@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+.tab {
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,.1);
+}
+
+.tab-content {
+  display: flex;
+  justify-content: center;
+}
+
+.tab-content > div {
+    width: 700px;
+    text-align: left;
+}
+
+.tab-title {
+  text-transform: capitalize;
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.MuiTab-textColorInherit.Mui-selected {
+  color: #473BD8;
+}
+
+.no-bg {
+  background: #FFFFFF;
+ 
+}
+
+.body-title {
+  font-family: Ubuntu;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 32px;
+  line-height: 1.5;
+  color: #000;
+  margin-bottom: 16px;
+}
+
+.report-img {
+  margin: 16px 0;
+}
+
+hr {
+  margin: 2rem 0;
+}
+
+.table-info table {
+  margin-top: 24px;
+  font-family: Lato;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #444444;
+  width: 100%;
+}
+
+.table-info table tr {
+  border-top: 1px solid rgba(0,0,0,.1);
+  border-bottom: 1px solid rgba(0,0,0,.1);
+}
+
+.table-info table tr:last-child {
+  border-bottom: none;
+}
+
+.table-info table th {
+  padding: 24px 24px 24px 0;
+}
+
+.table-info table td {
+  padding: 24px 0;
+}
+
+ul {
+  list-style-position: outside;
+  list-style-type: disc;
+}
+
+ul li {
+  font-family: Lato;
+  font-size: 16px;
+  line-height: 1.5;
+  margin-left: 32px;
+}
+
+a {
+    color: #4E42DA;
+}
+
+a:hover {
+    color: #261AB3;
+}

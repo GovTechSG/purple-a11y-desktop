@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+.loader{
+  margin-top: 150px;
+}
+
+.scanProgress{
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.scanComplete{
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  margin-top: 150px;
+  margin-bottom: 10px;
+}
+
+.clickDownload{
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 19px;
+}

@@ -1,0 +1,113 @@
+.intro-box{
+  background: #4E42DA;
+  min-height: 135px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: 16px 18px;
+}
+
+.MuiPaper-elevation1{
+  max-width: 375px;
+  box-shadow: 0 5px 40px 0 rgba(0,0,0,.16)!important;
+  background-color: #FFFFFF;
+  overflow: hidden;
+}
+
+@media (max-width: 407px) {
+  .MuiPaper-elevation1 {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+}
+
+.about-box{
+  top: -32px;
+  position: relative;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+  margin: 0 16px;
+  padding: 16px;
+}
+
+.report-box{
+  top: -16px;
+  position: relative;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+  margin: 0 16px;
+  padding: 16px;
+}
+
+.feedback-box{
+  background: #FFFFFF;
+  padding: 8px 0;
+  border-top: 1px solid rgba(0,0,0,.1);
+}
+
+.hi-title {
+  font-family: Ubuntu;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 1.5;
+  padding-bottom: 6px;
+  color: #FFFFFF;
+}
+
+.hi-text {
+  font-family: Lato;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #FFFFFF;
+}
+
+.info-title{
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #444444;
+}
+
+.info-text{
+  font-family: Lato;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #444444;
+}
+
+.read-more{
+  font-family: Lato;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #4E42DA;
+}
+
+.read-more:hover {
+  color: #261AB3;
+}
+
+.help-button{
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 50px;
+  height: 50px;
+  background: #4E42DA;
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  border: none;
+  font-family: Ubuntu;
+  font-weight: bold;
+  font-size: 26px;
+  line-height: 1.5;
+  color: #FFFFFF;
+  z-index: 9999;
+  cursor: pointer;
+}
+
+.MuiSvgIcon-root {
+  width: 1.3em!important;
+  height: 2em!important;
+}
