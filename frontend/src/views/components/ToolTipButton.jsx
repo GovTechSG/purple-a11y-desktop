@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import '../../styles/ToolTip.css'
-import { Popper, Fade, Paper } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import React, { useState } from "react";
+import "../../styles/ToolTip.css";
+import { Popper, Fade, Paper } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 // eslint-disable-next-line
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const ToolTipButton = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -19,69 +19,91 @@ const ToolTipButton = (props) => {
     if (title === "V") {
       setTitle("?");
     } else {
-      setTitle("V")
+      setTitle("V");
     }
   };
   const handleTab = (e) => {
-    console.log("e:", e)
-    localStorage.setItem("tabstore", Number(e))
-  }
-
+    // console.log("e:", e);
+    localStorage.setItem("tabstore", Number(e));
+  };
 
   return (
-
     <div>
-      <button className="help-button" onClick={handleClick("top-end")} type={props.type} disabled={props.disabled}>
-        {title === "?" ? '?' : <ExpandMoreIcon />}
+      <button
+        className="help-button"
+        onClick={handleClick("top-end")}
+        type={props.type}
+        disabled={props.disabled}
+      >
+        {title === "?" ? "?" : <ExpandMoreIcon />}
       </button>
 
-      <Popper open={open} anchorEl={anchorEl} placement={placement} transition popperOptions={{
-        modifiers: {
-          offset: {
-            offset: '0,9,0',
-          },
-        },
-      }}>
+      <Popper
+        open={open}
+        anchorEl={anchorEl}
+        placement={placement}
+        transition
+        modifiers={[{ name: "offset", options: { offset: [0, 9, 0] } }]}
+      >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
             <Paper>
               <div className="intro-box">
                 <p className="hi-title">Hi there!</p>
-                <p className="hi-text">Thank you for making your site more accessible.</p>
+                <p className="hi-text">
+                  Thank you for making your site more accessible.
+                </p>
                 <br />
               </div>
               <div className="about-box">
-                <p className='info-title'>About this tool</p>
+                <p className="info-title">About this tool</p>
                 <p className="info-text">
-                  This tool allows you to test your site for accessibility issues and generate a report for your developers to understand and act on.
-              </p>
-                <Link className="read-more"
-                  onClick={e => handleTab(0)}
-                  target="_blank"
+                  This tool allows you to test your site for accessibility
+                  issues and generate a report for your developers to understand
+                  and act on.
+                </p>
+                <Link
+                  className="read-more"
+                  onClick={(e) => handleTab(0)}
                   to={{
-                    pathname: '/about',
-                  }}> Read more</Link>
+                    pathname: "/about",
+                  }}
+                >
+                  {" "}
+                  Read more
+                </Link>
               </div>
               <div className="report-box">
-                <p className='info-title'>Report format</p>
-                <p className='info-text'>Learn how to read the report
-                <Link target="_blank" className="read-more"
-                    onClick={e => handleTab(1)}
+                <p className="info-title">Report format</p>
+                <p className="info-text">
+                  Learn how to read the report
+                  <Link
+                    className="read-more"
+                    onClick={(e) => handleTab(1)}
+                    state={{ message: "hello" }}
                     to={{
-                      pathname: '/about',
-                    }}> here</Link>
+                      pathname: "/about",
+                    }}
+                  >
+                    {" "}
+                    here
+                  </Link>
                 </p>
               </div>
-              <div className='feedback-box' align="center">
-                <a className="read-more" href="mailto:enquiries_HATS@tech.gov.sg">Give us feedback</a>
+              <div className="feedback-box" align="center">
+                <a
+                  className="read-more"
+                  href="mailto:enquiries_HATS@tech.gov.sg"
+                >
+                  Give us feedback
+                </a>
               </div>
             </Paper>
           </Fade>
         )}
       </Popper>
-
     </div>
-  )
-}
+  );
+};
 
 export default ToolTipButton;

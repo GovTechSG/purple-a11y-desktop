@@ -45,8 +45,8 @@ function a11yProps(index) {
 
 export default function HelpTab(props) {
   const [value, setValue] = React.useState(Number(props.value));
-  console.log("Value: ", props.value)
-  console.log("set", value)
+  // console.log("Value: ", props.value)
+  // console.log("set", value)
 
   useEffect(() => {
     setValue(props.value)

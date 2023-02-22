@@ -1,11 +1,11 @@
 import React from "react";
 import "./styles/App.css";
-import Routes from "./constants/Routes";
+import AppRoutes from "./constants/AppRoutes";
 
 function App() {
   return (
     <div className="App">
-      <Routes />
+      <AppRoutes />
     </div>
   );
 }
