@@ -68,6 +68,7 @@ const ToolTipButton = (props) => {
                   to={{
                     pathname: "/about",
                   }}
+                  target="_blank"
                 >
                   {" "}
                   Read more
@@ -80,10 +81,10 @@ const ToolTipButton = (props) => {
                   <Link
                     className="read-more"
                     onClick={(e) => handleTab(1)}
-                    state={{ message: "hello" }}
                     to={{
                       pathname: "/about",
                     }}
+                    target="_blank"
                   >
                     {" "}
                     here

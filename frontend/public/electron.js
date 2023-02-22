@@ -14,7 +14,9 @@ function createWindow() {
     webPreferences: { nodeIntegration: true, contextIsolation: false },
   });
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, "../build/index.html"));
+  // mainWindow.loadFile(path.join(__dirname, "../build/index.html"));
+  mainWindow.loadFile(path.join(__dirname, "./index.html"));
+  // mainWindow.loadURL("http://localhost:3000")
 }
 
 // This method will be called when Electron has finished
