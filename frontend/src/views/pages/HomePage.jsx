@@ -1,5 +1,5 @@
 /* eslint-disable react/state-in-constructor */
-import React, { useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import Typography from "@mui/material/Typography";
 import "../../styles/HomePage.css";

@@ -25,7 +25,7 @@ const ResultPage = ({ scanResults }) => {
     }
   }, []);
 
-  if (location.state === "scanning") {
+  if (location.state === "scanning" && scanResults === null) {
     return (
       <>
         <Loading className="loader" />

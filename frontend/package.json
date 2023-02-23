@@ -21,10 +21,10 @@
     "sgds-govtech-react": "^0.2.7"
   },
   "main": "public/electron.js",
-  "homepage": "./",
+  "homepage": ".",
   "scripts": {
     "dev": "react-scripts start",
-    "start": "craco build && electron .",
+    "start": "electron .",
     "build": "craco build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

@@ -11,7 +11,7 @@ const AppRoutes = () => {
 
   return (
     <>
-      <Router>
+      <Router basename="/React">
         <Navigation>
           <Routes>
             <Route
