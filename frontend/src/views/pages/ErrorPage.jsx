@@ -20,7 +20,7 @@ const ErrorPage = () => {
     )}
 
     <Typography variant="p">
-      Go back <Link to="/home">Home</Link> and try again.
+      Go back <Link to="/">Home</Link> and try again.
     </Typography>
   </div>
   )

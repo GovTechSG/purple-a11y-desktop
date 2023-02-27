@@ -9,6 +9,14 @@ module.exports = {
           allowlist: [/webpack(\/.*)?/, "electron-devtools-installer"],
         }),
       ],
+      module: {
+        rules: [
+          {
+            test: /\.css$/i,
+            use: ["style-loader", "css-loader"],
+          },
+        ],
+      }
     },
-  },
+  }
 };

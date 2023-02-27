@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
 import "../../styles/Scanning.css";
 import "../../styles/ResultPage.css";
@@ -17,6 +17,13 @@ const ResultPage = ({ scanResults }) => {
     link.href = window.URL.createObjectURL(blob);
     link.download = "report.html";
     link.click();
+  };
+
+  const openFile = (data) => {
+    console.log(data);
+    const newTab = window.open();
+    newTab.document.write(data);
+    newTab.document.close();
   };
 
   useEffect(() => {
@@ -55,14 +62,21 @@ const ResultPage = ({ scanResults }) => {
         </div>
         <div className="download-div">
           <Button
+            className={"download-button"}
+            title={"View report"}
+            style={{ marginRight: '8px' }}
+            action={() => openFile(scanResults)}
+          />
+          <Button
             type="download"
             className={"download-button"}
             title={"Download report"}
             id="downloadButton"
             action={() => downloadFile(scanResults)}
           />
+
           <div className="scan-link">
-            <a href="/">Scan again</a>
+            <Link to='/'>Scan again</Link>
           </div>
         </div>
         <div className="developed-text">Built by GDS HATS Team</div>

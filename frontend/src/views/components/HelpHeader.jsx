@@ -7,7 +7,7 @@ const HelpHeader = () => {
   const navigate = useNavigate();
   
   const backHome = () => {
-    navigate("/home");
+    navigate("/");
   };
 
   return (
