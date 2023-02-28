@@ -20,7 +20,6 @@ const ResultPage = ({ scanResults }) => {
   };
 
   const openFile = (data) => {
-    console.log(data);
     const newTab = window.open();
     newTab.document.write(data);
     newTab.document.close();
