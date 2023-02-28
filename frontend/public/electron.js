@@ -37,12 +37,13 @@ ipcMain.handle("startScan", async (_event, scanDetails) => {
   const response = await new Promise((resolve) => {
     const scan = fork(
       path.join(backendPath, "cli.js"),
-      ["-c", scanType, "-u", url, "-p", "1", "--resultspath"],
+      ["-c", scanType, "-u", url, "-p", "1"],
       { silent: true, cwd: backendPath }
     );
 
     scan.on("exit", (code) => {
       const stdout = scan.stdout.read().toString();
+      console.log(stdout);
       if (code === 0) {
         const resultsPath = stdout
           .split("Results directory is at ")[1]
