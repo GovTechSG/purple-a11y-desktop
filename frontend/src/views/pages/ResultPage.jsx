@@ -11,7 +11,8 @@ const ResultPage = ({ scanResults }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const downloadFile = (data) => {
+  const downloadFile = async () => { 
+    const data = await window.services.downloadReport(scanResults);
     let blob = new Blob([data], { type: "text/plain;charset=utf-8" });
     let link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
@@ -19,10 +20,8 @@ const ResultPage = ({ scanResults }) => {
     link.click();
   };
 
-  const openFile = (data) => {
-    const newTab = window.open();
-    newTab.document.write(data);
-    newTab.document.close();
+  const openFile = () => {
+    window.services.openReport(scanResults);
   };
 
   useEffect(() => {
@@ -64,14 +63,14 @@ const ResultPage = ({ scanResults }) => {
             className={"download-button"}
             title={"View report"}
             style={{ marginRight: '8px' }}
-            action={() => openFile(scanResults)}
+            action={() => openFile()}
           />
           <Button
             type="download"
             className={"download-button"}
             title={"Download report"}
             id="downloadButton"
-            action={() => downloadFile(scanResults)}
+            action={() => downloadFile()}
           />
 
           <div className="scan-link">

@@ -50,7 +50,7 @@ function DomainContainer({ setScanResults }) {
       url: state.domain,
     });
     if (response.success) {
-      setScanResults(response.report);
+      setScanResults(response.scanId);
     } else {
       navigate("/error", { state: { message: response.message } });
     }
