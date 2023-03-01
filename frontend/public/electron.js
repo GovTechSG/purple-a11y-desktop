@@ -51,14 +51,12 @@ ipcMain.handle("startScan", async (_event, scanDetails) => {
 
     scan.on("exit", (code) => {
       const stdout = scan.stdout.read().toString();
-      console.log(stdout);
       if (code === 0) {
         const resultsPath = stdout
           .split("Results directory is at ")[1]
           .split(" ")[0];
         const scanId = randomUUID();
         scanHistory[scanId] = resultsPath;
-        console.log('scanHistory:', scanHistory);
         resolve({ success: true, scanId });
       } else {
         resolve({ success: false, message: stdout });
@@ -66,13 +64,11 @@ ipcMain.handle("startScan", async (_event, scanDetails) => {
     });
   });
 
-  console.log(response.scanId);
   return response;
 });
 
 ipcMain.on('openReport', (_event, scanId) => {
   const reportPath = getReportPath(scanId);
-  console.log(reportPath);
   if (!reportPath) return;
 
   let reportWindow = new BrowserWindow({

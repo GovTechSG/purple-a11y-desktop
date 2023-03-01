@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
-import PropTypes from "prop-types";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
 import "../../styles/Scanning.css";
 import "../../styles/ResultPage.css";
 import Button from "../components/Button";
 import ToolTipButton from "../components/ToolTipButton";
+import { downloadReport, openReport } from "../../services";
 
-const ResultPage = ({ scanResults }) => {
+const ResultPage = ({ scanId }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const downloadFile = async () => { 
-    const data = await window.services.downloadReport(scanResults);
+  const handleDownloadReport = async () => { 
+    const data = await downloadReport(scanId);
     let blob = new Blob([data], { type: "text/plain;charset=utf-8" });
     let link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
@@ -20,8 +20,8 @@ const ResultPage = ({ scanResults }) => {
     link.click();
   };
 
-  const openFile = () => {
-    window.services.openReport(scanResults);
+  const handleViewReport = () => {
+    openReport(scanId);
   };
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const ResultPage = ({ scanResults }) => {
     }
   }, []);
 
-  if (location.state === "scanning" && scanResults === null) {
+  if (location.state === "scanning" && scanId === null) {
     return (
       <>
         <Loading className="loader" />
@@ -63,14 +63,14 @@ const ResultPage = ({ scanResults }) => {
             className={"download-button"}
             title={"View report"}
             style={{ marginRight: '8px' }}
-            action={() => openFile()}
+            action={() => handleViewReport()}
           />
           <Button
             type="download"
             className={"download-button"}
             title={"Download report"}
             id="downloadButton"
-            action={() => downloadFile()}
+            action={() => handleDownloadReport()}
           />
 
           <div className="scan-link">
@@ -85,9 +85,5 @@ const ResultPage = ({ scanResults }) => {
     );
   }
 };
-
-// ResultPage.propTypes = {
-//   match: PropTypes.object.isRequired,
-// };
 
 export default ResultPage;

@@ -1,5 +1,4 @@
-import React, { Component, useEffect } from "react";
-import PropTypes from "prop-types";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import "../../styles/ErrorPage.css";
@@ -25,9 +24,5 @@ const ErrorPage = () => {
   </div>
   )
 }
-
-// ErrorPage.propTypes = {
-//   match: PropTypes.object.isRequired,
-// };
 
 export default ErrorPage;

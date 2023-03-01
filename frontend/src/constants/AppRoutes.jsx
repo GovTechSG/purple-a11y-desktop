@@ -6,7 +6,7 @@ import HelpPage from "../views/pages/HelpPage";
 import ErrorPage from "../views/pages/ErrorPage";
 
 const AppRoutes = () => {
-  const [scanResults, setScanResults] = useState(null);
+  const [scanId, setScanId] = useState(null);
 
   return (
     <>
@@ -14,11 +14,11 @@ const AppRoutes = () => {
         <Routes>
           <Route
             path="/"
-            element={<HomePage setScanResults={setScanResults} />}
+            element={<HomePage setScanId={setScanId} />}
           />
           <Route
             path="/result"
-            element={<ResultPage scanResults={scanResults} />}
+            element={<ResultPage scanId={scanId} />}
           />
           <Route path="/about" element={<HelpPage />} />
           <Route path="/error" element={<ErrorPage />} />

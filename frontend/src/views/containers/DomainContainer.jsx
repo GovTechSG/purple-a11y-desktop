@@ -5,6 +5,7 @@ import Select from "../components/Select";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/DomainContainer.css";
+import { startScan } from "../../services";
 
 const validUrlRegex = RegExp(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i);
 const validateForm = (errors) => {
@@ -13,7 +14,7 @@ const validateForm = (errors) => {
   return valid;
 };
 
-function DomainContainer({ setScanResults }) {
+function DomainContainer({ setScanId }) {
   const [state, setState] = useState({
     domain: "",
     scanMethod: "Website",
@@ -23,7 +24,6 @@ function DomainContainer({ setScanResults }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // console.log(state);
     if (!validUrlRegex.test(state.domain) && touch === true) {
       setError("Domain is not valid");
     } else {
@@ -45,12 +45,12 @@ function DomainContainer({ setScanResults }) {
 
     navigate("/result", { state: "scanning" });
 
-    const response = await window.services.startScan({
+    const response = await startScan({
       scanType: state.scanMethod.toLowerCase(),
       url: state.domain,
     });
     if (response.success) {
-      setScanResults(response.scanId);
+      setScanId(response.scanId);
     } else {
       navigate("/error", { state: { message: response.message } });
     }
