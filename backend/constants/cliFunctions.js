@@ -58,12 +58,6 @@ export const cliOptions = {
     default: 'none',
     demandOption: false,
   },
-  resultspath: {
-    describe: 'Prints the path to the scan results',
-    type: 'boolean',
-    default: false,
-    demandOption: false,
-  }
 };
 
 export const configureReportSetting = isEnabled => {

@@ -92,14 +92,6 @@ export const setThresholdLimits = setWarnLevel => {
   process.env.WARN_LEVEL = setWarnLevel;
 };
 
-export const setResultsPathDisplay = isEnabled => {
-  if (isEnabled) {
-    process.env.RESULTS_PATH_DISPLAY = 1;
-  } else {
-    process.env.RESULTS_PATH_DISPLAY = 0;
-  }
-}
-
 export const zipResults = async (zipName, resultsPath) => {
   // Check prior zip file exist and remove
   if (fs.existsSync(zipName)) {

@@ -27,6 +27,6 @@
                 "properties": "always"
             }
         ],
-        // "prettier/prettier": "error"
+        "prettier/prettier": "error"
     }
 }

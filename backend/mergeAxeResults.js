@@ -12,8 +12,8 @@ import { consoleLogger, silentLogger } from './logs.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const axeIssuesList = JSON.parse(fs.readFileSync(path.join(__dirname, './constants/axeTypes.json')));
-const wcagList = JSON.parse(fs.readFileSync(path.join(__dirname, './constants/wcagLinks.json')));
+const axeIssuesList = JSON.parse(fs.readFileSync('./constants/axeTypes.json'));
+const wcagList = JSON.parse(fs.readFileSync('./constants/wcagLinks.json'));
 
 const extractFileNames = async directory =>
   fs
@@ -58,7 +58,7 @@ const writeResults = async (allissues, storagePath, jsonFilename = 'compiledResu
   );
 
   try {
-    await fs.writeFile(path.join(__dirname, `${storagePath}/reports/${jsonFilename}.json`), finalResultsInJson);
+    await fs.writeFile(`${storagePath}/reports/${jsonFilename}.json`, finalResultsInJson);
   } catch (writeResultsError) {
     consoleLogger.info(
       'An error has occurred when compiling the results into the report, please try again.',
@@ -130,7 +130,7 @@ const writeHTML = async (allissues, storagePath, deviceToScan, htmlFilename = 'r
   try {
     const musTemp = await fs.readFile(path.join(__dirname, '/static/report.mustache'));
     const output = Mustache.render(musTemp.toString(), JSON.parse(finalResultsInJson));
-    await fs.writeFile(path.join(__dirname, `${storagePath}/reports/${htmlFilename}.html`), output);
+    await fs.writeFile(`${storagePath}/reports/${htmlFilename}.html`, output);
   } catch (templateError) {
     consoleLogger.info('An error has ocurred when generating the report, please try again.');
     silentLogger.error(`(writeHTML) - ${templateError}`);
