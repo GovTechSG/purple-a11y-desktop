@@ -11,5 +11,10 @@ contextBridge.exposeInMainWorld("services", {
   downloadReport: async (scanId) => {
     const reportHtml = await ipcRenderer.invoke("downloadReport", scanId);
     return reportHtml;
+  },
+  appStatus: (callback) => {
+    ipcRenderer.on("appStatus", (event, data) => {
+      callback(data);
+    })
   }
 });
