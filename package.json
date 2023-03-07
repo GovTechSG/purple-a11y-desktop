@@ -15,9 +15,10 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.1",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "winston": "^3.8.2"
   },
-  "main": "public/electron.js",
+  "main": "public/electron/main.js",
   "homepage": ".",
   "scripts": {
     "dev": "react-scripts start",
