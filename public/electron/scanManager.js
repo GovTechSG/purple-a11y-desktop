@@ -3,12 +3,13 @@ const { fork } = require("child_process");
 const fs = require("fs");
 const { randomUUID } = require("crypto");
 const { backendPath } = require("./constants");
+const { silentLogger, consoleLogger } = require("./logs");
 
 const scanHistory = {};
 
 const getScanOptions = (details) => {
   const { scanType, url, customDevice, viewportWidth, maxPages } = details;
-  const options = ["-c", scanType, "-u", url, "-p", "1"];
+  const options = ["-c", scanType, "-u", url];
 
   if (customDevice) {
     options.push("-d", customDevice);

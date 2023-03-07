@@ -59,6 +59,7 @@ app.on("ready", async () => {
     launchWindow.webContents.send("appStatus", "settingUp");
     await downloadBackend();
   } else {
+    console.log("checking backend version...");
     launchWindow.webContents.send("appStatus", "checkingUpdates");
     const { isLatestVersion, latestTarballUrl } = await checkForBackendUpdates();
     if (!isLatestVersion) {
