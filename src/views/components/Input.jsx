@@ -3,7 +3,7 @@ import "../../styles/Input.css";
 
 const Input = (props) => {
   return (
-    <div className="form-group" id="urlInput">
+    <div id="urlInput">
       <label htmlFor={props.name} className="form-label">
         {props.title}
       </label>

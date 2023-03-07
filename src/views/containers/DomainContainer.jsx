@@ -6,6 +6,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/DomainContainer.css";
 import { startScan } from "../../services";
+import MuiButton from "@mui/material/Button";
+import Fade from "@mui/material/Fade";
+import Popper from "@mui/material/Popper";
+import Card from "@mui/material/Card";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { devices } from "../../constants/constants";
 
 const validUrlRegex = RegExp(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i);
 const validateForm = (errors) => {
@@ -21,6 +27,15 @@ function DomainContainer({ setScanId }) {
   });
   const [error, setError] = useState("");
   const [touch, setTouch] = useState(false);
+
+  const [maxPages, setMaxPages] = useState("100");
+  const [deviceToEmulate, setDeviceToEmulate] = useState("Desktop");
+  const [landscapeMode, setLandscapeMode] = useState(true);
+  const [customViewportWidth, setCustomViewportWidth] = useState(null);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,6 +45,42 @@ function DomainContainer({ setScanId }) {
       setError("");
     }
   }, [state, touch]);
+
+  const openAdvancedOptions = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpen((prev) => !prev);
+  };
+
+  const closeAdvancedOptions = () => {
+    setAnchorEl(null);
+    setOpen(false);
+  };
+
+  const handlePageLimitChange = (event) => {
+    event.preventDefault();
+    const input = event.target.value;
+    const parsedNum = Number(input);
+    if (!Number.isInteger(parsedNum)) {
+      return;
+    }
+
+    if (parsedNum <= 0) {
+      setMaxPages("1");
+    } else {
+      setMaxPages(input);
+    }
+  };
+
+  const handleViewportWidthChange = (event) => {
+    event.preventDefault();
+    const input = event.target.value;
+    const parsedNum = Number(input);
+    if (parsedNum <= 0) {
+      setCustomViewportWidth("1");
+    } else {
+      setCustomViewportWidth(input);
+    }
+  };
 
   const handleTouch = () => {
     setTouch(true);
@@ -43,12 +94,25 @@ function DomainContainer({ setScanId }) {
       return;
     }
 
+    let customDevice =
+      deviceToEmulate === devices[0] ? null : deviceToEmulate.replace(" ", "_");
+
+    if (customDevice && customDevice !== devices[1] && landscapeMode) {
+      customDevice += "_landscape";
+    }
+
+    const viewportWidth = customDevice ? null : customViewportWidth;
+
     navigate("/result", { state: "scanning" });
 
     const response = await startScan({
       scanType: state.scanMethod.toLowerCase(),
       url: state.domain,
+      customDevice,
+      viewportWidth,
+      maxPages,
     });
+
     if (response.success) {
       setScanId(response.scanId);
     } else {
@@ -58,10 +122,11 @@ function DomainContainer({ setScanId }) {
 
   return (
     <>
-      <div className="input-fields">
+      <div className="input-fields" style={{ paddingBottom: "14px" }}>
         <div className="select-input">
           <Select
             name={"scanMethod"}
+            title={"Scan Type"}
             options={["Website", "Sitemap"]}
             value={state.scanMethod}
             placeholder={
@@ -72,6 +137,7 @@ function DomainContainer({ setScanId }) {
             handleChange={(e) =>
               setState({ ...state, scanMethod: e.target.value })
             }
+            hideLabel
           />
           <Input
             type={"text"}
@@ -85,6 +151,110 @@ function DomainContainer({ setScanId }) {
             handleChange={(e) => setState({ ...state, domain: e.target.value })}
             onBlur={handleTouch}
           />
+          <div>
+            <MuiButton
+              sx={{
+                background: "#4E42DA",
+                borderRadius: 0,
+                height: "46px",
+                minWidth: "46px",
+                color: "#FFF",
+                "&:hover": {
+                  background: "#4E42DA",
+                },
+              }}
+              onClick={openAdvancedOptions}
+            >
+              <SettingsIcon />
+            </MuiButton>
+            <Popper
+              open={open}
+              anchorEl={anchorEl}
+              placement="bottom-end"
+              transition
+            >
+              {({ TransitionProps }) => (
+                <Fade {...TransitionProps} timeout={350}>
+                  <Card sx={{ p: 3 }}>
+                    <label for="pages-to-scan" style={{ display: "block" }}>
+                      Max Pages to Scan
+                    </label>
+                    <input
+                      type="number"
+                      id="pages-to-scan"
+                      step="10"
+                      onChange={handlePageLimitChange}
+                      value={maxPages}
+                      style={{
+                        width: "100%",
+                        padding: "8px 8px",
+                        lineHeight: "0",
+                      }}
+                    />
+                    <label for="device-to-emulate" style={{ display: "block" }}>
+                      Device to Emulate
+                    </label>
+                    <select
+                      value={deviceToEmulate}
+                      onChange={(e) => setDeviceToEmulate(e.target.value)}
+                      style={{ width: "100%", padding: "8px 8px" }}
+                    >
+                      {devices.map((d) => (
+                        <option key={d} value={d}>
+                          {d}
+                        </option>
+                      ))}
+                    </select>
+                    {deviceToEmulate !== devices[0] &&
+                      deviceToEmulate !== devices[1] && (
+                        <>
+                          <label for="landscapeMode">
+                            <input
+                              type="checkbox"
+                              id="landscapeMode"
+                              checked={landscapeMode}
+                              onChange={() => setLandscapeMode(!landscapeMode)}
+                              style={{
+                                marginRight: "4px",
+                              }}
+                            />
+                            Landscape
+                          </label>
+                        </>
+                      )}
+                    {deviceToEmulate === devices[0] && (
+                      <>
+                        <label
+                          for="viewport-width"
+                          style={{ display: "block" }}
+                        >
+                          Viewport Width (px)
+                        </label>
+                        <input
+                          type="number"
+                          id="viewport-width"
+                          step="1"
+                          onChange={handleViewportWidthChange}
+                          value={customViewportWidth}
+                          style={{
+                            width: "100%",
+                            padding: "8px 8px",
+                            lineHeight: "0",
+                          }}
+                        />
+                      </>
+                    )}
+                    <Button
+                      style={{ display: "block" }}
+                      className="button-field"
+                      title="Confirm"
+                      action={closeAdvancedOptions}
+                    />
+                  </Card>
+                </Fade>
+              )}
+            </Popper>
+          </div>
         </div>
 
         <div className="error">{error}</div>

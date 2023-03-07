@@ -27,8 +27,3 @@
 input.form-input:focus {
   outline: 1;
 }
-
-
-.form-group{
-  padding-bottom: 14px;
-}

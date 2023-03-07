@@ -4,16 +4,20 @@ import "../../styles/Select.css";
 const Select = (props) => {
   return (
     <div className="select-form">
-      <label className="input-title" htmlFor={props.name}>
-        {props.title}
-      </label>
-      <select className="select-field"
+      {!props.hideLabel && (
+        <label htmlFor={props.name}>
+          {props.title}
+        </label>
+      )}
+      <select
+        aria-label={props.title}
+        className="select-field"
         name={props.name}
         value={props.value}
         onChange={props.handleChange}
         id="selectField"
       >
-        {props.options.map(option => {
+        {props.options.map((option) => {
           return (
             <option
               key={option}
@@ -23,11 +27,11 @@ const Select = (props) => {
             >
               {option}
             </option>
-          )
+          );
         })}
       </select>
     </div>
-  )
-}
+  );
+};
 
 export default Select;
