@@ -1,5 +1,11 @@
 module.exports = {
-  packagerConfig: {},
+  packagerConfig: {
+    icon: 'public/purple-hats-logo',
+    ignore: [
+      '/build/electron',
+      '/build/purple-hats-logo'
+    ]
+  },
   rebuildConfig: {},
   makers: [
     {
