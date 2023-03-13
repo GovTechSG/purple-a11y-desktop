@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./styles/App.css";
 import AppRoutes from "./constants/AppRoutes";
 import LaunchWindow from "./views/components/LaunchWindow";
@@ -6,10 +6,17 @@ import LaunchWindow from "./views/components/LaunchWindow";
 function App() {
   const [status, setStatus] = useState(null);
 
-  window.services.appStatus((s) => setStatus(s));
+  useEffect(() => {
+    window.services.appStatus((s) => setStatus(s));
+  }, []);
 
   if (status === "settingUp") {
-    return <LaunchWindow message="Setting Up Purple HATS" />;
+    return (
+      <LaunchWindow
+        message="Setting Up Purple HATS"
+        subMessage="This may take a while. Please do not close the application."
+      />
+    );
   }
 
   if (status === "checkingUpdates") {
@@ -17,7 +24,12 @@ function App() {
   }
 
   if (status === "updatingApp") {
-    return <LaunchWindow message="Updating to the Latest Version" />;
+    return (
+      <LaunchWindow
+        message="Updating to the Latest Version"
+        subMessage="This may take a while. Please do not close the application."
+      />
+    );
   }
 
   if (status === "ready") {

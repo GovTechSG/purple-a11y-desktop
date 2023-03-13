@@ -4,7 +4,7 @@ import '../../styles/HelpFooter.css';
 export default function HelpFooter() {
   return (
     <div className='footer'>
-      <p className="footer-content">Built by GDS HATS Team</p>
+      <p className="footer-content">Built by Accessiblity Enabling Team, GovTech</p>
     </div>
   );
 }

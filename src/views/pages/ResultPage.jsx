@@ -46,7 +46,7 @@ const ResultPage = ({ scanId }) => {
             </p>
           </div>
         </div>
-        <div className="developed-text">Built by GDS HATS Team</div>
+        <div className="developed-text">Built by Accessiblity Enabling Team, GovTech</div>
         <div className="link-options">
           <ToolTipButton />
         </div>
@@ -77,7 +77,7 @@ const ResultPage = ({ scanId }) => {
             <Link to='/'>Scan again</Link>
           </div>
         </div>
-        <div className="developed-text">Built by GDS HATS Team</div>
+        <div className="developed-text">Built by Accessiblity Enabling Team, GovTech</div>
         <div className="link-options">
           <ToolTipButton />
         </div>
