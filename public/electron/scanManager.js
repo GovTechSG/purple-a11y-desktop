@@ -2,8 +2,7 @@ const path = require("path");
 const { fork } = require("child_process");
 const fs = require("fs");
 const { randomUUID } = require("crypto");
-const { backendPath } = require("./constants");
-const { silentLogger, consoleLogger } = require("./logs");
+const { enginePath } = require("./constants");
 
 const scanHistory = {};
 
@@ -32,9 +31,9 @@ const startScan = async (scanDetails) => {
 
   const response = await new Promise((resolve) => {
     const scan = fork(
-      path.join(backendPath, "cli.js"),
+      path.join(enginePath, "cli.js"),
       getScanOptions(scanDetails),
-      { silent: true, cwd: backendPath }
+      { silent: true, cwd: enginePath }
     );
 
     // scan.stdout.on('data', (chunk) => {
@@ -62,7 +61,7 @@ const startScan = async (scanDetails) => {
 const getReportPath = (scanId) => {
   if (scanHistory[scanId]) {
     return path.join(
-      backendPath,
+      enginePath,
       scanHistory[scanId],
       "reports",
       "report.html"

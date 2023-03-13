@@ -19,9 +19,9 @@ function createLaunchWindow() {
     height: 300,
     frame: false,
     webPreferences: {
-      preload: preloadPath
-    }
-  })
+      preload: preloadPath,
+    },
+  });
 
   launchWindow.loadFile(indexPath);
 }
@@ -61,11 +61,12 @@ app.on("ready", async () => {
   } else {
     console.log("checking backend version...");
     launchWindow.webContents.send("appStatus", "checkingUpdates");
-    const { isLatestVersion, latestTarballUrl } = await checkForBackendUpdates();
+    const { isLatestVersion, latestDownloadUrl } =
+      await checkForBackendUpdates();
     if (!isLatestVersion) {
       console.log("updating backend...");
       launchWindow.webContents.send("appStatus", "updatingApp");
-      updateBackend(latestTarballUrl);
+      updateBackend(latestDownloadUrl);
     }
   }
 
