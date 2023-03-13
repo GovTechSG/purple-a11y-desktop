@@ -95,7 +95,7 @@ function DomainContainer({ setScanId }) {
     }
 
     let customDevice =
-      deviceToEmulate === devices[0] ? null : deviceToEmulate.replace(" ", "_");
+      deviceToEmulate === devices[0] ? null : deviceToEmulate.replaceAll(" ", "_");
 
     if (customDevice && customDevice !== devices[1] && landscapeMode) {
       customDevice += "_landscape";
