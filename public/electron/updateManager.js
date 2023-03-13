@@ -59,11 +59,12 @@ const downloadBackend = async () => {
   let command;
 
   if (os.platform() === "win32") {
-    command = `Set-Location "${appDataPath}";
+    command = `$ProgressPreference = 'SilentlyContinue';
+      Set-Location "${appDataPath}";
       New-Item "${backendPath}" -ItemType directory;
       Invoke-WebRequest "${downloadUrl}" -OutFile PHLatest.zip;
       tar -xf PHLatest.zip -C "${backendPath}";
-      Remove-Item PHLatest.tar.gz;
+      Remove-Item PHLatest.zip;
       `;
   } else {
     command = `cd "${appDataPath}" &&
@@ -125,12 +126,13 @@ const updateBackend = (downloadUrl) => {
   let command;
 
   if (os.platform() === "win32") {
-    command = `Set-Location "${appDataPath}";
-      Rename-Item "${backendPath}\\purple-hats" purple-hats.bak;
+    command = `$ProgressPreference = 'SilentlyContinue';
+      Set-Location "${appDataPath}";
+      Move-Item "${backendPath}\\purple-hats" purple-hats.bak;
       Invoke-WebRequest "${downloadUrl}" -OutFile PHLatest.zip;
       Remove-Item "${backendPath}\\*" -Recurse;
       tar -xf PHLatest.zip -C "${backendPath}"; 
-      Move-Item purple-hats.bak\results "${backendPath}\\purple-hats";
+      Move-Item purple-hats.bak\\results "${backendPath}\\purple-hats";
       Remove-Item purple-hats.bak -Recurse;
       Remove-Item PHLatest.zip;
       `;
