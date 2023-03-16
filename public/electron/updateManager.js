@@ -121,7 +121,7 @@ const updateBackend = (downloadUrl) => {
       Remove-Item "${backendPath}" -Recurse -Force;
       New-Item "${backendPath}" -ItemType directory;
       tar -xf PHLatest.zip -C "${backendPath}"; 
-      if (Test-Path -Path "purple-hats.back\\results") {
+      if (Test-Path -Path "purple-hats.bak\\results") {
         Move-Item purple-hats.bak\\results "${backendPath}\\purple-hats";
       }
       Remove-Item purple-hats.bak -Recurse -Force;
