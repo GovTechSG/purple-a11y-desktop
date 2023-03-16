@@ -32,24 +32,12 @@ const getDownloadUrlFromReleaseData = (data) => {
 
     if (url.endsWith("windows.zip")) {
       osToUrl.win32 = url;
-    } else if (url.endsWith("mac-x64.zip")) {
-      osToUrl.macx64 = url;
     } else {
-      osToUrl.macarm64 = url;
+      osToUrl.darwin = url;
     }
   });
 
-  if (os.platform() === "win32") {
-    return osToUrl.win32;
-  }
-
-  const arch = execSync("uname -m").toString().trim();
-
-  if (arch === "x86_64") {
-    return osToUrl.macx64;
-  } else {
-    return osToUrl.macarm64;
-  }
+  return osToUrl[os.platform()];
 };
 
 const downloadBackend = async () => {
@@ -130,20 +118,24 @@ const updateBackend = (downloadUrl) => {
       Set-Location "${appDataPath}";
       Move-Item "${backendPath}\\purple-hats" purple-hats.bak;
       Invoke-WebRequest "${downloadUrl}" -OutFile PHLatest.zip;
-      Remove-Item "${backendPath}\\*" -Recurse;
+      Remove-Item "${backendPath}" -Recurse -Force;
+      New-Item "${backendPath}" -ItemType directory;
       tar -xf PHLatest.zip -C "${backendPath}"; 
-      Move-Item purple-hats.bak\\results "${backendPath}\\purple-hats";
-      Remove-Item purple-hats.bak -Recurse;
+      if (Test-Path -Path "purple-hats.back\\results") {
+        Move-Item purple-hats.bak\\results "${backendPath}\\purple-hats";
+      }
+      Remove-Item purple-hats.bak -Recurse -Force;
       Remove-Item PHLatest.zip;
       `;
   } else {
     command = `cd "${appDataPath}" &&
       mv "${backendPath}/purple-hats" purple-hats.bak && 
       curl "${downloadUrl}" -o PHLatest.zip -L &&
-      rm -r "${backendPath}/*"
+      rm -rf "${backendPath}" &&
+      mkdir "${backendPath}" &&
       tar -xf PHLatest.zip -C "${backendPath}" && 
-      mv purple-hats.bak/results "${backendPath}/purple-hats" &&
-      rm -r purple-hats.bak &&
+      ([ -d purple-hats.bak/results ] && mv purple-hats.bak/results "${backendPath}/purple-hats") |
+      rm -rf purple-hats.bak &&
       rm PHLatest.zip
       `;
   }
