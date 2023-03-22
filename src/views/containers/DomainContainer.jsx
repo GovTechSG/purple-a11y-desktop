@@ -95,7 +95,9 @@ function DomainContainer({ setScanId }) {
     }
 
     let customDevice =
-      deviceToEmulate === devices[0] ? null : deviceToEmulate.replaceAll(" ", "_");
+      deviceToEmulate === devices[0]
+        ? null
+        : deviceToEmulate.replaceAll(" ", "_");
 
     if (customDevice && customDevice !== devices[1] && landscapeMode) {
       customDevice += "_landscape";
@@ -105,13 +107,18 @@ function DomainContainer({ setScanId }) {
 
     navigate("/result", { state: "scanning" });
 
-    const response = await startScan({
-      scanType: state.scanMethod.toLowerCase(),
+    const scanArgs = {
+      scanType: state.scanMethod.split(" ")[0].toLowerCase(),
       url: state.domain,
       customDevice,
       viewportWidth,
-      maxPages,
-    });
+    }
+
+    if (state.scanMethod !== 'Custom Flow') {
+      scanArgs.maxPages = maxPages;
+    }
+
+    const response = await startScan(scanArgs);
 
     if (response.success) {
       setScanId(response.scanId);
@@ -127,7 +134,7 @@ function DomainContainer({ setScanId }) {
           <Select
             name={"scanMethod"}
             title={"Scan Type"}
-            options={["Website", "Sitemap"]}
+            options={["Website", "Sitemap", "Custom Flow"]}
             value={state.scanMethod}
             placeholder={
               state.scanMethod === "Website"
@@ -144,7 +151,7 @@ function DomainContainer({ setScanId }) {
             name={"domain"}
             value={state.domain}
             placeholder={
-              state.scanMethod === "Website"
+              state.scanMethod !== "Sitemap"
                 ? "https://www.hive.gov.sg"
                 : "https://www.hive.gov.sg/sitemap.xml"
             }
@@ -176,21 +183,25 @@ function DomainContainer({ setScanId }) {
               {({ TransitionProps }) => (
                 <Fade {...TransitionProps} timeout={350}>
                   <Card sx={{ p: 3 }}>
-                    <label for="pages-to-scan" style={{ display: "block" }}>
-                      Max Pages to Scan
-                    </label>
-                    <input
-                      type="number"
-                      id="pages-to-scan"
-                      step="10"
-                      onChange={handlePageLimitChange}
-                      value={maxPages}
-                      style={{
-                        width: "100%",
-                        padding: "8px 8px",
-                        lineHeight: "0",
-                      }}
-                    />
+                    {state.scanMethod !== "Custom Flow" && (
+                      <>
+                        <label for="pages-to-scan" style={{ display: "block" }}>
+                          Max Pages to Scan
+                        </label>
+                        <input
+                          type="number"
+                          id="pages-to-scan"
+                          step="10"
+                          onChange={handlePageLimitChange}
+                          value={maxPages}
+                          style={{
+                            width: "100%",
+                            padding: "8px 8px",
+                            lineHeight: "0",
+                          }}
+                        />
+                      </>
+                    )}
                     <label for="device-to-emulate" style={{ display: "block" }}>
                       Device to Emulate
                     </label>
