@@ -7,7 +7,8 @@ const { enginePath } = require("./constants");
 const scanHistory = {};
 
 const getScanOptions = (details) => {
-  const { scanType, url, customDevice, viewportWidth, maxPages } = details;
+  const { scanType, url, customDevice, viewportWidth, maxPages, headlessMode } =
+    details;
   const options = ["-c", scanType, "-u", url];
 
   if (customDevice) {
@@ -22,8 +23,12 @@ const getScanOptions = (details) => {
     options.push("-p", maxPages);
   }
 
+  if (!headlessMode) {
+    options.push("-h", "no");
+  }
+
   return options;
-}
+};
 
 const startScan = async (scanDetails) => {
   const { scanType, url } = scanDetails;
@@ -49,6 +54,11 @@ const startScan = async (scanDetails) => {
         const scanId = randomUUID();
         scanHistory[scanId] = resultsPath;
         resolve({ success: true, scanId });
+      } else if (code === 2) {
+        resolve({
+          success: false,
+          message: "An error has occurred when running the custom flow scan.",
+        });
       } else {
         resolve({ success: false, message: stdout });
       }
@@ -60,15 +70,10 @@ const startScan = async (scanDetails) => {
 
 const getReportPath = (scanId) => {
   if (scanHistory[scanId]) {
-    return path.join(
-      enginePath,
-      scanHistory[scanId],
-      "reports",
-      "report.html"
-    );
+    return path.join(enginePath, scanHistory[scanId], "reports", "report.html");
   }
   return null;
-}
+};
 
 const getReportHtml = (scanId) => {
   const reportPath = getReportPath(scanId);

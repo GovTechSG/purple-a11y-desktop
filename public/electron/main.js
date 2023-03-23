@@ -51,26 +51,26 @@ function createReportWindow(reportPath) {
 
 // TODO set ipcMain messages
 app.on("ready", async () => {
-  createLaunchWindow();
-  await new Promise((r) => setTimeout(r, 500));
+  // createLaunchWindow();
+  // await new Promise((r) => setTimeout(r, 500));
 
-  if (!fs.existsSync(backendPath)) {
-    console.log("backend does not exist. downloading now...");
-    launchWindow.webContents.send("appStatus", "settingUp");
-    await downloadBackend();
-  } else {
-    console.log("checking backend version...");
-    launchWindow.webContents.send("appStatus", "checkingUpdates");
-    const { isLatestVersion, latestDownloadUrl } =
-      await checkForBackendUpdates();
-    if (!isLatestVersion) {
-      console.log("updating backend...");
-      launchWindow.webContents.send("appStatus", "updatingApp");
-      updateBackend(latestDownloadUrl);
-    }
-  }
+  // if (!fs.existsSync(backendPath)) {
+  //   console.log("backend does not exist. downloading now...");
+  //   launchWindow.webContents.send("appStatus", "settingUp");
+  //   await downloadBackend();
+  // } else {
+  //   console.log("checking backend version...");
+  //   launchWindow.webContents.send("appStatus", "checkingUpdates");
+  //   const { isLatestVersion, latestDownloadUrl } =
+  //     await checkForBackendUpdates();
+  //   if (!isLatestVersion) {
+  //     console.log("updating backend...");
+  //     launchWindow.webContents.send("appStatus", "updatingApp");
+  //     updateBackend(latestDownloadUrl);
+  //   }
+  // }
 
-  launchWindow.close();
+  // launchWindow.close();
   createMainWindow();
   await new Promise((r) => setTimeout(r, 500));
   mainWindow.webContents.send("appStatus", "ready");

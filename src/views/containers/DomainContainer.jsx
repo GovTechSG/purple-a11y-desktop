@@ -32,7 +32,8 @@ function DomainContainer({ setScanId }) {
   const [deviceToEmulate, setDeviceToEmulate] = useState("Desktop");
   const [landscapeMode, setLandscapeMode] = useState(true);
   const [customViewportWidth, setCustomViewportWidth] = useState(null);
-
+  const [headlessMode, setHeadlessMode] = useState(false);
+  
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
 
@@ -112,6 +113,7 @@ function DomainContainer({ setScanId }) {
       url: state.domain,
       customDevice,
       viewportWidth,
+      headlessMode,
     }
 
     if (state.scanMethod !== 'Custom Flow') {
@@ -255,6 +257,18 @@ function DomainContainer({ setScanId }) {
                         />
                       </>
                     )}
+                     <label for="headlessMode">
+                            <input
+                              type="checkbox"
+                              id="headlessMode"
+                              checked={headlessMode}
+                              onChange={() => setHeadlessMode(!headlessMode)}
+                              style={{
+                                marginRight: "4px",
+                              }}
+                            />
+                            Run scan in background
+                          </label>
                     <Button
                       style={{ display: "block" }}
                       className="button-field"
