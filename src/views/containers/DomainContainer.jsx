@@ -33,7 +33,7 @@ function DomainContainer({ setScanId }) {
   const [landscapeMode, setLandscapeMode] = useState(true);
   const [customViewportWidth, setCustomViewportWidth] = useState(null);
   const [headlessMode, setHeadlessMode] = useState(false);
-  
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
 
@@ -64,23 +64,13 @@ function DomainContainer({ setScanId }) {
     if (!Number.isInteger(parsedNum)) {
       return;
     }
-
-    if (parsedNum <= 0) {
-      setMaxPages("1");
-    } else {
-      setMaxPages(input);
-    }
+    setMaxPages(input);
   };
 
   const handleViewportWidthChange = (event) => {
     event.preventDefault();
     const input = event.target.value;
-    const parsedNum = Number(input);
-    if (parsedNum <= 0) {
-      setCustomViewportWidth("1");
-    } else {
-      setCustomViewportWidth(input);
-    }
+    setCustomViewportWidth(input);
   };
 
   const handleTouch = () => {
@@ -114,9 +104,9 @@ function DomainContainer({ setScanId }) {
       customDevice,
       viewportWidth,
       headlessMode,
-    }
+    };
 
-    if (state.scanMethod !== 'Custom Flow') {
+    if (state.scanMethod !== "Custom Flow") {
       scanArgs.maxPages = maxPages;
     }
 
@@ -194,7 +184,13 @@ function DomainContainer({ setScanId }) {
                           type="number"
                           id="pages-to-scan"
                           step="10"
+                          min="0"
                           onChange={handlePageLimitChange}
+                          onBlur={(event) => {
+                            if (Number(event.target.value) < 1) {
+                              setMaxPages(1);
+                            }
+                          }}
                           value={maxPages}
                           style={{
                             width: "100%",
@@ -246,8 +242,14 @@ function DomainContainer({ setScanId }) {
                         <input
                           type="number"
                           id="viewport-width"
-                          step="1"
+                          step="50"
+                          min="0"
                           onChange={handleViewportWidthChange}
+                          onBlur={(event) => {
+                            if (Number(event.target.value) <= 0) {
+                              setCustomViewportWidth(1);
+                            }
+                          }}
                           value={customViewportWidth}
                           style={{
                             width: "100%",
@@ -257,18 +259,18 @@ function DomainContainer({ setScanId }) {
                         />
                       </>
                     )}
-                     <label for="headlessMode">
-                            <input
-                              type="checkbox"
-                              id="headlessMode"
-                              checked={headlessMode}
-                              onChange={() => setHeadlessMode(!headlessMode)}
-                              style={{
-                                marginRight: "4px",
-                              }}
-                            />
-                            Run scan in background
-                          </label>
+                    <label for="headlessMode">
+                      <input
+                        type="checkbox"
+                        id="headlessMode"
+                        checked={headlessMode}
+                        onChange={() => setHeadlessMode(!headlessMode)}
+                        style={{
+                          marginRight: "4px",
+                        }}
+                      />
+                      Run scan in background
+                    </label>
                     <Button
                       style={{ display: "block" }}
                       className="button-field"
