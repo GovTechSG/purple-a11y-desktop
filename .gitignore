@@ -1,6 +1,9 @@
 # Backend Engine
 backend/
 
+# Packaged app output
+out/
+
 # Logs
 logs
 *.log
