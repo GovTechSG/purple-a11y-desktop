@@ -1,5 +1,4 @@
 const os = require("os");
-const path = require("path");
 const { execSync } = require("child_process");
 const axios = require("axios");
 const {
@@ -7,6 +6,7 @@ const {
   enginePath,
   appDataPath,
   backendPath,
+  engineVersion
 } = require("./constants");
 const { silentLogger } = require("./logs");
 
@@ -96,11 +96,10 @@ const downloadBackend = async () => {
 // };
 
 const checkForBackendUpdates = async () => {
-  const currentVersion = require(path.join(enginePath, "package.json")).version;
   const { data } = await axios.get(releaseUrl);
   const latestVersion = data.tag_name;
 
-  if (currentVersion === latestVersion) {
+  if (engineVersion === latestVersion) {
     return { isLatestVersion: true };
   }
 
@@ -116,25 +115,25 @@ const updateBackend = (downloadUrl) => {
   if (os.platform() === "win32") {
     command = `$ProgressPreference = 'SilentlyContinue';
       Set-Location "${appDataPath}";
-      Move-Item "${backendPath}\\purple-hats" purple-hats.bak;
+      Move-Item "${enginePath}" purple-hats.bak;
       Invoke-WebRequest "${downloadUrl}" -OutFile PHLatest.zip;
       Remove-Item "${backendPath}" -Recurse -Force;
       New-Item "${backendPath}" -ItemType directory;
       tar -xf PHLatest.zip -C "${backendPath}"; 
       if (Test-Path -Path "purple-hats.bak\\results") {
-        Move-Item purple-hats.bak\\results "${backendPath}\\purple-hats";
+        Move-Item purple-hats.bak\\results "${enginePath}";
       }
       Remove-Item purple-hats.bak -Recurse -Force;
       Remove-Item PHLatest.zip;
       `;
   } else {
     command = `cd "${appDataPath}" &&
-      mv "${backendPath}/purple-hats" purple-hats.bak && 
+      mv "${enginePath}" purple-hats.bak && 
       curl "${downloadUrl}" -o PHLatest.zip -L &&
       rm -rf "${backendPath}" &&
       mkdir "${backendPath}" &&
       tar -xf PHLatest.zip -C "${backendPath}" && 
-      ([ -d purple-hats.bak/results ] && mv purple-hats.bak/results "${backendPath}/purple-hats") |
+      ([ -d purple-hats.bak/results ] && mv purple-hats.bak/results "${enginePath}") |
       rm -rf purple-hats.bak &&
       rm PHLatest.zip
       `;

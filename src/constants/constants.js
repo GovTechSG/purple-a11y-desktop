@@ -60,3 +60,9 @@ export const devices = [
   "Pixel 5",
   "Moto G4",
 ];
+
+export const userDataFormDetails = {
+  formUrl: "https://form.gov.sg/641d6e994422e90012fc4978",
+  urlScannedField: "641d6f416e65530012b57e29",
+  scanTypeField: "641d6fc6448fc900122f8684",
+};

@@ -15,6 +15,12 @@ contextBridge.exposeInMainWorld("services", {
   appStatus: (callback) => {
     ipcRenderer.on("appStatus", (event, data) => {
       callback(data);
-    })
-  }
+    });
+  },
+  openUserDataForm: (url) => {
+    ipcRenderer.send("openUserDataForm", url);
+  },
+  closeUserDataForm: (url) => {
+    ipcRenderer.send("closeUserDataForm", url);
+  },
 });

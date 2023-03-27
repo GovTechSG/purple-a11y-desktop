@@ -22,6 +22,8 @@ const preloadPath = path.join(__dirname, "preload.js");
 
 const indexPath = path.join(__dirname, "..", "..", "build", "index.html");
 
+const engineVersion = require(path.join(enginePath, "package.json")).version;
+
 module.exports = {
   appDataPath,
   releaseUrl,
@@ -29,4 +31,5 @@ module.exports = {
   enginePath,
   preloadPath,
   indexPath,
+  engineVersion,
 };

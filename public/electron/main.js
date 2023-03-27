@@ -1,4 +1,9 @@
-const { app: electronApp, BrowserWindow, ipcMain } = require("electron");
+const {
+  app: electronApp,
+  BrowserWindow,
+  ipcMain,
+  BrowserView,
+} = require("electron");
 const fs = require("fs");
 const { backendPath, preloadPath, indexPath } = require("./constants");
 const { startScan, getReportPath, getReportHtml } = require("./scanManager");
@@ -29,8 +34,8 @@ function createLaunchWindow() {
 function createMainWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1000,
+    height: 750,
     webPreferences: {
       preload: preloadPath,
     },
@@ -41,36 +46,58 @@ function createMainWindow() {
 
 function createReportWindow(reportPath) {
   let reportWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1000,
+    height: 750,
     parent: mainWindow,
   });
   reportWindow.loadFile(reportPath);
   reportWindow.on("close", () => reportWindow.destroy());
 }
 
+function openFormView(url) {
+  const view = new BrowserView();
+  mainWindow.setBrowserView(view);
+  view.setBounds({
+    x: 0.5 * mainWindow.getBounds().width,
+    y: 0,
+    width: 0.5 * mainWindow.getBounds().width,
+    height: mainWindow.getBounds().height,
+  });
+  view.setAutoResize({
+    width: true,
+    height: true,
+    horizontal: true,
+    vertical: true,
+  });
+  view.webContents.loadURL(url);
+}
+
+function closeFormView() {
+  mainWindow.setBrowserView(null);
+}
+
 // TODO set ipcMain messages
 app.on("ready", async () => {
-  // createLaunchWindow();
-  // await new Promise((r) => setTimeout(r, 500));
+  createLaunchWindow();
+  await new Promise((r) => setTimeout(r, 500));
 
-  // if (!fs.existsSync(backendPath)) {
-  //   console.log("backend does not exist. downloading now...");
-  //   launchWindow.webContents.send("appStatus", "settingUp");
-  //   await downloadBackend();
-  // } else {
-  //   console.log("checking backend version...");
-  //   launchWindow.webContents.send("appStatus", "checkingUpdates");
-  //   const { isLatestVersion, latestDownloadUrl } =
-  //     await checkForBackendUpdates();
-  //   if (!isLatestVersion) {
-  //     console.log("updating backend...");
-  //     launchWindow.webContents.send("appStatus", "updatingApp");
-  //     updateBackend(latestDownloadUrl);
-  //   }
-  // }
+  if (!fs.existsSync(backendPath)) {
+    console.log("backend does not exist. downloading now...");
+    launchWindow.webContents.send("appStatus", "settingUp");
+    await downloadBackend();
+  } else {
+    console.log("checking backend version...");
+    launchWindow.webContents.send("appStatus", "checkingUpdates");
+    const { isLatestVersion, latestDownloadUrl } =
+      await checkForBackendUpdates();
+    if (!isLatestVersion) {
+      console.log("updating backend...");
+      launchWindow.webContents.send("appStatus", "updatingApp");
+      updateBackend(latestDownloadUrl);
+    }
+  }
 
-  // launchWindow.close();
+  launchWindow.close();
   createMainWindow();
   await new Promise((r) => setTimeout(r, 500));
   mainWindow.webContents.send("appStatus", "ready");
@@ -88,4 +115,12 @@ ipcMain.on("openReport", (_event, scanId) => {
 
 ipcMain.handle("downloadReport", (_event, scanId) => {
   return getReportHtml(scanId);
+});
+
+ipcMain.on("openUserDataForm", (_event, url) => {
+  openFormView(url);
+});
+
+ipcMain.on("closeUserDataForm", (_event) => {
+  closeFormView();
 });

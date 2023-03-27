@@ -96,7 +96,13 @@ function DomainContainer({ setScanId }) {
 
     const viewportWidth = customDevice ? null : customViewportWidth;
 
-    navigate("/result", { state: "scanning" });
+    navigate("/result", {
+      state: {
+        status: "scanning",
+        scanUrl: state.domain,
+        scanType: state.scanMethod,
+      },
+    });
 
     const scanArgs = {
       scanType: state.scanMethod.split(" ")[0].toLowerCase(),
