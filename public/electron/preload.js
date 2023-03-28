@@ -23,4 +23,7 @@ contextBridge.exposeInMainWorld("services", {
   closeUserDataForm: (url) => {
     ipcRenderer.send("closeUserDataForm", url);
   },
+  guiReady: async () => {
+    ipcRenderer.send("guiReady");
+  }
 });

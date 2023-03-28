@@ -7,8 +7,14 @@ function App() {
   const [status, setStatus] = useState(null);
 
   useEffect(() => {
-    window.services.appStatus((s) => setStatus(s));
+    window.services.guiReady()
   }, []);
+
+  useEffect(() => {
+    window.services.appStatus((s) => {
+      setStatus(s)
+    });
+  })
 
   if (status === "settingUp") {
     return (

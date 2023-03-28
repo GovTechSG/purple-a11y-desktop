@@ -78,8 +78,14 @@ function closeFormView() {
 
 // TODO set ipcMain messages
 app.on("ready", async () => {
+  const launchWindowReady = new Promise((resolve) => {
+    ipcMain.once("guiReady", () => {
+      resolve();
+    });
+  });
+
   createLaunchWindow();
-  await new Promise((r) => setTimeout(r, 500));
+  await launchWindowReady;
 
   if (!fs.existsSync(backendPath)) {
     console.log("backend does not exist. downloading now...");
@@ -98,8 +104,15 @@ app.on("ready", async () => {
   }
 
   launchWindow.close();
+
+  const mainReady = new Promise((resolve) => {
+    ipcMain.once("guiReady", () => {
+      resolve();
+    });
+  });
+
   createMainWindow();
-  await new Promise((r) => setTimeout(r, 500));
+  await mainReady;
   mainWindow.webContents.send("appStatus", "ready");
 });
 

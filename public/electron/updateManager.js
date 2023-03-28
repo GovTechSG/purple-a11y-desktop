@@ -1,4 +1,5 @@
 const os = require("os");
+const path = require("path");
 const { execSync } = require("child_process");
 const axios = require("axios");
 const {
@@ -6,7 +7,6 @@ const {
   enginePath,
   appDataPath,
   backendPath,
-  engineVersion
 } = require("./constants");
 const { silentLogger } = require("./logs");
 
@@ -44,6 +44,8 @@ const downloadBackend = async () => {
   const { data } = await axios.get(releaseUrl);
   const downloadUrl = getDownloadUrlFromReleaseData(data);
 
+  const interval = setInterval(() => console.log('downloading'), 3000);
+
   let command;
 
   if (os.platform() === "win32") {
@@ -63,6 +65,7 @@ const downloadBackend = async () => {
   }
 
   execCommand(command);
+  clearInterval(interval);
 };
 
 // FUTURE IMPLEMENTATION (only mac version done)
@@ -98,6 +101,7 @@ const downloadBackend = async () => {
 const checkForBackendUpdates = async () => {
   const { data } = await axios.get(releaseUrl);
   const latestVersion = data.tag_name;
+  const engineVersion = require(path.join(enginePath, "package.json")).version;
 
   if (engineVersion === latestVersion) {
     return { isLatestVersion: true };
