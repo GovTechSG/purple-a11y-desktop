@@ -99,7 +99,7 @@ app.on("ready", async () => {
     if (!isLatestVersion) {
       console.log("updating backend...");
       launchWindow.webContents.send("appStatus", "updatingApp");
-      updateBackend(latestDownloadUrl);
+      await updateBackend(latestDownloadUrl);
     }
   }
 
