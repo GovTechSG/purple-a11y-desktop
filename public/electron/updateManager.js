@@ -1,6 +1,6 @@
 const os = require("os");
 const path = require("path");
-const { execSync } = require("child_process");
+const { exec } = require("child_process");
 const axios = require("axios");
 const {
   releaseUrl,
@@ -10,18 +10,23 @@ const {
 } = require("./constants");
 const { silentLogger } = require("./logs");
 
-const execCommand = (command) => {
+const execCommand = async (command) => {
   let options = { cwd: appDataPath };
 
   if (os.platform() === "win32") {
     options.shell = "powershell.exe";
   }
 
-  try {
-    execSync(command, options);
-  } catch (error) {
-    silentLogger.error(error.stderr.toString());
-  }
+  const execution = new Promise(resolve => {
+    exec(command, options, (err, _stdout, stderr) => {
+      if (err) {
+        silentLogger.error(stderr.toString());
+      }
+      resolve();
+    })
+  })
+
+  await execution;
 };
 
 const getDownloadUrlFromReleaseData = (data) => {
@@ -44,8 +49,6 @@ const downloadBackend = async () => {
   const { data } = await axios.get(releaseUrl);
   const downloadUrl = getDownloadUrlFromReleaseData(data);
 
-  const interval = setInterval(() => console.log('downloading'), 3000);
-
   let command;
 
   if (os.platform() === "win32") {
@@ -64,8 +67,7 @@ const downloadBackend = async () => {
       rm PHLatest.zip`;
   }
 
-  execCommand(command);
-  clearInterval(interval);
+  await execCommand(command);
 };
 
 // FUTURE IMPLEMENTATION (only mac version done)
@@ -113,7 +115,7 @@ const checkForBackendUpdates = async () => {
   };
 };
 
-const updateBackend = (downloadUrl) => {
+const updateBackend = async (downloadUrl) => {
   let command;
 
   if (os.platform() === "win32") {
@@ -143,7 +145,7 @@ const updateBackend = (downloadUrl) => {
       `;
   }
 
-  execCommand(command);
+  await execCommand(command);
 };
 
 module.exports = {
