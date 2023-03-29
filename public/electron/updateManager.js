@@ -129,6 +129,9 @@ const updateBackend = async (downloadUrl) => {
       if (Test-Path -Path "purple-hats.bak\\results") {
         Move-Item purple-hats.bak\\results "${enginePath}";
       }
+      if (Test-Path -Path "purple-hats.bak\\custom_flow_scripts") {
+        Move-Item purple-hats.bak\\custom_flow_scripts "${enginePath}";
+      }
       Remove-Item purple-hats.bak -Recurse -Force;
       Remove-Item PHLatest.zip;
       `;
@@ -140,6 +143,7 @@ const updateBackend = async (downloadUrl) => {
       mkdir "${backendPath}" &&
       tar -xf PHLatest.zip -C "${backendPath}" && 
       ([ -d purple-hats.bak/results ] && mv purple-hats.bak/results "${enginePath}") |
+      ([ -d purple-hats.bak/custom_flow_scripts ] && mv purple-hats.bak/custom_flow_scripts "${enginePath}") |
       rm -rf purple-hats.bak &&
       rm PHLatest.zip
       `;
