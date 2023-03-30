@@ -22,6 +22,17 @@ const preloadPath = path.join(__dirname, "preload.js");
 
 const indexPath = path.join(__dirname, "..", "..", "build", "index.html");
 
+const playwrightBrowsersPath = path.join(backendPath, "ms-playwright");
+
+const nodePath =
+  os.platform() === "win32"
+    ? "nodejs-win"
+    : os.arch() === "arm64"
+    ? "nodejs-mac-arm64"
+    : "nodejs-mac-x64";
+
+path.join(backendPath);
+
 module.exports = {
   appDataPath,
   releaseUrl,
@@ -29,4 +40,6 @@ module.exports = {
   enginePath,
   preloadPath,
   indexPath,
+  playwrightBrowsersPath,
+  nodePath
 };
