@@ -30,7 +30,7 @@ function DomainContainer({ setScanId }) {
 
   const [maxPages, setMaxPages] = useState("100");
   const [deviceToEmulate, setDeviceToEmulate] = useState("Desktop");
-  const [landscapeMode, setLandscapeMode] = useState(true);
+  const [landscapeMode, setLandscapeMode] = useState(false);
   const [customViewportWidth, setCustomViewportWidth] = useState(null);
   const [headlessMode, setHeadlessMode] = useState(false);
 
@@ -86,15 +86,16 @@ function DomainContainer({ setScanId }) {
     }
 
     let customDevice =
-      deviceToEmulate === devices[0]
+      deviceToEmulate === devices[0] || deviceToEmulate === devices[1]
         ? null
-        : deviceToEmulate.replaceAll(" ", "_");
+        : deviceToEmulate;
 
-    if (customDevice && customDevice !== devices[1] && landscapeMode) {
-      customDevice += "_landscape";
+    if (customDevice && landscapeMode) {
+      customDevice += " landscape";
     }
 
-    const viewportWidth = customDevice ? null : customViewportWidth;
+    const viewportWidth =
+      deviceToEmulate === devices[0] ? customViewportWidth : null;
 
     navigate("/result", {
       state: {
