@@ -23,7 +23,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "react-scripts build && electron-forge make"
   },
   "config": {
     "forge": "forge.config.js"
