@@ -56,7 +56,7 @@ const startScan = async (scanDetails) => {
       }
     );
 
-    currentChildProcess.push(scan);
+    currentChildProcess = scan;
     // scan.stdout.on('data', (chunk) => {
     //   console.log(chunk.toString());
     // })
@@ -78,7 +78,7 @@ const startScan = async (scanDetails) => {
       } else {
         resolve({ success: false, message: stdout });
       }
-      currentChildProcess.pop();
+      currentChildProcess = null;
     });
   });
 
