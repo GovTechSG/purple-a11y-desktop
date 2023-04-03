@@ -7,24 +7,39 @@ const {
   enginePath,
   appDataPath,
   backendPath,
+  updateBackupsFolder,
+  scanResultsPath,
+  customFlowGeneratedScriptsPath,
 } = require("./constants");
 const { silentLogger } = require("./logs");
+
+let currentChildProcess;
+
+const killChildProcess = () => {
+  if (currentChildProcess) {
+    currentChildProcess.kill('SIGKILL');
+  }
+};
 
 const execCommand = async (command) => {
   let options = { cwd: appDataPath };
 
   if (os.platform() === "win32") {
+    command = `$ProgressPreference = 'SilentlyContinue';${command}`;
     options.shell = "powershell.exe";
   }
 
-  const execution = new Promise(resolve => {
-    exec(command, options, (err, _stdout, stderr) => {
+  const execution = new Promise((resolve) => {
+    const process = exec(command, options, (err, _stdout, stderr) => {
       if (err) {
         silentLogger.error(stderr.toString());
       }
+      currentChildProcess = process
       resolve();
-    })
-  })
+    });
+
+    currentChildProcess = null;
+  });
 
   await execution;
 };
@@ -45,60 +60,74 @@ const getDownloadUrlFromReleaseData = (data) => {
   return osToUrl[os.platform()];
 };
 
-const downloadBackend = async () => {
-  const { data } = await axios.get(releaseUrl);
-  const downloadUrl = getDownloadUrlFromReleaseData(data);
-
+// only run during updates
+const backUpAndCleanUpBackend = async () => {
   let command;
 
   if (os.platform() === "win32") {
-    command = `$ProgressPreference = 'SilentlyContinue';
-      Set-Location "${appDataPath}";
-      New-Item "${backendPath}" -ItemType directory;
-      Invoke-WebRequest "${downloadUrl}" -OutFile PHLatest.zip;
-      tar -xf PHLatest.zip -C "${backendPath}";
-      Remove-Item PHLatest.zip;
-      `;
+    command = `New-Item '${updateBackupsFolder}' -ItemType directory;
+    if (Test-Path -Path '${scanResultsPath}') {
+      Move-Item '${scanResultsPath}' '${updateBackupsFolder}';
+    }
+    if (Test-Path -Path '${customFlowGeneratedScriptsPath}') {
+      Move-Item '${customFlowGeneratedScriptsPath}' '${updateBackupsFolder}';
+    }
+    Remove-Item '${backendPath}' -Recurse -Force;
+    `;
   } else {
-    command = `cd "${appDataPath}" &&
-      mkdir "${backendPath}" &&
-      curl "${downloadUrl}" -o PHLatest.zip -L &&
-      tar -xf PHLatest.zip -C "${backendPath}" &&
-      rm PHLatest.zip`;
+    command = `mkdir '${updateBackupsFolder}' &&
+    ([ -d '${scanResultsPath}' ] && mv '${scanResultsPath}' '${updateBackupsFolder}') |
+    ([ -d '${customFlowGeneratedScriptsPath}' ] && mv '${customFlowGeneratedScriptsPath}' '${updateBackupsFolder}') |
+    rm -rf '${backendPath}'`;
   }
 
   await execCommand(command);
 };
 
-// FUTURE IMPLEMENTATION (only mac version done)
-// const downloadBackend = async () => {
-//   const { data } = await axios.get(releaseUrl);
-//   // const downloadUrl = data.assets[0].browser_download_url;
+const downloadBackend = async (downloadUrl) => {
+  let command;
 
-//   let command;
+  if (os.platform() === "win32") {
+    command = `Invoke-WebRequest '${downloadUrl}' -OutFile PHLatest.zip;
+    New-Item '${backendPath}' -ItemType directory;
+    `;
+  } else {
+    command = `curl '${downloadUrl}' -o PHLatest.zip -L &&
+    mkdir '${backendPath}'
+    `;
+  }
 
-//   if (os.platform() === "win32") {
-//     command = `Invoke-WebRequest "${downloadUrl}" -OutFile PHLatest.zip;
-//       New-Item backend -ItemType directory;
-//       tar -xzf PHLatest.tar.gz -C backend --strip-components=1;
-//       Remove-Item PHLatest.tar.gz;
-//       Set-Location backend;
-//       npm install;
-//       `;
-//   } else {
-//     command = `cd "${appDataPath}" &&
-//     curl "${downloadUrl}" -o PHLatest.tar.gz -L &&
-//     mkdir purple-hats &&
-//     tar -xzf PHLatest.tar.gz -C purple-hats --strip-components=1 &&
-//     rm PHLatest.tar.gz &&
-//     export PATH=$PATH:"${__dirname}/../nodejs-mac-x64/bin" &&
-//     cd purple-hats &&
-//     npm install`;
-//   }
+  await execCommand(command);
+};
 
-//   execCommand(command);
+const unzipBackendAndCleanUp = async () => {
+  let command;
 
-// };
+  if (os.platform() === "win32") {
+    command = `tar -xf PHLatest.zip -C '${backendPath}';
+    Remove-Item PHLatest.zip;
+    if (Test-Path -Path '${updateBackupsFolder}\\*') {
+      Move-Item '${updateBackupsFolder}\\*' '${enginePath}';
+      Remove-Item -Recurse -Force '${updateBackupsFolder}'
+    }
+    `;
+  } else {
+    command = `tar -xf PHLatest.zip -C '${backendPath}' &&
+    rm PHLatest.zip &&
+    ([ -d '${updateBackupsFolder}' ] && mv '${updateBackupsFolder}'/* '${enginePath}' | rm -rf '${updateBackupsFolder}')
+    `;
+  }
+
+  await execCommand(command);
+};
+
+const setUpBackend = async () => {
+  const { data } = await axios.get(releaseUrl);
+  const downloadUrl = getDownloadUrlFromReleaseData(data);
+
+  await downloadBackend(downloadUrl);
+  await unzipBackendAndCleanUp();
+};
 
 const checkForBackendUpdates = async () => {
   const { data } = await axios.get(releaseUrl);
@@ -116,44 +145,14 @@ const checkForBackendUpdates = async () => {
 };
 
 const updateBackend = async (downloadUrl) => {
-  let command;
-
-  if (os.platform() === "win32") {
-    command = `$ProgressPreference = 'SilentlyContinue';
-      Set-Location "${appDataPath}";
-      Move-Item "${enginePath}" purple-hats.bak;
-      Invoke-WebRequest "${downloadUrl}" -OutFile PHLatest.zip;
-      Remove-Item "${backendPath}" -Recurse -Force;
-      New-Item "${backendPath}" -ItemType directory;
-      tar -xf PHLatest.zip -C "${backendPath}"; 
-      if (Test-Path -Path "purple-hats.bak\\results") {
-        Move-Item purple-hats.bak\\results "${enginePath}";
-      }
-      if (Test-Path -Path "purple-hats.bak\\custom_flow_scripts") {
-        Move-Item purple-hats.bak\\custom_flow_scripts "${enginePath}";
-      }
-      Remove-Item purple-hats.bak -Recurse -Force;
-      Remove-Item PHLatest.zip;
-      `;
-  } else {
-    command = `cd "${appDataPath}" &&
-      mv "${enginePath}" purple-hats.bak && 
-      curl "${downloadUrl}" -o PHLatest.zip -L &&
-      rm -rf "${backendPath}" &&
-      mkdir "${backendPath}" &&
-      tar -xf PHLatest.zip -C "${backendPath}" && 
-      ([ -d purple-hats.bak/results ] && mv purple-hats.bak/results "${enginePath}") |
-      ([ -d purple-hats.bak/custom_flow_scripts ] && mv purple-hats.bak/custom_flow_scripts "${enginePath}") |
-      rm -rf purple-hats.bak &&
-      rm PHLatest.zip
-      `;
-  }
-
-  await execCommand(command);
+  await backUpAndCleanUpBackend();
+  await downloadBackend(downloadUrl);
+  await unzipBackendAndCleanUp();
 };
 
 module.exports = {
-  downloadBackend,
+  setUpBackend,
   checkForBackendUpdates,
   updateBackend,
+  killChildProcess,
 };

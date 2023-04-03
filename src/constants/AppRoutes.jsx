@@ -9,7 +9,7 @@ import Alert from "@mui/material/Alert";
 
 const AppRoutes = () => {
   const [scanId, setScanId] = useState(null);
-  const [offlineOpen, setOfflineOpen] = useState(false);
+  const [offlineOpen, setOfflineOpen] = useState(!navigator.onLine);
   const [onlineOpen, setOnlineOpen] = useState(false);
 
   useEffect(() => {

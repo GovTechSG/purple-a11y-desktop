@@ -31,7 +31,11 @@ const nodePath =
     ? "nodejs-mac-arm64"
     : "nodejs-mac-x64";
 
-path.join(backendPath);
+const scanResultsPath = path.join(enginePath, "results");
+
+const customFlowGeneratedScriptsPath = path.join(enginePath, "custom_flow_scripts");
+
+const updateBackupsFolder = path.join(appDataPath, '30789f0f-73f5-43bc-93a6-e499e4a20f7a');
 
 module.exports = {
   appDataPath,
@@ -41,5 +45,8 @@ module.exports = {
   preloadPath,
   indexPath,
   playwrightBrowsersPath,
-  nodePath
+  nodePath,
+  scanResultsPath,
+  customFlowGeneratedScriptsPath,
+  updateBackupsFolder
 };

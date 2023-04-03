@@ -6,6 +6,14 @@ const { enginePath, nodePath, playwrightBrowsersPath } = require("./constants");
 
 const scanHistory = {};
 
+let currentChildProcess;
+
+const killChildProcess = () => {
+  if (currentChildProcess) {
+    currentChildProcess.kill("SIGKILL");
+  }
+};
+
 const getScanOptions = (details) => {
   const { scanType, url, customDevice, viewportWidth, maxPages, headlessMode } =
     details;
@@ -48,6 +56,7 @@ const startScan = async (scanDetails) => {
       }
     );
 
+    currentChildProcess.push(scan);
     // scan.stdout.on('data', (chunk) => {
     //   console.log(chunk.toString());
     // })
@@ -69,6 +78,7 @@ const startScan = async (scanDetails) => {
       } else {
         resolve({ success: false, message: stdout });
       }
+      currentChildProcess.pop();
     });
   });
 
@@ -94,4 +104,5 @@ module.exports = {
   startScan,
   getReportPath,
   getReportHtml,
+  killChildProcess,
 };

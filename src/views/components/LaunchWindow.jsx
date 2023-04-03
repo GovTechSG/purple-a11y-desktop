@@ -1,8 +1,55 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useEffect, useState } from "react";
 
-const LaunchWindow = ({ message, subMessage }) => {
+const LaunchWindow = () => {
+  const [launchStatus, setLaunchStatus] = useState(null);
+
+  useEffect(() => {
+    window.services.launchStatus((s) => {
+      setLaunchStatus(s);
+    });
+  }, []);
+
+  useEffect(() => {
+   
+    window.addEventListener("offline", () => {
+      const lastKnownStatus = launchStatus;
+      setLaunchStatus("offline");
+
+      window.addEventListener(
+        "online",
+        () => {
+          setLaunchStatus(lastKnownStatus);
+        },
+        { once: true }
+      );
+    });
+  }, [launchStatus]);
+
+  const messages = {
+    settingUp: {
+      main: "Setting Up Purple HATS",
+      sub: "This may take a while. Please do not close the application.",
+    },
+    checkingUpdates: { main: "Checking for Updates" },
+    updatingApp: {
+      main: "Updating to the Latest Version",
+      sub: "This may take a while. Please do not close the application.",
+    },
+    offline: {
+      main: "No internet connection",
+      sub: "Waiting for reconnection.",
+    },
+  };
+
+  if (!launchStatus) {
+    return null;
+  }
+
+  const { main: displayedMessage, sub: displayedSub } = messages[launchStatus];
+
   return (
     <Box
       sx={{
@@ -28,9 +75,9 @@ const LaunchWindow = ({ message, subMessage }) => {
           color: "#FFFFFF",
         }}
       >
-        {message}
+        {displayedMessage}
       </Typography>
-      {subMessage && (
+      {displayedSub && (
         <Typography
           variant="p"
           sx={{
@@ -43,7 +90,7 @@ const LaunchWindow = ({ message, subMessage }) => {
             color: "#FFFFFF",
           }}
         >
-          {subMessage}
+          {displayedSub}
         </Typography>
       )}
     </Box>

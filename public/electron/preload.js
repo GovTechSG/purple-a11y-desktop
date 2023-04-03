@@ -12,11 +12,6 @@ contextBridge.exposeInMainWorld("services", {
     const reportHtml = await ipcRenderer.invoke("downloadReport", scanId);
     return reportHtml;
   },
-  appStatus: (callback) => {
-    ipcRenderer.on("appStatus", (event, data) => {
-      callback(data);
-    });
-  },
   openUserDataForm: (url) => {
     ipcRenderer.send("openUserDataForm", url);
   },
@@ -25,5 +20,15 @@ contextBridge.exposeInMainWorld("services", {
   },
   guiReady: async () => {
     ipcRenderer.send("guiReady");
-  }
+  },
+  appStatus: (callback) => {
+    ipcRenderer.on("appStatus", (event, data) => {
+      callback(data);
+    });
+  },
+  launchStatus: (callback) => {
+    ipcRenderer.on("launchStatus", (event, data) => {
+      callback(data);
+    });
+  },
 });

@@ -5,13 +5,9 @@ const {
   BrowserView,
 } = require("electron");
 const fs = require("fs");
-const { backendPath, preloadPath, indexPath } = require("./constants");
-const { startScan, getReportPath, getReportHtml } = require("./scanManager");
-const {
-  downloadBackend,
-  checkForBackendUpdates,
-  updateBackend,
-} = require("./updateManager");
+const constants = require("./constants");
+const scanManager = require("./scanManager");
+const updateManager = require("./updateManager");
 
 const app = electronApp;
 
@@ -24,11 +20,11 @@ function createLaunchWindow() {
     height: 300,
     frame: false,
     webPreferences: {
-      preload: preloadPath,
+      preload: constants.preloadPath,
     },
   });
 
-  launchWindow.loadFile(indexPath);
+  launchWindow.loadFile(constants.indexPath);
 }
 
 function createMainWindow() {
@@ -37,11 +33,11 @@ function createMainWindow() {
     width: 1000,
     height: 750,
     webPreferences: {
-      preload: preloadPath,
+      preload: constants.preloadPath,
     },
   });
   // and load the index.html of the app.
-  mainWindow.loadFile(indexPath);
+  mainWindow.loadFile(constants.indexPath);
 }
 
 function createReportWindow(reportPath) {
@@ -86,21 +82,27 @@ app.on("ready", async () => {
 
   createLaunchWindow();
   await launchWindowReady;
+  launchWindow.webContents.send("appStatus", "launch");
 
-  if (!fs.existsSync(backendPath)) {
+  if (!fs.existsSync(constants.backendPath)) {
     console.log("backend does not exist. downloading now...");
-    launchWindow.webContents.send("appStatus", "settingUp");
-    await downloadBackend();
+    launchWindow.webContents.send("launchStatus", "settingUp");
+    await updateManager.setUpBackend();
   } else {
     console.log("checking backend version...");
-    launchWindow.webContents.send("appStatus", "checkingUpdates");
-    const { isLatestVersion, latestDownloadUrl } =
-      await checkForBackendUpdates();
-    if (!isLatestVersion) {
-      console.log("updating backend...");
-      launchWindow.webContents.send("appStatus", "updatingApp");
-      await updateBackend(latestDownloadUrl);
-    }
+    launchWindow.webContents.send("launchStatus", "checkingUpdates");
+    await updateManager
+      .checkForBackendUpdates()
+      .then(async ({ isLatestVersion, latestDownloadUrl }) => {
+        if (!isLatestVersion) {
+          console.log("updating backend...");
+          launchWindow.webContents.send("launchStatus", "updatingApp");
+          await updateManager.updateBackend(latestDownloadUrl);
+        }
+      })
+      .catch((error) =>
+        console.log("Error occurred when checking for updates:", error)
+      );
   }
 
   launchWindow.close();
@@ -117,17 +119,17 @@ app.on("ready", async () => {
 });
 
 ipcMain.handle("startScan", async (_event, scanDetails) => {
-  return await startScan(scanDetails);
+  return await scanManager.startScan(scanDetails);
 });
 
 ipcMain.on("openReport", (_event, scanId) => {
-  const reportPath = getReportPath(scanId);
+  const reportPath = scanManager.getReportPath(scanId);
   if (!reportPath) return;
   createReportWindow(reportPath);
 });
 
 ipcMain.handle("downloadReport", (_event, scanId) => {
-  return getReportHtml(scanId);
+  return scanManager.getReportHtml(scanId);
 });
 
 ipcMain.on("openUserDataForm", (_event, url) => {
@@ -136,4 +138,9 @@ ipcMain.on("openUserDataForm", (_event, url) => {
 
 ipcMain.on("closeUserDataForm", (_event) => {
   closeFormView();
+});
+
+app.on("quit", () => {
+  updateManager.killChildProcess();
+  scanManager.killChildProcess();
 });

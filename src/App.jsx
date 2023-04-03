@@ -16,26 +16,8 @@ function App() {
     });
   })
 
-  if (status === "settingUp") {
-    return (
-      <LaunchWindow
-        message="Setting Up Purple HATS"
-        subMessage="This may take a while. Please do not close the application."
-      />
-    );
-  }
-
-  if (status === "checkingUpdates") {
-    return <LaunchWindow message="Checking for Updates" />;
-  }
-
-  if (status === "updatingApp") {
-    return (
-      <LaunchWindow
-        message="Updating to the Latest Version"
-        subMessage="This may take a while. Please do not close the application."
-      />
-    );
+  if (status === "launch") {
+    return <LaunchWindow />
   }
 
   if (status === "ready") {
