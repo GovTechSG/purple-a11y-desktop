@@ -1,5 +1,6 @@
 const os = require("os");
 const path = require("path");
+const fs = require("fs");
 const { exec } = require("child_process");
 const axios = require("axios");
 const {
@@ -10,6 +11,7 @@ const {
   updateBackupsFolder,
   scanResultsPath,
   customFlowGeneratedScriptsPath,
+  phZipPath,
 } = require("./constants");
 const { silentLogger } = require("./logs");
 
@@ -17,7 +19,7 @@ let currentChildProcess;
 
 const killChildProcess = () => {
   if (currentChildProcess) {
-    currentChildProcess.kill('SIGKILL');
+    currentChildProcess.kill("SIGKILL");
   }
 };
 
@@ -34,11 +36,10 @@ const execCommand = async (command) => {
       if (err) {
         silentLogger.error(stderr.toString());
       }
-      currentChildProcess = process
+      currentChildProcess = null;
       resolve();
     });
-
-    currentChildProcess = null;
+    currentChildProcess = process;
   });
 
   await execution;
@@ -60,8 +61,7 @@ const getDownloadUrlFromReleaseData = (data) => {
   return osToUrl[os.platform()];
 };
 
-// only run during updates
-const backUpAndCleanUpBackend = async () => {
+const backUpData = async () => {
   let command;
 
   if (os.platform() === "win32") {
@@ -71,28 +71,41 @@ const backUpAndCleanUpBackend = async () => {
     }
     if (Test-Path -Path '${customFlowGeneratedScriptsPath}') {
       Move-Item '${customFlowGeneratedScriptsPath}' '${updateBackupsFolder}';
-    }
-    Remove-Item '${backendPath}' -Recurse -Force;
-    `;
+    }`;
   } else {
     command = `mkdir '${updateBackupsFolder}' &&
-    ([ -d '${scanResultsPath}' ] && mv '${scanResultsPath}' '${updateBackupsFolder}') |
-    ([ -d '${customFlowGeneratedScriptsPath}' ] && mv '${customFlowGeneratedScriptsPath}' '${updateBackupsFolder}') |
-    rm -rf '${backendPath}'`;
+    (mv '${scanResultsPath}' '${updateBackupsFolder}' || true) &&
+    (mv '${customFlowGeneratedScriptsPath}' '${updateBackupsFolder}' || true)`;
   }
 
   await execCommand(command);
 };
 
-const downloadBackend = async (downloadUrl) => {
+// only run during updates
+const cleanUpBackend = async () => {
   let command;
 
   if (os.platform() === "win32") {
-    command = `Invoke-WebRequest '${downloadUrl}' -OutFile PHLatest.zip;
+    command = `Remove-Item '${backendPath}' -Recurse -Force;`;
+  } else {
+    command = `rm -rf '${backendPath}'`;
+  }
+
+  await execCommand(command);
+};
+
+const downloadBackend = async () => {
+  const { data } = await axios.get(releaseUrl);
+  const downloadUrl = getDownloadUrlFromReleaseData(data);
+
+  let command;
+
+  if (os.platform() === "win32") {
+    command = `Invoke-WebRequest '${downloadUrl}' -OutFile '${phZipPath}';
     New-Item '${backendPath}' -ItemType directory;
     `;
   } else {
-    command = `curl '${downloadUrl}' -o PHLatest.zip -L &&
+    command = `curl '${downloadUrl}' -o '${phZipPath}' -L &&
     mkdir '${backendPath}'
     `;
   }
@@ -104,55 +117,80 @@ const unzipBackendAndCleanUp = async () => {
   let command;
 
   if (os.platform() === "win32") {
-    command = `tar -xf PHLatest.zip -C '${backendPath}';
-    Remove-Item PHLatest.zip;
+    command = `tar -xf '${phZipPath}' -C '${backendPath}';
+    Remove-Item '${phZipPath}';
     if (Test-Path -Path '${updateBackupsFolder}\\*') {
       Move-Item '${updateBackupsFolder}\\*' '${enginePath}';
       Remove-Item -Recurse -Force '${updateBackupsFolder}'
     }
     `;
   } else {
-    command = `tar -xf PHLatest.zip -C '${backendPath}' &&
-    rm PHLatest.zip &&
-    ([ -d '${updateBackupsFolder}' ] && mv '${updateBackupsFolder}'/* '${enginePath}' | rm -rf '${updateBackupsFolder}')
+    command = `tar -xf '${phZipPath}' -C '${backendPath}' &&
+    rm '${phZipPath}' &&
+    (mv '${updateBackupsFolder}'/* '${enginePath}' || true) &&
+    (rm -rf '${updateBackupsFolder} || true)'
     `;
   }
 
   await execCommand(command);
 };
 
-const setUpBackend = async () => {
-  const { data } = await axios.get(releaseUrl);
-  const downloadUrl = getDownloadUrlFromReleaseData(data);
-
-  await downloadBackend(downloadUrl);
-  await unzipBackendAndCleanUp();
-};
-
-const checkForBackendUpdates = async () => {
+const isLatestBackendVersion = async () => {
   const { data } = await axios.get(releaseUrl);
   const latestVersion = data.tag_name;
   const engineVersion = require(path.join(enginePath, "package.json")).version;
 
-  if (engineVersion === latestVersion) {
-    return { isLatestVersion: true };
-  }
-
-  return {
-    isLatestVersion: false,
-    latestDownloadUrl: getDownloadUrlFromReleaseData(data),
-  };
+  return engineVersion === latestVersion;
 };
 
-const updateBackend = async (downloadUrl) => {
-  await backUpAndCleanUpBackend();
-  await downloadBackend(downloadUrl);
-  await unzipBackendAndCleanUp();
+const run = async (updaterEventEmitter) => {
+  const processesToRun = [];
+
+  const isInterruptedUpdate = fs.existsSync(updateBackupsFolder);
+  const backendExists = fs.existsSync(backendPath);
+  const phZipExists = fs.existsSync(phZipPath);
+
+  if (isInterruptedUpdate) {
+    updaterEventEmitter.emit("updating");
+    if (!backendExists) {
+      processesToRun.push(downloadBackend, unzipBackendAndCleanUp);
+    } else if (phZipExists) {
+      processesToRun.push(unzipBackendAndCleanUp);
+    } else {
+      processesToRun.push(
+        cleanUpBackend,
+        downloadBackend,
+        unzipBackendAndCleanUp
+      );
+    }
+  } else {
+    if (!backendExists) {
+      updaterEventEmitter.emit("settingUp");
+      processesToRun.push(downloadBackend, unzipBackendAndCleanUp);
+    } else if (phZipExists) {
+      updaterEventEmitter.emit("settingUp");
+      processesToRun.push(unzipBackendAndCleanUp);
+    } else {
+      updaterEventEmitter.emit("checking");
+      const isUpdateAvailable = !(await isLatestBackendVersion());
+      if (isUpdateAvailable) {
+        updaterEventEmitter.emit("updating");
+        processesToRun.push(
+          backUpData,
+          cleanUpBackend,
+          downloadBackend,
+          unzipBackendAndCleanUp
+        );
+      }
+    }
+  }
+
+  for (const proc of processesToRun) {
+    await proc();
+  }
 };
 
 module.exports = {
-  setUpBackend,
-  checkForBackendUpdates,
-  updateBackend,
   killChildProcess,
+  run,
 };

@@ -37,6 +37,8 @@ const customFlowGeneratedScriptsPath = path.join(enginePath, "custom_flow_script
 
 const updateBackupsFolder = path.join(appDataPath, '30789f0f-73f5-43bc-93a6-e499e4a20f7a');
 
+const phZipPath = path.join(appDataPath, 'PHLatest.zip');
+
 module.exports = {
   appDataPath,
   releaseUrl,
@@ -48,5 +50,6 @@ module.exports = {
   nodePath,
   scanResultsPath,
   customFlowGeneratedScriptsPath,
-  updateBackupsFolder
+  updateBackupsFolder,
+  phZipPath
 };

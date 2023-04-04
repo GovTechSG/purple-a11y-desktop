@@ -4,7 +4,7 @@ const {
   ipcMain,
   BrowserView,
 } = require("electron");
-const fs = require("fs");
+const EventEmitter = require("events");
 const constants = require("./constants");
 const scanManager = require("./scanManager");
 const updateManager = require("./updateManager");
@@ -84,26 +84,21 @@ app.on("ready", async () => {
   await launchWindowReady;
   launchWindow.webContents.send("appStatus", "launch");
 
-  if (!fs.existsSync(constants.backendPath)) {
-    console.log("backend does not exist. downloading now...");
+  const updateEvent = new EventEmitter();
+ 
+  updateEvent.on('settingUp', () => {
     launchWindow.webContents.send("launchStatus", "settingUp");
-    await updateManager.setUpBackend();
-  } else {
-    console.log("checking backend version...");
+  })
+
+  updateEvent.on('checking', () => {
     launchWindow.webContents.send("launchStatus", "checkingUpdates");
-    await updateManager
-      .checkForBackendUpdates()
-      .then(async ({ isLatestVersion, latestDownloadUrl }) => {
-        if (!isLatestVersion) {
-          console.log("updating backend...");
-          launchWindow.webContents.send("launchStatus", "updatingApp");
-          await updateManager.updateBackend(latestDownloadUrl);
-        }
-      })
-      .catch((error) =>
-        console.log("Error occurred when checking for updates:", error)
-      );
-  }
+  })
+
+  updateEvent.on('updating', () => {
+    launchWindow.webContents.send("launchStatus", "updatingApp");
+  })
+
+  await updateManager.run(updateEvent);
 
   launchWindow.close();
 
