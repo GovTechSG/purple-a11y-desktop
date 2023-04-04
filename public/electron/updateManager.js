@@ -1,6 +1,7 @@
 const os = require("os");
 const path = require("path");
 const fs = require("fs");
+const https = require("https");
 const { exec } = require("child_process");
 const axios = require("axios");
 const {
@@ -44,6 +45,16 @@ const execCommand = async (command) => {
 
   await execution;
 };
+
+const axiosInstance = axios.create({
+  httpsAgent: new https.Agent({  
+    rejectUnauthorized: false,
+    headers: {
+      // 'X-Forwarded-For': 'xxx',
+      'User-Agent': 'axios'
+    }
+  })
+});
 
 const getDownloadUrlFromReleaseData = (data) => {
   const osToUrl = {};
@@ -95,8 +106,24 @@ const cleanUpBackend = async () => {
 };
 
 const downloadBackend = async () => {
-  const { data } = await axios.get(releaseUrl);
-  const downloadUrl = getDownloadUrlFromReleaseData(data);
+
+  let downloadUrl;
+
+  try {
+    const { data } = await axiosInstance.get(releaseUrl);
+    downloadUrl = getDownloadUrlFromReleaseData(data);
+
+  } catch (e) {
+    console.log("An error occured while trying to check for backend download URL\n", e.toString());
+    console.log("Attemping to download latest from GitHub directly");
+
+    if (os.platform() === "win32") {
+      downloadUrl = "https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-windows.zip";
+    } else {
+      downloadUrl = "https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-mac.zip";
+    }
+
+  }
 
   let command;
 
@@ -123,12 +150,16 @@ const unzipBackendAndCleanUp = async () => {
       Move-Item '${updateBackupsFolder}\\*' '${enginePath}';
       Remove-Item -Recurse -Force '${updateBackupsFolder}'
     }
+    cd '${backendPath}'
+    .\hats_shell.cmd Write-Output "Initialise"
     `;
   } else {
     command = `tar -xf '${phZipPath}' -C '${backendPath}' &&
     rm '${phZipPath}' &&
     (mv '${updateBackupsFolder}'/* '${enginePath}' || true) &&
     (rm -rf '${updateBackupsFolder}' || true)
+    cd '${backendPath}'
+    './hats_shell.sh' echo "Initialise"
     `;
   }
 
@@ -136,11 +167,26 @@ const unzipBackendAndCleanUp = async () => {
 };
 
 const isLatestBackendVersion = async () => {
-  const { data } = await axios.get(releaseUrl);
-  const latestVersion = data.tag_name;
-  const engineVersion = require(path.join(enginePath, "package.json")).version;
+  try {
+    const engineVersion = require(path.join(enginePath, "package.json")).version;
+      
+    const { data } = await axiosInstance.get(releaseUrl);
+    const latestVersion = data.tag_name;
 
-  return engineVersion === latestVersion;
+    console.log("Engine version installed: ", engineVersion);
+    console.log("Latest version found: ", latestVersion);
+
+    if (engineVersion === latestVersion) {
+      return { isLatestVersion: true };
+    }
+
+    return engineVersion === latestVersion;
+
+  } catch (e) {
+    console.log(`Unable to check latest version, skipping\n${e.toString()}`);
+    return true;
+  }
+
 };
 
 const run = async (updaterEventEmitter) => {
