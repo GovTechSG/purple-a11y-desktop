@@ -172,16 +172,23 @@ const run = async (updaterEventEmitter) => {
       processesToRun.push(unzipBackendAndCleanUp);
     } else {
       updaterEventEmitter.emit("checking");
-      const isUpdateAvailable = !(await isLatestBackendVersion());
-      if (isUpdateAvailable) {
-        updaterEventEmitter.emit("updating");
-        processesToRun.push(
-          backUpData,
-          cleanUpBackend,
-          downloadBackend,
-          unzipBackendAndCleanUp
-        );
-      }
+      try {
+        const isUpdateAvailable = !(await isLatestBackendVersion());
+        if (isUpdateAvailable) {
+          updaterEventEmitter.emit("updating");
+          processesToRun.push(
+            backUpData,
+            cleanUpBackend,
+            downloadBackend,
+            unzipBackendAndCleanUp
+          );
+        }
+      } catch (error) {
+        // goes into here when checking of latest backend version fails
+        // could be due to internet connectivity issues or github api issues
+        // if updates are in fact available, it will be skipped for now and the app will launch
+        silentLogger.error(`Could not get lastest version:\n${error}`);
+      }    
     }
   }
 
