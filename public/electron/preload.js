@@ -31,4 +31,7 @@ contextBridge.exposeInMainWorld("services", {
       callback(data);
     });
   },
+  proceedUpdate: (response) => {
+    ipcRenderer.send("proceedUpdate", response);
+  },
 });

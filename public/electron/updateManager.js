@@ -128,7 +128,7 @@ const unzipBackendAndCleanUp = async () => {
     command = `tar -xf '${phZipPath}' -C '${backendPath}' &&
     rm '${phZipPath}' &&
     (mv '${updateBackupsFolder}'/* '${enginePath}' || true) &&
-    (rm -rf '${updateBackupsFolder} || true)'
+    (rm -rf '${updateBackupsFolder}' || true)
     `;
   }
 
@@ -172,9 +172,25 @@ const run = async (updaterEventEmitter) => {
       processesToRun.push(unzipBackendAndCleanUp);
     } else {
       updaterEventEmitter.emit("checking");
+      let isUpdateAvailable;
       try {
-        const isUpdateAvailable = !(await isLatestBackendVersion());
-        if (isUpdateAvailable) {
+        isUpdateAvailable = !(await isLatestBackendVersion());
+      } catch (error) {
+        // goes into here when checking of latest backend version fails
+        // could be due to internet connectivity issues or github api issues
+        // if updates are in fact available, it will be skipped for now and the app will launch
+        silentLogger.error(`Could not get lastest version:\n${error}`);
+        isUpdateAvailable = false;
+      }
+
+      if (isUpdateAvailable) {
+        const userResponse = new Promise((resolve) => {
+          updaterEventEmitter.emit("promptUpdate", resolve);
+        });
+
+        const proceedUpdate = await userResponse;
+
+        if (proceedUpdate) {
           updaterEventEmitter.emit("updating");
           processesToRun.push(
             backUpData,
@@ -183,12 +199,7 @@ const run = async (updaterEventEmitter) => {
             unzipBackendAndCleanUp
           );
         }
-      } catch (error) {
-        // goes into here when checking of latest backend version fails
-        // could be due to internet connectivity issues or github api issues
-        // if updates are in fact available, it will be skipped for now and the app will launch
-        silentLogger.error(`Could not get lastest version:\n${error}`);
-      }    
+      }
     }
   }
 

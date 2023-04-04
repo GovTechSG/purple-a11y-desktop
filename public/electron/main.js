@@ -84,6 +84,7 @@ app.on("ready", async () => {
   await launchWindowReady;
   launchWindow.webContents.send("appStatus", "launch");
 
+  // this is used for listening to messages that updateManager sends
   const updateEvent = new EventEmitter();
  
   updateEvent.on('settingUp', () => {
@@ -92,6 +93,13 @@ app.on("ready", async () => {
 
   updateEvent.on('checking', () => {
     launchWindow.webContents.send("launchStatus", "checkingUpdates");
+  })
+
+  updateEvent.on('promptUpdate', (userResponse) => {
+    launchWindow.webContents.send("launchStatus", "promptUpdate");
+    ipcMain.once("proceedUpdate", (_event, response) => {
+      userResponse(response);
+    })
   })
 
   updateEvent.on('updating', () => {

@@ -5,15 +5,19 @@ import { useEffect, useState } from "react";
 
 const LaunchWindow = () => {
   const [launchStatus, setLaunchStatus] = useState(null);
+  const [promptUpdate, setPromptUpdate] = useState(false);
 
   useEffect(() => {
     window.services.launchStatus((s) => {
-      setLaunchStatus(s);
+      if (s === "promptUpdate") {
+        setPromptUpdate(true);
+      } else {
+        setLaunchStatus(s);
+      }
     });
   }, []);
 
   useEffect(() => {
-   
     window.addEventListener("offline", () => {
       const lastKnownStatus = launchStatus;
       setLaunchStatus("offline");
@@ -48,8 +52,22 @@ const LaunchWindow = () => {
     return null;
   }
 
+  const handlePromptUpdateResponse = (response) => () => {
+    window.services.proceedUpdate(response);
+    setPromptUpdate(false);
+  };
+
   const { main: displayedMessage, sub: displayedSub } = messages[launchStatus];
 
+  if (promptUpdate) {
+    return (
+      <div>
+        <p>New update available. Proceed?</p>
+        <button onClick={handlePromptUpdateResponse(true)}>Yes</button>
+        <button onClick={handlePromptUpdateResponse(false)}>No</button>
+      </div>
+    );
+  }
   return (
     <Box
       sx={{
