@@ -23,7 +23,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "package": "electron-forge package",
-    "make": "react-scripts build && electron-forge make"
+    "make": "react-scripts build && electron-forge make",
+    "make-mac": "react-scripts build && electron-forge make --arch=universal --platform darwin",
+    "make-win": "react-scripts build && electron-forge make --arch=x64 --platform win32"
   },
   "config": {
     "forge": "forge.config.js"
