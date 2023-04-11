@@ -1,0 +1,65 @@
+name: Push desktop app 
+
+on: 
+  workflow_dispatch:
+  release:
+    types: [published, created, edited]
+
+jobs:
+  windows-install-purple:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          path: purple-hats-desktop
+          
+      - name: Download node.js version from nodejs.org
+        run: |
+          curl -o ./nodejs-win.zip --create-dirs https://nodejs.org/dist/v18.15.0/node-v18.15.0-win-x64.zip     
+          mkdir nodejs-win && tar -xzf nodejs-win.zip -C nodejs-win --strip-components=1 && rm ./nodejs-win.zip
+
+      - name: Install Node Modules for Windows
+        run: |
+          $env:Path = "${{github.workspace}}\nodejs-win;${{github.workspace}}\purple-hats-desktop\node_modules\.bin;$env:Path;";
+          npm run make-win
+          
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: purple-hats-desktop-windows
+          path: ./purple-hats-desktop-windows.zip
+            
+  mac-install-purple:
+    runs-on: macos-latest  
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          path: purple-hats-desktop
+    
+      - name: Download node.js version from nodejs.org
+        run: |         
+          curl -o ./nodejs-mac-arm64.tar.gz --create-dirs https://nodejs.org/dist/v18.15.0/node-v18.15.0-darwin-arm64.tar.gz      
+          mkdir nodejs-mac-arm64 && tar -xzf nodejs-mac-arm64.tar.gz -C nodejs-mac-arm64 --strip-components=1 && rm ./nodejs-mac-arm64.tar.gz
+          curl -o ./nodejs-mac-x64.tar.gz --create-dirs https://nodejs.org/dist/v18.15.0/node-v18.15.0-darwin-x64.tar.gz    
+          mkdir nodejs-mac-x64 && tar -xzf nodejs-mac-x64.tar.gz -C nodejs-mac-x64 --strip-components=1 && rm ./nodejs-mac-x64.tar.gz
+
+      - name: Install Node Modules for Mac0S
+        run: |
+          if [[ $(uname -m) == 'arm64' ]]; then
+            export PATH_TO_NODE="${{github.workspace}}/nodejs-mac-arm64/bin"
+          else
+            export PATH_TO_NODE="${{github.workspace}}/nodejs-mac-x64/bin"
+          fi
+          export PATH="$PATH_TO_NODE:$PATH"
+          export PATH="$PWD/purple-hats-desktop/node_modules/.bin:$PATH"
+          npm run make-mac
+        
+      - name: Upload Mac artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: purple-hats-desktop-mac
+          path: ./purple-hats-desktop-mac.zip
