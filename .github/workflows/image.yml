@@ -15,17 +15,17 @@ jobs:
         with:
           path: purple-hats-desktop
           
-    - name: Download node.js version from nodejs.org
+      - name: Download node.js version from nodejs.org
         run: |
           curl -o ./nodejs-win.zip --create-dirs https://nodejs.org/dist/v18.15.0/node-v18.15.0-win-x64.zip     
           mkdir nodejs-win && tar -xzf nodejs-win.zip -C nodejs-win --strip-components=1 && rm ./nodejs-win.zip
 
-    - name: Install Node Modules for Windows
+      - name: Install Node Modules for Windows
         run: |
           $env:Path = "${{github.workspace}}\nodejs-win;${{github.workspace}}\purple-hats-desktop\node_modules\.bin;$env:Path;";
           npm run make-win
           
-     - name: Upload Windows artifact
+      - name: Upload Windows artifact
         uses: actions/upload-artifact@v3
         with:
           name: purple-hats-desktop-windows
