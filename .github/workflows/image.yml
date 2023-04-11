@@ -19,17 +19,20 @@ jobs:
         run: |
           curl -o ./nodejs-win.zip --create-dirs https://nodejs.org/dist/v18.15.0/node-v18.15.0-win-x64.zip     
           mkdir nodejs-win && tar -xzf nodejs-win.zip -C nodejs-win --strip-components=1 && rm ./nodejs-win.zip
-
-      - name: Install Node Modules for Windows
+        working-directory: ${{github.workspace}}
+        
+      - name: Install Node Modules and Build for Windows
         run: |
           $env:Path = "${{github.workspace}}\nodejs-win;${{github.workspace}}\purple-hats-desktop\node_modules\.bin;$env:Path;";
+          npm install
           npm run make-win
-          
+        working-directory: ${{github.workspace}}/purple-hats-desktop
+        
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v3
         with:
-          name: purple-hats-desktop-windows
-          path: ./purple-hats-desktop-windows.zip
+          name: purple-hats-desktop
+          path: ./purple-hats-desktop
             
   mac-install-purple:
     runs-on: macos-latest  
@@ -46,8 +49,9 @@ jobs:
           mkdir nodejs-mac-arm64 && tar -xzf nodejs-mac-arm64.tar.gz -C nodejs-mac-arm64 --strip-components=1 && rm ./nodejs-mac-arm64.tar.gz
           curl -o ./nodejs-mac-x64.tar.gz --create-dirs https://nodejs.org/dist/v18.15.0/node-v18.15.0-darwin-x64.tar.gz    
           mkdir nodejs-mac-x64 && tar -xzf nodejs-mac-x64.tar.gz -C nodejs-mac-x64 --strip-components=1 && rm ./nodejs-mac-x64.tar.gz
-
-      - name: Install Node Modules for Mac0S
+        working-directory: ${{github.workspace}}
+        
+      - name: Install Node Modules and Build for Mac0S
         run: |
           if [[ $(uname -m) == 'arm64' ]]; then
             export PATH_TO_NODE="${{github.workspace}}/nodejs-mac-arm64/bin"
@@ -56,10 +60,12 @@ jobs:
           fi
           export PATH="$PATH_TO_NODE:$PATH"
           export PATH="$PWD/purple-hats-desktop/node_modules/.bin:$PATH"
+          npm install
           npm run make-mac
+        working-directory: ${{github.workspace}}/purple-hats-desktop
         
       - name: Upload Mac artifact
         uses: actions/upload-artifact@v3
         with:
           name: purple-hats-desktop-mac
-          path: ./purple-hats-desktop-mac.zip
+          path: ./purple-hats-desktop
