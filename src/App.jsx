@@ -1,31 +1,27 @@
 import React, { useEffect, useState } from "react";
-import "./styles/App.css";
-import AppRoutes from "./constants/AppRoutes";
-import LaunchWindow from "./views/components/LaunchWindow";
+import MainWindow from "./MainWindow";
+import LaunchWindow from "./LaunchWindow";
+import "./App.css";
 
 function App() {
   const [status, setStatus] = useState(null);
 
   useEffect(() => {
-    window.services.guiReady()
+    window.services.guiReady();
   }, []);
 
   useEffect(() => {
     window.services.appStatus((s) => {
-      setStatus(s)
+      setStatus(s);
     });
-  })
+  });
 
   if (status === "launch") {
-    return <LaunchWindow />
+    return <LaunchWindow />;
   }
 
   if (status === "ready") {
-    return (
-      <div className="App">
-        <AppRoutes />
-      </div>
-    );
+    return <MainWindow />;
   }
 
   return null;

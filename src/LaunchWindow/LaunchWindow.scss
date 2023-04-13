@@ -1,0 +1,26 @@
+#launch-window {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+
+  h1 {
+    font-size: 1.75rem;
+    font-family: "Viga", "Helvetica", sans-serif;
+  }
+
+  button {
+    width: 9rem;
+  }
+
+  .loading-spinner {
+    margin-bottom: 1.75rem;
+  }
+
+  #proceed-button {
+    margin-left: 0.75rem;
+  }
+}

@@ -2,7 +2,11 @@ const path = require("path");
 const { fork } = require("child_process");
 const fs = require("fs");
 const { randomUUID } = require("crypto");
-const { enginePath, nodePath, playwrightBrowsersPath } = require("./constants");
+const {
+  enginePath,
+  getNodeBinariesPath,
+  playwrightBrowsersPath,
+} = require("./constants");
 
 const scanHistory = {};
 
@@ -51,7 +55,7 @@ const startScan = async (scanDetails) => {
         cwd: enginePath,
         env: {
           PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
-          PATH: `${process.env.PATH}:${nodePath}`,
+          PATH: `${process.env.PATH}:${getNodeBinariesPath()}`,
         },
       }
     );

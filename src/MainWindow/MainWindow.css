@@ -1,0 +1,26 @@
+#connection-notification {
+  background-color: #d7260f;
+  width: 100vw;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  position: fixed;
+  top: 0rem;
+  z-index: 1;
+  animation: 0.5s slideIn;
+  transition: background-color 0.3s linear, top 0.5s linear 3.3s;
+}
+
+.reconnected {
+  background-color: #039855 !important;
+  top: -1.75rem !important;
+}
+
+@keyframes slideIn {
+  from {
+    top: -1.75rem;
+  }
+  to {
+    top: 0rem;
+  }
+}

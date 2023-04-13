@@ -1,6 +1,9 @@
 module.exports = {
   packagerConfig: {
     icon: 'public/purple-hats-logo',
+    osxUniversal: { // config options for `@electron/universal`
+      x64ArchFiles: "*" // replace with any relevant glob pattern
+    },
     ignore: [
       '/build/electron',
       '/build/purple-hats-logo'

@@ -51,7 +51,9 @@ function createReportWindow(reportPath) {
 }
 
 function openFormView(url) {
-  const view = new BrowserView();
+  const view = new BrowserView({
+    webPreferences: { preload: constants.userDataFormPreloadPath },
+  });
   mainWindow.setBrowserView(view);
   view.setBounds({
     x: 0.5 * mainWindow.getBounds().width,
@@ -86,25 +88,25 @@ app.on("ready", async () => {
 
   // this is used for listening to messages that updateManager sends
   const updateEvent = new EventEmitter();
- 
-  updateEvent.on('settingUp', () => {
+
+  updateEvent.on("settingUp", () => {
     launchWindow.webContents.send("launchStatus", "settingUp");
-  })
+  });
 
-  updateEvent.on('checking', () => {
+  updateEvent.on("checking", () => {
     launchWindow.webContents.send("launchStatus", "checkingUpdates");
-  })
+  });
 
-  updateEvent.on('promptUpdate', (userResponse) => {
+  updateEvent.on("promptUpdate", (userResponse) => {
     launchWindow.webContents.send("launchStatus", "promptUpdate");
     ipcMain.once("proceedUpdate", (_event, response) => {
       userResponse(response);
-    })
-  })
+    });
+  });
 
-  updateEvent.on('updating', () => {
+  updateEvent.on("updating", () => {
     launchWindow.webContents.send("launchStatus", "updatingApp");
-  })
+  });
 
   await updateManager.run(updateEvent);
 
@@ -139,7 +141,11 @@ ipcMain.on("openUserDataForm", (_event, url) => {
   openFormView(url);
 });
 
-ipcMain.on("closeUserDataForm", (_event) => {
+ipcMain.on("userDataFormSubmitted", () => {
+  mainWindow.webContents.send("enableReportDownload");
+});
+
+ipcMain.on("closeUserDataForm", () => {
   closeFormView();
 });
 

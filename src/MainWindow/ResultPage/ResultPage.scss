@@ -1,0 +1,76 @@
+#result-page {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: 100%;
+
+  #main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15vh;
+    width: 50%;
+  }
+
+  #main-contents {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 2rem;
+  }
+
+  #form-container {
+    background-color: #d9d9d9;
+    /* height: 100%; */
+    /* width: 100%; */
+    width: 50%;
+  }
+
+  .bi-check-circle {
+    font-size: 3rem;
+    color: #039855;
+  }
+
+  h1 {
+    font-family: "Viga";
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 2.5rem;
+  }
+
+  #view-button {
+    width: 100%;
+  }
+
+  #download-button {
+    margin-top: 1rem;
+    display: block;
+  }
+
+  .bi-box-arrow-up-right {
+    -webkit-text-stroke: 1px;
+    margin-right: 0.5rem;
+  }
+
+  .bi-download {
+    margin-right: 0.5rem;
+  }
+
+  hr {
+    border: 1px solid #b5c5ca;
+    width: 115%;
+    margin: 1.5rem 0;
+  }
+
+  a {
+    text-underline-offset: 0.5rem;
+  }
+
+  a:before {
+    content: "\F116   ";
+    font-family: bootstrap-icons;
+    position: relative;
+    top: 2.5px;
+  }
+}

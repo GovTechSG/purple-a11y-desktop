@@ -34,4 +34,7 @@ contextBridge.exposeInMainWorld("services", {
   proceedUpdate: (response) => {
     ipcRenderer.send("proceedUpdate", response);
   },
+  enableReportDownload: (callback) => {
+    ipcRenderer.on("enableReportDownload", () => callback());
+  },
 });
