@@ -2,8 +2,8 @@ name: Push desktop app
 
 on: 
   workflow_dispatch:
-  release:
-    types: [published, created, edited]
+  #release:
+  #  types: [published, created, edited]
 
 jobs:
   windows-install-purple:
