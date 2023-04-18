@@ -18,7 +18,7 @@ const backendPath = path.join(appDataPath, "backend");
 
 const enginePath = path.join(backendPath, "purple-hats");
 
-const engineVersion = require(path.join(enginePath, "package.json")).version;
+const getEngineVersion = () => require(path.join(enginePath, "package.json")).version;
 
 const appVersion = require(path.join(__dirname, "..", "..", "package.json")).version;
 
@@ -60,7 +60,7 @@ module.exports = {
   releaseUrl,
   backendPath,
   enginePath,
-  engineVersion,
+  getEngineVersion,
   appVersion,
   preloadPath,
   userDataFormPreloadPath,

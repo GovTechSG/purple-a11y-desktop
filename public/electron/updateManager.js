@@ -6,7 +6,7 @@ const axios = require("axios");
 const {
   releaseUrl,
   enginePath,
-  engineVersion,
+  getEngineVersion,
   appDataPath,
   backendPath,
   updateBackupsFolder,
@@ -151,6 +151,7 @@ const isLatestBackendVersion = async () => {
   try {
     const { data } = await axiosInstance.get(releaseUrl);
     const latestVersion = data.tag_name;
+    const engineVersion = getEngineVersion();
 
     console.log("Engine version installed: ", engineVersion);
     console.log("Latest version found: ", latestVersion);
