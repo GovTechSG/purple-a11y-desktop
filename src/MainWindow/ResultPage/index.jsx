@@ -10,6 +10,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
   useEffect(() => {
     services.openUserDataForm();
     window.services.enableReportDownload(() => setEnableReportDownload(true));
+    return () => services.closeUserDataForm();
   }, []);
 
   const handleDownloadReport = async () => {
@@ -57,9 +58,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
             </>
           )}
           <hr />
-          <Link to="/" onClick={services.closeUserDataForm}>
-            Scan again
-          </Link>
+          <Link to="/">Scan again</Link>
         </div>
       </div>
       <div id="form-container" />

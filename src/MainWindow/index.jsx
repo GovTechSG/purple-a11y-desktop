@@ -7,7 +7,7 @@ import ResultPage from "./ResultPage";
 import ConnectionNotification from "./ConnectionNotification";
 import "./MainWindow.css";
 
-const MainWindow = () => {
+const MainWindow = ({ appVersion }) => {
   const [completedScanId, setCompletedScanId] = useState(null);
 
   return (
@@ -17,7 +17,12 @@ const MainWindow = () => {
         <Routes>
           <Route
             path="/"
-            element={<HomePage setCompletedScanId={setCompletedScanId} />}
+            element={
+              <HomePage
+                appVersion={appVersion}
+                setCompletedScanId={setCompletedScanId}
+              />
+            }
           />
           <Route path="/scanning" element={<ScanningPage />} />
           <Route

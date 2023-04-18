@@ -121,6 +121,7 @@ app.on("ready", async () => {
   createMainWindow();
   await mainReady;
   mainWindow.webContents.send("appStatus", "ready");
+  mainWindow.webContents.send("versionNumber", constants.appVersion);
 });
 
 ipcMain.handle("startScan", async (_event, scanDetails) => {
@@ -138,7 +139,12 @@ ipcMain.handle("downloadReport", (_event, scanId) => {
 });
 
 ipcMain.on("openUserDataForm", (_event, url) => {
-  openFormView(url);
+  try {
+    openFormView(url);
+  } catch (error) {
+    console.log("Could not open the post scan form:\n", error);
+    mainWindow.webContents.send("enableReportDownload");
+  }
 });
 
 ipcMain.on("userDataFormSubmitted", () => {

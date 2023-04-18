@@ -66,7 +66,7 @@ const startScan = async (scanDetails) => {
     // })
 
     scan.on("exit", (code) => {
-      const stdout = scan.stdout.read().toString();
+      const stdout = scan.stdout.read().toString().trim();
       if (code === 0) {
         const resultsPath = stdout
           .split("Results directory is at ")[1]
@@ -80,7 +80,7 @@ const startScan = async (scanDetails) => {
           message: "An error has occurred when running the custom flow scan.",
         });
       } else {
-        resolve({ success: false, message: stdout });
+        resolve({ success: false, statusCode: code, message: stdout });
       }
       currentChildProcess = null;
     });

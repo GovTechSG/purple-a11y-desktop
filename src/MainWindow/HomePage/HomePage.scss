@@ -2,7 +2,7 @@
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  min-height: 100vh;
 
   #a11y-logo {
     margin-top: 1.5rem;
@@ -14,17 +14,8 @@
     color: #785ef0;
   }
 
-  #app-illustration {
-    width: 50vw;
-    margin-bottom: 10vh;
-  }
-
-  #homepage-bottom-cluster {
-    position: absolute;
-    bottom: 0px;
-  }
-
-  #homepage-bottom-cluster p {
+  #home-page-main {
+    flex-grow: 1;
     text-align: center;
   }
 
@@ -45,6 +36,7 @@
     background-color: white;
     height: 46px;
     width: 600px;
+    max-width: 95vw;
     display: flex;
     padding: 2px 2px 2px 24px;
     align-items: center;
@@ -72,12 +64,40 @@
   }
 
   #page-limit-adjuster {
-    display: block;
+    display: flex;
+    align-items: center;
     position: absolute;
+    background-color: white;
+    padding: 0.5rem;
+    border: 1px solid #b5c5ca;
+    border-radius: 0.25rem;
+    animation: 0.2s fade-in;
+    z-index: 10;
+    box-shadow: 0.25rem 0.25rem 0.5rem #b5c5ca;
+
+    // TODO find a better way to do the positioning
+    margin-top: 0.75rem;
+    margin-left: 4rem;
   }
 
-  #advanced-options-group {
-    width: 331px;
+  #page-limit-input {
+    width: 4rem;
+    margin-right: 0.5rem;
+    padding-right: 0.5rem;
+    text-align: end;
+    border: 1px solid #b5c5ca;
+    border-radius: 0.25rem;
+  }
+
+  #page-limit-input::-webkit-textfield-decoration-container {
+    flex-direction: row-reverse;
+  }
+
+  #url-error-message {
+    text-align: left;
+    margin-left: 1.5rem;
+    width: 100%;
+    display: block;
   }
 
   #advanced-options-toggle-button {
@@ -97,10 +117,15 @@
     background-color: #f6f8f9;
     border: 1px solid #b5c5ca;
     border-radius: 0.5rem;
+    width: 332px;
+    max-width: 90vw;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
     margin-top: 1rem;
-    position: relative;
     z-index: 10;
-    animation: fade-in 0.2s ease;
+    animation: 0.2s fade-in;
   }
 
   #scan-type-dropdown,
@@ -125,7 +150,6 @@
     background-size: contain;
     border: 1px solid #b5c5ca;
     height: 1.5rem;
-    /* margin-top: 0.4375em; */
     margin-right: 0.5rem;
     vertical-align: top;
     width: 1.5rem;
@@ -144,6 +168,7 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1rem;
+    white-space: nowrap;
   }
 
   .input-field,
@@ -169,7 +194,36 @@
     padding: 0.25rem 1.5rem 0.25rem 0.5rem;
   }
 
+  #home-page-footer {
+    text-align: center;
+  }
+
+  #app-illustration {
+    display: block;
+    margin: auto;
+    margin-bottom: 5vh;
+    max-width: 95vw;
+  }
+
   #footer-text {
     font-size: 0.875rem;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
   }
 }

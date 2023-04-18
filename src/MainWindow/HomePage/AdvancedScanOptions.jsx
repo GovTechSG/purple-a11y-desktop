@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Button from "../../common/components/Button";
 import SelectField from "./SelectField";
 
@@ -11,6 +11,16 @@ const AdvancedScanOptions = ({
 }) => {
   const [openAdvancedOptionsMenu, setOpenAdvancedOptionsMenu] = useState(false);
   const [advancedOptionsDirty, setAdvancedOptionsDirty] = useState(false);
+  const menu = useRef();
+
+  const handleToggleMenu = () => {
+    if (!openAdvancedOptionsMenu) {
+      setOpenAdvancedOptionsMenu(true);
+    } else {
+      menu.current.style.animationName = "fade-out";
+      setTimeout(() => setOpenAdvancedOptionsMenu(false), 200);
+    }
+  };
 
   /*
   by default, new value of the selected option will be set to event.target.value
@@ -31,18 +41,23 @@ const AdvancedScanOptions = ({
       newOptions[option] = val;
       setAdvancedOptions(newOptions);
 
-      if (!advancedOptionsDirty) {
+      if (
+        newOptions.scanType === scanTypeOptions[0] &&
+        newOptions.viewport === viewportOptions[0]
+      ) {
+        setAdvancedOptionsDirty(false);
+      } else {
         setAdvancedOptionsDirty(true);
       }
     };
 
   return (
-    <div id="advanced-options-group">
+    <div>
       <div id="advanced-options-toggle-button">
         <Button
           type="transparent"
           className={"purple-text" + (advancedOptionsDirty ? " bold-text" : "")}
-          onClick={() => setOpenAdvancedOptionsMenu(!openAdvancedOptionsMenu)}
+          onClick={handleToggleMenu}
         >
           Advanced scan options{" "}
           {openAdvancedOptionsMenu ? (
@@ -53,7 +68,7 @@ const AdvancedScanOptions = ({
         </Button>
       </div>
       {openAdvancedOptionsMenu && (
-        <div id="advanced-options-menu">
+        <div id="advanced-options-menu" ref={menu}>
           <SelectField
             id="scan-type-dropdown"
             label="Scan Type:"
@@ -86,13 +101,17 @@ const AdvancedScanOptions = ({
                 type="number"
                 id="viewport-width-input"
                 className="input-field"
-                step="50"
-                min="1"
+                step="10"
+                min="320"
+                max="1080"
                 required
                 onChange={handleSetAdvancedOption("viewportWidth")}
                 onBlur={handleSetAdvancedOption("viewportWidth", (e) => {
-                  if (Number(e.target.value) <= 0) {
-                    return 1;
+                  if (Number(e.target.value) < 320) {
+                    return 320;
+                  }
+                  if (Number(e.target.value) > 1080) {
+                    return 1080;
                   }
                   return e.target.value;
                 })}

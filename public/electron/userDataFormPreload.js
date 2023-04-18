@@ -5,6 +5,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const elements = Array.from(document.getElementsByTagName("p"));
     elements.forEach((e) => {
       if (e.innerText.startsWith("Response ID: ")) {
+        document.getElementsByTagName("label")[0].innerHTML =
+          "How was your experience with Purple HATS?";
         ipcRenderer.send("userDataFormSubmitted");
         observer.disconnect();
       }

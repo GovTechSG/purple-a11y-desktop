@@ -49,13 +49,13 @@ export const devices = {
   "LG Optimus L70": "LG Optimus L70",
   "Microsoft Lumia 550": "Microsoft Lumia 550",
   "Microsoft Lumia 950": "Microsoft Lumia 950",
-  "Google Nexus 10": "Nexus 10",
   "Google Nexus 4": "Nexus 4",
   "Google Nexus 5": "Nexus 5",
   "Google Nexus 5X": "Nexus 5X",
   "Google Nexus 6": "Nexus 6",
   "Google Nexus 6P": "Nexus 6P",
   "Google Nexus 7": "Nexus 7",
+  "Google Nexus 10": "Nexus 10",
   "Nokia Lumia 520": "Nokia Lumia 520",
   "Nokia N9": "Nokia N9",
   "Google Pixel 2": "Pixel 2",
@@ -67,6 +67,15 @@ export const devices = {
   "Motorola Moto G4": "Moto G4"
 }
 
+// exit codes returned by Purple HATS cli when there is an error with the URL provided
+export const urlErrorCodes = new Set([11, 12, 13, 14, 15]);
+export const urlErrorTypes = {
+  invalidUrl: 11,
+  cannotBeResolved: 12,
+  errorStatusReceived: 13,
+  systemError: 14,
+  notASitemap: 15,
+}
 
 export const userDataFormDetails = {
   // production form

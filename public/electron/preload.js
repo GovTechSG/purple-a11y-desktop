@@ -1,6 +1,11 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("services", {
+  getVersionNumber: (callback) => {
+    ipcRenderer.on("versionNumber", (event, data) => {
+      callback(data)
+    })
+  },
   startScan: async (scanDetails) => {
     const results = await ipcRenderer.invoke("startScan", scanDetails);
     return results;

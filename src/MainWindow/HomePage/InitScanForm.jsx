@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Button from "../../common/components/Button";
 import AdvancedScanOptions from "./AdvancedScanOptions";
 import { scanTypes, viewportTypes, devices } from "../../common/constants";
 
-const InitScanForm = ({ startScan }) => {
+const InitScanForm = ({ startScan, prevUrlErrorMessage }) => {
   const [openPageLimitAdjuster, setOpenPageLimitAdjuster] = useState(false);
+  const pageLimitAdjuster = useRef();
 
   const [scanUrl, setScanUrl] = useState("https://");
   const [pageLimit, setPageLimit] = useState("100");
@@ -17,12 +18,21 @@ const InitScanForm = ({ startScan }) => {
     scanType: scanTypeOptions[0],
     viewport: viewportOptions[0],
     device: deviceOptions[0],
-    viewportWidth: "1",
+    viewportWidth: "320",
     scanInBackground: false,
   });
 
+  const togglePageLimitAdjuster = () => {
+    if (!openPageLimitAdjuster) {
+      setOpenPageLimitAdjuster(true);
+    } else {
+      pageLimitAdjuster.current.style.animationName = "fade-out";
+      setTimeout(() => setOpenPageLimitAdjuster(false), 200);
+    }
+  };
+
   const handleScanButtonClicked = () => {
-    startScan({ scanUrl, pageLimit, ...advancedOptions });
+    startScan({ scanUrl: scanUrl.trim(), pageLimit, ...advancedOptions });
   };
 
   // styles are in HomePage.scss
@@ -31,40 +41,60 @@ const InitScanForm = ({ startScan }) => {
       <label htmlFor="url-input" id="url-bar-label">
         Enter your URL to get started
       </label>
-      <div id="url-bar">
-        <input
-          id="url-input"
-          type="text"
-          value={scanUrl}
-          onChange={(e) => setScanUrl(e.target.value)}
-        />
-        {advancedOptions.scanType !== scanTypeOptions[2] && (
-          <div>
-            <Button
-              type="transparent"
-              id="page-limit-toggle-button"
-              onClick={() => setOpenPageLimitAdjuster(!openPageLimitAdjuster)}
-            >
-              capped at{" "}
-              <span className="purple-text">
-                {pageLimit} pages <i className="bi bi-chevron-down" />
-              </span>
-            </Button>
-            {openPageLimitAdjuster && (
-              <input
-                type="number"
-                id="page-limit-adjuster"
-                step="10"
-                min="0"
-                value={pageLimit}
-                onChange={(e) => setPageLimit(e.target.value)}
-              />
-            )}
-          </div>
+      <div id="url-bar-group">
+        <div id="url-bar">
+          <input
+            id="url-input"
+            type="text"
+            value={scanUrl}
+            onChange={(e) => setScanUrl(e.target.value)}
+          />
+          {advancedOptions.scanType !== scanTypeOptions[2] && (
+            <div>
+              <Button
+                type="transparent"
+                id="page-limit-toggle-button"
+                onClick={togglePageLimitAdjuster}
+              >
+                capped at{" "}
+                <span className="purple-text">
+                  {pageLimit} pages{" "}
+                  {openPageLimitAdjuster ? (
+                    <i className="bi bi-chevron-up" />
+                  ) : (
+                    <i className="bi bi-chevron-down" />
+                  )}
+                </span>
+              </Button>
+              {openPageLimitAdjuster && (
+                <div id="page-limit-adjuster" ref={pageLimitAdjuster}>
+                  <input
+                    type="number"
+                    id="page-limit-input"
+                    step="10"
+                    min="1"
+                    value={pageLimit}
+                    onChange={(e) => setPageLimit(e.target.value)}
+                    onBlur={(e) => {
+                      if (Number(e.target.value) <= 0) {
+                        setPageLimit(1);
+                      }
+                    }}
+                  />
+                  <label htmlFor="page-limit-input">pages</label>
+                </div>
+              )}
+            </div>
+          )}
+          <Button type="primary" onClick={handleScanButtonClicked}>
+            Scan
+          </Button>
+        </div>
+        {prevUrlErrorMessage && (
+          <span id="url-error-message" className="error-text">
+            {prevUrlErrorMessage}
+          </span>
         )}
-        <Button type="primary" onClick={handleScanButtonClicked}>
-          Scan
-        </Button>
       </div>
       <AdvancedScanOptions
         scanTypeOptions={scanTypeOptions}

@@ -1,5 +1,4 @@
 const os = require("os");
-const path = require("path");
 const fs = require("fs");
 const https = require("https");
 const { exec } = require("child_process");
@@ -7,6 +6,7 @@ const axios = require("axios");
 const {
   releaseUrl,
   enginePath,
+  engineVersion,
   appDataPath,
   backendPath,
   updateBackupsFolder,
@@ -149,11 +149,6 @@ const unzipBackendAndCleanUp = async () => {
 
 const isLatestBackendVersion = async () => {
   try {
-    const engineVersion = require(path.join(
-      enginePath,
-      "package.json"
-    )).version;
-
     const { data } = await axiosInstance.get(releaseUrl);
     const latestVersion = data.tag_name;
 
