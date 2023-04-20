@@ -2,12 +2,12 @@ const {
   app: electronApp,
   BrowserWindow,
   ipcMain,
-  BrowserView,
 } = require("electron");
 const EventEmitter = require("events");
 const constants = require("./constants");
 const scanManager = require("./scanManager");
 const updateManager = require("./updateManager");
+const userDataFormManager = require("./userDataFormManager");
 
 const app = electronApp;
 
@@ -48,30 +48,6 @@ function createReportWindow(reportPath) {
   });
   reportWindow.loadFile(reportPath);
   reportWindow.on("close", () => reportWindow.destroy());
-}
-
-function openFormView(url) {
-  const view = new BrowserView({
-    webPreferences: { preload: constants.userDataFormPreloadPath },
-  });
-  mainWindow.setBrowserView(view);
-  view.setBounds({
-    x: 0.5 * mainWindow.getBounds().width,
-    y: 0,
-    width: 0.5 * mainWindow.getBounds().width,
-    height: mainWindow.getBounds().height,
-  });
-  view.setAutoResize({
-    width: true,
-    height: true,
-    horizontal: true,
-    vertical: true,
-  });
-  view.webContents.loadURL(url);
-}
-
-function closeFormView() {
-  mainWindow.setBrowserView(null);
 }
 
 // TODO set ipcMain messages
@@ -119,6 +95,7 @@ app.on("ready", async () => {
   });
 
   createMainWindow();
+  userDataFormManager.init(mainWindow);
   await mainReady;
   mainWindow.webContents.send("appStatus", "ready");
   mainWindow.webContents.send("versionNumber", constants.appVersion);
@@ -136,23 +113,6 @@ ipcMain.on("openReport", (_event, scanId) => {
 
 ipcMain.handle("downloadReport", (_event, scanId) => {
   return scanManager.getReportHtml(scanId);
-});
-
-ipcMain.on("openUserDataForm", (_event, url) => {
-  try {
-    openFormView(url);
-  } catch (error) {
-    console.log("Could not open the post scan form:\n", error);
-    mainWindow.webContents.send("enableReportDownload");
-  }
-});
-
-ipcMain.on("userDataFormSubmitted", () => {
-  mainWindow.webContents.send("enableReportDownload");
-});
-
-ipcMain.on("closeUserDataForm", () => {
-  closeFormView();
 });
 
 app.on("quit", () => {

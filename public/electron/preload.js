@@ -3,8 +3,8 @@ const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("services", {
   getVersionNumber: (callback) => {
     ipcRenderer.on("versionNumber", (event, data) => {
-      callback(data)
-    })
+      callback(data);
+    });
   },
   startScan: async (scanDetails) => {
     const results = await ipcRenderer.invoke("startScan", scanDetails);
@@ -41,5 +41,11 @@ contextBridge.exposeInMainWorld("services", {
   },
   enableReportDownload: (callback) => {
     ipcRenderer.on("enableReportDownload", () => callback());
+  },
+  handleRetryOpenForm: (callback) => {
+    ipcRenderer.on("retryOpenForm", () => callback());
+  },
+  handleFormOpenFailure: (callback) => {
+    ipcRenderer.on("formOpenFailure", () => callback());
   },
 });

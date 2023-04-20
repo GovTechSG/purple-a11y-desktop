@@ -62,14 +62,16 @@ const downloadReport = async (scanId) => {
   return reportHtml;
 };
 
-const openUserDataForm = () => {
+const getUserDataFormUrl = () => {
   const { formUrl, urlScannedField, scanTypeField } = userDataFormDetails;
   const encodedUrl = encodeURIComponent(currentScanUrl);
   const encodedScanType = encodeURIComponent(currentScanType);
-  
-  window.services.openUserDataForm(
-    `${formUrl}/?${urlScannedField}=${encodedUrl}&${scanTypeField}=${encodedScanType}`
-  );
+
+  return `${formUrl}/?${urlScannedField}=${encodedUrl}&${scanTypeField}=${encodedScanType}`;
+};
+
+const openUserDataForm = () => {
+  window.services.openUserDataForm(getUserDataFormUrl());
 };
 
 const closeUserDataForm = () => {
@@ -80,6 +82,7 @@ const services = {
   startScan,
   openReport,
   downloadReport,
+  getUserDataFormUrl,
   openUserDataForm,
   closeUserDataForm,
 };

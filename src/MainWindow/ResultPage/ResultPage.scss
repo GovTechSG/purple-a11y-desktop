@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  min-height: 100vh;
+  height: 100vh;
 
   #main-container {
     display: flex;
@@ -22,8 +22,10 @@
 
   #form-container {
     background-color: #d9d9d9;
-    /* height: 100%; */
-    /* width: 100%; */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 50%;
   }
 
@@ -63,11 +65,11 @@
     margin: 1.5rem 0;
   }
 
-  a {
+  #main-contents a {
     text-underline-offset: 0.5rem;
   }
 
-  a:before {
+  #main-contents a:before {
     content: "\F116   ";
     font-family: bootstrap-icons;
     position: relative;
