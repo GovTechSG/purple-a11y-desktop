@@ -1,8 +1,4 @@
-const {
-  app: electronApp,
-  BrowserWindow,
-  ipcMain,
-} = require("electron");
+const { app: electronApp, BrowserWindow, ipcMain } = require("electron");
 const EventEmitter = require("events");
 const constants = require("./constants");
 const scanManager = require("./scanManager");
@@ -38,16 +34,6 @@ function createMainWindow() {
   });
   // and load the index.html of the app.
   mainWindow.loadFile(constants.indexPath);
-}
-
-function createReportWindow(reportPath) {
-  let reportWindow = new BrowserWindow({
-    width: 1000,
-    height: 750,
-    parent: mainWindow,
-  });
-  reportWindow.loadFile(reportPath);
-  reportWindow.on("close", () => reportWindow.destroy());
 }
 
 // TODO set ipcMain messages
@@ -96,23 +82,10 @@ app.on("ready", async () => {
 
   createMainWindow();
   userDataFormManager.init(mainWindow);
+  scanManager.init(mainWindow);
   await mainReady;
   mainWindow.webContents.send("appStatus", "ready");
   mainWindow.webContents.send("versionNumber", constants.appVersion);
-});
-
-ipcMain.handle("startScan", async (_event, scanDetails) => {
-  return await scanManager.startScan(scanDetails);
-});
-
-ipcMain.on("openReport", (_event, scanId) => {
-  const reportPath = scanManager.getReportPath(scanId);
-  if (!reportPath) return;
-  createReportWindow(reportPath);
-});
-
-ipcMain.handle("downloadReport", (_event, scanId) => {
-  return scanManager.getReportHtml(scanId);
 });
 
 app.on("quit", () => {

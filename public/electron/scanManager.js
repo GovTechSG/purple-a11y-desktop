@@ -1,3 +1,4 @@
+const { BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const { fork } = require("child_process");
 const fs = require("fs");
@@ -104,9 +105,33 @@ const getReportHtml = (scanId) => {
   return reportHtml;
 };
 
+function createReportWindow(contextWindow, reportPath) {
+  let reportWindow = new BrowserWindow({
+    width: 1000,
+    height: 750,
+    parent: contextWindow,
+  });
+  reportWindow.loadFile(reportPath);
+  reportWindow.on("close", () => reportWindow.destroy());
+}
+
+const init = (contextWindow) => {
+  ipcMain.handle("startScan", async (_event, scanDetails) => {
+    return await startScan(scanDetails);
+  });
+
+  ipcMain.on("openReport", (_event, scanId) => {
+    const reportPath = getReportPath(scanId);
+    if (!reportPath) return;
+    createReportWindow(contextWindow, reportPath);
+  });
+
+  ipcMain.handle("downloadReport", (_event, scanId) => {
+    return getReportHtml(scanId);
+  });
+};
+
 module.exports = {
-  startScan,
-  getReportPath,
-  getReportHtml,
+  init,
   killChildProcess,
 };
