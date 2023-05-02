@@ -19,12 +19,12 @@ const ResultPage = ({ completedScanId: scanId }) => {
     return () => services.closeUserDataForm();
   }, []);
 
-  const handleDownloadReport = async () => {
-    const data = await services.downloadReport(scanId);
-    let blob = new Blob([data], { type: "text/plain;charset=utf-8" });
+  const handleDownloadResults = async () => {
+    const data = await services.downloadResults(scanId);
+    let blob = new Blob([data], { type: "application/zip" });
     let link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
-    link.download = "report.html";
+    link.download = "results.zip";
     link.click();
   };
 
@@ -52,10 +52,10 @@ const ResultPage = ({ completedScanId: scanId }) => {
               <Button
                 id="download-button"
                 type="secondary"
-                onClick={handleDownloadReport}
+                onClick={handleDownloadResults}
               >
                 <i className="bi bi-download" />
-                Download report (.html)
+                Download results (.zip)
               </Button>
             </>
           ) : (

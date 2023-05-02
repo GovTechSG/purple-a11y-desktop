@@ -13,9 +13,9 @@ contextBridge.exposeInMainWorld("services", {
   openReport: (scanId) => {
     ipcRenderer.send("openReport", scanId);
   },
-  downloadReport: async (scanId) => {
-    const reportHtml = await ipcRenderer.invoke("downloadReport", scanId);
-    return reportHtml;
+  downloadResults: async (scanId) => {
+    const reportZip = await ipcRenderer.invoke("downloadResults", scanId);
+    return reportZip;
   },
   openUserDataForm: (url) => {
     ipcRenderer.send("openUserDataForm", url);

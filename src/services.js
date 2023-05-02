@@ -57,9 +57,9 @@ const openReport = (scanId) => {
   window.services.openReport(scanId);
 };
 
-const downloadReport = async (scanId) => {
-  const reportHtml = await window.services.downloadReport(scanId);
-  return reportHtml;
+const downloadResults = async (scanId) => {
+  const reportZip = await window.services.downloadResults(scanId);
+  return reportZip;
 };
 
 const getUserDataFormUrl = () => {
@@ -81,7 +81,7 @@ const closeUserDataForm = () => {
 const services = {
   startScan,
   openReport,
-  downloadReport,
+  downloadResults,
   getUserDataFormUrl,
   openUserDataForm,
   closeUserDataForm,

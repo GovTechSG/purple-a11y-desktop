@@ -97,12 +97,19 @@ const getReportPath = (scanId) => {
   return null;
 };
 
-const getReportHtml = (scanId) => {
-  const reportPath = getReportPath(scanId);
-  if (!reportPath) return "";
+const getResultsZipPath = (scanId) => {
+  if (scanHistory[scanId]) {
+    return path.join(enginePath, 'a11y-scan-results.zip');
+  }
+  return null;
+}
 
-  const reportHtml = fs.readFileSync(reportPath, { encoding: "utf8" });
-  return reportHtml;
+const getResultsZip = (scanId) => {
+  const resultsZipPath = getResultsZipPath(scanId);
+  if (!resultsZipPath) return "";
+
+  const reportZip = fs.readFileSync(resultsZipPath);
+  return reportZip;
 };
 
 function createReportWindow(contextWindow, reportPath) {
@@ -126,8 +133,8 @@ const init = (contextWindow) => {
     createReportWindow(contextWindow, reportPath);
   });
 
-  ipcMain.handle("downloadReport", (_event, scanId) => {
-    return getReportHtml(scanId);
+  ipcMain.handle("downloadResults", (_event, scanId) => {
+    return getResultsZip(scanId);
   });
 };
 
