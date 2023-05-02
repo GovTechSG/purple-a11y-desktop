@@ -114,10 +114,9 @@ const getResultsZip = (scanId) => {
 
 function createReportWindow(contextWindow, reportPath) {
   let reportWindow = new BrowserWindow({
-    width: 1000,
-    height: 750,
     parent: contextWindow,
   });
+  reportWindow.maximize();
   reportWindow.loadFile(reportPath);
   reportWindow.on("close", () => reportWindow.destroy());
 }
