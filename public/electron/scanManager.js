@@ -5,7 +5,7 @@ const fs = require("fs");
 const { randomUUID } = require("crypto");
 const {
   enginePath,
-  getNodeBinariesPath,
+  getPathVariable,
   playwrightBrowsersPath,
 } = require("./constants");
 
@@ -56,7 +56,7 @@ const startScan = async (scanDetails) => {
         cwd: enginePath,
         env: {
           PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
-          PATH: `${process.env.PATH}:${getNodeBinariesPath()}`,
+          PATH: getPathVariable(),
         },
       }
     );
