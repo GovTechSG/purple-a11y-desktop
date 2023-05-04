@@ -51,7 +51,7 @@ const getPathVariable = () => {
       `${os.arch() === "arm64" ? "nodejs-mac-arm64" : "nodejs-mac-x64"}/bin`,
       "purple-hats/node_modules/.bin",
     ];
-    return `${process.env.PATH};${directories
+    return `${process.env.PATH}:${directories
       .map((d) => path.join(backendPath, d))
       .join(":")}`;
   }

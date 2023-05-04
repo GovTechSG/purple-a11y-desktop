@@ -79,9 +79,9 @@ export const urlErrorTypes = {
 
 export const userDataFormDetails = {
   // production form
+  // formUrl: "https://form.gov.sg/6453387735eb0c00128becdc",
+  // dev form
   formUrl: "https://form.gov.sg/642c10f5d88e080012b6eb49",
-  // test form
-  // formUrl: "https://form.gov.sg/641d6e994422e90012fc4978",
   urlScannedField: "641d6f416e65530012b57e29",
   scanTypeField: "641d6fc6448fc900122f8684",
 };
