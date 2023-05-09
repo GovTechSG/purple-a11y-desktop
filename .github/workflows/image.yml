@@ -15,8 +15,11 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+      
+      - name: Specify Node.js version
+        uses: actions/setup-node@v2
         with:
-          path: purple-hats-desktop
+            node-version: "16.x"
 
       - name: Install Node modules and build for MacOS x86_64
         run: npm install
