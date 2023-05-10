@@ -9,9 +9,9 @@ Purple HATS Desktop is the desktop user interface built on top of [Purple HATS](
 
 ## Prerequisites and Installations
 
-### Portable Purple HATS desktop
+### Download Purple HATS Desktop
 
-Portable Purple HATS desktop is the recommended way to run Purple HATS desktop as it reduces the difficulty for installation. Refer to [Installation Guide](/INSTALLATION.md) for step-by-step instructions.
+Purple HATS Desktop is available as a download for Windows and MacOS. Refer to [Installation Guide](/INSTALLATION.md) for step-by-step instructions.
 
 #### Facing issues?
 
@@ -19,11 +19,11 @@ Please refer to [Troubleshooting section](#troubleshooting) for more information
 
 ---
 
-## Usage
+## Basic usage
 
-Provide a valid URL to scan in the text box and press the "Scan" button.
+Enter a valid URL to scan in the textbox and press the "Scan" button.  The default settings will crawl your website and scan 100 pages for accessibility issues.
 
-## Limiting the number of pages scanned
+## Limit number of pages scanned
 
 If you find a scan takes too long to complete due to large website, or there are too many pages in a sitemap to scan, you may choose to limit number of pages scanned. Click on the drop down and enter the desired number of pages to scan.
 
@@ -52,6 +52,8 @@ Custom flow is used to scan Single-Page Applications (SPAs) or websites that req
 ![custom-flow](https://github.com/GovTechSG/purple-hats-desktop/assets/52128673/9f4179e7-07cc-4ba0-ba80-27280de7ab64)
 
 ### Viewport Options
+
+Customise the viewport options to render your websites for desktop and mobile device users.
 
 #### Desktop
 
@@ -185,11 +187,6 @@ Defaults to the screen size of iPhone 11.
 ### Custom Width
 
 Enter a custom width in pixels. Minimum width is 320px and maximum width is 1080px.
-
----
-## Troubleshooting
-
-To be added.
 
 ## Additional Information on Data
 
