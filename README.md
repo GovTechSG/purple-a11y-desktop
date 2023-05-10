@@ -15,7 +15,7 @@ Purple HATS Desktop is available as a download for Windows and MacOS. Refer to [
 
 #### Facing issues?
 
-Please refer to [Troubleshooting section](#troubleshooting) for more information.
+Open an [issue ticket](https://github.com/GovTechSG/purple-hats-desktop/issues) for assistance.
 
 ---
 
