@@ -27,9 +27,13 @@ Provide a valid URL to scan in the text box and press the "Scan" button.
 
 If you find a scan takes too long to complete due to large website, or there are too many pages in a sitemap to scan, you may choose to limit number of pages scanned. Click on the drop down and enter the desired number of pages to scan.
 
+![limit-scan-pages](https://github.com/GovTechSG/purple-hats-desktop/assets/52128673/230bc32d-091d-45be-8e63-8bd911117aa5)
+
 ## Advanced scan options
 
 Click on the "Advanced scan options" button to configure the scan options.
+
+![advanced-scan-options](https://github.com/GovTechSG/purple-hats-desktop/assets/52128673/fb59e042-c46b-490d-a5be-c7135efe74f8)
 
 ### Scan Type Selection
 
@@ -44,6 +48,8 @@ With sitemap crawl, provide a URL to a sitemap file (e.g. `https.domain.com/site
 #### Custom Flow
 
 Custom flow is used to scan Single-Page Applications (SPAs) or websites that require user authentication. 2 pop-up windows will appear after running the scan. The browser pop-up window will be used to record your actions, proceed with your actions as you would normally do on the website and close the browser window when you are done. The second window is used to log the actions in code (**do not close the second window** until the scan is completed).
+
+![custom-flow](https://github.com/GovTechSG/purple-hats-desktop/assets/52128673/9f4179e7-07cc-4ba0-ba80-27280de7ab64)
 
 ### Viewport Options
 
