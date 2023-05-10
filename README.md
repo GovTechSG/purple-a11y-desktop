@@ -37,7 +37,7 @@ If you find a scan takes too long to complete due to large website, or there are
 
 Click on the "Advanced scan options" button to configure the scan options.
 
-![Advanced Scan Options](https://github.com/GovTechSG/purple-hats-desktop/assets/2021525/31215f99-3abc-4dee-8f37-7637a5e2caf9)
+![Advanced Scan Options](https://github.com/GovTechSG/purple-hats-desktop/assets/2021525/caf2c1a6-1acf-433d-9843-3482666ac377)
 
 ### Scan Type Selection
 
