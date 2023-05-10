@@ -192,4 +192,4 @@ Enter a custom width in pixels. Minimum width is 320px and maximum width is 1080
 
 Purple HATS Desktop uses third-party open-source tools that may be downloaded over the Internet during the installation process of Purple HATS. Users should be aware of the libraries used by examining `package.json`.
 
-Purple HATS Desktop may send information to the website or URL where the user chooses to initiate a Purple HATS scan. By default, data collected by Purple HATS is processed and stored locally on the machine where the tool is run.
+Purple HATS Desktop may send information to the website or URL where the user chooses to initiate a Purple HATS scan. By default, data collected by Purple HATS is processed and stored locally on the machine where the tool is run.  Limited user information such as e-mail address, name, and basic analytics is collected for the purpose of knowing our usage patterns better.
