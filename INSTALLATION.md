@@ -19,7 +19,7 @@ Purple HATS is a customisable, automated accessibility testing tool that allows 
 
 ### Download Purple HATS Desktop Windows
 
-* Download [purple-hats-desktop-windows.zip](https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-hats-portable-windows.zip)
+* Download [purple-hats-desktop-windows.zip](https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-hats-desktop-windows-prod.zip)
 * Double-click the downloaded zip file. Extract the contents of the zip file with a right-click and choosing “Extract All” in the context menu.
 
 ### Run Purple HATS Desktop Windows
@@ -37,7 +37,7 @@ Purple HATS is a customisable, automated accessibility testing tool that allows 
 
 ### Download Purple HATS desktop MacOS
 
-* Download [purple-hats-desktop-mac.zip](https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-hats-portable-mac.zip).
+* Download [purple-hats-desktop-macos.zip](https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-hats-desktop-macos-prod.zip).
 * If Purple HATS app does not appear in your Downloads folder, double-click the downloaded purple-hats-desktop-macos.zip file.
 
 > Tip: To extract files in Mac, double-click on `purple-hats-portable-mac.zip` file, usually located at your Downloads folder. A new folder with the name purple-hats-mac will appear in Finder.
