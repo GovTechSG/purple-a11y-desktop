@@ -1,6 +1,8 @@
 # Purple HATS Desktop
 
-Purple HATS Desktop is the desktop user interface built on top of [Purple HATS](https://github.com/GovTechSG/purple-hats) a customisable, automated accessibility testing tool that allows software development teams to assess whether their products are user-friendly to persons with disabilities (PWDs).
+Purple hats Desktop is a desktop frontend for [Purple HATS](https://github.com/GovTechSG/purple-hats) accessibility site scanner - a customisable, automated web accessibility testing tool that allows software development teams to find and fix accessibility problems to improve persons with disabilities (PWDs) access to digital services.
+
+<img alt="Purple HATS Desktop main screen" src="https://github.com/GovTechSG/purple-hats-desktop/assets/2021525/dc388870-2bec-41d9-a0fa-2371435b1b5a">
 
 ## Technology Stack
 
@@ -23,17 +25,19 @@ Open an [issue ticket](https://github.com/GovTechSG/purple-hats-desktop/issues) 
 
 Enter a valid URL to scan in the textbox and press the "Scan" button.  The default settings will crawl your website and scan 100 pages for accessibility issues.
 
+![Purple HATS Desktop main page](https://github.com/GovTechSG/purple-hats-desktop/assets/2021525/7d114637-6337-4f68-a8a4-a7673c4601ef)
+
 ## Limit number of pages scanned
 
 If you find a scan takes too long to complete due to large website, or there are too many pages in a sitemap to scan, you may choose to limit number of pages scanned. Click on the drop down and enter the desired number of pages to scan.
 
-![limit-scan-pages](https://github.com/GovTechSG/purple-hats-desktop/assets/52128673/230bc32d-091d-45be-8e63-8bd911117aa5)
+![Limit Scan Pages](https://github.com/GovTechSG/purple-hats-desktop/assets/2021525/4bfb1125-138e-4720-9db0-a046a4b1f495)
 
 ## Advanced scan options
 
 Click on the "Advanced scan options" button to configure the scan options.
 
-![advanced-scan-options](https://github.com/GovTechSG/purple-hats-desktop/assets/52128673/fb59e042-c46b-490d-a5be-c7135efe74f8)
+![Advanced Scan Options](https://github.com/GovTechSG/purple-hats-desktop/assets/2021525/31215f99-3abc-4dee-8f37-7637a5e2caf9)
 
 ### Scan Type Selection
 
@@ -49,7 +53,7 @@ With sitemap crawl, provide a URL to a sitemap file (e.g. `https.domain.com/site
 
 Custom flow is used to scan Single-Page Applications (SPAs) or websites that require user authentication. 2 pop-up windows will appear after running the scan. The browser pop-up window will be used to record your actions, proceed with your actions as you would normally do on the website and close the browser window when you are done. The second window is used to log the actions in code (**do not close the second window** until the scan is completed).
 
-![custom-flow](https://github.com/GovTechSG/purple-hats-desktop/assets/52128673/9f4179e7-07cc-4ba0-ba80-27280de7ab64)
+![Custom Flow Browser](https://github.com/GovTechSG/purple-hats-desktop/assets/2021525/c5962e1d-80c4-430d-853f-37009302c19d)
 
 ### Viewport Options
 
