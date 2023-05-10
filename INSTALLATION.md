@@ -24,8 +24,12 @@ Purple HATS is a customisable, automated accessibility testing tool that allows 
 
 ### Run Purple HATS Desktop Windows
 
-* Double-click the extracted Purple HATS-win32-x64 folder
+* Double-click the extracted Purple HATS-win32-x64 folder.
 * Double-click Purple HATS application.
+* If you see "Windows protected your PC" prompt as shown below, click "More info" and "Run anyway".
+    
+    <img width="787" alt="Example of Windows protected your PC prompt" src="https://github.com/GovTechSG/purple-hats-desktop/assets/2021525/dd30c459-c2ea-417f-9fed-cc7b71c6c96e">
+
 * Purple HATS will start setting up. This process may take up to 5 minutes.
 
 </details>
