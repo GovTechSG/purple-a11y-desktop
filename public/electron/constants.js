@@ -71,6 +71,8 @@ const updateBackupsFolder = path.join(
 
 const phZipPath = path.join(appDataPath, "PHLatest.zip");
 
+
+
 module.exports = {
   appDataPath,
   releaseUrl,

@@ -8,10 +8,12 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const [userDataFormOpenUnsuccessful, setUserDataFormOpenUnsuccessful] =
     useState(false);
   const [enableReportDownload, setEnableReportDownload] = useState();
+  const [enableMailReport, setEnableMailReport] = useState();
 
   useEffect(() => {
     services.openUserDataForm();
     window.services.enableReportDownload(() => setEnableReportDownload(true));
+    window.services.enableMailReport((formDetails) => setEnableMailReport(formDetails));
     window.services.handleRetryOpenForm(() => services.openUserDataForm());
     window.services.handleFormOpenFailure(() =>
       setUserDataFormOpenUnsuccessful(true)
@@ -32,12 +34,29 @@ const ResultPage = ({ completedScanId: scanId }) => {
     services.openReport(scanId);
   };
 
+  const handleMailReport = () => {
+    services.mailReport({enableMailReport});
+  }
+
   return (
     <div id="result-page">
       <div id="main-container">
         <div id="main-contents">
           <i className="bi bi-check-circle"></i>
           <h1>Scan completed</h1>
+          {enableReportDownload && enableMailReport && (
+            <>
+              <Button
+                id="download-button"
+                type="primary"
+                className="bold-text"
+                onClick={handleMailReport}
+              >
+              <i className="bi bi-envelope" />
+              Mail report
+            </Button>
+            </>
+          )}
           {enableReportDownload ? (
             <>
               <Button

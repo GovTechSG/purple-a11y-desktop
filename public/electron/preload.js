@@ -42,6 +42,11 @@ contextBridge.exposeInMainWorld("services", {
   enableReportDownload: (callback) => {
     ipcRenderer.on("enableReportDownload", () => callback());
   },
+  enableMailReport: (callback) => {
+    ipcRenderer.on("enableMailReport", (event, formDetails) => {
+      callback(formDetails)
+    });
+  },
   handleRetryOpenForm: (callback) => {
     ipcRenderer.on("retryOpenForm", () => callback());
   },

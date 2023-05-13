@@ -64,8 +64,8 @@ export const devices = {
   "Google Pixel 4": "Pixel 4",
   "Google Pixel 4a (5G)": "Pixel 4a (5G)",
   "Google Pixel 5": "Pixel 5",
-  "Motorola Moto G4": "Moto G4"
-}
+  "Motorola Moto G4": "Moto G4",
+};
 
 // exit codes returned by Purple HATS cli when there is an error with the URL provided
 export const urlErrorCodes = new Set([11, 12, 13, 14, 15]);
@@ -75,7 +75,7 @@ export const urlErrorTypes = {
   errorStatusReceived: 13,
   systemError: 14,
   notASitemap: 15,
-}
+};
 
 export const userDataFormDetails = {
   // production form

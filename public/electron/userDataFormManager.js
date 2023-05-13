@@ -1,5 +1,6 @@
-const { ipcMain, BrowserView } = require("electron");
+const { ipcMain, BrowserView, BrowserWindow } = require("electron");
 const constants = require("./constants");
+const os = require("os");
 
 let formOpenAttempt = 0;
 
@@ -52,8 +53,11 @@ function init(contextWindow) {
     }
   });
 
-  ipcMain.on("userDataFormSubmitted", () => {
+  ipcMain.on("userDataFormSubmitted", (_event, formDetails) => {
     contextWindow.webContents.send("enableReportDownload");
+    contextWindow.webContents.send("enableMailReport", formDetails);
+    if (os.platform() === "win32") {
+    }
   });
 
   ipcMain.on("closeUserDataForm", () => {
