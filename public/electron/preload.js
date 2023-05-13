@@ -44,8 +44,16 @@ contextBridge.exposeInMainWorld("services", {
   },
   enableMailReport: (callback) => {
     ipcRenderer.on("enableMailReport", (event, formDetails) => {
-      callback(formDetails)
+      callback(formDetails);
     });
+  },
+  mailReport: async (formDetails, scanId) => {
+    const response = await ipcRenderer.invoke(
+      "mailReport",
+      formDetails,
+      scanId
+    );
+    return response;
   },
   handleRetryOpenForm: (callback) => {
     ipcRenderer.on("retryOpenForm", () => callback());

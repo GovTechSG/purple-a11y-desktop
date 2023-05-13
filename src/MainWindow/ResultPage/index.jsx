@@ -9,11 +9,18 @@ const ResultPage = ({ completedScanId: scanId }) => {
     useState(false);
   const [enableReportDownload, setEnableReportDownload] = useState();
   const [enableMailReport, setEnableMailReport] = useState();
+  const [mailStatus, setMailStatus] = useState({
+    mailSentSucessful: false,
+    sendingMail: false,
+    mailError: false,
+  });
 
   useEffect(() => {
     services.openUserDataForm();
     window.services.enableReportDownload(() => setEnableReportDownload(true));
-    window.services.enableMailReport((formDetails) => setEnableMailReport(formDetails));
+    window.services.enableMailReport((formDetails) =>
+      setEnableMailReport(formDetails)
+    );
     window.services.handleRetryOpenForm(() => services.openUserDataForm());
     window.services.handleFormOpenFailure(() =>
       setUserDataFormOpenUnsuccessful(true)
@@ -34,9 +41,25 @@ const ResultPage = ({ completedScanId: scanId }) => {
     services.openReport(scanId);
   };
 
-  const handleMailReport = () => {
-    services.mailReport({enableMailReport});
-  }
+  const handleMailReport = async () => {
+    const response = await services.mailReport(enableMailReport, scanId);
+    setMailStatus({ ...mailStatus, sendingMail: true });
+    if (response.success) {
+      alert("Report successfully mailed");
+      setMailStatus({
+        mailSentSucessful: true,
+        sendingMail: false,
+        mailError: false,
+      });
+    } else {
+      alert("Report failed to mail");
+      setMailStatus({
+        mailSentSucessful: false,
+        sendingMail: false,
+        mailError: true,
+      });
+    }
+  };
 
   return (
     <div id="result-page">
@@ -44,19 +67,22 @@ const ResultPage = ({ completedScanId: scanId }) => {
         <div id="main-contents">
           <i className="bi bi-check-circle"></i>
           <h1>Scan completed</h1>
-          {enableReportDownload && enableMailReport && (
-            <>
-              <Button
-                id="download-button"
-                type="primary"
-                className="bold-text"
-                onClick={handleMailReport}
-              >
-              <i className="bi bi-envelope" />
-              Mail report
-            </Button>
-            </>
-          )}
+          {enableReportDownload &&
+            enableMailReport &&
+            mailStatus.mailSentSucessful === false &&
+            mailStatus.sendingMail === false && (
+              <>
+                <Button
+                  id="mail-button"
+                  type="secondary"
+                  className="bold-text"
+                  onClick={handleMailReport}
+                >
+                  <i className="bi bi-envelope" />
+                  Mail report
+                </Button>
+              </>
+            )}
           {enableReportDownload ? (
             <>
               <Button

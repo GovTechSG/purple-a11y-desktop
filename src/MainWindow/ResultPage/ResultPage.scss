@@ -41,6 +41,12 @@
     margin-bottom: 2.5rem;
   }
 
+  #mail-button {
+    width: 100%;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
   #view-button {
     width: 100%;
   }
@@ -48,6 +54,10 @@
   #download-button {
     margin-top: 1rem;
     display: block;
+  }
+
+  .bi-envelope {
+    margin-right: 0.5rem;
   }
 
   .bi-box-arrow-up-right {

@@ -1,6 +1,6 @@
 const { BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
-const { fork } = require("child_process");
+const { fork, spawn } = require("child_process");
 const fs = require("fs");
 const { randomUUID } = require("crypto");
 const {
@@ -99,10 +99,10 @@ const getReportPath = (scanId) => {
 
 const getResultsZipPath = (scanId) => {
   if (scanHistory[scanId]) {
-    return path.join(enginePath, 'a11y-scan-results.zip');
+    return path.join(enginePath, "a11y-scan-results.zip");
   }
   return null;
-}
+};
 
 const getResultsZip = (scanId) => {
   const resultsZipPath = getResultsZipPath(scanId);
@@ -110,6 +110,91 @@ const getResultsZip = (scanId) => {
 
   const reportZip = fs.readFileSync(resultsZipPath);
   return reportZip;
+};
+
+const mailResults = async (formDetails, scanId) => {
+  const resultsZipPath = getResultsZipPath(scanId);
+
+  const { websiteURL, scanType, emailAddress } = formDetails;
+
+  const shellCommand = `
+if ((Split-Path -Path $pwd -Leaf) -eq "scripts") {
+  cd ..
+}
+
+$attachmentCount = 0
+
+#Get an Outlook application object
+$o = New-Object -com Outlook.Application
+
+if ($null -eq $o) {
+  throw "Unable to open outlook"
+  exit
+}
+
+$mail = $o.CreateItem(0)
+
+$mail.subject = "${scanType} scan results for: ${websiteURL}"
+$mail.body = "This is your scan results for PurpleHATS. Please see the attached files for more information."
+
+
+$mail.To = "<${emailAddress}>"
+
+# # Iterate over all files and only add the ones that have an .zip extension
+$files = Get-ChildItem '${resultsZipPath}'
+
+for ($i = 0; $i -lt $files.Count; $i++) {
+  $outfileName = $files[$i].FullName
+  $outfileNameExtension = $files[$i].Extension
+
+  if ($outfileNameExtension -eq ".zip") {
+      $mail.Attachments.Add($outfileName);
+      $attachmentCount++
+  }
+}
+
+if ($attachmentCount -eq 0) {
+  throw "No files were found in the specified folder. Exiting."
+  $o.Quit()
+  exit
+}
+
+$mail.Send()
+
+# give time to send the email
+Start-Sleep -Seconds 5
+
+# quit Outlook
+$o.Quit()
+
+#end the script
+exit
+`;
+
+  const response = await new Promise((resolve) => {
+    const mailProcess = spawn("powershell.exe", [
+      "-ExecutionPolicy",
+      "Bypass",
+      "-Command",
+      shellCommand,
+    ]);
+
+    mailProcess.on("close", (code) => {
+      if (code === 0) {
+        resolve({ success: true });
+      } else {
+        mailProcess.stderr.on("data", (data) => {
+          console.error(`stderr: ${data}`);
+          resolve({
+            success: false,
+            message: `An error has occurred when sending the email: ${data}`,
+          });
+        });
+      }
+    });
+  });
+
+  return response;
 };
 
 function createReportWindow(contextWindow, reportPath) {
@@ -134,6 +219,10 @@ const init = (contextWindow) => {
 
   ipcMain.handle("downloadResults", (_event, scanId) => {
     return getResultsZip(scanId);
+  });
+
+  ipcMain.handle("mailReport", (_event, formDetails, scanId) => {
+    return mailResults(formDetails, scanId);
   });
 };
 

@@ -55,8 +55,8 @@ function init(contextWindow) {
 
   ipcMain.on("userDataFormSubmitted", (_event, formDetails) => {
     contextWindow.webContents.send("enableReportDownload");
-    contextWindow.webContents.send("enableMailReport", formDetails);
     if (os.platform() === "win32") {
+      contextWindow.webContents.send("enableMailReport", formDetails);
     }
   });
 

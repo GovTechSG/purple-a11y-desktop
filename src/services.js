@@ -62,6 +62,11 @@ const downloadResults = async (scanId) => {
   return reportZip;
 };
 
+const mailReport = async (formDetails, scanId) => {
+  const response = await window.services.mailReport(formDetails, scanId);
+  return response;
+};
+
 const getUserDataFormUrl = () => {
   const { formUrl, urlScannedField, scanTypeField } = userDataFormDetails;
   const encodedUrl = encodeURIComponent(currentScanUrl);
@@ -82,6 +87,7 @@ const services = {
   startScan,
   openReport,
   downloadResults,
+  mailReport,
   getUserDataFormUrl,
   openUserDataForm,
   closeUserDataForm,
