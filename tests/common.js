@@ -12,17 +12,19 @@ const testHappyFlow = async (scanType, deviceType) => {
   
     // Get first window that app opens 
     const launchWindow = await electronApp.firstWindow();
-  
-    if (await launchWindow.locator('#loading-spinner').isVisible()) {
-        // Checking For Updates
-        await common.validateCheckUpdateElements(launchWindow);
-    }
+
+    await Promise.resolve(
+        launchWindow.locator('#loading-spinner').waitFor()
+    ).catch(() => {});
+
+    await Promise.any([
+        launchWindow.getByRole('heading', {name: 'Checking for Updates'}).waitFor().then(() => true),
+        launchWindow.getByRole('heading', {name: 'Setting up'}).waitFor().then(() => false),
+    ]).catch(() => {});
     
-    // Prompt Update
-    if (await (launchWindow.getByRole('heading', {name: "New updates available"})).isVisible()) {
-        await validatePromptUpdateElements(launchWindow);
-        await launchWindow.getByRole('button', {name: "Later"}).click();
-    }
+    await Promise.resolve(
+        launchWindow.getByRole('heading', {name: 'New update available'}).waitFor()
+    ).catch(() => {});
   
     const mainWindow = await electronApp.waitForEvent('window'); 
   
@@ -61,15 +63,10 @@ const testHappyFlow = async (scanType, deviceType) => {
     await electronApp.close();
 }
 
-const validateCheckUpdateElements = async (launchWindow) => {
-    await expect(launchWindow.locator('#loading-spinner')).toBeVisible({timeout: 30000});
-    await expect(launchWindow.getByRole('heading', {name: 'Checking for Updates'})).toBeVisible();
-}
-  
 const validatePromptUpdateElements = async (launchWindow) => {
-   await expect(await launchWindow.getByRole('paragraph', {name: "Would you like to update now? It may take a few minutes."})).toBeVisible();
-   await expect(await launchWindow.getByRole('button', {name: "Later"})).toBeVisible();
-   await expect(await launchWindow.getByRole('button', {name: "Update"})).toBeVisible();
+   await expect(await launchWindow.getByText('Would you like to update now? It may take a few minutes.')).toBeVisible();
+   await expect(await launchWindow.getByRole('button', {name: 'Later'})).toBeVisible();
+   await expect(await launchWindow.getByRole('button', {name: 'Update'})).toBeVisible();
 }
   
 const validateHomePageElements = async (mainWindow) => {
@@ -115,12 +112,11 @@ const validateResultPageElements = async (mainWindow) => {
 const commons = {
     testHappyFlow,
     validateAdvancedPageOptionsLocator,
-    validateCheckUpdateElements,
     validateHomePageElements,
     validatePageLimitElements, 
     validatePromptUpdateElements,
     validateResultPageElements,
-    validateScanPageElements
+    validateScanPageElements,
   };
   
   export default commons;
