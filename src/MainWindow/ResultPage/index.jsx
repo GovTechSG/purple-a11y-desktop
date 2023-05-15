@@ -3,6 +3,7 @@ import Button from "../../common/components/Button";
 import "./ResultPage.scss";
 import services from "../../services";
 import { Link } from "react-router-dom";
+import LoadingSpinner from "../../common/components/LoadingSpinner";
 
 const ResultPage = ({ completedScanId: scanId }) => {
   const [userDataFormOpenUnsuccessful, setUserDataFormOpenUnsuccessful] =
@@ -42,8 +43,8 @@ const ResultPage = ({ completedScanId: scanId }) => {
   };
 
   const handleMailReport = async () => {
-    const response = await services.mailReport(enableMailReport, scanId);
     setMailStatus({ ...mailStatus, sendingMail: true });
+    const response = await services.mailReport(enableMailReport, scanId);
     if (response.success) {
       alert("Report successfully mailed");
       setMailStatus({
@@ -69,17 +70,23 @@ const ResultPage = ({ completedScanId: scanId }) => {
           <h1>Scan completed</h1>
           {enableReportDownload &&
             enableMailReport &&
-            mailStatus.mailSentSucessful === false &&
-            mailStatus.sendingMail === false && (
+            mailStatus.mailSentSucessful === false && (
               <>
                 <Button
                   id="mail-button"
                   type="secondary"
                   className="bold-text"
                   onClick={handleMailReport}
+                  disabled={mailStatus.sendingMail ? "disabled" : null}
                 >
-                  <i className="bi bi-envelope" />
-                  Mail report
+                  {mailStatus.sendingMail ? (
+                    <>Sending mail...</>
+                  ) : (
+                    <>
+                      <i className="bi bi-envelope" />
+                      Mail report
+                    </>
+                  )}
                 </Button>
               </>
             )}

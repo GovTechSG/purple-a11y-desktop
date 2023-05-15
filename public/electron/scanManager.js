@@ -134,7 +134,9 @@ if ($null -eq $o) {
 
 $mail = $o.CreateItem(0)
 
-$mail.subject = "[A11y] ${scanType} Scan Results for: ${websiteURL}"
+$mail.subject = "[A11y] ${scanType
+    .split(" ")
+    .shift()} Scan Results for: ${websiteURL} (${scanType})"
 
 $mail.body = "Hi there,
 
