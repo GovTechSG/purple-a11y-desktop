@@ -113,7 +113,7 @@ const getResultsZip = (scanId) => {
 };
 
 const mailResults = async (formDetails, scanId) => {
-  const resultsZipPath = getResultsZipPath(scanId);
+  const reportPath = getReportPath(scanId);
 
   const { websiteURL, scanType, emailAddress } = formDetails;
 
@@ -134,20 +134,29 @@ if ($null -eq $o) {
 
 $mail = $o.CreateItem(0)
 
-$mail.subject = "${scanType} scan results for: ${websiteURL}"
-$mail.body = "This is your scan results for PurpleHATS. Please see the attached files for more information."
+$mail.subject = "[A11y] ${scanType} Scan Results for: ${websiteURL}"
+
+$mail.body = "Hi there,
+
+Please see the attached accessibility scan results with Purple HATS (report.html).
+Feel free to reach us at accessibility@tech.gov.sg if you have any questions.
+
+Thank you.
+Accessibility Enabling Team"
 
 
 $mail.To = "<${emailAddress}>"
 
-# # Iterate over all files and only add the ones that have an .zip extension
-$files = Get-ChildItem '${resultsZipPath}'
+$mail.cc = "<accessibility@tech.gov.sg>"
+
+# # Iterate over all files and only add the ones that have an .html extension
+$files = Get-ChildItem '${reportPath}'
 
 for ($i = 0; $i -lt $files.Count; $i++) {
   $outfileName = $files[$i].FullName
   $outfileNameExtension = $files[$i].Extension
 
-  if ($outfileNameExtension -eq ".zip") {
+  if ($outfileNameExtension -eq ".html") {
       $mail.Attachments.Add($outfileName);
       $attachmentCount++
   }
