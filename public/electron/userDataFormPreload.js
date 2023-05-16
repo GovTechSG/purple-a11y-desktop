@@ -12,7 +12,8 @@ let websiteURL = "";
 let scanType = "";
 let emailAddress = "";
 
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
+  await new Promise(r => setTimeout(r, 1000));
   const websiteURLElement = document.getElementById(formFieldIds.urlScannedField);
   const scanTypeElement = document.getElementById(formFieldIds.scanTypeField);
   websiteURL = websiteURLElement.value;
