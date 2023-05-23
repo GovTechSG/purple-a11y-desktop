@@ -15,14 +15,6 @@ jobs:
       with:
         path: purple-hats-desktop
     
-    - name: Grant execute permissions for user
-      run: chmod ugo+rwx ./scripts/*.command ./scripts/*.sh
-      working-directory: purple-hats-desktop
-
-    - name: Copy scripts to parent directory
-      run: |
-        cp ./purple-hats-desktop/scripts/{*.command,*.sh}  ${{ github.workspace }}
-
     - name: Install NPM packages 
       run:
         npm install  
@@ -30,11 +22,7 @@ jobs:
     - name: Install Playwright browsers and dependencies
       run: 
         npx playwright install --with-deps
-    
-    - name: Install Purple dependencies for MacOS
-      run: |
-        ./install_purple_dependencies.command
-
+        
     - name: Build Application 
       run: npm run build
     
