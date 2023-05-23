@@ -11,7 +11,6 @@ const {
   backendPath,
   updateBackupsFolder,
   scanResultsPath,
-  customFlowGeneratedScriptsPath,
   phZipPath,
 } = require("./constants");
 const { silentLogger } = require("./logs");
@@ -73,12 +72,10 @@ const backUpData = async () => {
 
   if (os.platform() === "win32") {
     command = `mkdir "${updateBackupsFolder}" &&\
-    move "${scanResultsPath}" "${updateBackupsFolder}" &\
-    move "${customFlowGeneratedScriptsPath}" "${updateBackupsFolder}"`;
+    move "${scanResultsPath}" "${updateBackupsFolder}"`;
   } else {
     command = `mkdir '${updateBackupsFolder}' &&
-    (mv '${scanResultsPath}' '${updateBackupsFolder}' || true) &&
-    (mv '${customFlowGeneratedScriptsPath}' '${updateBackupsFolder}' || true)`;
+    (mv '${scanResultsPath}' '${updateBackupsFolder}' || true)`;
   }
 
   await execCommand(command);

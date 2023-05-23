@@ -6,6 +6,7 @@ const { randomUUID } = require("crypto");
 const {
   enginePath,
   getPathVariable,
+  customFlowGeneratedScriptsPath,
   playwrightBrowsersPath,
 } = require("./constants");
 
@@ -84,6 +85,14 @@ const startScan = async (scanDetails) => {
         resolve({ success: false, statusCode: code, message: stdout });
       }
       currentChildProcess = null;
+      
+      if (fs.existsSync(customFlowGeneratedScriptsPath)) {
+        fs.rm(customFlowGeneratedScriptsPath, { recursive: true }, err => {
+          if (err) {
+            console.error(`Error while deleting ${customFlowGeneratedScriptsPath}.`);
+          }
+        });
+      }
     });
   });
 
