@@ -4,9 +4,7 @@ on:
   release:
     types: [published]
   push:
-    branches: [ main, master, happyflow-test ]
-  pull_request:
-    branches: [ main, master ]
+    branches: [ feat/happyflow-test ]
 jobs:
   test:
     timeout-minutes: 60
