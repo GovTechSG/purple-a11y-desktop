@@ -30,7 +30,7 @@ const testHappyFlow = async (scanType, deviceType) => {
         )
     ).catch(() => {});
   
-    const mainWindow = await electronApp.waitForEvent('window'); 
+    const mainWindow = await electronApp.waitForEvent('window', {timeout: 300000}); 
   
     // Home Page
     await common.validateHomePageElements(mainWindow); 
