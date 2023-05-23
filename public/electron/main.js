@@ -1,4 +1,5 @@
 const { app: electronApp, BrowserWindow, ipcMain } = require("electron");
+const fs = require("fs");
 const EventEmitter = require("events");
 const constants = require("./constants");
 const scanManager = require("./scanManager");
@@ -89,6 +90,17 @@ app.on("ready", async () => {
 });
 
 app.on("quit", () => {
+  /* Synchrnously removes file upon quitting the app. Restarts/Shutdowns in
+  Windows will not trigger this event */
+  if (fs.existsSync(constants.scanResultsPath)){
+    console.log(constants.scanResultsPath)
+    fs.rmSync(constants.scanResultsPath, { recursive: true }, err => {
+      console.log('Here')
+      if (err) {
+        console.error(`Error while deleting ${constants.scanResultsPath}.`);
+      }
+    })
+  }
   updateManager.killChildProcess();
   scanManager.killChildProcess();
 });
