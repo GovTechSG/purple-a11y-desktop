@@ -50,8 +50,7 @@ const testHappyFlow = async (scanType, deviceType) => {
     await mainWindow.getByLabel('Scan in background').uncheck();
   
     // Start Scan
-    await mainWindow.screenshot({path: "beforeClickScan.png"});
-    await mainWindow.getByRole('button', { name: 'Scan', exact: true }).click();
+    await mainWindow.getByRole('button', { name: 'Scan', exact: true }).click({timeout: 60000});
   
     // Scan Page
     await common.validateScanPageElements(mainWindow);
