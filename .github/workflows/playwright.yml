@@ -10,36 +10,18 @@ jobs:
     runs-on: macos-latest  
 
     steps:
-    - name: Check out repository code
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
-        path: purple-hats-desktop
-    
-    - name: Update NPM to the latest version
-      run: 
-        npm install -g npm@latest 
-    
-    - name: Clean NPM cache 
-      run: 
-        npm cache clean --force 
-    
-    - name: Delete node modules and package-lock.json 
-      run: 
-        npm rm -rf node_modules && rm package-lock.json
-
-    - name: Install NPM packages 
-      run:
-        npm install  
-
-    - name: Install Playwright browsers and dependencies
-      run: 
-        npx playwright install --with-deps
-
+        node-version: 16
+    - name: Install dependencies
+      run: npm ci
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
     - name: Build Application 
       run: npm run build
-    
     - name: Run Playwright tests
-      run: npx playwright test --workers 1 --trace on
+      run: npx playwright test --workers 1
     - uses: actions/upload-artifact@v3
       if: always()
       with:
