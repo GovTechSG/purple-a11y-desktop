@@ -4,9 +4,7 @@ on:
   release:
     types: [published]
   push:
-    branches: [ main, master, happyflow-test ]
-  pull_request:
-    branches: [ main, master ]
+    branches: [ happyflow-test ]
 jobs:
   test:
     timeout-minutes: 60
@@ -18,7 +16,7 @@ jobs:
       with:
         node-version: 16
     - name: Install dependencies
-      run: npm install
+      run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Build Application 
