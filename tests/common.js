@@ -18,8 +18,9 @@ const testHappyFlow = async (scanType, deviceType) => {
     ).catch(() => {});
 
     await Promise.any([
-        launchWindow.getByRole('heading', {name: 'Checking for Updates'}).waitFor().then(() => true),
-        launchWindow.getByRole('heading', {name: 'Setting up'}).waitFor().then(() => false),
+        launchWindow.getByRole('heading', {name: 'Checking for Updates'}).waitFor(),
+        launchWindow.getByRole('heading', {name: 'Setting up'}).waitFor(),
+        launchWindow.getByRole('heading', {name: 'Updating app'}).waitFor()
     ]).catch(() => {});
     
     await Promise.resolve(
