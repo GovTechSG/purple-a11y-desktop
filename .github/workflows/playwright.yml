@@ -14,11 +14,22 @@ jobs:
       uses: actions/checkout@v3
       with:
         path: purple-hats-desktop
-        node-version: 18
     
+    - name: Update NPM to the latest version
+      run: 
+        npm install -g npm@latest 
+    
+    - name: Clean NPM cache 
+      run: 
+        npm cache clean --force 
+    
+    - name: Delete node modules and package-lock.json 
+      run: 
+        npm rm -rf node_modules && rm package-lock.json
+
     - name: Install NPM packages 
       run:
-        npm ci  
+        npm install  
 
     - name: Install Playwright browsers and dependencies
       run: 
