@@ -23,7 +23,11 @@ const testHappyFlow = async (scanType, deviceType) => {
     ]).catch(() => {});
     
     await Promise.resolve(
-        launchWindow.getByRole('heading', {name: 'New update available'}).waitFor()
+        launchWindow.getByRole('heading', {name: 'New update available'}).waitFor().then(async () => {
+                await validatePromptUpdateElements(launchWindow);
+                await launchWindow.getByRole('button', {name: 'Update'}).click();
+            }
+        )
     ).catch(() => {});
   
     const mainWindow = await electronApp.waitForEvent('window'); 
