@@ -130,3 +130,6 @@ dist
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+#runner 
+/actions-runner/
