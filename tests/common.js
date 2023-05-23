@@ -17,19 +17,21 @@ const testHappyFlow = async (scanType, deviceType) => {
         launchWindow.locator('#loading-spinner').waitFor()
     ).catch(() => {});
 
-    await Promise.any([
-        launchWindow.getByRole('heading', {name: 'Checking for Updates'}).waitFor(),
-        launchWindow.getByRole('heading', {name: 'Setting up'}).waitFor(),
-        launchWindow.getByRole('heading', {name: 'Updating app'}).waitFor()
+    const isCheckForUpdate = await Promise.any([
+        launchWindow.getByRole('heading', {name: 'Checking for Updates'}).waitFor().then(() => {return true}),
+        launchWindow.getByRole('heading', {name: 'Setting up'}).waitFor().then(() => {return false}),
+        launchWindow.getByRole('heading', {name: 'Updating app'}).waitFor().then(() => {return false}),
     ]).catch(() => {});
     
-    await Promise.resolve(
-        launchWindow.getByRole('heading', {name: 'New update available'}).waitFor().then(async () => {
-                await validatePromptUpdateElements(launchWindow);
-                await launchWindow.getByRole('button', {name: 'Update'}).click();
-            }
-        )
+    if (isCheckForUpdate) {
+        await Promise.resolve(
+            launchWindow.getByRole('heading', {name: 'New update available'}).waitFor().then(async () => {
+                    await validatePromptUpdateElements(launchWindow);
+                    await launchWindow.getByRole('button', {name: 'Update'}).click();
+                }
+            )
     ).catch(() => {});
+   }
   
     const mainWindow = await electronApp.waitForEvent('window', {timeout: 300000}); 
   
