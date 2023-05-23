@@ -10,16 +10,22 @@ jobs:
     runs-on: macos-latest  
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - name: Check out repository code
+      uses: actions/checkout@v3
       with:
-        node-version: 16
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+        path: purple-hats-desktop
+    
+    - name: Install NPM packages 
+      run:
+        npm ci  
+
+    - name: Install Playwright browsers and dependencies
+      run: 
+        npx playwright install --with-deps
+
     - name: Build Application 
       run: npm run build
+    
     - name: Run Playwright tests
       run: npx playwright test --workers 1 --trace on
     - uses: actions/upload-artifact@v3
