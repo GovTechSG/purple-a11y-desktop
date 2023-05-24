@@ -4,11 +4,13 @@ on:
   release:
     types: [published]
   push:
-    branches: [ feat/happyflow-test ]
+    branches: [ main, master, feat/happyflow-test ]
+  pull_request:
+    branches: [ main, master, feat/happyflow-test ]
 jobs:
   test:
     timeout-minutes: 60
-    runs-on: self-hosted  
+    runs-on: macos-latest  
 
     steps:
     - uses: actions/checkout@v3
