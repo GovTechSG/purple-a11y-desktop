@@ -5,12 +5,10 @@ on:
     types: [published]
   push:
     branches: [ main, master, feat/happyflow-test ]
-  pull_request:
-    branches: [ main, master, feat/happyflow-test ]
 jobs:
   test:
     timeout-minutes: 60
-    runs-on: macos-latest  
+    runs-on: self-hosted 
 
     steps:
     - uses: actions/checkout@v3
