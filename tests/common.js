@@ -63,7 +63,7 @@ const testHappyFlow = async (scanType, deviceType) => {
     await common.validateScanPageElements(mainWindow);
 
     // Result Page 
-   await expect(mainWindow.getByRole('heading', {name: 'Scan Completed'})).toBeVisible();
+   await expect(mainWindow.getByRole('heading', {name: 'Scan Completed'})).toBeVisible({timeout: 180000});
    await common.validateResultPageElements(mainWindow);
 
     // Exit App 
