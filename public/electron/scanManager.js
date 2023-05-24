@@ -1,7 +1,8 @@
 const { BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
-const { fork } = require("child_process");
+const { fork, spawnSync } = require("child_process");
 const fs = require("fs");
+const os = require("os");
 const { randomUUID } = require("crypto");
 const {
   enginePath,
@@ -97,16 +98,13 @@ const getReportPath = (scanId) => {
   return null;
 };
 
-const getResultsZipPath = (scanId) => {
-  if (scanHistory[scanId]) {
-    return path.join(enginePath, 'a11y-scan-results.zip');
-  }
-  return null;
-}
-
 const getResultsZip = (scanId) => {
-  const resultsZipPath = getResultsZipPath(scanId);
-  if (!resultsZipPath) return "";
+  if (!scanHistory[scanId]) return "";
+
+  const reportsPath = path.join(enginePath, scanHistory[scanId], "reports");
+  const resultsZipPath = path.join(os.tmpdir(), `${scanId}.zip`);
+
+  spawnSync('tar', ['-C', reportsPath, '-cf', resultsZipPath, 'report.html', 'passed_items.json']);
 
   const reportZip = fs.readFileSync(resultsZipPath);
   return reportZip;
