@@ -23,6 +23,9 @@ jobs:
       run: npm run build
     - name: Run Playwright tests
       run: npx playwright test --workers 1 --trace on
+    - name: CLI 
+      run: 
+        node "~/Library/Application Support/Purple HATS/backend/purple-hats/cli.js" -c website -u https://www.tech.gov.sg -p 1
     - uses: actions/upload-artifact@v3
       if: always()
       with:
