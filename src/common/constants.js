@@ -85,3 +85,11 @@ export const userDataFormDetails = {
   urlScannedField: "641d6f416e65530012b57e29",
   scanTypeField: "641d6fc6448fc900122f8684",
 };
+
+export const userDataFormInputFields = {
+  formUrl: 'https://docs.google.com/forms/d/1tg8WYKWOgAo-DRsKNczZQF7OFeT00kjpmL1DPlL_VoI/formResponse',
+  websiteUrlField: 'entry.1562345227', 
+  scanTypeField: 'entry.1148680657', 
+  emailField: 'entry.52161304', 
+  nameField: 'entry.1787318910', 
+};

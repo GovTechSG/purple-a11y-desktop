@@ -69,6 +69,8 @@ const updateBackupsFolder = path.join(
   "30789f0f-73f5-43bc-93a6-e499e4a20f7a"
 );
 
+const userDataFilePath = path.join(enginePath, "userData.json");
+
 const phZipPath = path.join(appDataPath, "PHLatest.zip");
 
 module.exports = {
@@ -87,4 +89,5 @@ module.exports = {
   customFlowGeneratedScriptsPath,
   updateBackupsFolder,
   phZipPath,
+  userDataFilePath,
 };

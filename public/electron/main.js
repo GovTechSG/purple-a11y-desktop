@@ -3,6 +3,7 @@ const EventEmitter = require("events");
 const constants = require("./constants");
 const scanManager = require("./scanManager");
 const updateManager = require("./updateManager");
+const userDataManager = require("./userDataManager.js");
 const userDataFormManager = require("./userDataFormManager");
 
 const app = electronApp;
@@ -72,6 +73,16 @@ app.on("ready", async () => {
 
   await updateManager.run(updateEvent);
 
+  const userDataEvent = new EventEmitter(); 
+  userDataEvent.on("userDataDoesNotExist", (userData) => {
+    launchWindow.webContents.send("launchStatus", "setUserData"); 
+    ipcMain.once("userDataReceived", (_event, data) => {
+      userData(data);
+    });
+  })
+
+  await userDataManager.setData(userDataEvent); 
+
   launchWindow.close();
 
   const mainReady = new Promise((resolve) => {
@@ -81,8 +92,8 @@ app.on("ready", async () => {
   });
 
   createMainWindow();
-  userDataFormManager.init(mainWindow);
   scanManager.init(mainWindow);
+  userDataManager.run();
   await mainReady;
   mainWindow.webContents.send("appStatus", "ready");
   mainWindow.webContents.send("versionNumber", constants.appVersion);

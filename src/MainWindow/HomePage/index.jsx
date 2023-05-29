@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import a11yLogo from "../../assets/a11y-logo.svg";
 import appIllustration from "../../assets/app-illustration.svg";
@@ -13,6 +13,20 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   const [prevUrlErrorMessage, setPrevUrlErrorMessage] = useState(
     location.state
   );
+  const [email, setEmail] = useState(''); 
+  const [name, setName] = useState('');
+  const [autoSubmit, setAutoSubmit] = useState(false);
+
+  useEffect(() => {
+    const getUserData = async () => {
+      const userData = await services.getUserData();
+      setEmail(userData['email']); 
+      setName(userData['name']); 
+      setAutoSubmit(userData['autoSubmit']);
+    }
+
+    getUserData()
+  }, []);
 
   const isValidHttpUrl = (input) => {
     const regexForUrl = new RegExp("^(http|https):/{2}.+$", "gmi");
@@ -65,6 +79,11 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
     navigate("/error");
   };
 
+  const handleChecked = () => {
+    services.setToggleStatus(!autoSubmit);
+    setAutoSubmit(!autoSubmit);
+  }
+
   return (
     <div id="home-page">
       <div id="home-page-main">
@@ -78,6 +97,14 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
           startScan={startScan}
           prevUrlErrorMessage={prevUrlErrorMessage}
         />
+        <div>
+          <input type="checkbox" checked={autoSubmit} onChange={handleChecked}></input>
+          <label>Auto-Submit Form</label>
+        </div>
+        <div id="user-details">
+          <div>{name}</div>
+          <div>{email}</div>
+        </div>
       </div>
       <div id="home-page-footer">
         <img

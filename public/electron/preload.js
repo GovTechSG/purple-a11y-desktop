@@ -23,6 +23,17 @@ contextBridge.exposeInMainWorld("services", {
   closeUserDataForm: (url) => {
     ipcRenderer.send("closeUserDataForm", url);
   },
+  getUserData: async () => {
+    const data = await ipcRenderer.invoke("getUserData"); 
+    return data;
+  },
+  getToggleStatus: async () => {
+    const status = await ipcRenderer.invoke("getToggleStatus"); 
+    return status; 
+  },
+  setToggleStatus: (status) => {
+    ipcRenderer.send("setToggleStatus", status)
+  },
   guiReady: async () => {
     ipcRenderer.send("guiReady");
   },
@@ -38,6 +49,9 @@ contextBridge.exposeInMainWorld("services", {
   },
   proceedUpdate: (response) => {
     ipcRenderer.send("proceedUpdate", response);
+  },
+  setUserData: (data) => {
+    ipcRenderer.send("userDataReceived", data);
   },
   enableReportDownload: (callback) => {
     ipcRenderer.on("enableReportDownload", () => callback());

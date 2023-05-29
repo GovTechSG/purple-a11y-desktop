@@ -78,6 +78,34 @@ const closeUserDataForm = () => {
   window.services.closeUserDataForm();
 };
 
+const getToggleStatus = async () => {
+  const toggleStatus = await window.services.getToggleStatus(); 
+  return toggleStatus; 
+}
+
+const setToggleStatus = (status) => {
+  window.services.setToggleStatus(status); 
+}
+
+const getUserData = async () => {
+  const userData = await window.services.getUserData(); 
+  return userData;
+}
+
+const getDataForForm = async () => {
+  const userData = await getUserData();
+  const email = userData['email']; 
+  const name = userData['name'];
+  const autoSubmit = userData['autoSubmit'];
+  return {
+    websiteUrl: currentScanUrl, 
+    scanType: currentScanType, 
+    email: email, 
+    name: name,
+    autoSubmit: autoSubmit
+  }
+};
+
 const services = {
   startScan,
   openReport,
@@ -85,6 +113,10 @@ const services = {
   getUserDataFormUrl,
   openUserDataForm,
   closeUserDataForm,
+  getUserData, 
+  getDataForForm,
+  getToggleStatus,
+  setToggleStatus, 
 };
 
 export default services;
