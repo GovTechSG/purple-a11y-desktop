@@ -64,7 +64,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
             </>
           )}
           <hr />
-          <Link to="/">Scan again</Link>
+          <Link id="scan-again" to="/">Scan again</Link>
         </div>
       </div>
       <div id="form-container">
