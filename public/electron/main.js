@@ -73,16 +73,6 @@ app.on("ready", async () => {
 
   await updateManager.run(updateEvent);
 
-  const userDataEvent = new EventEmitter(); 
-  userDataEvent.on("userDataDoesNotExist", (userData) => {
-    launchWindow.webContents.send("launchStatus", "setUserData"); 
-    ipcMain.once("userDataReceived", (_event, data) => {
-      userData(data);
-    });
-  })
-
-  await userDataManager.setData(userDataEvent); 
-
   launchWindow.close();
 
   const mainReady = new Promise((resolve) => {
@@ -92,11 +82,31 @@ app.on("ready", async () => {
   });
 
   createMainWindow();
-  scanManager.init(mainWindow);
-  userDataManager.run();
+  scanManager.init(mainWindow);  
   await mainReady;
   mainWindow.webContents.send("appStatus", "ready");
   mainWindow.webContents.send("versionNumber", constants.appVersion);
+
+  const userDataEvent = new EventEmitter(); 
+  userDataEvent.on("userDataDoesNotExist", (setUserData) => {  
+    console.log("data does not exist")
+    mainWindow.webContents.send("userDataExists", "doesNotExist"); 
+    ipcMain.once("userDataReceived", (_event, data) => {
+      setUserData(data);
+    });
+  })
+  userDataEvent.on("userDataDoesExist", () => {
+    mainWindow.webContents.send("userDataExists", "exists"); 
+  })
+  
+
+  mainWindow.webContents.on('did-finish-load', async () => {
+    await userDataManager.setData(userDataEvent);
+  })
+
+  userDataManager.getData();
+
+
 });
 
 app.on("quit", () => {

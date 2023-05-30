@@ -6,18 +6,20 @@ const { ipcMain } = require("electron");
 
 const setData = async (userDataEvent) => {
     const userDataExists = fs.existsSync(userDataFilePath);
+    console.log(userDataExists);
     if (!userDataExists) {
         const userData = new Promise((resolve) => {
-            userDataEvent.emit("userDataDoesNotExist", resolve);
+           userDataEvent.emit("userDataDoesNotExist", resolve);
         })
-
-        const userDataReceived = await userData;
+        const userDataReceived = await userData; 
         fs.writeFileSync(userDataFilePath, JSON.stringify(userDataReceived));
-    } 
-} 
+    } else {
+        userDataEvent.emit("userDataDoesExist");
+    }
+}
 
-const run = () => {
-    ipcMain.handle("getUserData", (_event) => {
+const getData = () => {
+    ipcMain.handle("getUserData", (_event) => { 
         const data = JSON.parse(fs.readFileSync(userDataFilePath));
         return data;
     })
@@ -25,5 +27,5 @@ const run = () => {
 
 module.exports = {
     setData, 
-    run
+    getData
 }

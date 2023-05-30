@@ -16,10 +16,11 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   const [email, setEmail] = useState(''); 
   const [name, setName] = useState('');
   const [autoSubmit, setAutoSubmit] = useState(false);
-
+    
   useEffect(() => {
     const getUserData = async () => {
       const userData = await services.getUserData();
+      // if no user data then i set?
       const isEvent = userData['event']; 
       if (!isEvent) {
         setEmail(userData['email']); 
@@ -27,7 +28,6 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
         setAutoSubmit(userData['autoSubmit']);
       }
     }
-
     getUserData()
   }, []);
 
@@ -83,37 +83,38 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   };
 
   return (
-    <div id="home-page">
-      <div id="home-page-main">
-        <img
-          id="a11y-logo"
-          src={a11yLogo}
-          alt="Logo of the GovTech Accessibility Enabling Team"
-        />
-        <h1 id="app-title">Accessibility Site Scanner</h1>
-        <InitScanForm
-          startScan={startScan}
-          prevUrlErrorMessage={prevUrlErrorMessage}
-        />
-        {autoSubmit && 
-          (<div id="user-details">
-            <div>{name}</div>
-            <div>{email}</div>
-          </div>)
-        }
+      <div id="home-page">
+        <div id="home-page-main">
+          <img
+            id="a11y-logo"
+            src={a11yLogo}
+            alt="Logo of the GovTech Accessibility Enabling Team"
+          />
+          <h1 id="app-title">Accessibility Site Scanner</h1>
+          <InitScanForm
+            startScan={startScan}
+            prevUrlErrorMessage={prevUrlErrorMessage}
+          />
+          {autoSubmit && 
+            (<div id="user-details">
+              <div>{name}</div>
+              <div>{email}</div>
+            </div>)
+          }
+        </div>
+        <div id="home-page-footer">
+          <img
+            id="app-illustration"
+            src={appIllustration}
+            alt="Illustration showing people with sight, hearing, motor and cognitive disabilities"
+          />
+          <span id="footer-text">
+            Version {appVersion} | Built by GovTech Accessibility Enabling Team
+          </span>
+        </div>
       </div>
-      <div id="home-page-footer">
-        <img
-          id="app-illustration"
-          src={appIllustration}
-          alt="Illustration showing people with sight, hearing, motor and cognitive disabilities"
-        />
-        <span id="footer-text">
-          Version {appVersion} | Built by GovTech Accessibility Enabling Team
-        </span>
-      </div>
-    </div>
   );
+  
 };
 
 export default HomePage;

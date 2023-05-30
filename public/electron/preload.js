@@ -40,6 +40,12 @@ contextBridge.exposeInMainWorld("services", {
       callback(data);
     });
   },
+  userDataExists: (callback) => {
+    ipcRenderer.on("userDataExists", (event, data) => {
+      console.log(data);
+      callback(data);
+    })
+  },
   proceedUpdate: (response) => {
     ipcRenderer.send("proceedUpdate", response);
   },
