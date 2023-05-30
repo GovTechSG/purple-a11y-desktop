@@ -20,9 +20,12 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   useEffect(() => {
     const getUserData = async () => {
       const userData = await services.getUserData();
-      setEmail(userData['email']); 
-      setName(userData['name']); 
-      setAutoSubmit(userData['autoSubmit']);
+      const isEvent = userData['event']; 
+      if (!isEvent) {
+        setEmail(userData['email']); 
+        setName(userData['name']); 
+        setAutoSubmit(userData['autoSubmit']);
+      }
     }
 
     getUserData()
@@ -79,11 +82,6 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
     navigate("/error");
   };
 
-  const handleChecked = () => {
-    services.setToggleStatus(!autoSubmit);
-    setAutoSubmit(!autoSubmit);
-  }
-
   return (
     <div id="home-page">
       <div id="home-page-main">
@@ -97,14 +95,12 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
           startScan={startScan}
           prevUrlErrorMessage={prevUrlErrorMessage}
         />
-        <div>
-          <input type="checkbox" checked={autoSubmit} onChange={handleChecked}></input>
-          <label>Auto-Submit Form</label>
-        </div>
-        <div id="user-details">
-          <div>{name}</div>
-          <div>{email}</div>
-        </div>
+        {autoSubmit && 
+          (<div id="user-details">
+            <div>{name}</div>
+            <div>{email}</div>
+          </div>)
+        }
       </div>
       <div id="home-page-footer">
         <img

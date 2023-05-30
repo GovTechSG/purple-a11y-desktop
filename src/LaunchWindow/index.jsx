@@ -64,22 +64,22 @@ const LaunchWindow = () => {
   };
 
   const handleSetUserData = () => () => {
-    // const invalidName = (userName === null || userName.trim() === ''); 
-    // const invalidEmail = (userEmail === null || userEmail.trim() === '' || !isValidEmail(userEmail));
+    const invalidName = (userName === null || userName.trim() === ''); 
+    const invalidEmail = (userEmail === null || userEmail.trim() === '' || !isValidEmail(userEmail));
 
-    // if (invalidEmail || invalidName) {
-    //   setErrorMessage("Invalid name or email.");
-    //   return;
-    // } else {
+    if (invalidEmail || invalidName) {
+      setErrorMessage("Invalid name or email.");
+      // return;
+    } else {
       window.services.setUserData({name: userName, email: userEmail, autoSubmit: true});
       setUserData(false);
-    // }
+    }
   }
 
-  // const isValidEmail = (email) => {
-  //   let regex = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
-  //   return regex.test(email);
-  // }
+  const isValidEmail = (email) => {
+    let regex = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
+    return regex.test(email);
+  }
 
   const { main: displayedMessage, sub: displayedSub } = messages[launchStatus];
 

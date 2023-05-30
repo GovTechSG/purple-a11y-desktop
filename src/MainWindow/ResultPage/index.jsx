@@ -15,6 +15,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const [email, setEmail] = useState(''); 
   const [name, setName] = useState('');
   const [autoSubmit, setAutoSubmit] = useState(false);
+  const [event, setEvent] = useState(false); 
 
   // useEffect(() => {
   //   services.openUserDataForm();
@@ -29,23 +30,24 @@ const ResultPage = ({ completedScanId: scanId }) => {
   useEffect(() => {
     const getDataForForm = async () => {
       const data =  await services.getDataForForm();
-      if (!ignore) {
-        setWebsiteUrl(data['websiteUrl']); 
-        setScanType(data['scanType']); 
-        let isAutoSubmit = data['autoSubmit'];
-        if (isAutoSubmit) {
-          setEmail(data['email']); 
-          setName(data['name']);
+      setWebsiteUrl(data['websiteUrl']); 
+      setScanType(data['scanType']); 
+      let isAutoSubmit = data['autoSubmit'];
+      let isEvent = data['event']; 
+      if (isAutoSubmit) {
+        setEmail(data['email']); 
+        setName(data['name']);
+      } else {
+        if (!isEvent) {
+          setEnableReportDownload(true);
         }
-        setAutoSubmit(data['autoSubmit']);
       }
+      setEvent(data['event']);
+      setAutoSubmit(data['autoSubmit']);
     }
-    let ignore = false; 
+
     getDataForForm();
-    return () => {
-      ignore = true;
-    }
-  })
+  }, [])
 
   useEffect(() => {
     const submitForm = async () => {
@@ -58,7 +60,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
         formData.append(userDataFormInputFields.scanTypeField, scanType); 
         formData.append(userDataFormInputFields.emailField, email); 
         formData.append(userDataFormInputFields.nameField, name);
-  
+
         // Send POST request to Google Form
         await axios.post(formUrl, formData);
   
@@ -92,18 +94,21 @@ const ResultPage = ({ completedScanId: scanId }) => {
     event.preventDefault();
 
     try {
-      const formUrl = userDataFormInputFields.formUrl;
-      await fetch(formUrl, {
-        method: 'POST',
-        body: new FormData(event.target),
-      });
-
       setEnableReportDownload(true);
+      setEvent(false);  
+
+      const formUrl = userDataFormInputFields.formUrl;
+      const formData = new FormData(event.target);
+
+      await axios.post(formUrl, formData);
+
       // Form submission successful
       console.log('Form submitted successfully!');
     } catch (error) {
       // Handle error
       console.error('Form submission error:', error);
+      // Write to error log
+
     }
   }
 
@@ -113,7 +118,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
         <div id="main-contents">
           <i className="bi bi-check-circle"></i>
           <h1>Scan completed</h1>
-            { enableReportDownload ? 
+            { enableReportDownload && !event ? 
             (
               <>
               <Button

@@ -17,22 +17,15 @@ contextBridge.exposeInMainWorld("services", {
     const reportZip = await ipcRenderer.invoke("downloadResults", scanId);
     return reportZip;
   },
-  openUserDataForm: (url) => {
-    ipcRenderer.send("openUserDataForm", url);
-  },
-  closeUserDataForm: (url) => {
-    ipcRenderer.send("closeUserDataForm", url);
-  },
+  // openUserDataForm: (url) => {
+  //   ipcRenderer.send("openUserDataForm", url);
+  // },
+  // closeUserDataForm: (url) => {
+  //   ipcRenderer.send("closeUserDataForm", url);
+  // },
   getUserData: async () => {
     const data = await ipcRenderer.invoke("getUserData"); 
     return data;
-  },
-  getToggleStatus: async () => {
-    const status = await ipcRenderer.invoke("getToggleStatus"); 
-    return status; 
-  },
-  setToggleStatus: (status) => {
-    ipcRenderer.send("setToggleStatus", status)
   },
   guiReady: async () => {
     ipcRenderer.send("guiReady");
@@ -56,10 +49,10 @@ contextBridge.exposeInMainWorld("services", {
   enableReportDownload: (callback) => {
     ipcRenderer.on("enableReportDownload", () => callback());
   },
-  handleRetryOpenForm: (callback) => {
-    ipcRenderer.on("retryOpenForm", () => callback());
-  },
-  handleFormOpenFailure: (callback) => {
-    ipcRenderer.on("formOpenFailure", () => callback());
-  },
+  // handleRetryOpenForm: (callback) => {
+  //   ipcRenderer.on("retryOpenForm", () => callback());
+  // },
+  // handleFormOpenFailure: (callback) => {
+  //   ipcRenderer.on("formOpenFailure", () => callback());
+  // },
 });
