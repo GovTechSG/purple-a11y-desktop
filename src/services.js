@@ -4,7 +4,7 @@ and the renderer. The APIs are provided via the window.services object, as defin
 
 import {
   scanTypes,
-  userDataFormDetails,
+  // userDataFormDetails,
   viewportTypes,
   devices,
 } from "./common/constants";
@@ -62,21 +62,21 @@ const downloadResults = async (scanId) => {
   return reportZip;
 };
 
-const getUserDataFormUrl = () => {
-  const { formUrl, urlScannedField, scanTypeField } = userDataFormDetails;
-  const encodedUrl = encodeURIComponent(currentScanUrl);
-  const encodedScanType = encodeURIComponent(currentScanType);
+// const getUserDataFormUrl = () => {
+//   const { formUrl, urlScannedField, scanTypeField } = userDataFormDetails;
+//   const encodedUrl = encodeURIComponent(currentScanUrl);
+//   const encodedScanType = encodeURIComponent(currentScanType);
 
-  return `${formUrl}/?${urlScannedField}=${encodedUrl}&${scanTypeField}=${encodedScanType}`;
-};
+//   return `${formUrl}/?${urlScannedField}=${encodedUrl}&${scanTypeField}=${encodedScanType}`;
+// };
 
-const openUserDataForm = () => {
-  window.services.openUserDataForm(getUserDataFormUrl());
-};
+// const openUserDataForm = () => {
+//   window.services.openUserDataForm(getUserDataFormUrl());
+// };
 
-const closeUserDataForm = () => {
-  window.services.closeUserDataForm();
-};
+// const closeUserDataForm = () => {
+//   window.services.closeUserDataForm();
+// };
 
 const getUserData = async () => {
   const userData = await window.services.getUserData(); 
@@ -99,15 +99,21 @@ const getDataForForm = async () => {
   }
 };
 
+const isValidEmail = (email) => {
+  let regex = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
+  return regex.test(email);
+}
+
 const services = {
   startScan,
   openReport,
   downloadResults,
-  getUserDataFormUrl,
-  openUserDataForm,
-  closeUserDataForm,
+  // getUserDataFormUrl,
+  // openUserDataForm,
+  // closeUserDataForm,
   getUserData, 
   getDataForForm,
+  isValidEmail
 };
 
 export default services;

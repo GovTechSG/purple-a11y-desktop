@@ -42,7 +42,6 @@ contextBridge.exposeInMainWorld("services", {
   },
   userDataExists: (callback) => {
     ipcRenderer.on("userDataExists", (event, data) => {
-      console.log(data);
       callback(data);
     })
   },

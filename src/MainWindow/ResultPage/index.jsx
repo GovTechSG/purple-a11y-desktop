@@ -16,6 +16,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const [name, setName] = useState('');
   const [autoSubmit, setAutoSubmit] = useState(false);
   const [event, setEvent] = useState(false); 
+  const [errorMessage, setErrorMessage] = useState(false);
 
   // useEffect(() => {
   //   services.openUserDataForm();
@@ -34,6 +35,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
       setScanType(data['scanType']); 
       let isAutoSubmit = data['autoSubmit'];
       let isEvent = data['event']; 
+      
       if (isAutoSubmit) {
         setEmail(data['email']); 
         setName(data['name']);
@@ -42,6 +44,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
           setEnableReportDownload(true);
         }
       }
+      
       setEvent(data['event']);
       setAutoSubmit(data['autoSubmit']);
     }
@@ -94,6 +97,11 @@ const ResultPage = ({ completedScanId: scanId }) => {
     event.preventDefault();
 
     try {
+      if (!services.isValidEmail(email)) {
+        setErrorMessage('Please enter a valid email');
+        return;
+      }
+
       setEnableReportDownload(true);
       setEvent(false);  
 
@@ -152,7 +160,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
                 <input type="text" id="form-name" name={userDataFormInputFields.nameField} value={name} onChange={(e) => setName(e.target.value)}></input>
                 <label for="form-email">Email:</label>
                 <input type="text" id="form-email" name={userDataFormInputFields.emailField} value={email} onChange={(e) => setEmail(e.target.value)}></input>
-                
+                {errorMessage && (<p className="error-text">{errorMessage}</p>)}
                 <Button type="submit">
                   View Results
                 </Button>

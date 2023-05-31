@@ -83,13 +83,13 @@ app.on("ready", async () => {
 
   createMainWindow();
   scanManager.init(mainWindow);  
+  userDataManager.getData();
   await mainReady;
   mainWindow.webContents.send("appStatus", "ready");
   mainWindow.webContents.send("versionNumber", constants.appVersion);
 
   const userDataEvent = new EventEmitter(); 
   userDataEvent.on("userDataDoesNotExist", (setUserData) => {  
-    console.log("data does not exist")
     mainWindow.webContents.send("userDataExists", "doesNotExist"); 
     ipcMain.once("userDataReceived", (_event, data) => {
       setUserData(data);
@@ -99,14 +99,7 @@ app.on("ready", async () => {
     mainWindow.webContents.send("userDataExists", "exists"); 
   })
   
-
-  mainWindow.webContents.on('did-finish-load', async () => {
-    await userDataManager.setData(userDataEvent);
-  })
-
-  userDataManager.getData();
-
-
+  await userDataManager.setData(userDataEvent);
 });
 
 app.on("quit", () => {

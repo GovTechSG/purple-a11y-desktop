@@ -6,7 +6,6 @@ const { ipcMain } = require("electron");
 
 const setData = async (userDataEvent) => {
     const userDataExists = fs.existsSync(userDataFilePath);
-    console.log(userDataExists);
     if (!userDataExists) {
         const userData = new Promise((resolve) => {
            userDataEvent.emit("userDataDoesNotExist", resolve);
