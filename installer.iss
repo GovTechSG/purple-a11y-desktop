@@ -39,8 +39,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\a11y\Desktop\Purple HATS-win32-x64\*"; DestDir: "C:\Program Files\Purple HATS\Purple HATS Frontend"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\a11y\Desktop\purple-hats-portable-window\*"; DestDir: "C:\Program Files\Purple HATS\Purple HATS Backend"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\a11y\Desktop\Purple HATS-win32-x64\*"; DestDir: "C:\Program Files\Purple HATS Desktop\Purple HATS Frontend"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\a11y\Desktop\purple-hats-portable-window\*"; DestDir: "C:\Program Files\Purple HATS Desktop\Purple HATS Backend"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
