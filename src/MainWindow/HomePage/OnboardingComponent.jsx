@@ -13,13 +13,18 @@ const OnboardingComponent = ({
     userInputErrorMessage
 }) => {
     const [step, setStep] = useState(1);
-    
+    const [animation, setAnimation] = useState("in");
+
     const handleOnBackClick = () => {
+        setAnimation("out");
         setStep(step - 1);
+        setAnimation("in");
     }
 
     const handleOnNextClick = () => {
+        setAnimation("out");
         setStep(step + 1);
+        setAnimation("in");
     }
 
     const backButton = <Button type="secondary" className="secondary modal-half-button modal-left-button" onClick={handleOnBackClick}>Back</Button>; 
@@ -39,6 +44,8 @@ const OnboardingComponent = ({
                     modalFooter={
                         <Button type="primary" className="modal-full-button" onClick={handleOnNextClick}>Let's go</Button>
                     }
+                    key={step}
+                    animation={animation}
                 />
             )
         }
@@ -58,6 +65,8 @@ const OnboardingComponent = ({
                            {nextButton}
                         </>
                     }
+                    key={step}
+                    animation={animation}
                 />
             )
         }
@@ -77,6 +86,7 @@ const OnboardingComponent = ({
                             {nextButton}
                         </>
                     }
+                    key={step}
                 />
             )
         }
@@ -107,6 +117,7 @@ const OnboardingComponent = ({
                             <button type="submit" form={formID} className="primary modal-half-button modal-right-button">I consent</button>
                         </>
                     }
+                    key={step}
                 />
             )
         }

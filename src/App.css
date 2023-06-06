@@ -128,9 +128,8 @@ a:hover {
   }
 
   .modal-footer-button {
-    position: absolute;
-    bottom: 0; 
     width: 100%;
+    align-self: flex-end;
     align-items: center;
     display: flex;
   }
@@ -180,4 +179,30 @@ a:hover {
     background: white;
     border: 1px solid #B5C5CA;;
     border-radius: 4px;
+  }
+
+  .fade-in {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0s linear 0s, opacity 300ms;
+  }
+
+  .fade-out {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s linear 300ms, opacity 300ms; 
+  }
+
+  @keyframes in {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    } to {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+  }
+
+  .in {
+    animation: in 0.5s;
   }
