@@ -39,6 +39,7 @@ function createMainWindow() {
 
 // TODO set ipcMain messages
 app.on("ready", async () => {
+  // create settings file if it does not exist 
   const launchWindowReady = new Promise((resolve) => {
     ipcMain.once("guiReady", () => {
       resolve();

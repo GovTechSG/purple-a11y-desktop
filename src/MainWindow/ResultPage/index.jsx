@@ -5,6 +5,7 @@ import "./ResultPage.scss";
 import services from "../../services";
 import { Link } from "react-router-dom";
 import axios from 'axios'
+import { chromium } from 'playwright';
 
 const ResultPage = ({ completedScanId: scanId }) => {
   // const [userDataFormOpenUnsuccessful, setUserDataFormOpenUnsuccessful] =
@@ -57,16 +58,41 @@ const ResultPage = ({ completedScanId: scanId }) => {
       const formUrl = userDataFormInputFields.formUrl; 
   
       try {
-        // Collect form data
-        const formData = new FormData();
-        formData.append(userDataFormInputFields.websiteUrlField, websiteUrl); 
-        formData.append(userDataFormInputFields.scanTypeField, scanType); 
-        formData.append(userDataFormInputFields.emailField, email); 
-        formData.append(userDataFormInputFields.nameField, name);
+        // // Collect form data
+        // const formData = new FormData();
+        // formData.append(userDataFormInputFields.websiteUrlField, websiteUrl); 
+        // formData.append(userDataFormInputFields.scanTypeField, scanType); 
+        // formData.append(userDataFormInputFields.emailField, email); 
+        // formData.append(userDataFormInputFields.nameField, name);
 
-        // Send POST request to Google Form
-        await axios.post(formUrl, formData);
-  
+        // // Send POST request to Google Form
+        // await axios.post(formUrl, formData);
+        
+        const browser = await chromium.launch({
+          channel:"chrome", 
+          headless: false
+        });
+        const context = await browser.newContext(
+          {
+            ignoreHTTPSErrors: true,
+            serviceWorkers: 'block'
+          }
+        ); 
+        const page = await context.newPage();
+
+        await page.goto(formUrl);
+        await page.getByRole('textbox', { name: 'Website URL' }).fill(websiteUrl);
+        await page.getByRole('textbox', { name: 'Scan Type' }).click();
+        await page.getByRole('textbox', { name: 'Scan Type' }).fill(scanType);
+        await page.getByRole('textbox', { name: 'Email' }).click();
+        await page.getByRole('textbox', { name: 'Email' }).fill(email);
+        await page.getByRole('textbox', { name: 'Name' }).click();
+        await page.getByRole('textbox', { name: 'Name' }).fill(name);
+        await page.getByRole('button', { name: 'Get link' }).click();
+
+        await context.close();
+        await browser.close();
+
         // Form submission successful
         console.log('Form submitted successfully!');
       } catch (error) {
