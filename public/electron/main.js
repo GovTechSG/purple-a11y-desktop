@@ -90,7 +90,6 @@ app.on("ready", async () => {
 
   const userDataEvent = new EventEmitter(); 
   userDataEvent.on("userDataDoesNotExist", (setUserData) => {  
-    console.log("does not exist");
     mainWindow.webContents.send("userDataExists", "doesNotExist"); 
     ipcMain.once("userDataReceived", (_event, data) => {
       setUserData(data);

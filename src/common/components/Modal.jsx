@@ -5,7 +5,6 @@ const Modal = ({
     modalBody, 
     modalDesc, 
     modalFooter, 
-    animation,
     key,
 }) => {
     return (

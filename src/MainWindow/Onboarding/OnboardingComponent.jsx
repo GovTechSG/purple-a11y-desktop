@@ -13,18 +13,13 @@ const OnboardingComponent = ({
     userInputErrorMessage
 }) => {
     const [step, setStep] = useState(1);
-    const [animation, setAnimation] = useState("in");
 
     const handleOnBackClick = () => {
-        setAnimation("out");
         setStep(step - 1);
-        setAnimation("in");
     }
 
     const handleOnNextClick = () => {
-        setAnimation("out");
         setStep(step + 1);
-        setAnimation("in");
     }
 
     const backButton = <Button type="secondary" className="secondary modal-half-button modal-left-button" onClick={handleOnBackClick}>Back</Button>; 
@@ -45,7 +40,6 @@ const OnboardingComponent = ({
                         <Button type="primary" className="modal-full-button" onClick={handleOnNextClick}>Let's go</Button>
                     }
                     key={step}
-                    animation={animation}
                 />
             )
         }
@@ -66,7 +60,6 @@ const OnboardingComponent = ({
                         </>
                     }
                     key={step}
-                    animation={animation}
                 />
             )
         }
@@ -77,7 +70,7 @@ const OnboardingComponent = ({
                     showCloseButton={false}
                     modalTitle={"Custom Flow"}
                     modalBody={
-                        <img className="modal-img" src={firstTimer3} ></img>
+                        <object className="modal-img" data={firstTimer3}></object>
                     }
                     modalDesc={"Custom flow scan type allows you to specify a user journey of your choice by recording a series of actions on the browser and re-play them automatically."}
                     modalFooter={
