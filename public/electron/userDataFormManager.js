@@ -67,7 +67,6 @@ const init = () => {
         {
           ignoreDefaultArgs: ['--use-mock-keychain'], 
           ...(browserChannel && {channel: browserChannel}),
-          headless: false
         }
     );
 

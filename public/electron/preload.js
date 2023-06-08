@@ -20,12 +20,6 @@ contextBridge.exposeInMainWorld("services", {
   submitFormViaBrowser: (formDetails) => {
     ipcRenderer.send("submitFormViaBrowser", formDetails);
   },
-  // openUserDataForm: (url) => {
-  //   ipcRenderer.send("openUserDataForm", url);
-  // },
-  // closeUserDataForm: (url) => {
-  //   ipcRenderer.send("closeUserDataForm", url);
-  // },
   getUserData: async () => {
     const data = await ipcRenderer.invoke("getUserData"); 
     return data;
@@ -57,10 +51,4 @@ contextBridge.exposeInMainWorld("services", {
   enableReportDownload: (callback) => {
     ipcRenderer.on("enableReportDownload", () => callback());
   },
-  // handleRetryOpenForm: (callback) => {
-  //   ipcRenderer.on("retryOpenForm", () => callback());
-  // },
-  // handleFormOpenFailure: (callback) => {
-  //   ipcRenderer.on("formOpenFailure", () => callback());
-  // },
 });

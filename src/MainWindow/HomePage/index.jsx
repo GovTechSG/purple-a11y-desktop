@@ -15,9 +15,9 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   const [prevUrlErrorMessage, setPrevUrlErrorMessage] = useState(
     location.state
   );
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [autoSubmit, setAutoSubmit] = useState(false);
+  // const [email, setEmail] = useState("");
+  // const [name, setName] = useState("");
+  // const [autoSubmit, setAutoSubmit] = useState(false);
   const [browser, setBrowser] = useState(null);
   const [showBasicAuthModal, setShowBasicAuthModal] = useState(false);
 
@@ -33,13 +33,13 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   useEffect(() => {
     const getUserData = async () => {
       const userData = await services.getUserData();
-      const isEvent = userData["event"];
-      if (!isEvent) {
-        setEmail(userData['email']); 
-        setName(userData['name']); 
-        setAutoSubmit(userData['autoSubmit']);
-        setBrowser(userData['browser'])
-      }
+      setBrowser(userData['browser'])
+      // const isEvent = userData["event"];
+      // if (!isEvent) {
+      //   setEmail(userData['email']); 
+      //   setName(userData['name']); 
+      //   setAutoSubmit(userData['autoSubmit']);   
+      // }
     };
 
     getUserData();

@@ -7,8 +7,6 @@ import { Link } from "react-router-dom";
 // import axios from 'axios'
 
 const ResultPage = ({ completedScanId: scanId }) => {
-  // const [userDataFormOpenUnsuccessful, setUserDataFormOpenUnsuccessful] =
-  //   useState(false);
   const [enableReportDownload, setEnableReportDownload] = useState(false);
   const [websiteUrl, setWebsiteUrl] = useState(null);
   const [scanType, setScanType] = useState(null); 
@@ -18,16 +16,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const [autoSubmit, setAutoSubmit] = useState(false);
   const [event, setEvent] = useState(false); 
   const [errorMessage, setErrorMessage] = useState(false);
-
-  // useEffect(() => {
-  //   services.openUserDataForm();
-  //   window.services.enableReportDownload(() => setEnableReportDownload(true));
-  //   window.services.handleRetryOpenForm(() => services.openUserDataForm());
-  //   window.services.handleFormOpenFailure(() =>
-  //     setUserDataFormOpenUnsuccessful(true)
-  //   );
-  //   return () => services.closeUserDataForm();
-  // }, []);
 
   useEffect(() => {
     const getDataForForm = async () => {
@@ -188,25 +176,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
           <Link to="/">Scan again</Link>
         </div>
       </div>
-      {/* <div id="form-container">
-        {userDataFormOpenUnsuccessful && (
-          <>
-            <span>
-              Help us out by filling this{" "}
-              {
-                <a
-                  href={services.getUserDataFormUrl()}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  form
-                </a>
-              }
-              .
-            </span>
-          </>
-        )}
-      </div> */}
     </div>
   );
 };

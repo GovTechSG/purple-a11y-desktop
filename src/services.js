@@ -64,22 +64,6 @@ const downloadResults = async (scanId) => {
   return reportZip;
 };
 
-// const getUserDataFormUrl = () => {
-//   const { formUrl, urlScannedField, scanTypeField } = userDataFormDetails;
-//   const encodedUrl = encodeURIComponent(currentScanUrl);
-//   const encodedScanType = encodeURIComponent(currentScanType);
-
-//   return `${formUrl}/?${urlScannedField}=${encodedUrl}&${scanTypeField}=${encodedScanType}`;
-// };
-
-// const openUserDataForm = () => {
-//   window.services.openUserDataForm(getUserDataFormUrl());
-// };
-
-// const closeUserDataForm = () => {
-//   window.services.closeUserDataForm();
-// };
-
 const getUserData = async () => {
   const userData = await window.services.getUserData(); 
   return userData;
@@ -112,9 +96,6 @@ const services = {
   startScan,
   openReport,
   downloadResults,
-  // getUserDataFormUrl,
-  // openUserDataForm,
-  // closeUserDataForm,
   getUserData, 
   getDataForForm,
   isValidEmail
