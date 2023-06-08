@@ -83,13 +83,15 @@ const init = () => {
     await page.getByRole('textbox', { name: 'Name' }).fill(formDetails.name);
     await page.getByRole('button', { name: 'Submit' }).click();
 
+    await page.close();
+    await context.close();
+
     if (browserChannel == browserTypes.chrome) {
       deleteClonedChromeProfiles(); 
     } else if (browserChannel == browserTypes.edge) {
-      deleteClonedEdgeProfiles; 
+      deleteClonedEdgeProfiles(); 
     } 
 
-    await context.close();
   }) 
 }
 
@@ -262,6 +264,7 @@ const cloneLocalStateFile = (options, destDir) => {
 
 const cloneChromeProfiles = () => {
   const baseDir = getDefaultChromeDataDir();
+  console.log(baseDir);
 
   if (!baseDir) {
     console.error('Unable to find Chrome data directory in the system.');
