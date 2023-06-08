@@ -7,6 +7,7 @@ const {
   enginePath,
   getPathVariable,
   playwrightBrowsersPath,
+  resultsPath
 } = require("./constants");
 
 const scanHistory = {};
@@ -53,7 +54,7 @@ const startScan = async (scanDetails) => {
       getScanOptions(scanDetails),
       {
         silent: true,
-        cwd: enginePath,
+        cwd: resultsPath,
         env: {
           PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
           PATH: getPathVariable(),

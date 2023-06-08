@@ -1,9 +1,9 @@
 const path = require("path");
 const os = require("os");
 
-const appDataPath =
+const appPath =
   os.platform() === "win32"
-    ? path.join(process.env.APPDATA, "Purple HATS")
+    ? path.join(process.env.PROGRAMFILES, "Purple HATS Desktop")
     : path.join(
         process.env.HOME,
         "Library",
@@ -14,7 +14,9 @@ const appDataPath =
 const releaseUrl =
   "https://api.github.com/repos/GovTechSG/purple-hats/releases/latest";
 
-const backendPath = path.join(appDataPath, "backend");
+const resultsPath = path.join(process.env.APPDATA, "Purple HATS");
+
+const backendPath = path.join(appPath, "Purple HATS Backend");
 
 const enginePath = path.join(backendPath, "purple-hats");
 
@@ -65,14 +67,14 @@ const customFlowGeneratedScriptsPath = path.join(
 );
 
 const updateBackupsFolder = path.join(
-  appDataPath,
+  appPath,
   "30789f0f-73f5-43bc-93a6-e499e4a20f7a"
 );
 
-const phZipPath = path.join(appDataPath, "PHLatest.zip");
+const phZipPath = path.join(appPath, "PHLatest.zip");
 
 module.exports = {
-  appDataPath,
+  appPath,
   releaseUrl,
   backendPath,
   enginePath,
@@ -87,4 +89,5 @@ module.exports = {
   customFlowGeneratedScriptsPath,
   updateBackupsFolder,
   phZipPath,
+  resultsPath
 };
