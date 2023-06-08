@@ -5,6 +5,7 @@ const Modal = ({
     modalBody, 
     modalDesc, 
     modalFooter, 
+    pageIndicator, 
     key,
 }) => {
     return (
@@ -21,6 +22,7 @@ const Modal = ({
                     {!isTopTitle && <h3 className="modal-title">{modalTitle}</h3>}
                     <p className="modal-desc">{modalDesc}</p>
                 </div>
+                {pageIndicator && <div className="page-indicator">{pageIndicator}</div>}
                 <div className="modal-footer-button">{modalFooter}</div>
             </div>
         </div>

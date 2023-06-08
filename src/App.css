@@ -94,7 +94,7 @@ a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(1, 1, 1, 0.5);
+    background-color: rgba(1, 1, 1, 0.1);
   }
 
   .modal-container {
@@ -103,6 +103,7 @@ a:hover {
     padding: 32px; 
     background-color: #F6F8F9;
     box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.1), 0px 8px 8px -4px rgba(16, 24, 40, 0.04);
+    border-radius: 4px;
     display: flex;
     flex-direction: column;
   }
@@ -162,6 +163,12 @@ a:hover {
     margin: 30px 0 30px 0;
   }
 
+  .page-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .user-form {
     margin: 20px 0 40px 0;
     padding: 10px;
@@ -190,7 +197,7 @@ a:hover {
   @keyframes in {
     from {
       opacity: 0;
-      transform: translateX(-20px);
+      transform: translateX(20px);
     } to {
       opacity: 1;
       transform: translateX(0px);
