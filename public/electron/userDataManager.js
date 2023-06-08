@@ -12,7 +12,7 @@ const init = async () => {
             email: "",
             autoSubmit: true, 
             event: false, 
-            browserBased: "chrome", 
+            browser: "chrome", 
             autoUpdate: true
         }; 
         fs.writeFileSync(userDataFilePath, JSON.stringify(defaultSettings));

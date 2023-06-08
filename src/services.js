@@ -91,7 +91,7 @@ const getDataForForm = async () => {
   const name = userData['name'];
   const autoSubmit = userData['autoSubmit'];
   const event = userData['event'];
-  const browserBased = userData['browserBased'];
+  const browser = userData['browser'];
   return {
     websiteUrl: currentScanUrl, 
     scanType: currentScanType, 
@@ -99,7 +99,7 @@ const getDataForForm = async () => {
     name: name,
     autoSubmit: autoSubmit, 
     event: event,
-    browserBased: browserBased
+    browser: browser
   }
 };
 

@@ -1,73 +1,59 @@
 const { ipcMain, BrowserView } = require("electron");
-// const path = require("path");
-// const os = require("os");
-// const fs = require("fs");
-// import { globSync } from 'glob';
+const path = require("path");
+const os = require("os");
+const fs = require("fs");
+const { globSync } = require("glob"); 
 
-// const browserTypes = {
-//   chrome: 'chrome', 
-//   edge: 'msedge',
-//   chromium: null
-// }
+const browserTypes = {
+  chrome: 'chrome', 
+  edge: 'msedge',
+  chromium: 'chromium'
+}
 
 const init = () => {
   ipcMain.on("submitFormViaBrowser", async (_event, formDetails) => {
+
     const playwright = require('/Users/erinong/Library/Application Support/Purple HATS/backend/purple-hats/node_modules/playwright/index.js'); 
     const chromium = playwright.chromium;
+        
+    const chromeDataDir = getDefaultChromeDataDir(); 
+    const edgeDataDir = getDefaultEdgeDataDir(); 
 
-    // const chromeDataDir = getDefaultChromeDataDir(); 
-    // const edgeDataDir = getDefaultEdgeDataDir(); 
+    let browserChannel; 
+    let userDataDir; 
 
-    // let browserChannel; 
-    // let userDataDir; 
+    if (formDetails.browser == browserTypes.chrome  && chromeDataDir) {
+      browserChannel = browserTypes.chrome;
+      userDataDir = cloneChromeProfiles();
+    } else if (formDetails.browser == browserTypes.edge && edgeDataDir) {
+      browserChannel = browserTypes.edge; 
+      userDataDir = cloneEdgeProfiles()
+    } else {
+      hasUserProfile = false; 
+      browserChannel = null; 
+      userDataDir = ""; 
+    }
 
-    // if (formDetails.browserBased == browserTypes.chrome) {
-    //   if (chromeDataDir) {
-    //     browserChannel = browserTypes.chrome;
-    //     userDataDir = cloneChromeProfiles();
-    //   } else {
-    //     if (edgeDataDir) {
-    //       browserChannel = browserTypes.edge; 
-    //       userDataDir = cloneEdgeProfiles()
-    //     } else {
-    //       browserChannel = browserTypes.chromium; 
+    const context = await chromium.launchPersistentContext(
+        userDataDir, 
+        {
+          ignoreDefaultArgs: ['--use-mock-keychain'], 
+          ...(browserChannel && {channel: browserChannel}),
+          headless: false
+        }
+    );
+    // } else {
+    //   browser = await chromium.launch({
+    //     headless: false
+    //   })
+    //   context = await browser.newContext(
+    //     {
+    //       ignoreHTTPSErrors: true,
+    //       serviceWorkers: 'block'
     //     }
-    //   }
-    // } 
-
-    // if (formDetails.browserBased == browserTypes.edge) {
-    //   if (edgeDataDir) {
-    //     browserChannel = browserTypes.edge; 
-    //     userDataDir = cloneEdgeProfiles()
-    //   } else {
-    //     if (chromeDataDir) {
-    //       browserChannel = browserTypes.chrome;
-    //       userDataDir = cloneChromeProfiles();
-    //     } else {
-    //       browserChannel = browserTypes.chromium; 
-    //     }
-    //   }
+    //   ); 
     // }
 
-    // const browser = await chromium.launchPersistentContext(
-    //   userDataDir, 
-    //   {
-    //     ignoreDefaultArgs: ['--use-mock-keychain'], 
-    //     ...(browserChannel && {channel: browserChannel}),
-    //     headless: false
-    //   }
-    // );
-
-    const browser = await chromium.launch({
-      channel: formDetails.browserBased, 
-      headless: false
-    })
-    const context = await browser.newContext(
-      {
-        ignoreHTTPSErrors: true,
-        serviceWorkers: 'block'
-      }
-    ); 
     const page = await context.newPage();
 
     await page.goto(formDetails.formUrl);
@@ -80,14 +66,13 @@ const init = () => {
     await page.getByRole('textbox', { name: 'Name' }).fill(formDetails.name);
     await page.getByRole('button', { name: 'Submit' }).click();
 
-    // if (browserChannel == browserTypes.chrome) {
-    //   deleteClonedChromeProfiles(); 
-    // } else if (browserChannel == browserTypes.edge) {
-    //   deleteClonedEdgeProfiles; 
-    // }
+    if (browserChannel == browserTypes.chrome) {
+      deleteClonedChromeProfiles(); 
+    } else if (browserChannel == browserTypes.edge) {
+      deleteClonedEdgeProfiles; 
+    } 
 
     await context.close();
-    await browser.close();
   }) 
 }
 
