@@ -132,12 +132,12 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
           startScan={startScan}
           prevUrlErrorMessage={prevUrlErrorMessage}
         />
-        {autoSubmit && (
+        {/* {autoSubmit && (
           <div id="user-details">
             <div>{name}</div>
             <div>{email}</div>
           </div>
-        )}
+        )} */}
       </div>
       <Modal
         id="basic-auth-modal"
