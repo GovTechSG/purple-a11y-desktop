@@ -20,7 +20,7 @@ const killChildProcess = () => {
 };
 
 const getScanOptions = (details) => {
-  const { scanType, url, customDevice, viewportWidth, maxPages, headlessMode } =
+  const { scanType, url, customDevice, viewportWidth, maxPages, headlessMode, browserBased } =
     details;
   const options = ["-c", scanType, "-u", url];
 
@@ -40,6 +40,10 @@ const getScanOptions = (details) => {
     options.push("-h", "no");
   }
 
+  if (browserBased) {
+    options.push("-b", browserBased);
+  }
+  
   return options;
 };
 

@@ -22,6 +22,7 @@ const startScan = async (scanDetails) => {
     device,
     viewportWidth,
     scanInBackground,
+    browerBased
   } = scanDetails;
 
   currentScanUrl = scanUrl;
@@ -31,6 +32,7 @@ const startScan = async (scanDetails) => {
     scanType: scanTypes[selectedScanType],
     url: scanUrl,
     headlessMode: scanInBackground,
+    browerBased: browerBased
   };
 
   if (selectedScanType !== Object.keys(scanTypes)[2]) {
@@ -89,6 +91,7 @@ const getDataForForm = async () => {
   const name = userData['name'];
   const autoSubmit = userData['autoSubmit'];
   const event = userData['event'];
+  const browserBased = userData['browserBased'];
   return {
     websiteUrl: currentScanUrl, 
     scanType: currentScanType, 
@@ -96,6 +99,7 @@ const getDataForForm = async () => {
     name: name,
     autoSubmit: autoSubmit, 
     event: event,
+    browserBased: browserBased
   }
 };
 

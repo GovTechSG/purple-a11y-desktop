@@ -17,6 +17,9 @@ contextBridge.exposeInMainWorld("services", {
     const reportZip = await ipcRenderer.invoke("downloadResults", scanId);
     return reportZip;
   },
+  submitFormViaBrowser: (formDetails) => {
+    ipcRenderer.send("submitFormViaBrowser", formDetails);
+  },
   // openUserDataForm: (url) => {
   //   ipcRenderer.send("openUserDataForm", url);
   // },

@@ -39,6 +39,8 @@ function createMainWindow() {
 
 // TODO set ipcMain messages
 app.on("ready", async () => {
+  // create settings file if it does not exist 
+  await userDataManager.init();
   const launchWindowReady = new Promise((resolve) => {
     ipcMain.once("guiReady", () => {
       resolve();
@@ -100,6 +102,7 @@ app.on("ready", async () => {
   })
   
   await userDataManager.setData(userDataEvent);
+  await userDataFormManager.init();
 });
 
 app.on("quit", () => {

@@ -14,6 +14,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const [scanType, setScanType] = useState(null); 
   const [email, setEmail] = useState(''); 
   const [name, setName] = useState('');
+  const [browserBased, setBrowserBased] = useState('')
   const [autoSubmit, setAutoSubmit] = useState(false);
   const [event, setEvent] = useState(false); 
   const [errorMessage, setErrorMessage] = useState(false);
@@ -33,10 +34,11 @@ const ResultPage = ({ completedScanId: scanId }) => {
       const data =  await services.getDataForForm();
       setWebsiteUrl(data['websiteUrl']); 
       setScanType(data['scanType']); 
+      setBrowserBased(data['browserBased'])
       let isAutoSubmit = data['autoSubmit'];
       let isEvent = data['event']; 
       
-      if (isAutoSubmit) {
+      if (isAutoSubmit && !isEvent) {
         setEmail(data['email']); 
         setName(data['name']);
       } else {
@@ -57,16 +59,20 @@ const ResultPage = ({ completedScanId: scanId }) => {
       const formUrl = userDataFormInputFields.formUrl; 
   
       try {
-        // Collect form data
-        const formData = new FormData();
-        formData.append(userDataFormInputFields.websiteUrlField, websiteUrl); 
-        formData.append(userDataFormInputFields.scanTypeField, scanType); 
-        formData.append(userDataFormInputFields.emailField, email); 
-        formData.append(userDataFormInputFields.nameField, name);
+        if (browserBased) {
+          await submitFormViaBrowser(formUrl);
+        } else {
+          // Collect form data
+          const formData = new FormData();
+          formData.append(userDataFormInputFields.websiteUrlField, websiteUrl); 
+          formData.append(userDataFormInputFields.scanTypeField, scanType); 
+          formData.append(userDataFormInputFields.emailField, email); 
+          formData.append(userDataFormInputFields.nameField, name);
 
-        // Send POST request to Google Form
-        await axios.post(formUrl, formData);
-  
+          // Send POST request to Google Form
+          await axios.post(formUrl, formData);
+        }
+
         // Form submission successful
         console.log('Form submitted successfully!');
       } catch (error) {
@@ -106,9 +112,12 @@ const ResultPage = ({ completedScanId: scanId }) => {
       setEvent(false);  
 
       const formUrl = userDataFormInputFields.formUrl;
-      const formData = new FormData(event.target);
-
-      await axios.post(formUrl, formData);
+      if (browserBased) {
+        await submitFormViaBrowser(formUrl);
+      } else {
+        const formData = new FormData(event.target);
+        await axios.post(formUrl, formData);
+      }
 
       // Form submission successful
       console.log('Form submitted successfully!');
@@ -117,6 +126,20 @@ const ResultPage = ({ completedScanId: scanId }) => {
       console.error('Form submission error:', error);
       // Write to error log
 
+    }
+  }
+
+  const submitFormViaBrowser = async (formUrl) => {
+    if (browserBased) {
+      const formDetails = {
+        formUrl: formUrl,
+        websiteUrl: websiteUrl, 
+        scanType: scanType, 
+        name: name, 
+        email: email, 
+        browserBased: browserBased, 
+      }
+      await window.services.submitFormViaBrowser(formDetails); 
     }
   }
 
