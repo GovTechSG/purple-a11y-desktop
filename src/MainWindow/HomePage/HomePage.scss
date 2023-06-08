@@ -61,6 +61,7 @@
     border: none;
     background-color: transparent;
     font-size: 0.875rem;
+    white-space: nowrap;
   }
 
   #page-limit-adjuster {
@@ -192,6 +193,22 @@
     background-repeat: no-repeat;
     background-size: 16px 12px;
     padding: 0.25rem 1.5rem 0.25rem 0.5rem;
+  }
+
+  #user-details {
+    margin: auto;
+    padding: 2px 5px 2px 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: #333333;
+    border-radius: 1;
+    border-style: solid;
+    width: fit-content;
+  }
+  
+  #auto-submit {
+    padding-bottom: 8px; 
   }
 
   #home-page-footer {

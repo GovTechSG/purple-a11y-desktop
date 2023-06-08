@@ -30,7 +30,7 @@ button.primary {
 }
 
 button.primary:hover {
-  background-color: #6650cc;
+  background-color: #5B3BED;
 }
 
 button.secondary {
@@ -84,3 +84,135 @@ a:hover {
       transform: rotate(360deg);
     }
   }
+
+  .modal {
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(1, 1, 1, 0.1);
+  }
+
+  .modal-container {
+    width: 50vw;
+    height: 80vh;
+    padding: 32px; 
+    background-color: #F6F8F9;
+    box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.1), 0px 8px 8px -4px rgba(16, 24, 40, 0.04);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    
+  }
+
+  .modal-header-button {
+    text-align: right;
+  }
+
+  .modal-body {
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+
+  .modal-desc {
+    text-align: center;
+    padding: 0 30px 0 30px;
+  }
+
+  .modal-footer-button {
+    width: 100%;
+    align-self: flex-end;
+    align-items: center;
+    display: flex;
+  }
+
+  .modal-full-button {
+    width: 100%;
+    border-radius: 4px !important;
+  }
+
+  .modal-half-button {
+    width: 50%;
+    border-radius: 4px !important;
+  }
+
+  .modal-right-button {
+    margin: 0 0 0 5px;
+  }
+  
+  .modal-left-button {
+    margin: 0 5px 0 0;
+  }
+
+  .modal-img {
+    margin: 30px 0 30px 0;
+  }
+
+  .display-block {
+    display: block;
+  }
+  
+  .display-none {
+    display: none !important;
+  }
+
+  .page-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .user-form {
+    margin: 20px 0 40px 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .user-form-field {
+    display: grid;
+    grid-template-columns: 30% 70%;
+    justify-content: right;
+  }
+
+  .user-form-label {
+    font-weight: 700;
+  }
+
+  .user-form-input {
+    box-sizing: border-box;
+    background: white;
+    border: 1px solid #B5C5CA;;
+    border-radius: 4px;
+  }
+
+  @keyframes in {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    } to {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+  }
+
+  .in {
+    animation: in 0.5s;
+  }
+  

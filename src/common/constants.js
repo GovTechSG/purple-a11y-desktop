@@ -68,14 +68,15 @@ export const devices = {
 }
 
 // exit codes returned by Purple HATS cli when there is an error with the URL provided
-export const urlErrorCodes = new Set([11, 12, 13, 14, 15]);
+export const urlErrorCodes = new Set([11, 12, 13, 14, 15, 16]);
 export const urlErrorTypes = {
   invalidUrl: 11,
   cannotBeResolved: 12,
   errorStatusReceived: 13,
   systemError: 14,
   notASitemap: 15,
-}
+  unauthorisedBasicAuth: 16,
+};
 
 export const userDataFormDetails = {
   // production form
@@ -84,4 +85,12 @@ export const userDataFormDetails = {
   formUrl: "https://form.gov.sg/642c10f5d88e080012b6eb49",
   urlScannedField: "641d6f416e65530012b57e29",
   scanTypeField: "641d6fc6448fc900122f8684",
+};
+
+export const userDataFormInputFields = {
+  formUrl: 'https://docs.google.com/forms/d/1tg8WYKWOgAo-DRsKNczZQF7OFeT00kjpmL1DPlL_VoI/formResponse',
+  websiteUrlField: 'entry.1562345227', 
+  scanTypeField: 'entry.1148680657', 
+  emailField: 'entry.52161304', 
+  nameField: 'entry.1787318910', 
 };

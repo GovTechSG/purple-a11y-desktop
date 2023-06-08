@@ -1,65 +1,354 @@
 const { ipcMain, BrowserView } = require("electron");
-const constants = require("./constants");
+const path = require("path");
+const os = require("os");
+const fs = require("fs");
+const { globSync } = require("glob"); 
 
-let formOpenAttempt = 0;
-
-function openFormView(contextWindow, url) {
-  const view = new BrowserView({
-    webPreferences: { preload: constants.userDataFormPreloadPath },
-  });
-  contextWindow.setBrowserView(view);
-  view.setBounds({
-    x: 0.5 * contextWindow.getBounds().width,
-    y: 0,
-    width: 0.5 * contextWindow.getBounds().width,
-    height: contextWindow.getBounds().height,
-  });
-  view.setAutoResize({
-    width: true,
-    height: true,
-    horizontal: true,
-    vertical: true,
-  });
-  view.webContents.loadURL(url);
+const browserTypes = {
+  chrome: 'chrome', 
+  edge: 'msedge',
+  chromium: 'chromium'
 }
 
-function closeFormView(contextWindow) {
-  formOpenAttempt = 0;
-  contextWindow.setBrowserView(null);
-}
+const init = () => {
+  ipcMain.on("submitFormViaBrowser", async (_event, formDetails) => {
 
-/* retries are implemented to handle very rare occurrences where Electron is somehow
-unable to process arguments passed into openFormView, which the cause of it has yet
-to be determined. 3 retries are performed and if it is still unsuccessful, just
-enable report viewing/download */
-function init(contextWindow) {
-  ipcMain.on("openUserDataForm", async (_event, url) => {
-    try {
-      formOpenAttempt += 1;
-      openFormView(contextWindow, url);
-    } catch (error) {
-      if (formOpenAttempt <= 3) {
-        // wait for 500ms before each retry
-        await new Promise((r) => setTimeout(r, 500));
-        console.log("Retry form opening...");
-        contextWindow.webContents.send("retryOpenForm");
-      } else {
-        console.log("Could not open the post scan form:\n", error);
-        contextWindow.webContents.send("formOpenFailure");
-        contextWindow.webContents.send("enableReportDownload");
-        closeFormView(contextWindow);
-      }
+    let playwright; 
+    if (os.platform() == "win32") {
+      const playwrightPath = path.join(
+        os.homedir(), 
+        "AppData", 
+        "Roaming", 
+        "Purple HATS", 
+        "backend", 
+        "purple-hats", 
+        "node_modules", 
+        "playwright", 
+        "index.js"
+      )
+      playwright = require(playwrightPath)
+    } else if (os.platform() == "darwin") {
+      const playwrightPath = path.join(
+        os.homedir(), 
+        "Library", 
+        "Application Support", 
+        "Purple HATS", 
+        "backend",
+        "purple-hats", 
+        "node_modules", 
+        "playwright", 
+        "index.js"
+      )
+      playwright = require(playwrightPath); 
+    
     }
-  });
+    const chromium = playwright.chromium;
+        
+    const chromeDataDir = getDefaultChromeDataDir(); 
+    const edgeDataDir = getDefaultEdgeDataDir(); 
 
-  ipcMain.on("userDataFormSubmitted", () => {
-    contextWindow.webContents.send("enableReportDownload");
-  });
+    let browserChannel; 
+    let userDataDir; 
 
-  ipcMain.on("closeUserDataForm", () => {
-    closeFormView(contextWindow);
-  });
+    if (formDetails.browser == browserTypes.chrome  && chromeDataDir) {
+      browserChannel = browserTypes.chrome;
+      userDataDir = cloneChromeProfiles();
+    } else if (formDetails.browser == browserTypes.edge && edgeDataDir) {
+      browserChannel = browserTypes.edge; 
+      userDataDir = cloneEdgeProfiles()
+    } else {
+      hasUserProfile = false; 
+      browserChannel = null; 
+      userDataDir = ""; 
+    }
+
+    const context = await chromium.launchPersistentContext(
+        userDataDir, 
+        {
+          ignoreDefaultArgs: ['--use-mock-keychain'], 
+          ...(browserChannel && {channel: browserChannel}),
+        }
+    );
+
+    const page = await context.newPage();
+
+    await page.goto(formDetails.formUrl);
+    await page.getByRole('textbox', { name: 'Website URL' }).fill(formDetails.websiteUrl);
+    await page.getByRole('textbox', { name: 'Scan Type' }).click();
+    await page.getByRole('textbox', { name: 'Scan Type' }).fill(formDetails.scanType);
+    await page.getByRole('textbox', { name: 'Email' }).click();
+    await page.getByRole('textbox', { name: 'Email' }).fill(formDetails.email);
+    await page.getByRole('textbox', { name: 'Name' }).click();
+    await page.getByRole('textbox', { name: 'Name' }).fill(formDetails.name);
+    await page.getByRole('button', { name: 'Submit' }).click();
+
+    if (browserChannel == browserTypes.chrome) {
+      deleteClonedChromeProfiles(); 
+    } else if (browserChannel == browserTypes.edge) {
+      deleteClonedEdgeProfiles; 
+    } 
+
+    await context.close();
+  }) 
 }
+
+const getDefaultChromeDataDir = () => {
+  try {
+    if (os.platform() === "win32") {
+      return path.join(
+        os.homedir(),
+        "AppData",
+        "Local",
+        "Google",
+        "Chrome",
+        "User Data"
+      );
+    }
+
+    if (os.platform() === "darwin") {
+      return path.join(
+        os.homedir(),
+        "Library",
+        "Application Support",
+        "Google",
+        "Chrome"
+      );
+    }
+  } catch (error) {
+    console.error(`Error in getDefaultChromeDataDir(): ${error}`);
+  }
+};
+
+const getDefaultEdgeDataDir = () => {
+  try {
+    if (os.platform() === "win32") {
+      return path.join(
+        os.homedir(),
+        "AppData",
+        "Local",
+        "Microsoft",
+        "Edge",
+        "User Data"
+      );
+    }
+
+    if (os.platform() === "darwin") {
+      return path.join(
+        os.homedir(),
+        "Library",
+        "Application Support",
+        "Microsoft Edge"
+      );
+    }
+  } catch (error) {
+    console.error(`Error in getDefaultEdgeDataDir(): ${error}`);
+  }
+};
+
+
+const cloneChromeProfileCookieFiles = (options, destDir) => {
+  let profileCookiesDir;
+  // Cookies file per profile is located in .../User Data/<profile name>/Network/Cookies for windows
+  // and ../Chrome/<profile name>/Cookies for mac
+  let profileNamesRegex;
+  if (os.platform() === 'win32') {
+    profileCookiesDir = globSync('**/Network/Cookies', {
+      ...options,
+      ignore: ['Purple-HATS/**'],
+    });
+    profileNamesRegex = /User Data\\(.*?)\\Network/;
+  } else if (os.platform() === 'darwin') {
+    // maxDepth 2 to avoid copying cookies from the Purple-HATS directory if it exists
+    profileCookiesDir = globSync('**/Cookies', {
+      ...options,
+      ignore: 'Purple-HATS/**',
+    });
+    profileNamesRegex = /Chrome\/(.*?)\/Cookies/;
+  }
+
+  if (profileCookiesDir.length > 0) {
+    profileCookiesDir.map(dir => {
+      const profileName = dir.match(profileNamesRegex)[1];
+      if (profileName) {
+        let destProfileDir = path.join(destDir, profileName);
+        if (os.platform() === 'win32') {
+          destProfileDir = path.join(destProfileDir, 'Network');
+        }
+        // Recursive true to create all parent directories (e.g. PbProfile/Default/Cookies)
+        if (!fs.existsSync(destProfileDir)) {
+          fs.mkdirSync(destProfileDir, { recursive: true });
+          if (!fs.existsSync(destProfileDir)) {
+            fs.mkdirSync(destProfileDir);
+          }
+        }
+
+        // Prevents duplicate cookies file if the cookies already exist
+        if (!fs.existsSync(path.join(destProfileDir, 'Cookies'))) {
+          fs.copyFileSync(dir, path.join(destProfileDir, 'Cookies'));
+        }
+      }
+    });
+  } else {
+    console.error('Unable to find Chrome profile cookies file in the system.');
+    return;
+  }
+};
+
+const cloneEdgeProfileCookieFiles = (options, destDir) => {
+  let profileCookiesDir;
+  // Cookies file per profile is located in .../User Data/<profile name>/Network/Cookies for windows
+  // and ../Chrome/<profile name>/Cookies for mac
+  let profileNamesRegex;
+  // Ignores the cloned Purple-HATS directory if exists
+  if (os.platform() === 'win32') {
+    ignore: ['Purple-HATS/**'],
+      (profileCookiesDir = globSync('**/Network/Cookies', {
+        ...options,
+      }));
+    profileNamesRegex = /User Data\\(.*?)\\Network/;
+  } else if (os.platform() === 'darwin') {
+    // Ignores copying cookies from the Purple-HATS directory if it exists
+    profileCookiesDir = globSync('**/Cookies', {
+      ...options,
+      ignore: 'Purple-HATS/**',
+    });
+    profileNamesRegex = /Microsoft Edge\/(.*?)\/Cookies/;
+  }
+
+  if (profileCookiesDir.length > 0) {
+    profileCookiesDir.map(dir => {
+      const profileName = dir.match(profileNamesRegex)[1];
+      if (profileName) {
+        let destProfileDir = path.join(destDir, profileName);
+        if (os.platform() === 'win32') {
+          destProfileDir = path.join(destProfileDir, 'Network');
+        }
+        // Recursive true to create all parent directories (e.g. PbProfile/Default/Cookies)
+        if (!fs.existsSync(destProfileDir)) {
+          fs.mkdirSync(destProfileDir, { recursive: true });
+          if (!fs.existsSync(destProfileDir)) {
+            fs.mkdirSync(destProfileDir);
+          }
+        }
+
+        // Prevents duplicate cookies file if the cookies already exist
+        if (!fs.existsSync(path.join(destProfileDir, 'Cookies'))) {
+          fs.copyFileSync(dir, path.join(destProfileDir, 'Cookies'));
+        }
+      }
+    });
+  } else {
+    console.error('Unable to find Edge profile cookies file in the system.');
+    return;
+  }
+};
+
+const cloneLocalStateFile = (options, destDir) => {
+  const localState = globSync('**/*Local State', {
+    ...options,
+    maxDepth: 1,
+  });
+
+  if (localState.length > 0) {
+    localState.map(dir => {
+      fs.copyFileSync(dir, path.join(destDir, 'Local State'));
+    });
+  } else {
+    console.error('Unable to find local state file in the system.');
+    return;
+  }
+};
+
+const cloneChromeProfiles = () => {
+  const baseDir = getDefaultChromeDataDir();
+
+  if (!baseDir) {
+    console.error('Unable to find Chrome data directory in the system.');
+    return;
+  }
+
+  const destDir = path.join(baseDir, 'Purple-HATS');
+
+  if (!fs.existsSync(destDir)) {
+    fs.mkdirSync(destDir);
+  }
+
+  const baseOptions = {
+    cwd: baseDir,
+    recursive: true,
+    absolute: true,
+    nodir: true,
+  };
+  cloneChromeProfileCookieFiles(baseOptions, destDir);
+  cloneLocalStateFile(baseOptions, destDir);
+  // eslint-disable-next-line no-undef, consistent-return
+  return path.join(baseDir, 'Purple-HATS');
+};
+
+const cloneEdgeProfiles = () => {
+  const baseDir = getDefaultEdgeDataDir();
+
+  if (!baseDir) {
+    console.error('Unable to find Edge data directory in the system.');
+    return;
+  }
+
+  const destDir = path.join(baseDir, 'Purple-HATS');
+
+  if (!fs.existsSync(destDir)) {
+    fs.mkdirSync(destDir);
+  }
+
+  const baseOptions = {
+    cwd: baseDir,
+    recursive: true,
+    absolute: true,
+    nodir: true,
+  };
+  cloneEdgeProfileCookieFiles(baseOptions, destDir);
+  cloneLocalStateFile(baseOptions, destDir);
+  // eslint-disable-next-line no-undef, consistent-return
+  return path.join(baseDir, 'Purple-HATS');
+};
+
+const deleteClonedChromeProfiles = () => {
+  const baseDir = getDefaultChromeDataDir();
+
+  if (!baseDir) {
+    console.error('Unable to find Chrome data directory in the system.');
+    return;
+  }
+
+  const destDir = path.join(baseDir, 'Purple-HATS');
+
+  if (fs.existsSync(destDir)) {
+    fs.rmSync(destDir, { recursive: true });
+    return;
+  } else {
+    console.error('Unable to find Purple-HATS directory in the Chrome data directory.');
+    return;
+  }
+};
+
+const deleteClonedEdgeProfiles = () => {
+  const baseDir = getDefaultEdgeDataDir();
+
+  if (!baseDir) {
+    console.error('Unable to find Edge data directory in the system.');
+    return;
+  }
+
+  const destDir = path.join(baseDir, 'Purple-HATS');
+
+  if (fs.existsSync(destDir)) {
+    fs.rmSync(destDir, { recursive: true });
+    return;
+  } else {
+    console.error('Unable to find Purple-HATS directory in the Edge data directory.');
+    return;
+  }
+};
+
 
 module.exports = {
   init,
