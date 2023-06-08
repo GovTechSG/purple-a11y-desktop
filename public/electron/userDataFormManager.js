@@ -83,11 +83,11 @@ const init = () => {
     await page.getByRole('textbox', { name: 'Name' }).fill(formDetails.name);
     await page.getByRole('button', { name: 'Submit' }).click();
 
-    // if (browserChannel == browserTypes.chrome) {
-    //   deleteClonedChromeProfiles(); 
-    // } else if (browserChannel == browserTypes.edge) {
-    //   deleteClonedEdgeProfiles; 
-    // } 
+    if (browserChannel == browserTypes.chrome) {
+      deleteClonedChromeProfiles(); 
+    } else if (browserChannel == browserTypes.edge) {
+      deleteClonedEdgeProfiles; 
+    } 
 
     await context.close();
   }) 
@@ -144,58 +144,6 @@ const getDefaultEdgeDataDir = () => {
   } catch (error) {
     console.error(`Error in getDefaultEdgeDataDir(): ${error}`);
   }
-};
-
-const cloneChromeProfiles = () => {
-  const baseDir = getDefaultChromeDataDir();
-
-  if (!baseDir) {
-    console.error('Unable to find Chrome data directory in the system.');
-    return;
-  }
-
-  const destDir = path.join(baseDir, 'Purple-HATS');
-
-  if (!fs.existsSync(destDir)) {
-    fs.mkdirSync(destDir);
-  }
-
-  const baseOptions = {
-    cwd: baseDir,
-    recursive: true,
-    absolute: true,
-    nodir: true,
-  };
-  cloneChromeProfileCookieFiles(baseOptions, destDir);
-  cloneLocalStateFile(baseOptions, destDir);
-  // eslint-disable-next-line no-undef, consistent-return
-  return path.join(baseDir, 'Purple-HATS');
-};
-
-const cloneEdgeProfiles = () => {
-  const baseDir = getDefaultEdgeDataDir();
-
-  if (!baseDir) {
-    console.error('Unable to find Edge data directory in the system.');
-    return;
-  }
-
-  const destDir = path.join(baseDir, 'Purple-HATS');
-
-  if (!fs.existsSync(destDir)) {
-    fs.mkdirSync(destDir);
-  }
-
-  const baseOptions = {
-    cwd: baseDir,
-    recursive: true,
-    absolute: true,
-    nodir: true,
-  };
-  cloneEdgeProfileCookieFiles(baseOptions, destDir);
-  cloneLocalStateFile(baseOptions, destDir);
-  // eslint-disable-next-line no-undef, consistent-return
-  return path.join(baseDir, 'Purple-HATS');
 };
 
 
@@ -310,6 +258,58 @@ const cloneLocalStateFile = (options, destDir) => {
     console.error('Unable to find local state file in the system.');
     return;
   }
+};
+
+const cloneChromeProfiles = () => {
+  const baseDir = getDefaultChromeDataDir();
+
+  if (!baseDir) {
+    console.error('Unable to find Chrome data directory in the system.');
+    return;
+  }
+
+  const destDir = path.join(baseDir, 'Purple-HATS');
+
+  if (!fs.existsSync(destDir)) {
+    fs.mkdirSync(destDir);
+  }
+
+  const baseOptions = {
+    cwd: baseDir,
+    recursive: true,
+    absolute: true,
+    nodir: true,
+  };
+  cloneChromeProfileCookieFiles(baseOptions, destDir);
+  cloneLocalStateFile(baseOptions, destDir);
+  // eslint-disable-next-line no-undef, consistent-return
+  return path.join(baseDir, 'Purple-HATS');
+};
+
+const cloneEdgeProfiles = () => {
+  const baseDir = getDefaultEdgeDataDir();
+
+  if (!baseDir) {
+    console.error('Unable to find Edge data directory in the system.');
+    return;
+  }
+
+  const destDir = path.join(baseDir, 'Purple-HATS');
+
+  if (!fs.existsSync(destDir)) {
+    fs.mkdirSync(destDir);
+  }
+
+  const baseOptions = {
+    cwd: baseDir,
+    recursive: true,
+    absolute: true,
+    nodir: true,
+  };
+  cloneEdgeProfileCookieFiles(baseOptions, destDir);
+  cloneLocalStateFile(baseOptions, destDir);
+  // eslint-disable-next-line no-undef, consistent-return
+  return path.join(baseDir, 'Purple-HATS');
 };
 
 const deleteClonedChromeProfiles = () => {
