@@ -6,6 +6,7 @@ const { randomUUID } = require("crypto");
 const {
   enginePath,
   getPathVariable,
+  customFlowGeneratedScriptsPath,
   playwrightBrowsersPath,
 } = require("./constants");
 
@@ -73,6 +74,11 @@ const startScan = async (scanDetails) => {
     scan.on("exit", (code) => {
       const stdout = scan.stdout.read().toString().trim();
       if (code === 0) {
+        // Output from combine.js which prints the string "No pages were scanned" if crawled URL <= 0
+        if (stdout.includes("No pages were scanned")) {
+          resolve({success: false})
+        }
+
         const resultsPath = stdout
           .split("Results directory is at ")[1]
           .split(" ")[0];
@@ -88,6 +94,14 @@ const startScan = async (scanDetails) => {
         resolve({ success: false, statusCode: code, message: stdout });
       }
       currentChildProcess = null;
+      
+      if (fs.existsSync(customFlowGeneratedScriptsPath)) {
+        fs.rm(customFlowGeneratedScriptsPath, { recursive: true }, err => {
+          if (err) {
+            console.error(`Error while deleting ${customFlowGeneratedScriptsPath}.`);
+          }
+        });
+      }
     });
   });
 

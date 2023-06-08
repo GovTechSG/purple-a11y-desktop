@@ -30,7 +30,7 @@ button.primary {
 }
 
 button.primary:hover {
-  background-color: #6650cc;
+  background-color: #5B3BED;
 }
 
 button.secondary {
@@ -163,6 +163,14 @@ a:hover {
     margin: 30px 0 30px 0;
   }
 
+  .display-block {
+    display: block;
+  }
+  
+  .display-none {
+    display: none !important;
+  }
+
   .page-indicator {
     display: flex;
     align-items: center;
@@ -207,3 +215,4 @@ a:hover {
   .in {
     animation: in 0.5s;
   }
+  

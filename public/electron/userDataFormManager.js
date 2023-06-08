@@ -39,20 +39,8 @@ const init = () => {
         {
           ignoreDefaultArgs: ['--use-mock-keychain'], 
           ...(browserChannel && {channel: browserChannel}),
-          headless: false
         }
     );
-    // } else {
-    //   browser = await chromium.launch({
-    //     headless: false
-    //   })
-    //   context = await browser.newContext(
-    //     {
-    //       ignoreHTTPSErrors: true,
-    //       serviceWorkers: 'block'
-    //     }
-    //   ); 
-    // }
 
     const page = await context.newPage();
 

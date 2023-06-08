@@ -6,6 +6,8 @@ import InitScanForm from "./InitScanForm";
 import "./HomePage.scss";
 import services from "../../services";
 import { urlErrorCodes, urlErrorTypes } from "../../common/constants";
+import Modal from "../../common/components/Modal";
+import { BasicAuthForm, BasicAuthFormFooter } from "./BasicAuthForm";
 
 const HomePage = ({ appVersion, setCompletedScanId }) => {
   const navigate = useNavigate();
@@ -13,22 +15,32 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   const [prevUrlErrorMessage, setPrevUrlErrorMessage] = useState(
     location.state
   );
-  const [email, setEmail] = useState(''); 
-  const [name, setName] = useState('');
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [autoSubmit, setAutoSubmit] = useState(false);
   const [browser, setBrowser] = useState(null);
+  const [showBasicAuthModal, setShowBasicAuthModal] = useState(false);
+
+  useEffect(() => {
+    if (
+      prevUrlErrorMessage !== null &&
+      prevUrlErrorMessage.includes("Unauthorised Basic Authentication")
+    ) {
+      setShowBasicAuthModal(true);
+    }
+  }, [prevUrlErrorMessage]);
 
   useEffect(() => {
     const getUserData = async () => {
       const userData = await services.getUserData();
-      const isEvent = userData['event']; 
+      const isEvent = userData["event"];
       if (!isEvent) {
         setEmail(userData['email']); 
         setName(userData['name']); 
         setAutoSubmit(userData['autoSubmit']);
         setBrowser(userData['browser'])
       }
-    }
+    };
 
     getUserData();
   });
@@ -54,6 +66,8 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
       return;
     }
 
+    window.localStorage.setItem("scanDetails", JSON.stringify(scanDetails));
+
     navigate("/scanning");
     const response = await services.startScan(scanDetails);
 
@@ -62,11 +76,15 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
       navigate("/result");
       return;
     }
+
     if (urlErrorCodes.has(response.statusCode)) {
       let errorMessageToShow;
       switch (response.statusCode) {
         /* technically urlErrorTypes.invalidUrl is not needed since this case
         was handled above, but just for completeness */
+        case urlErrorTypes.unauthorisedBasicAuth:
+          errorMessageToShow = "Unauthorised Basic Authentication.";
+          break;
         case urlErrorTypes.invalidUrl:
         case urlErrorTypes.cannotBeResolved:
         case urlErrorTypes.errorStatusReceived:
@@ -82,8 +100,23 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
       navigate("/", { state: errorMessageToShow });
       return;
     }
-
+    /* When no pages were scanned (e.g. out of domain upon redirects when valid URL was entered),
+    redirects user to error page to going to result page with empty result
+    */
     navigate("/error");
+    return;
+  };
+
+  const handleBasicAuthSubmit = (e) => {
+    e.preventDefault();
+    const username = e.target.username.value;
+    const password = e.target.password.value;
+    const scanDetails = JSON.parse(window.localStorage.getItem("scanDetails"));
+    const splitUrl = scanDetails.scanUrl.split("://");
+    scanDetails.scanUrl = `${splitUrl[0]}://${username}:${password}@${splitUrl[1]}`;
+    startScan(scanDetails);
+    setShowBasicAuthModal(false);
+    return;
   };
 
   return (
@@ -99,13 +132,29 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
           startScan={startScan}
           prevUrlErrorMessage={prevUrlErrorMessage}
         />
-        {autoSubmit && 
-          (<div id="user-details">
+        {autoSubmit && (
+          <div id="user-details">
             <div>{name}</div>
             <div>{email}</div>
-          </div>)
-        }
+          </div>
+        )}
       </div>
+      <Modal
+        id="basic-auth-modal"
+        isTopTitle={true}
+        modalTitle={"Basic Authentication Required"}
+        modalDesc={`The site you are trying to scan requires basic authentication. 
+        Please enter your credentials. Purple-HATS will not collect the information and only use it for this scan instance.`}
+        show={showBasicAuthModal}
+        showCloseButton={true}
+        setShowModal={setShowBasicAuthModal}
+        modalBody={
+          <BasicAuthForm handleBasicAuthSubmit={handleBasicAuthSubmit} />
+        }
+        modalFooter={
+          <BasicAuthFormFooter setShowBasicAuthModal={setShowBasicAuthModal} />
+        }
+      />
       <div id="home-page-footer">
         <img
           id="app-illustration"
@@ -118,7 +167,6 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
       </div>
     </div>
   );
-  
 };
 
 export default HomePage;
