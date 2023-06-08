@@ -13,7 +13,35 @@ const browserTypes = {
 const init = () => {
   ipcMain.on("submitFormViaBrowser", async (_event, formDetails) => {
 
-    const playwright = require('/Users/erinong/Library/Application Support/Purple HATS/backend/purple-hats/node_modules/playwright/index.js'); 
+    let playwright; 
+    if (os.platform() == "win32") {
+      const playwrightPath = path.join(
+        os.homedir(), 
+        "AppData", 
+        "Roaming", 
+        "Purple HATS", 
+        "backend", 
+        "purple-hats", 
+        "node_modules", 
+        "playwright", 
+        "index.js"
+      )
+      playwright = require(playwrightPath)
+    } else if (os.platform() == "darwin") {
+      const playwrightPath = path.join(
+        os.homedir(), 
+        "Library", 
+        "Application Support", 
+        "Purple HATS", 
+        "backend",
+        "purple-hats", 
+        "node_modules", 
+        "playwright", 
+        "index.js"
+      )
+      playwright = require(playwrightPath); 
+    
+    }
     const chromium = playwright.chromium;
         
     const chromeDataDir = getDefaultChromeDataDir(); 
@@ -39,6 +67,7 @@ const init = () => {
         {
           ignoreDefaultArgs: ['--use-mock-keychain'], 
           ...(browserChannel && {channel: browserChannel}),
+          headless: false
         }
     );
 
@@ -54,11 +83,11 @@ const init = () => {
     await page.getByRole('textbox', { name: 'Name' }).fill(formDetails.name);
     await page.getByRole('button', { name: 'Submit' }).click();
 
-    if (browserChannel == browserTypes.chrome) {
-      deleteClonedChromeProfiles(); 
-    } else if (browserChannel == browserTypes.edge) {
-      deleteClonedEdgeProfiles; 
-    } 
+    // if (browserChannel == browserTypes.chrome) {
+    //   deleteClonedChromeProfiles(); 
+    // } else if (browserChannel == browserTypes.edge) {
+    //   deleteClonedEdgeProfiles; 
+    // } 
 
     await context.close();
   }) 
