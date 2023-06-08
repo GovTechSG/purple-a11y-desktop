@@ -2,19 +2,35 @@ import React from "react";
 
 export const BasicAuthForm = ({ handleBasicAuthSubmit }) => {
   return (
-    <form
-      id="home-page-basic-auth-form"
-      onSubmit={(e) => handleBasicAuthSubmit(e)}
-    >
-      <div className="form-group">
-        <label htmlFor="username">Username</label>
-        <input type="text" id="username" name="username" />
-      </div>
-      <div className="form-group">
-        <label htmlFor="password">Password</label>
-        <input type="password" id="password" name="password" />
-      </div>
-    </form>
+    <div className="user-form">
+      <form
+        id="home-page-basic-auth-form"
+        onSubmit={(e) => handleBasicAuthSubmit(e)}
+      >
+        <div className="user-form-field">
+          <label className="user-form-label" htmlFor="username">
+            Username
+          </label>
+          <input
+            className="user-form-input"
+            type="text"
+            id="username"
+            name="username"
+          />
+        </div>
+        <div className="user-form-field">
+          <label className="user-form-label" htmlFor="password">
+            Password
+          </label>
+          <input
+            className="user-form-input"
+            type="password"
+            id="password"
+            name="password"
+          />
+        </div>
+      </form>
+    </div>
   );
 };
 
