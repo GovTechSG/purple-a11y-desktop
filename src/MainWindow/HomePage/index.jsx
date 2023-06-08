@@ -62,6 +62,7 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
       navigate("/result");
       return;
     }
+
     if (urlErrorCodes.has(response.statusCode)) {
       let errorMessageToShow;
       switch (response.statusCode) {
@@ -82,8 +83,11 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
       navigate("/", { state: errorMessageToShow });
       return;
     }
-
-    navigate("/error");
+    /* When no pages were scanned (e.g. out of domain upon redirects when valid URL was entered),
+    redirects user to error page to going to result page with empty result
+    */
+   navigate("/error");
+   return;
   };
 
   return (
