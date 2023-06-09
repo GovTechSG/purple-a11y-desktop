@@ -3,6 +3,7 @@ $destinationPath = "$env:APPDATA\PHLatest.zip"
 $extractPath = "$env:APPDATA\Purple HATS Backend"
 $innoSetupCompilerUrl = "https://jrsoftware.org/download.php/is.exe"
 $innoSetupCompilerPath = "$env:APPDATA\iscc.exe"
+$current_path = (Get-Item -Path ".\" -Verbose).FullName
 
 Invoke-WebRequest -Uri $downloadUrl -OutFile $destinationPath
 
@@ -16,8 +17,10 @@ Invoke-WebRequest -Uri $innoSetupCompilerUrl -OutFile $innoSetupCompilerPath
 
 echo "InnoSetup compiler extracted to $innoSetupCompilerPath."
 
-#$current_path = (Get-Item -Path ".\" -Verbose).FullName
+# Start-Process "$env:APPDATA\iscc.exe" -ArgumentList "/LOG /O`"$env:APPDATA" `"C:\Program Files\Purple HATS Desktop\Purple HATS Frontend\hats_for_windows.iss`"" -Wait -NoNewWindow 
 
-# Start-Process "$env:APPDATA\iscc.exe" -ArgumentList "/LOG /O`"$env:APPDATA" "C:\Program Files\Purple HATS Desktop\Purple HATS Frontend\hats_for_windows.iss"" -Wait -NoNewWindow 
+#echo "Inno Setup compiler has been installed."
 
-echo "Purple HATS Windows installer has completed."
+Move-Item -Path "$current_path\hats_for_windows.iss" -Destination "$env:APPDATA\hats_for_windows.iss" -Force
+
+echo "Moved Inno Setup script from $current_path to $env:APPDATA"
