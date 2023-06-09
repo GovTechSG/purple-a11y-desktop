@@ -70,6 +70,7 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
 
     navigate("/scanning");
     const response = await services.startScan(scanDetails);
+    console.log(response.success);
 
     if (response.success) {
       setCompletedScanId(response.scanId);
@@ -97,6 +98,7 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
         default:
           errorMessageToShow = "Something went wrong. Please try again later.";
       }
+      console.log(`status error: ${response.statusCode}`);
       navigate("/", { state: errorMessageToShow });
       return;
     }

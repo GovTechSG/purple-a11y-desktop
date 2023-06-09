@@ -7,7 +7,7 @@ const {
   releaseUrl,
   enginePath,
   getEngineVersion,
-  appDataPath,
+  appPath,
   backendPath,
   updateBackupsFolder,
   scanResultsPath,
@@ -24,7 +24,7 @@ const killChildProcess = () => {
 };
 
 const execCommand = async (command) => {
-  let options = { cwd: appDataPath };
+  let options = { cwd: appPath };
 
   const execution = new Promise((resolve) => {
     const process = exec(command, options, (err, _stdout, stderr) => {
@@ -85,15 +85,19 @@ const cleanUpBackend = async () => {
   let command;
 
   if (os.platform() === "win32") {
-    command = `rmdir /s /q "${backendPath}"`;
+    command = rmdir /s /q "${backendPath}";
   } else {
-    command = `rm -rf '${backendPath}'`;
+    command = rm -rf '${backendPath}';
   }
 
   await execCommand(command);
 };
 
 const downloadBackend = async () => {
+  if (os.platform() === "win32"){
+    return
+  }
+
   let downloadUrl;
 
   try {
@@ -106,16 +110,15 @@ const downloadBackend = async () => {
     );
     console.log("Attemping to download latest from GitHub directly");
 
-    if (os.platform() === "win32") {
-      downloadUrl =
-        "https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-windows.zip";
-    } else {
-      downloadUrl =
-        "https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-mac.zip";
-    }
+    // if (os.platform() === "win32") {
+    //   downloadUrl =
+    //     "https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-windows.zip";
+    // } else {
+    downloadUrl ="https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-mac.zip";
+    //}
   }
 
-  const command = `curl "${downloadUrl}" -o "${phZipPath}" -L && mkdir "${backendPath}"`;
+  const command = curl "${downloadUrl}" -o "${phZipPath}" -L && mkdir "${backendPath}";
 
   await execCommand(command);
 };
@@ -124,18 +127,14 @@ const unzipBackendAndCleanUp = async () => {
   let command;
 
   if (os.platform() === "win32") {
-    command = `tar -xf "${phZipPath}" -C "${backendPath}" &&\
-    del "${phZipPath}" &&\
-    (for /D %s in ("${updateBackupsFolder}"\\*) do move "%s" "${enginePath}") &&\
-    rmdir /s /q "${updateBackupsFolder}" &&\
-    cd "${backendPath}" &&\
+    // command = `tar -xf "${phZipPath}" -C "${backendPath}" &&\
+    // del "${phZipPath}" &&\
+    command = `cd "${backendPath}" &&\
     ".\\hats_shell.cmd" echo "Initialise" 
     `;
   } else {
     command = `tar -xf '${phZipPath}' -C '${backendPath}' &&
     rm '${phZipPath}' &&
-    (mv '${updateBackupsFolder}'/* '${enginePath}' || true) &&
-    (rm -rf '${updateBackupsFolder}' || true) &&
     cd '${backendPath}' &&
     './hats_shell.sh' echo "Initialise"
     `;
@@ -155,7 +154,7 @@ const isLatestBackendVersion = async () => {
 
     return engineVersion === latestVersion;
   } catch (e) {
-    console.log(`Unable to check latest version, skipping\n${e.toString()}`);
+    console.log(Unable to check latest version, skipping\n${e.toString()});
     return true;
   }
 };
@@ -187,7 +186,11 @@ const run = async (updaterEventEmitter) => {
     } else if (phZipExists) {
       updaterEventEmitter.emit("settingUp");
       processesToRun.push(unzipBackendAndCleanUp);
-    } else {
+    } else  {
+      if (os.platform() === "win32"){
+        return
+      }     
+
       updaterEventEmitter.emit("checking");
       let isUpdateAvailable;
       isUpdateAvailable = !(await isLatestBackendVersion());

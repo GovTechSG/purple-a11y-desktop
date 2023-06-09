@@ -124,4 +124,12 @@ dist
 
 # production
 /build
-/actions-runner
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
+#runner 
+/actions-runner/
