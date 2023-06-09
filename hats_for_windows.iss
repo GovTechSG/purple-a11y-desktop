@@ -6,7 +6,7 @@
 AppId={{10A741B8-E330-4DC5-A86C-7F7B8DE775A9}
 AppName=Purple HATS Desktop
 AppVersion=0.0.13.0
-;AppVerName=Purple HATS Desktop 0.0.13.0
+AppVerName=Purple HATS Desktop
 AppPublisher=GovTech
 AppPublisherURL=https://github.com/GovTechSG/purple-hats-desktop
 AppSupportURL=https://github.com/GovTechSG/purple-hats-desktop
