@@ -22,7 +22,7 @@ const startScan = async (scanDetails) => {
     device,
     viewportWidth,
     scanInBackground,
-    browser,
+    browser
   } = scanDetails;
 
   currentScanUrl = scanUrl;

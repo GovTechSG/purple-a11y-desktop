@@ -16,11 +16,13 @@ const appPath =
 const releaseUrl =
   "https://api.github.com/repos/GovTechSG/purple-hats/releases/latest";
 
-const resultsPath = path.join(process.env.APPDATA, "Purple HATS");
+
+const resultsPath = (os.platform() == "win32") ? path.join(process.env.APPDATA, "Purple HATS") : appPath; 
 
 const backendPath = path.join(appPath, "Purple HATS Backend");
 
 const enginePath = path.join(backendPath, "purple-hats");
+
 
 const getEngineVersion = () =>
   require(path.join(enginePath, "package.json")).version;
@@ -72,11 +74,7 @@ const updateBackupsFolder = path.join(
   "30789f0f-73f5-43bc-93a6-e499e4a20f7a"
 );
 
-const userDataFilePath = path.join(
-  process.env.APPDATA,
-  "Purple HATS",
-  "userData.txt"
-);
+const userDataFilePath = (os.platform() == "win32") ? path.join(resultsPath, "userData.txt") : path.join(appPath, "userData.txt"); 
 
 const phZipPath = path.join(appPath, "PHLatest.zip");
 

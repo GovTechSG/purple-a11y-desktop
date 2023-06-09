@@ -2,6 +2,7 @@ const { BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const { fork } = require("child_process");
 const fs = require("fs");
+const os = require("os");
 const { randomUUID } = require("crypto");
 const {
   enginePath,
@@ -81,8 +82,8 @@ const startScan = async (scanDetails) => {
         silent: true,
         cwd: resultsPath,
         env: {
-          // PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
           ...process.env,
+          RUNNING_FROM_PH_GUI: true,
           ...(useChromium && {
             PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
           }),
@@ -92,13 +93,8 @@ const startScan = async (scanDetails) => {
     );
 
     currentChildProcess = scan;
-    // scan.stdout.on('data', (chunk) => {
-    //   console.log(chunk.toString());
-    // })
 
     scan.on("exit", (code) => {
-      // console.log(`STOUTD: ${scan.stdout.read()}`);
-      // console.log(`ERROR: ${scan.stderr.read().toString().trim()}`);
       const stdout = scan.stdout.read().toString().trim();
       if (code === 0) {
         // Output from combine.js which prints the string "No pages were scanned" if crawled URL <= 0
@@ -138,15 +134,19 @@ const startScan = async (scanDetails) => {
 };
 
 const getReportPath = (scanId) => {
+  const reportPath = os.platform() === "win32" ? resultsPath : enginePath;
+
   if (scanHistory[scanId]) {
-    return path.join(enginePath, scanHistory[scanId], "reports", "report.html");
+    return path.join(reportPath, scanHistory[scanId], "reports", "report.html");
   }
   return null;
 };
 
 const getResultsZipPath = (scanId) => {
+  const reportPath = os.platform() === "win32" ? resultsPath : enginePath;
+
   if (scanHistory[scanId]) {
-    return path.join(enginePath, "a11y-scan-results.zip");
+    return path.join(reportPath, "a11y-scan-results.zip");
   }
   return null;
 };
