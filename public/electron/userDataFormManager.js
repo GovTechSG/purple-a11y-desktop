@@ -3,45 +3,25 @@ const path = require("path");
 const os = require("os");
 const fs = require("fs");
 const { globSync } = require("glob"); 
+const { backendPath } = require("./constants");
 
 const browserTypes = {
   chrome: 'chrome', 
-  edge: 'msedge',
+  edge: 'edge',
   chromium: 'chromium'
 }
 
 const init = () => {
   ipcMain.on("submitFormViaBrowser", async (_event, formDetails) => {
 
-    let playwright; 
-    if (os.platform() == "win32") {
-      const playwrightPath = path.join(
-        os.homedir(), 
-        "AppData", 
-        "Roaming", 
-        "Purple HATS", 
-        "backend", 
-        "purple-hats", 
-        "node_modules", 
-        "playwright", 
-        "index.js"
-      )
-      playwright = require(playwrightPath)
-    } else if (os.platform() == "darwin") {
-      const playwrightPath = path.join(
-        os.homedir(), 
-        "Library", 
-        "Application Support", 
-        "Purple HATS", 
-        "backend",
-        "purple-hats", 
-        "node_modules", 
-        "playwright", 
-        "index.js"
-      )
-      playwright = require(playwrightPath); 
-    
-    }
+    const playwrightPath = path.join(
+      backendPath,
+      "purple-hats", 
+      "node_modules", 
+      "playwright", 
+      "index.js"
+    )
+    const playwright = require(playwrightPath);
     const chromium = playwright.chromium;
         
     const chromeDataDir = getDefaultChromeDataDir(); 
@@ -263,6 +243,7 @@ const cloneLocalStateFile = (options, destDir) => {
 
 const cloneChromeProfiles = () => {
   const baseDir = getDefaultChromeDataDir();
+  console.log(baseDir);
 
   if (!baseDir) {
     console.error('Unable to find Chrome data directory in the system.');

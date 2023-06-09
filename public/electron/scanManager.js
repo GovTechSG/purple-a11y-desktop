@@ -2,6 +2,7 @@ const { BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const { fork } = require("child_process");
 const fs = require("fs");
+const os = require("os");
 const { randomUUID } = require("crypto");
 const {
   enginePath,
@@ -61,6 +62,7 @@ const startScan = async (scanDetails) => {
         silent: true,
         cwd: resultsPath,
         env: {
+          RUNNING_FROM_PH_GUI: true,
           PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
           PATH: getPathVariable(),
         },
@@ -110,15 +112,19 @@ const startScan = async (scanDetails) => {
 };
 
 const getReportPath = (scanId) => {
+  const reportPath = os.platform() === "win32" ? resultsPath : enginePath;
+
   if (scanHistory[scanId]) {
-    return path.join(enginePath, scanHistory[scanId], "reports", "report.html");
+    return path.join(reportPath, scanHistory[scanId], "reports", "report.html");
   }
   return null;
 };
 
 const getResultsZipPath = (scanId) => {
+  const reportPath = os.platform() === "win32" ? resultsPath : enginePath;
+
   if (scanHistory[scanId]) {
-    return path.join(enginePath, 'a11y-scan-results.zip');
+    return path.join(reportPath, 'a11y-scan-results.zip');
   }
   return null;
 }

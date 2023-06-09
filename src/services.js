@@ -22,7 +22,7 @@ const startScan = async (scanDetails) => {
     device,
     viewportWidth,
     scanInBackground,
-    browerBased
+    browser
   } = scanDetails;
 
   currentScanUrl = scanUrl;
@@ -32,7 +32,7 @@ const startScan = async (scanDetails) => {
     scanType: scanTypes[selectedScanType],
     url: scanUrl,
     headlessMode: scanInBackground,
-    browerBased: browerBased
+    browser: browser
   };
 
   if (selectedScanType !== Object.keys(scanTypes)[2]) {
