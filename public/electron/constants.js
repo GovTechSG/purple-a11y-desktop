@@ -59,10 +59,10 @@ const getPathVariable = () => {
   }
 };
 
-const scanResultsPath = path.join(enginePath, "results");
+const scanResultsPath = path.join(resultsPath, "results");
 
 const customFlowGeneratedScriptsPath = path.join(
-  enginePath,
+  resultsPath,
   "custom_flow_scripts"
 );
 
@@ -71,7 +71,11 @@ const updateBackupsFolder = path.join(
   "30789f0f-73f5-43bc-93a6-e499e4a20f7a"
 );
 
-const userDataFilePath = path.join(process.env.APPDATA, "Purple HATS", "userData.txt");
+const userDataFilePath = path.join(
+  process.env.APPDATA,
+  "Purple HATS",
+  "userData.txt"
+);
 
 const phZipPath = path.join(appPath, "PHLatest.zip");
 
