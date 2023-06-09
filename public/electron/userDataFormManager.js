@@ -82,13 +82,15 @@ const init = () => {
     await page.getByRole('textbox', { name: 'Name' }).fill(formDetails.name);
     await page.getByRole('button', { name: 'Submit' }).click();
 
+    await page.close();
+    await context.close();
+
     if (browserChannel == browserTypes.chrome) {
       deleteClonedChromeProfiles(); 
     } else if (browserChannel == browserTypes.edge) {
-      deleteClonedEdgeProfiles; 
+      deleteClonedEdgeProfiles(); 
     } 
 
-    await context.close();
   }) 
 }
 
