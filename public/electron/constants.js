@@ -1,5 +1,7 @@
 const path = require("path");
 const os = require("os");
+const fs = require("fs");
+const { get } = require("http");
 
 const appPath =
   os.platform() === "win32"
@@ -45,9 +47,8 @@ const getPathVariable = () => {
       "purple-hats\\node_modules\\.bin",
       "ImageMagick\\bin",
     ];
-    return `${process.env.PATH};${directories
-      .map((d) => path.join(backendPath, d))
-      .join(";")}`;
+    return `${directories.map((d) => path.join(backendPath, d)).join(";")}
+    ;${process.env.PATH}`;
   } else {
     const directories = [
       `${os.arch() === "arm64" ? "nodejs-mac-arm64" : "nodejs-mac-x64"}/bin`,
@@ -79,6 +80,74 @@ const userDataFilePath = path.join(
 
 const phZipPath = path.join(appPath, "PHLatest.zip");
 
+const browserTypes = {
+  chrome: "chrome",
+  edge: "msedge",
+  chromium: "chromium",
+};
+
+const getDefaultChromeDataDir = () => {
+  try {
+    let defaultChromeDataDir = null;
+    if (os.platform() === "win32") {
+      defaultChromeDataDir = path.join(
+        os.homedir(),
+        "AppData",
+        "Local",
+        "Google",
+        "Chrome",
+        "User Data"
+      );
+    } else if (os.platform() === "darwin") {
+      defaultChromeDataDir = path.join(
+        os.homedir(),
+        "Library",
+        "Application Support",
+        "Google",
+        "Chrome"
+      );
+    }
+    if (defaultChromeDataDir && fs.existsSync(defaultChromeDataDir)) {
+      return defaultChromeDataDir;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error(`Error in getDefaultChromeDataDir(): ${error}`);
+  }
+};
+
+const getDefaultEdgeDataDir = () => {
+  try {
+    let defaultEdgeDataDir = null;
+    if (os.platform() === "win32") {
+      defaultEdgeDataDir = path.join(
+        os.homedir(),
+        "AppData",
+        "Local",
+        "Microsoft",
+        "Edge",
+        "User Data"
+      );
+    } else if (os.platform() === "darwin") {
+      defaultEdgeDataDir = path.join(
+        os.homedir(),
+        "Library",
+        "Application Support",
+        "Microsoft Edge"
+      );
+    }
+
+    if (defaultEdgeDataDir && fs.existsSync(defaultEdgeDataDir)) {
+      return defaultEdgeDataDir;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error(`Error in getDefaultEdgeDataDir(): ${error}`);
+  }
+};
+
 module.exports = {
   appPath,
   releaseUrl,
@@ -97,4 +166,7 @@ module.exports = {
   phZipPath,
   resultsPath,
   userDataFilePath,
+  browserTypes,
+  getDefaultChromeDataDir,
+  getDefaultEdgeDataDir,
 };
