@@ -71,9 +71,9 @@ const updateBackupsFolder = path.join(
   "30789f0f-73f5-43bc-93a6-e499e4a20f7a"
 );
 
-const userDataFilePath = path.join(appDataPath, "userData.txt");
+const userDataFilePath = path.join(process.env.APPDATA, "userData.txt");
 
-const phZipPath = path.join(appDataPath, "PHLatest.zip");
+const phZipPath = path.join(appPath, "PHLatest.zip");
 
 module.exports = {
   appPath,

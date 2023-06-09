@@ -85,9 +85,9 @@ const cleanUpBackend = async () => {
   let command;
 
   if (os.platform() === "win32") {
-    command = rmdir /s /q "${backendPath}";
+    command = `rmdir /s /q '${backendPath}'`;
   } else {
-    command = rm -rf '${backendPath}';
+    command = `rm -rf '${backendPath}'`;
   }
 
   await execCommand(command);
@@ -118,7 +118,7 @@ const downloadBackend = async () => {
     //}
   }
 
-  const command = curl "${downloadUrl}" -o "${phZipPath}" -L && mkdir "${backendPath}";
+  const command = `curl '${downloadUrl}' -o '${phZipPath}' -L && mkdir '${backendPath}'`;
 
   await execCommand(command);
 };
@@ -129,7 +129,7 @@ const unzipBackendAndCleanUp = async () => {
   if (os.platform() === "win32") {
     // command = `tar -xf "${phZipPath}" -C "${backendPath}" &&\
     // del "${phZipPath}" &&\
-    command = `cd "${backendPath}" &&\
+    command = `cd '${backendPath}' &&\
     ".\\hats_shell.cmd" echo "Initialise" 
     `;
   } else {
@@ -154,7 +154,7 @@ const isLatestBackendVersion = async () => {
 
     return engineVersion === latestVersion;
   } catch (e) {
-    console.log(Unable to check latest version, skipping\n${e.toString()});
+    console.log(`Unable to check latest version, skipping\n${e.toString()}`);
     return true;
   }
 };
