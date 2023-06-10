@@ -187,7 +187,6 @@ const cloneLocalStateFile = (options, destDir) => {
 
 const cloneChromeProfiles = () => {
   const baseDir = getDefaultChromeDataDir();
-  console.log(baseDir);
 
   if (!baseDir) {
     console.error("Unable to find Chrome data directory in the system.");
