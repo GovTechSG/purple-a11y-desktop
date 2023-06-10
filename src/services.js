@@ -40,9 +40,9 @@ const startScan = async (scanDetails) => {
   }
 
   if (viewport === viewportTypes[1]) {
-    scanArgs.customDevice = Object.keys(devices)[0];
+    scanArgs.customDevice = "Mobile";
   }
-
+  
   if (viewport === viewportTypes[2]) {
     scanArgs.customDevice = devices[device];
   }
