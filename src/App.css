@@ -34,6 +34,10 @@ button.primary:hover {
   background-color: #5B3BED;
 }
 
+button.primary:active {
+  background-color: #472BC4;
+}
+
 button.secondary {
   border-radius: 50rem;
   padding: 0.25rem 2rem;
@@ -44,8 +48,18 @@ button.secondary {
 }
 
 button.secondary:hover {
-  background-color: #785ef0;
-  color: white;
+  background-color: #EBE8FD;
+  color: #5B3BED
+}
+
+button.secondary:active {
+  background-color: #C0B4F8;
+  color: #472BC4
+}
+
+button:disabled {
+  background-color: #E7ECEE;
+  color: #97ADB5;
 }
 
 button.transparent {
@@ -110,30 +124,37 @@ a:hover {
   }
 
   .modal-content {
-    position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    background-color: transparent;
+    flex: 1;
+    justify-content: center;
     border: none;
-    
+    background-color: transparent;
   }
 
   .modal-header-button {
     text-align: right;
   }
 
-  .modal-body {
-    padding: 0;
+  .modal-title {
+    text-align: center;
     margin: 0;
-    border: 0;
+    padding: 0;
+  }
+
+  .modal-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    margin: 0;
+    padding: 0;
   }
 
   .modal-desc {
     text-align: center;
     padding: 0 30px 0 30px;
+    flex: 1;
   }
 
   .modal-footer-button {
@@ -161,8 +182,9 @@ a:hover {
     margin: 0 5px 0 0;
   }
 
-  .modal-img {
-    margin: 30px 0 30px 0;
+  .modal-space {
+    height: 50%;
+    background-color: lightblue;
   }
 
   .display-block {
@@ -177,13 +199,16 @@ a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 0 0 10px 0;
   }
 
   .user-form {
+    position: relative;
     margin: 20px 0 40px 0;
     padding: 10px;
     display: flex;
     flex-direction: column;
+    flex: 1;
     width: 100%;
   }
 
@@ -204,6 +229,12 @@ a:hover {
     border-radius: 4px;
   }
 
+  .user-form-error {
+    top: 100%;
+    margin-top: 5px;
+    position: absolute;
+  }
+
   @keyframes in {
     from {
       opacity: 0;
@@ -218,3 +249,36 @@ a:hover {
     animation: in 0.5s;
   }
   
+#first-timer-2-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.typewriter {
+  position: absolute;
+  left: 0;
+  padding-left: 24px;
+  padding-bottom: 28px;
+  z-index: 2;
+  color: #eb5d5e;
+  font-family: "Open Sans";
+  font-size: 16px;
+  font-weight: 700;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 0 auto;
+  animation: typing 2s steps(200, end);
+  animation-delay: 0.5s;
+  animation-fill-mode: both;
+}
+
+@keyframes typing {
+  from {
+      width: 0;
+  }
+  to {
+      width: 100%;
+  }
+}

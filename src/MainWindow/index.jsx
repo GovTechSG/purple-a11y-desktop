@@ -39,9 +39,12 @@ const MainWindow = ({ appVersion }) => {
     return (
       <OnboardingComponent 
         handleSetUserData={handleSetUserData} 
+        name={name}
+        email={email}
         setName={setName}
         setEmail={setEmail}
         userInputErrorMessage={userInputErrorMessage}
+        setUserInputErrorMessage={setUserInputErrorMessage}
       />
     )
   }

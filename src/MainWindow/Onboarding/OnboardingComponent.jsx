@@ -8,6 +8,7 @@ import firstTimer1Circle from "../../assets/first-timer-1-circles.svg";
 import firstTimer2Circle from "../../assets/first-timer-2-circles.svg";
 import firstTimer3Circle from "../../assets/first-timer-3-circles.svg";
 import firstTimer4Circle from "../../assets/first-timer-4-circles.svg";
+import arrowRight from "../../assets/arrow-right.png";
 import { useState } from "react";
 
 const OnboardingComponent = ({
@@ -15,6 +16,9 @@ const OnboardingComponent = ({
   setName,
   setEmail,
   userInputErrorMessage,
+  setUserInputErrorMessage,
+  name, 
+  email
 }) => {
   const [step, setStep] = useState(1);
 
@@ -24,7 +28,22 @@ const OnboardingComponent = ({
 
   const handleOnNextClick = () => {
     setStep(step + 1);
+    resetFormInputs();
   };
+
+  const resetFormInputs = () => {
+    if (userInputErrorMessage) {
+      setUserInputErrorMessage(null);
+    }
+
+    if (name) {
+      setName("");
+    }
+
+    if (email) {
+      setEmail("")
+    }
+  }
 
   const backButton = (
     <Button
@@ -58,7 +77,7 @@ const OnboardingComponent = ({
             "Making your website accessible is within reach. Let’s get started by taking a quick look at how Purple HATS work."
           }
           pageIndicator={
-              <img className="modal-img" src={firstTimer1Circle} ></img>
+              <img className="page-indicator" src={firstTimer1Circle} ></img>
           }
           modalFooter={
             <Button
@@ -66,7 +85,8 @@ const OnboardingComponent = ({
               className="modal-full-button"
               onClick={handleOnNextClick}
             >
-              Let's go
+              Let's go &nbsp;
+              <img src={arrowRight}></img>
             </Button>
           }
           key={step}
@@ -80,12 +100,17 @@ const OnboardingComponent = ({
           isTopTitle={false}
           showCloseButton={false}
           modalTitle={"Get Started"}
-          modalBody={<img className="modal-img" src={firstTimer2}></img>}
+          modalBody={
+            <div id="first-timer-2-container">
+              <div className="typewriter">https://www.</div>
+              <img className="modal-img" src={firstTimer2}></img>
+            </div>
+          }
           modalDesc={
             "You just need to enter your website/sitemap URL and Purple HATS will crawl through all the web pages to analyse for accessibility issues."
           }
           pageIndicator={
-              <img className="modal-img" src={firstTimer2Circle} ></img>
+              <img className="page-indicator" src={firstTimer2Circle} ></img>
           }
           modalFooter={
             <>
@@ -109,7 +134,7 @@ const OnboardingComponent = ({
             "Custom flow scan type allows you to specify a user journey of your choice by recording a series of actions on the browser and re-play them automatically."
           }
           pageIndicator={
-              <img className="modal-img" src={firstTimer3Circle} ></img>
+              <img className="page-indicator" src={firstTimer3Circle} ></img>
           }
           modalFooter={
             <>
@@ -132,6 +157,7 @@ const OnboardingComponent = ({
           GovTech's Privacy Policy
         </a>
       );
+      const isSubmitDisabled = name.trim() === "" || email.trim() === "";
       return (
         <Modal
           show={true}
@@ -144,6 +170,8 @@ const OnboardingComponent = ({
               setName={setName}
               setEmail={setEmail}
               handleSetUserData={handleSetUserData}
+              userInputErrorMessage={userInputErrorMessage}
+              isSubmitDisabled={isSubmitDisabled}
             ></UserDetailsForm>
           }
           modalDesc={
@@ -154,9 +182,8 @@ const OnboardingComponent = ({
             </span>
           }
           pageIndicator={
-              <img className="modal-img" src={firstTimer4Circle} ></img>
+              <img className="page-indicator" src={firstTimer4Circle} ></img>
           }
-          // userInputErrorMessage={userInputErrorMessage}
           modalFooter={
             <>
               {backButton}
@@ -164,6 +191,7 @@ const OnboardingComponent = ({
                 type="submit"
                 form={formID}
                 className="primary modal-half-button modal-right-button"
+                disabled={isSubmitDisabled}
               >
                 I consent
               </button>

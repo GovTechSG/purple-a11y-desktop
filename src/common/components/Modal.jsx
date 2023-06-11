@@ -32,13 +32,13 @@ const Modal = ({
           </div>
         )}
         <div key={key} className="modal-content in">
-          {isTopTitle && <h3 className="modal-title">{modalTitle}</h3>}
-          {modalBody}
-          {!isTopTitle && <h3 className="modal-title">{modalTitle}</h3>}
-          {/* {userInputErrorMessage && (<p className="error-text">{userInputErrorMessage}</p>)} */}
-          {modalDesc && <p className="modal-desc">{modalDesc}</p>}
+          {isTopTitle && <div className="modal-title"><h3>{modalTitle}</h3></div>}
+          <div className="modal-body">{modalBody}</div>
+          {!isTopTitle && <div className="modal-title"><h3>{modalTitle}</h3></div>}
+          {modalDesc && <div className="modal-desc">{modalDesc}</div>}
+          <br className="modal-space"></br>
         </div>
-            {pageIndicator && <div className="page-indicator">{pageIndicator}</div>}
+        {pageIndicator && <div className="page-indicator">{pageIndicator}</div>}
         <div className="modal-footer-button">{modalFooter}</div>
       </div>
     </div>
