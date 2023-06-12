@@ -1,0 +1,20 @@
+name: Windows installer
+
+on:
+  workflow_dispatch:
+
+jobs:
+    build-win-installer:
+      runs-on: windows-latest
+
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
+
+        - name: Copy scripts to parent directory
+          run: cp ${{github.workspace}}/installer.ps1 ${{github.workspace}}    
+
+        - name: Run Powershell script for windows installer
+          shell: pwsh
+          run: powershell.exe -NoProfile -ExecutionPolicy Bypass "& ${{github.workspace}}\installer.ps1"     
+          working-directory:  ${{github.workspace}}
