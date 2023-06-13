@@ -8,6 +8,8 @@ import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import { ReactComponent as CheckCircleIcon } from "../../assets/check-circle.svg";
 import { ReactComponent as BoxArrowUpRightIcon } from "../../assets/box-arrow-up-right.svg";
 import { ReactComponent as DownloadIcon } from "../../assets/download.svg";
+import { ReactComponent as ReturnIcon } from "../../assets/return.svg";
+
 
 const ResultPage = ({ completedScanId: scanId }) => {
   const [enableReportDownload, setEnableReportDownload] = useState(false);
@@ -207,6 +209,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
           )}
           <hr />
           <Link id="scan-again" to="/">
+            <ButtonSvgIcon svgIcon={<ReturnIcon/>} className={`return-icon`}/>
             Scan again
           </Link>
         </div>

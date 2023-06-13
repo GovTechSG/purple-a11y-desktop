@@ -81,9 +81,13 @@
   }
 
   #main-contents a:before {
-    content: "\F116   ";
-    font-family: bootstrap-icons;
-    position: relative;
-    top: 2.5px;
+    // content: "\F116   ";
+    // font-family: bootstrap-icons;
+    // position: relative;
+    // top: 2.5px;
+  }
+
+  .return-icon {
+    margin-right: 0.5rem;
   }
 }
