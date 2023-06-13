@@ -10,7 +10,7 @@ const ErrorPage = () => {
   return (
     <div id="error-page">
       <ButtonSvgIcon
-        className={`exclamation-circle`}
+        className={`exclamation-circle-icon`}
         svgIcon={<ExclamationCircleIcon />}
       />
       {/* <i className="bi bi-exclamation-circle"></i> */}
