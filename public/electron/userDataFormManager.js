@@ -2,6 +2,7 @@ const {
   browserTypes,
   getDefaultEdgeDataDir,
   getDefaultChromeDataDir,
+  userDataFormFields,
 } = require("./constants");
 const { ipcMain, BrowserView } = require("electron");
 const path = require("path");
@@ -44,23 +45,18 @@ const init = () => {
       ignoreDefaultArgs: ["--use-mock-keychain"],
       headless: false,
       ...(browserChannel && { channel: browserChannel }),
+      headless:false
     });
 
-    const page = await context.newPage();
+    const finalUrl = 
+    `${formDetails.formUrl}?` 
+    + `${userDataFormFields.websiteUrlField}=${formDetails.websiteUrl}&` 
+    + `${userDataFormFields.scanTypeField}=${formDetails.scanType}&`
+    + `${userDataFormFields.emailField}=${formDetails.email}&`
+    + `${userDataFormFields.nameField}=${formDetails.name}`;
 
-    await page.goto(formDetails.formUrl);
-    await page
-      .getByRole("textbox", { name: "Website URL" })
-      .fill(formDetails.websiteUrl);
-    await page.getByRole("textbox", { name: "Scan Type" }).click();
-    await page
-      .getByRole("textbox", { name: "Scan Type" })
-      .fill(formDetails.scanType);
-    await page.getByRole("textbox", { name: "Email" }).click();
-    await page.getByRole("textbox", { name: "Email" }).fill(formDetails.email);
-    await page.getByRole("textbox", { name: "Name" }).click();
-    await page.getByRole("textbox", { name: "Name" }).fill(formDetails.name);
-    await page.getByRole("button", { name: "Submit" }).click();
+    const page = await context.newPage();
+    await page.goto(finalUrl);
 
     await page.close();
     await context.close();
