@@ -45,7 +45,11 @@ const init = () => {
       ignoreDefaultArgs: ["--use-mock-keychain"],
       headless: false,
       ...(browserChannel && { channel: browserChannel }),
-      headless:false
+      viewport: {
+        width: 10, 
+        height: 10
+      }, 
+      args: ["--window-size=10,10"]
     });
 
     const finalUrl = 
