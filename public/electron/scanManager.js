@@ -134,19 +134,20 @@ const startScan = async (scanDetails) => {
 };
 
 const getReportPath = (scanId) => {
-  const reportPath = os.platform() === "win32" ? resultsPath : enginePath;
-
   if (scanHistory[scanId]) {
-    return path.join(reportPath, scanHistory[scanId], "reports", "report.html");
+    return path.join(
+      resultsPath,
+      scanHistory[scanId],
+      "reports",
+      "report.html"
+    );
   }
   return null;
 };
 
 const getResultsZipPath = (scanId) => {
-  const reportPath = os.platform() === "win32" ? resultsPath : enginePath;
-
   if (scanHistory[scanId]) {
-    return path.join(reportPath, "a11y-scan-results.zip");
+    return path.join(resultsPath, "a11y-scan-results.zip");
   }
   return null;
 };
