@@ -31,7 +31,7 @@ const init = () => {
     if (formDetails.browser == browserTypes.chrome && chromeDataDir) {
       browserChannel = browserTypes.chrome;
       userDataDir = cloneChromeProfiles();
-    } else if (formDetails.browser == browserTypes.edge && edgeDataDir) {
+    } else if (formDetails.browser === "edge" && edgeDataDir) {
       browserChannel = browserTypes.edge;
       userDataDir = cloneEdgeProfiles();
     } else {
@@ -42,6 +42,7 @@ const init = () => {
 
     const context = await chromium.launchPersistentContext(userDataDir, {
       ignoreDefaultArgs: ["--use-mock-keychain"],
+      headless: false,
       ...(browserChannel && { channel: browserChannel }),
     });
 
