@@ -151,6 +151,14 @@ const getDefaultEdgeDataDir = () => {
   }
 };
 
+const userDataFormFields = {
+  formUrl: 'https://docs.google.com/forms/d/1tg8WYKWOgAo-DRsKNczZQF7OFeT00kjpmL1DPlL_VoI/formResponse',
+  websiteUrlField: 'entry.1562345227', 
+  scanTypeField: 'entry.1148680657', 
+  emailField: 'entry.52161304', 
+  nameField: 'entry.1787318910', 
+}
+
 module.exports = {
   appPath,
   releaseUrl,
@@ -169,6 +177,7 @@ module.exports = {
   phZipPath,
   resultsPath,
   userDataFilePath,
+  userDataFormFields,
   browserTypes,
   getDefaultChromeDataDir,
   getDefaultEdgeDataDir,
