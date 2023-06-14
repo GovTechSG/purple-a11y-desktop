@@ -1,48 +1,38 @@
 import React from "react";
+import UserDetailsForm from "./UserDetailsForm";
+
 
 const Modal = ({
-    id,
-    modalTitle,
-    show,
-    setShowModal,
-    modalBody,
-    modalFooter,
-    isTopTitle,
-    showCloseButton,
-    modalDesc,
-    pageIndicator,
-    key,
-    // userInputErrorMessage
+  id, 
+  showModal, 
+  showCloseButton, 
+  modalTitle,
+  modalBody,
+  modalFooter,
+  setShowModal
 }) => {
-  const showHideClassName = show ? "modal display-flex" : "modal display-none";
+  const showHideClassName = showModal ? "modal display-flex" : "modal display-none";
+  const showCloseButtonClassName = showCloseButton ? "btn-close show" : "btn-close hide"
+  const modalTitleClassName = modalTitle ? "modal-title show" : "modal-title hide"; 
+
   return (
-    <div className={`${showHideClassName}`} id={id}>
-      <div className="modal-container">
-        {showCloseButton && (
-          <div className="modal-header-button">
-            <button
-              id="close-button"
-              className="close button transparent"
-              onClick={() => setShowModal(false)}
-              aria-label="Close"
-              aria-controls={id}
-            >
-              Close
-            </button>
-          </div>
-        )}
-        <div key={key} className="modal-content in">
-          {isTopTitle && <div className="modal-title"><h3>{modalTitle}</h3></div>}
-          <div className="modal-body">{modalBody}</div>
-          {!isTopTitle && <div className="modal-title"><h3>{modalTitle}</h3></div>}
-          {modalDesc && <div className="modal-desc">{modalDesc}</div>}
-          <br className="modal-space"></br>
+    <div className={showHideClassName} id={id}>
+      <div className="modal-content">
+        <div className="modal-header">
+          <h3 className={modalTitleClassName} defaultValue={"modalTitle"}>{modalTitle}</h3>
+          <button 
+            type="button" 
+            className={showCloseButtonClassName}
+            onClick={() => setShowModal(false)}
+            aria-label="Close"
+            aria-controls={id}
+          />
         </div>
-        {pageIndicator && <div className="page-indicator">{pageIndicator}</div>}
-        <div className="modal-footer-button">{modalFooter}</div>
+        <div className="modal-body">{modalBody}</div>
+        <div className="modal-footer">{modalFooter}</div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default Modal;

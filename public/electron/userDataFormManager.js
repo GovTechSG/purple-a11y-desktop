@@ -43,6 +43,7 @@ const init = () => {
     const context = await chromium.launchPersistentContext(userDataDir, {
       ignoreDefaultArgs: ["--use-mock-keychain"],
       ...(browserChannel && { channel: browserChannel }),
+      headless: false
     });
 
     const page = await context.newPage();

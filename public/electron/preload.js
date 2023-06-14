@@ -24,6 +24,9 @@ contextBridge.exposeInMainWorld("services", {
     const data = await ipcRenderer.invoke("getUserData"); 
     return data;
   },
+  editUserData: async (userData) => {
+    ipcRenderer.send("editUserData", userData);
+  },
   guiReady: async () => {
     ipcRenderer.send("guiReady");
   },
@@ -51,4 +54,7 @@ contextBridge.exposeInMainWorld("services", {
   enableReportDownload: (callback) => {
     ipcRenderer.on("enableReportDownload", () => callback());
   },
+  openLink: (url) => {
+    ipcRenderer.send("openLink", url)
+  }
 });
