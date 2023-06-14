@@ -55,4 +55,5 @@ const setData = async (userDataEvent) => {
 module.exports = {
     init,
     setData, 
+    readUserDataFromFile
 }

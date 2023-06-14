@@ -74,7 +74,7 @@ app.on("ready", async () => {
     launchWindow.webContents.send("launchStatus", "updatingApp");
   });
 
-  // await updateManager.run(updateEvent);
+  await updateManager.run(updateEvent);
 
   launchWindow.close();
 
