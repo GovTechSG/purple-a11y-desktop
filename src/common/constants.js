@@ -11,6 +11,7 @@ export const viewportTypes = [
   "Custom width...",
 ];
 
+// key is what will be displayed on the GUI, value is the internal value that Playwright recognises
 export const devices = {
   "Blackberry PlayBook": "Blackberry PlayBook",
   "BlackBerry Z30": "BlackBerry Z30",
@@ -64,8 +65,8 @@ export const devices = {
   "Google Pixel 4": "Pixel 4",
   "Google Pixel 4a (5G)": "Pixel 4a (5G)",
   "Google Pixel 5": "Pixel 5",
-  "Motorola Moto G4": "Moto G4"
-}
+  "Motorola Moto G4": "Moto G4",
+};
 
 // exit codes returned by Purple HATS cli when there is an error with the URL provided
 export const urlErrorCodes = new Set([11, 12, 13, 14, 15, 16]);
@@ -88,9 +89,10 @@ export const userDataFormDetails = {
 };
 
 export const userDataFormInputFields = {
-  formUrl: 'https://docs.google.com/forms/d/1tg8WYKWOgAo-DRsKNczZQF7OFeT00kjpmL1DPlL_VoI/formResponse',
-  websiteUrlField: 'entry.1562345227', 
-  scanTypeField: 'entry.1148680657', 
-  emailField: 'entry.52161304', 
-  nameField: 'entry.1787318910', 
+  formUrl:
+    "https://docs.google.com/forms/d/1tg8WYKWOgAo-DRsKNczZQF7OFeT00kjpmL1DPlL_VoI/formResponse",
+  websiteUrlField: "entry.1562345227",
+  scanTypeField: "entry.1148680657",
+  emailField: "entry.52161304",
+  nameField: "entry.1787318910",
 };

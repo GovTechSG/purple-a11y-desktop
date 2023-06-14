@@ -33,12 +33,12 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   useEffect(() => {
     const getUserData = async () => {
       const userData = await services.getUserData();
-      setBrowser(userData['browser'])
+      setBrowser(userData["browser"]);
       // const isEvent = userData["event"];
       // if (!isEvent) {
-      //   setEmail(userData['email']); 
-      //   setName(userData['name']); 
-      //   setAutoSubmit(userData['autoSubmit']);   
+      //   setEmail(userData['email']);
+      //   setName(userData['name']);
+      //   setAutoSubmit(userData['autoSubmit']);
       // }
     };
 
@@ -69,7 +69,6 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
     window.localStorage.setItem("scanDetails", JSON.stringify(scanDetails));
 
     navigate("/scanning");
-    console.log(scanDetails); 
     const response = await services.startScan(scanDetails);
     console.log(response.success);
 

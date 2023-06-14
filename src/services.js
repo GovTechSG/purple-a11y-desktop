@@ -22,7 +22,7 @@ const startScan = async (scanDetails) => {
     device,
     viewportWidth,
     scanInBackground,
-    browser
+    browser,
   } = scanDetails;
 
   currentScanUrl = scanUrl;
@@ -40,7 +40,7 @@ const startScan = async (scanDetails) => {
   }
 
   if (viewport === viewportTypes[1]) {
-    scanArgs.customDevice = Object.keys(devices)[0];
+    scanArgs.customDevice = "Mobile";
   }
 
   if (viewport === viewportTypes[2]) {
