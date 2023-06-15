@@ -60,6 +60,7 @@ button.secondary:active {
 button:disabled {
   background-color: #E7ECEE;
   color: #97ADB5;
+  pointer-events: none;
 }
 
 button.transparent {
