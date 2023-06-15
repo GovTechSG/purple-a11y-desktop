@@ -207,10 +207,10 @@ const cloneEdgeProfileCookieFiles = (options, destDir) => {
   let profileNamesRegex;
   // Ignores the cloned Purple-HATS directory if exists
   if (os.platform() === "win32") {
-    ["Purple-HATS/**"],
-      (profileCookiesDir = globSync("**/Network/Cookies", {
-        ...options,
-      }));
+    profileCookiesDir = globSync("**/Network/Cookies", {
+      ...options,
+      ignore: "Purple-HATS/**",
+    });
     profileNamesRegex = /User Data\\(.*?)\\Network/;
   } else if (os.platform() === "darwin") {
     // Ignores copying cookies from the Purple-HATS directory if it exists
@@ -365,7 +365,7 @@ const deleteClonedProfiles = (browserChannel) => {
   } else if (browserChannel == browserTypes.edge) {
     deleteClonedEdgeProfiles();
   }
-}
+};
 
 const createPlaywrightContext = async (browser, screenSize) => {
   const playwrightPath = path.join(
@@ -399,24 +399,25 @@ const createPlaywrightContext = async (browser, screenSize) => {
   const context = await chromium.launchPersistentContext(userDataDir, {
     ignoreDefaultArgs: ["--use-mock-keychain"],
     ...(browserChannel && { channel: browserChannel }),
-    headless:false,
+    headless: false,
     viewport: {
-      width: screenSize.width, 
-      height: screenSize.height
+      width: screenSize.width,
+      height: screenSize.height,
     },
-    args: ["--window-size=10,10"]
+    args: ["--window-size=10,10"],
   });
 
-  return {context, browserChannel};
-}
+  return { context, browserChannel };
+};
 
 const userDataFormFields = {
-  formUrl: 'https://docs.google.com/forms/d/1tg8WYKWOgAo-DRsKNczZQF7OFeT00kjpmL1DPlL_VoI/formResponse',
-  websiteUrlField: 'entry.1562345227', 
-  scanTypeField: 'entry.1148680657', 
-  emailField: 'entry.52161304', 
-  nameField: 'entry.1787318910', 
-}
+  formUrl:
+    "https://docs.google.com/forms/d/1tg8WYKWOgAo-DRsKNczZQF7OFeT00kjpmL1DPlL_VoI/formResponse",
+  websiteUrlField: "entry.1562345227",
+  scanTypeField: "entry.1148680657",
+  emailField: "entry.52161304",
+  nameField: "entry.1787318910",
+};
 
 module.exports = {
   appPath,
@@ -441,5 +442,5 @@ module.exports = {
   getDefaultChromeDataDir,
   getDefaultEdgeDataDir,
   deleteClonedProfiles,
-  createPlaywrightContext
+  createPlaywrightContext,
 };

@@ -71,14 +71,15 @@ export const devices = {
 };
 
 // exit codes returned by Purple HATS cli when there is an error with the URL provided
-export const urlErrorCodes = new Set([11, 12, 13, 14, 15, 16]);
-export const urlErrorTypes = {
+export const cliErrorCodes = new Set([11, 12, 13, 14, 15, 16, 21]);
+export const cliErrorTypes = {
   invalidUrl: 11,
   cannotBeResolved: 12,
   errorStatusReceived: 13,
   systemError: 14,
   notASitemap: 15,
   unauthorisedBasicAuth: 16,
+  profileDataCopyError: 21,
 };
 
 export const userDataFormDetails = {

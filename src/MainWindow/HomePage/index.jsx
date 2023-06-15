@@ -6,7 +6,7 @@ import editIcon from "../../assets/edit-icon.png";
 import InitScanForm from "./InitScanForm";
 import "./HomePage.scss";
 import services from "../../services";
-import { urlErrorCodes, urlErrorTypes } from "../../common/constants";
+import { cliErrorCodes, cliErrorTypes } from "../../common/constants";
 import Modal from "../../common/components/Modal";
 import { BasicAuthForm, BasicAuthFormFooter } from "./BasicAuthForm";
 import EditUserDetailsModal from "./EditUserDetailsModal";
@@ -36,12 +36,12 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   useEffect(() => {
     const getUserData = async () => {
       const userData = await services.getUserData();
-      setBrowser(userData['browser'])
+      setBrowser(userData["browser"]);
       const isEvent = userData["event"];
       if (!isEvent) {
-        setEmail(userData['email']); 
-        setName(userData['name']); 
-        setAutoSubmit(userData['autoSubmit']);   
+        setEmail(userData["email"]);
+        setName(userData["name"]);
+        setAutoSubmit(userData["autoSubmit"]);
       }
     };
 
@@ -81,23 +81,27 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
       return;
     }
 
-    if (urlErrorCodes.has(response.statusCode)) {
+    if (cliErrorCodes.has(response.statusCode)) {
       let errorMessageToShow;
       switch (response.statusCode) {
         /* technically urlErrorTypes.invalidUrl is not needed since this case
         was handled above, but just for completeness */
-        case urlErrorTypes.unauthorisedBasicAuth:
+        case cliErrorTypes.unauthorisedBasicAuth:
           errorMessageToShow = "Unauthorised Basic Authentication.";
           break;
-        case urlErrorTypes.invalidUrl:
-        case urlErrorTypes.cannotBeResolved:
-        case urlErrorTypes.errorStatusReceived:
+        case cliErrorTypes.invalidUrl:
+        case cliErrorTypes.cannotBeResolved:
+        case cliErrorTypes.errorStatusReceived:
           errorMessageToShow = "Invalid URL.";
           break;
-        case urlErrorTypes.notASitemap:
+        case cliErrorTypes.notASitemap:
           errorMessageToShow = "Invalid sitemap.";
           break;
-        case urlErrorTypes.systemError:
+        case cliErrorTypes.profileDataCopyError:
+          errorMessageToShow =
+            "Error cloning browser profile data. Try closing your opened browser(s) before the next scan.";
+          break;
+        case cliErrorTypes.systemError:
         default:
           errorMessageToShow = "Something went wrong. Please try again later.";
       }
@@ -112,7 +116,7 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
     return;
   };
 
-  const areUserDetailsSet = (name != "" && email != "");
+  const areUserDetailsSet = name != "" && email != "";
 
   const handleBasicAuthSubmit = (e) => {
     e.preventDefault();
@@ -127,14 +131,16 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   };
 
   return (
-
     <div id="home-page">
       <div id="home-page-main">
-         {autoSubmit && (
+        {autoSubmit && (
           <div>
-             <button id="edit-user-details" onClick={() => setShowEditDataModal(true)}>
-                Welcome <b>{name}</b> &nbsp;
-                <img src={editIcon}></img>
+            <button
+              id="edit-user-details"
+              onClick={() => setShowEditDataModal(true)}
+            >
+              Welcome <b>{name}</b> &nbsp;
+              <img src={editIcon}></img>
             </button>
           </div>
         )}
@@ -157,16 +163,19 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
         modalTitle={"Basic Authentication Required"}
         modalBody={
           <>
-             <BasicAuthForm handleBasicAuthSubmit={handleBasicAuthSubmit} />
-             <p>The site you are trying to scan requires basic authentication. 
-        Please enter your credentials. Purple-HATS will not collect the information and only use it for this scan instance.</p>
+            <BasicAuthForm handleBasicAuthSubmit={handleBasicAuthSubmit} />
+            <p>
+              The site you are trying to scan requires basic authentication.
+              Please enter your credentials. Purple-HATS will not collect the
+              information and only use it for this scan instance.
+            </p>
           </>
         }
         modalFooter={
           <BasicAuthFormFooter setShowBasicAuthModal={setShowBasicAuthModal} />
         }
       />
-     {areUserDetailsSet && (
+      {areUserDetailsSet && (
         <>
           <EditUserDetailsModal
             formID={"edit-details-form"}
@@ -176,8 +185,7 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
             initialEmail={email}
           />
         </>
-      )
-     }
+      )}
       <div id="home-page-footer">
         <img
           id="app-illustration"
