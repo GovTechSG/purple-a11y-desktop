@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import a11yLogo from "../../assets/a11y-logo.svg";
 import appIllustration from "../../assets/app-illustration.svg";
+import editIcon from "../../assets/edit-icon.png";
 import InitScanForm from "./InitScanForm";
 import "./HomePage.scss";
 import services from "../../services";
 import { urlErrorCodes, urlErrorTypes } from "../../common/constants";
 import Modal from "../../common/components/Modal";
 import { BasicAuthForm, BasicAuthFormFooter } from "./BasicAuthForm";
+import EditUserDetailsModal from "./EditUserDetailsModal";
 
 const HomePage = ({ appVersion, setCompletedScanId }) => {
   const navigate = useNavigate();
@@ -15,11 +17,12 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   const [prevUrlErrorMessage, setPrevUrlErrorMessage] = useState(
     location.state
   );
-  // const [email, setEmail] = useState("");
-  // const [name, setName] = useState("");
-  // const [autoSubmit, setAutoSubmit] = useState(false);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [autoSubmit, setAutoSubmit] = useState(false);
   const [browser, setBrowser] = useState(null);
   const [showBasicAuthModal, setShowBasicAuthModal] = useState(false);
+  const [showEditDataModal, setShowEditDataModal] = useState(false);
 
   useEffect(() => {
     if (
@@ -33,13 +36,13 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   useEffect(() => {
     const getUserData = async () => {
       const userData = await services.getUserData();
-      setBrowser(userData["browser"]);
-      // const isEvent = userData["event"];
-      // if (!isEvent) {
-      //   setEmail(userData['email']);
-      //   setName(userData['name']);
-      //   setAutoSubmit(userData['autoSubmit']);
-      // }
+      setBrowser(userData['browser'])
+      const isEvent = userData["event"];
+      if (!isEvent) {
+        setEmail(userData['email']); 
+        setName(userData['name']); 
+        setAutoSubmit(userData['autoSubmit']);   
+      }
     };
 
     getUserData();
@@ -109,6 +112,8 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
     return;
   };
 
+  const areUserDetailsSet = (name != "" && email != "");
+
   const handleBasicAuthSubmit = (e) => {
     e.preventDefault();
     const username = e.target.username.value;
@@ -122,8 +127,17 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   };
 
   return (
+
     <div id="home-page">
       <div id="home-page-main">
+         {autoSubmit && (
+          <div>
+             <button id="edit-user-details" onClick={() => setShowEditDataModal(true)}>
+                Welcome <b>{name}</b> &nbsp;
+                <img src={editIcon}></img>
+            </button>
+          </div>
+        )}
         <img
           id="a11y-logo"
           src={a11yLogo}
@@ -134,29 +148,36 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
           startScan={startScan}
           prevUrlErrorMessage={prevUrlErrorMessage}
         />
-        {/* {autoSubmit && (
-          <div id="user-details">
-            <div>{name}</div>
-            <div>{email}</div>
-          </div>
-        )} */}
       </div>
       <Modal
         id="basic-auth-modal"
-        isTopTitle={true}
-        modalTitle={"Basic Authentication Required"}
-        modalDesc={`The site you are trying to scan requires basic authentication. 
-        Please enter your credentials. Purple-HATS will not collect the information and only use it for this scan instance.`}
-        show={showBasicAuthModal}
         showCloseButton={true}
+        showModal={showBasicAuthModal}
         setShowModal={setShowBasicAuthModal}
+        modalTitle={"Basic Authentication Required"}
         modalBody={
-          <BasicAuthForm handleBasicAuthSubmit={handleBasicAuthSubmit} />
+          <>
+             <BasicAuthForm handleBasicAuthSubmit={handleBasicAuthSubmit} />
+             <p>The site you are trying to scan requires basic authentication. 
+        Please enter your credentials. Purple-HATS will not collect the information and only use it for this scan instance.</p>
+          </>
         }
         modalFooter={
           <BasicAuthFormFooter setShowBasicAuthModal={setShowBasicAuthModal} />
         }
       />
+     {areUserDetailsSet && (
+        <>
+          <EditUserDetailsModal
+            formID={"edit-details-form"}
+            showModal={showEditDataModal}
+            setShowEditDataModal={setShowEditDataModal}
+            initialName={name}
+            initialEmail={email}
+          />
+        </>
+      )
+     }
       <div id="home-page-footer">
         <img
           id="app-illustration"

@@ -1,3 +1,5 @@
+import boxRightArrow from "../assets/box-right-arrow.png";
+
 export const scanTypes = {
   "Website crawl": "website",
   "Sitemap crawl": "sitemap",
@@ -96,3 +98,18 @@ export const userDataFormInputFields = {
   emailField: "entry.52161304",
   nameField: "entry.1787318910",
 };
+
+export const policyUrlElem = (
+  <a
+    role="link"
+    className="link"
+    onClick={() => {handleClickLink("https://www.tech.gov.sg/privacy/")}}
+  >
+    GovTech's Privacy Policy
+    <img id="box-arrow-right" src={boxRightArrow}></img>
+  </a>
+);
+
+const handleClickLink = (url) => {
+window.services.openLink(url);
+}

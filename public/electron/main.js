@@ -1,4 +1,4 @@
-const { app: electronApp, BrowserWindow, ipcMain } = require("electron");
+const { app: electronApp, BrowserWindow, ipcMain, shell } = require("electron");
 const fs = require("fs");
 const EventEmitter = require("events");
 const constants = require("./constants");
@@ -86,7 +86,11 @@ app.on("ready", async () => {
 
   createMainWindow();
   scanManager.init(mainWindow);  
-  userDataManager.getData();
+
+  ipcMain.on("openLink", (_event, url) => {
+    shell.openExternal(url);
+  })
+  
   await mainReady;
   mainWindow.webContents.send("appStatus", "ready");
   mainWindow.webContents.send("versionNumber", constants.appVersion);
