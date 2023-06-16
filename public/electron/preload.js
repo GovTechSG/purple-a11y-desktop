@@ -13,8 +13,8 @@ contextBridge.exposeInMainWorld("services", {
   openReport: (scanId) => {
     ipcRenderer.send("openReport", scanId);
   },
-  downloadResults: async (scanId) => {
-    const reportZip = await ipcRenderer.invoke("downloadResults", scanId);
+  downloadResults: async (scanId, includeScreenshots=false) => {
+    const reportZip = await ipcRenderer.invoke("downloadResults", scanId, includeScreenshots);
     return reportZip;
   },
   submitFormViaBrowser: (formDetails) => {

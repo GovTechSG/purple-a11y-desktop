@@ -1,6 +1,6 @@
 const { BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
-const { fork, spawnSync } = require("child_process");
+const { fork, spawnSync, execSync } = require("child_process");
 const fs = require("fs");
 const os = require("os");
 const { randomUUID } = require("crypto");
@@ -145,15 +145,29 @@ const getReportPath = (scanId) => {
   return null;
 };
 
-const getResultsZip = (scanId) => {
+const getResultsZip = (scanId, includeScreenshots=false) => {
   if (!scanHistory[scanId]) return "";
 
-  const reportsPath = path.join(resultsPath, scanHistory[scanId], "reports");
+  const scanResPath = path.join(resultsPath, scanHistory[scanId]);
+  const reportsPath = path.join(scanResPath, "reports");
   const downloadResultsZipPath = path.join(os.tmpdir(), `${scanId}.zip`);
 
-  spawnSync('tar', ['-C', reportsPath, '-cf', downloadResultsZipPath, 'report.html', 'passed_items.json']);
+  if (os.platform() === 'win32') {
+    if (includeScreenshots) {
+      spawnSync('Compress-Archive', ['-Path', `'${reportsPath}\\report.html', '${reportsPath}\\passed_items.json', '${scanResPath}\\screenshots'`, '-DestinationPath', `'${downloadResultsZipPath}'`], {shell: 'powershell.exe'})
+    } else {
+      spawnSync('Compress-Archive', ['-Path', `'${reportsPath}\\report.html', '${reportsPath}\\passed_items.json'`, '-DestinationPath', `'${downloadResultsZipPath}'`], {shell: 'powershell.exe'})
+    }
+  } else {
+    if (includeScreenshots) {
+      spawnSync('zip', [`${reportsPath}/report.html`, `${reportsPath}/passed_items.json`, `${scanResPath}/screenshots/*`, '-j']);
+    } else {
+      spawnSync('zip', [`${reportsPath}/report.html`, `${reportsPath}/passed_items.json`, '-j']);
+    }
+  }
 
   const reportZip = fs.readFileSync(downloadResultsZipPath);
+  fs.rmSync(downloadResultsZipPath);
   return reportZip;
 };
 
@@ -177,8 +191,8 @@ const init = (contextWindow) => {
     createReportWindow(contextWindow, reportPath);
   });
 
-  ipcMain.handle("downloadResults", (_event, scanId) => {
-    return getResultsZip(scanId);
+  ipcMain.handle("downloadResults", (_event, scanId, includeScreenshots) => {
+    return getResultsZip(scanId, includeScreenshots);
   });
 };
 

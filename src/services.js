@@ -59,8 +59,8 @@ const openReport = (scanId) => {
   window.services.openReport(scanId);
 };
 
-const downloadResults = async (scanId) => {
-  const reportZip = await window.services.downloadResults(scanId);
+const downloadResults = async (scanId, includeScreenshots) => {
+  const reportZip = await window.services.downloadResults(scanId, includeScreenshots);
   return reportZip;
 };
 

@@ -21,6 +21,9 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const [autoSubmit, setAutoSubmit] = useState(false);
   const [event, setEvent] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
+  
+  // used for custom flow scans
+  const [includeCustomFlowScreenshots, setIncludeCustomFlowScreenshots] = useState(false);
 
   useEffect(() => {
     const getDataForForm = async () => {
@@ -79,7 +82,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
   }, [autoSubmit]);
 
   const handleDownloadResults = async () => {
-    const data = await services.downloadResults(scanId);
+    const data = await services.downloadResults(scanId, includeCustomFlowScreenshots);
     let blob = new Blob([data], { type: "application/zip" });
     let link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
@@ -166,6 +169,17 @@ const ResultPage = ({ completedScanId: scanId }) => {
                 {/* <i className="bi bi-download" /> */}
                 Download results (.zip)
               </Button>
+              { scanType === 'Custom flow' && <>
+                <input
+                type="checkbox"
+                id="download-screenshots-checkbox"
+                checked={includeCustomFlowScreenshots}
+                onChange={() => setIncludeCustomFlowScreenshots(!includeCustomFlowScreenshots)}
+              />
+              <label htmlFor="download-screenshots-checkbox">
+                Include screenshots of pages scanned
+              </label>
+              </> }
             </>
           ) : (
             <>
