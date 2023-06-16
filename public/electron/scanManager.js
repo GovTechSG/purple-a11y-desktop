@@ -145,22 +145,15 @@ const getReportPath = (scanId) => {
   return null;
 };
 
-const getResultsZipPath = (scanId) => {
-  if (scanHistory[scanId]) {
-    return path.join(resultsPath, "a11y-scan-results.zip");
-  }
-  return null;
-};
-
 const getResultsZip = (scanId) => {
   if (!scanHistory[scanId]) return "";
 
-  const reportsPath = path.join(enginePath, scanHistory[scanId], "reports");
-  const resultsZipPath = path.join(os.tmpdir(), `${scanId}.zip`);
+  const reportsPath = path.join(resultsPath, scanHistory[scanId], "reports");
+  const downloadResultsZipPath = path.join(os.tmpdir(), `${scanId}.zip`);
 
-  spawnSync('tar', ['-C', reportsPath, '-cf', resultsZipPath, 'report.html', 'passed_items.json']);
+  spawnSync('tar', ['-C', reportsPath, '-cf', downloadResultsZipPath, 'report.html', 'passed_items.json']);
 
-  const reportZip = fs.readFileSync(resultsZipPath);
+  const reportZip = fs.readFileSync(downloadResultsZipPath);
   return reportZip;
 };
 
