@@ -33,7 +33,7 @@ const EditUserDetailsModal = ({
     return (
         <Modal
             showModal={showModal}
-            showCloseButton={true}
+            showHeader={true}
             modalTitle={"Edit Form"}
             modalBody={
                 <>

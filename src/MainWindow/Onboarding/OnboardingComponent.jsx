@@ -1,14 +1,11 @@
 import Modal from "../../common/components/Modal";
 import Button from "../../common/components/Button";
 import UserDetailsForm from "../../common/components/UserDetailsForm";
+import PageIndicator from "./components/PageIndicator";
 import { policyUrlElem } from "../../common/constants";
 import firstTimer1 from "../../assets/first-timer-1.svg";
 import firstTimer2 from "../../assets/first-timer-2.svg";
 import firstTimer3 from "../../assets/first-timer-3.svg";
-import firstTimer1Circle from "../../assets/first-timer-1-circles.svg";
-import firstTimer2Circle from "../../assets/first-timer-2-circles.svg";
-import firstTimer3Circle from "../../assets/first-timer-3-circles.svg";
-import firstTimer4Circle from "../../assets/first-timer-4-circles.svg";
 import arrowRight from "../../assets/arrow-right.png";
 import { useState } from "react";
 
@@ -70,15 +67,16 @@ const OnboardingComponent = ({
       return (
         <Modal
           showModal={true}
-          showCloseButton={false}
+          showHeader={false}
+          isOnboarding={true}
           modalBody={
             <>
               <div className="modal-img-container">
                 <img className="modal-img" src={firstTimer1}></img>
               </div>
-              <h3 className="modal-title">Hi There!</h3>
+              <h3 className="onboarding-modal modal-title">Hi There!</h3>
               <p className="modal-desc">Making your website accessible is within reach. Let’s get started by taking a quick look at how Purple HATS work.</p>
-              <img className="page-indicator" src={firstTimer1Circle} ></img>
+              <PageIndicator page={1}></PageIndicator>
             </>
           }
           modalFooter={
@@ -99,7 +97,8 @@ const OnboardingComponent = ({
       return (
         <Modal
           showModal={true}
-          showCloseButton={false}
+          showHeader={false}
+          isOnboarding={true}
           modalBody={
             <>
               <div className="modal-img-container">
@@ -108,9 +107,9 @@ const OnboardingComponent = ({
                   <img className="modal-img" src={firstTimer2}></img>
                 </div>
               </div>
-              <h3 className="modal-title">Get started</h3>
+              <h3 className="onboarding-modal modal-title">Get started</h3>
               <p className="modal-desc">You just need to enter your website/sitemap URL and Purple HATS will crawl through all the web pages to analyse for accessibility issues.</p>
-              <img className="page-indicator" src={firstTimer2Circle} ></img>
+              <PageIndicator page={2}></PageIndicator>
             </>
           }
           modalFooter={
@@ -127,15 +126,16 @@ const OnboardingComponent = ({
       return (
         <Modal
           showModal={true}
-          showCloseButton={false}
+          showHeader={false}
+          isOnboarding={true}
           modalBody={
             <>
               <div className="modal-img-container">
                 <img className="modal-img" src={firstTimer3}></img>
               </div>
-              <h3 className="modal-title">Custom Flow</h3>
+              <h3 className="onboarding-modal modal-title">Custom Flow</h3>
               <p className="modal-desc">You just need to enter your website/sitemap URL and Purple HATS will crawl through all the web pages to analyse for accessibility issues.</p>
-              <img className="page-indicator" src={firstTimer3Circle} ></img>
+              <PageIndicator page={3}></PageIndicator>
             </>
           }
           modalFooter={
@@ -155,10 +155,11 @@ const OnboardingComponent = ({
       return (
         <Modal
           showModal={true}
-          showCloseButton={false}
+          showHeader={false}
+          isOnboarding={true}
           modalBody={
             <>
-              <h3 className="modal-title">Get to know you</h3>
+              <h3 className="onboarding-modal modal-title">Get to know you</h3>
               <UserDetailsForm
                 formID={formID}
                 setName={setName}
@@ -169,7 +170,7 @@ const OnboardingComponent = ({
               <p className="modal-desc">
                 To personalise your experience, we will be collecting your name, email address and app usage data. Your information fully complies with {policyUrlElem}
               </p>
-              <img className="page-indicator" src={firstTimer4Circle} ></img>
+              <PageIndicator page={4}></PageIndicator>
             </>
           }
           modalFooter={
