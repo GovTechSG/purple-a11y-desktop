@@ -1,6 +1,6 @@
 const LoadingSpinner = (props) => {
     return (
-        <div className="loading-spinner" {...props} />
+        <div id="loading-spinner" className="loading-spinner" {...props} />
     )
 }
 
