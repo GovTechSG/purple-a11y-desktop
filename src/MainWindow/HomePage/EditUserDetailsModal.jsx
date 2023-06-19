@@ -34,7 +34,8 @@ const EditUserDetailsModal = ({
         <Modal
             showModal={showModal}
             showHeader={true}
-            modalTitle={"Edit Form"}
+            isOnboarding={false}
+            modalTitle={"Edit your profile"}
             modalBody={
                 <>
                     <UserDetailsForm
@@ -47,7 +48,7 @@ const EditUserDetailsModal = ({
                         userInputErrorMessage={userInputErrorMessage}
                         isSubmitDisabled={isSubmitDisabled}
                     />
-                    <p>We are collecting your name, email address and app usage data. Your information fully complies with {policyUrlElem}.</p>
+                    <p className="mb-0">We are collecting your name, email address and app usage data. Your information fully complies with {policyUrlElem}.</p>
                 </>
             }
             modalFooter = {
