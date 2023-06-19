@@ -6,9 +6,11 @@ const UserDetailsForm = ({
     setEmail,
     handleOnSubmit,
     userInputErrorMessage,
+    isOnboarding,
 }) => {
+    const userFormClassName = isOnboarding ? "user-form fade-in" : "user-form";
     return (
-        <div className="user-form">
+        <div className={userFormClassName}>
             <form id={formID} onSubmit={(e) => handleOnSubmit(e)}>
                 <div className="user-form-field">
                     <label className="user-form-label" for="name">Name</label>

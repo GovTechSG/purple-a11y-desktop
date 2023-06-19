@@ -104,18 +104,31 @@ a:hover {
     }
   }
 
-  .onboarding-modal.modal-content {
+  .onboarding-modal .modal-content {
     max-width: 450px;
     min-height: 600px;
   }
 
-  .onboarding-modal.modal-title {
+  .onboarding-modal .modal-title {
     margin-bottom: 1rem;
   }
 
-  .onboarding-modal.modal-body {
+  .onboarding-modal .modal-body {
     display: flex;
     flex-direction: column;
+  }
+
+  .onboarding-modal .user-form {
+    margin-top: 1rem;
+    min-height: 160px;
+  }
+
+  .onboarding-modal .modal-img-container {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
   }
 
   .modal {
@@ -137,12 +150,10 @@ a:hover {
     padding-bottom: 0px;
   }
 
-  .modal-img-container {
-    height: 160px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
+  .modal-header .btn-close {
+    border-radius: 50%;
+    background-color: #E7ECEE;
+    margin: 0;
   }
 
   .modal-desc {
@@ -202,8 +213,8 @@ a:hover {
     display: flex;
     flex-direction: column;
     width: 100%;
-    min-height: 160px;
-    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: #333333;
   }
 
   .user-form-field {
@@ -222,6 +233,7 @@ a:hover {
     background: white;
     border: 1px solid #B5C5CA;;
     border-radius: 4px;
+    padding: 0.25rem 0.5rem;
   }
 
   .user-form-error {
@@ -250,6 +262,20 @@ a:hover {
   .fade-in {
     animation: fade-in 0.5s;
   }
+
+  @keyframes fade-out {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    } to {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+  }
+
+  .fade-out {
+    animation: fade-out 0.5s;
+  }
   
 #first-timer-2-container {
   position: relative;
@@ -274,6 +300,7 @@ a:hover {
   animation: typing 2s steps(200, end);
   animation-delay: 0.5s;
   animation-fill-mode: both;
+  max-width: max-content;
 }
 
 @keyframes typing {

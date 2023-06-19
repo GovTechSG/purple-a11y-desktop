@@ -71,11 +71,11 @@ const OnboardingComponent = ({
           isOnboarding={true}
           modalBody={
             <>
-              <div className="modal-img-container">
+              <div className="modal-img-container fade-in">
                 <img className="modal-img" src={firstTimer1}></img>
               </div>
-              <h3 className="onboarding-modal modal-title">Hi There!</h3>
-              <p className="modal-desc">Making your website accessible is within reach. Let’s get started by taking a quick look at how Purple HATS work.</p>
+              <h3 className="modal-title fade-in">Hi There!</h3>
+              <p className="modal-desc fade-in">Making your website accessible is within reach. Let’s get started by taking a quick look at how Purple HATS work.</p>
               <PageIndicator page={1}></PageIndicator>
             </>
           }
@@ -101,14 +101,14 @@ const OnboardingComponent = ({
           isOnboarding={true}
           modalBody={
             <>
-              <div className="modal-img-container">
+              <div className="modal-img-container fade-in">
                 <div id="first-timer-2-container">
                   <div className="typewriter">https://www.</div>
                   <img className="modal-img" src={firstTimer2}></img>
                 </div>
               </div>
-              <h3 className="onboarding-modal modal-title">Get started</h3>
-              <p className="modal-desc">You just need to enter your website/sitemap URL and Purple HATS will crawl through all the web pages to analyse for accessibility issues.</p>
+              <h3 className="modal-title fade-in">Get started</h3>
+              <p className="modal-desc fade-in">You just need to enter your website/sitemap URL and Purple HATS will crawl through all the web pages to analyse for accessibility issues.</p>
               <PageIndicator page={2}></PageIndicator>
             </>
           }
@@ -130,11 +130,11 @@ const OnboardingComponent = ({
           isOnboarding={true}
           modalBody={
             <>
-              <div className="modal-img-container">
+              <div className="modal-img-container fade-in">
                 <img className="modal-img" src={firstTimer3}></img>
               </div>
-              <h3 className="onboarding-modal modal-title">Custom Flow</h3>
-              <p className="modal-desc">You just need to enter your website/sitemap URL and Purple HATS will crawl through all the web pages to analyse for accessibility issues.</p>
+              <h3 className="modal-title fade-in">Custom Flow</h3>
+              <p className="modal-desc fade-in">You just need to enter your website/sitemap URL and Purple HATS will crawl through all the web pages to analyse for accessibility issues.</p>
               <PageIndicator page={3}></PageIndicator>
             </>
           }
@@ -159,15 +159,16 @@ const OnboardingComponent = ({
           isOnboarding={true}
           modalBody={
             <>
-              <h3 className="onboarding-modal modal-title">Get to know you</h3>
+              <h3 className="modal-title fade-in">Get to know you</h3>
               <UserDetailsForm
                 formID={formID}
                 setName={setName}
                 setEmail={setEmail}
                 handleOnSubmit={handleSetUserData}
                 userInputErrorMessage={userInputErrorMessage}
+                isOnboarding={true}
               />
-              <p className="modal-desc">
+              <p className="modal-desc fade-in">
                 To personalise your experience, we will be collecting your name, email address and app usage data. Your information fully complies with {policyUrlElem}
               </p>
               <PageIndicator page={4}></PageIndicator>

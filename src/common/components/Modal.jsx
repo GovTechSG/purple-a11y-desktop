@@ -1,6 +1,4 @@
 import React from "react";
-import UserDetailsForm from "./UserDetailsForm";
-
 
 const Modal = ({
   id, 
@@ -12,17 +10,16 @@ const Modal = ({
   modalFooter,
   setShowModal
 }) => {
-  const showHideClassName = showModal ? "modal fade show" : "modal d-none";
-  const showHeaderClassName = showHeader ? "modal-header show" : "modal-header hide"; 
-  const modalContentClassName = isOnboarding ? "onboarding-modal modal-content" : "modal-content"
-  const modalBodyClassName = isOnboarding ? "onboarding-modal modal-body fade-in text-center" : "modal-body";
+  const modalClassName = getModalClassName(showModal, isOnboarding);
+  const modalHeaderClassName = showHeader ? "modal-header show" : "modal-header hide";  
+  const modalBodyClassName = isOnboarding ? "modal-body onboarding-modal text-center" : "modal-body"; 
 
   return (
-    <div className={showHideClassName} id={id}>
+    <div className={modalClassName} id={id}>
       <div className="modal-dialog">
-        <div className={modalContentClassName}>
-          <div className={showHeaderClassName}>
-            <h3 className="modal-title"defaultValue={"modalTitle"}>{modalTitle}</h3>
+        <div className="modal-content">
+          <div className={modalHeaderClassName}>
+            <h3 className="modal-title" defaultValue={"modalTitle"}>{modalTitle}</h3>
             <button 
               type="button" 
               className="btn-close"
@@ -37,6 +34,20 @@ const Modal = ({
       </div>
     </div>
   )
+}
+
+
+const getModalClassName = (showModal, isOnboarding) => {
+  let modalClassName; 
+  if (showModal) {
+    modalClassName = "modal fade show"; 
+    if (isOnboarding) {
+      modalClassName = "onboarding-modal " + "modal fade show";
+    }
+  } else {
+    modalClassName = "modal d-none"; 
+  }
+  return modalClassName;
 }
 
 export default Modal;
