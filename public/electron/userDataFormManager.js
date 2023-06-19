@@ -9,7 +9,7 @@ const { ipcMain, BrowserView } = require("electron");
 const init = () => {
   ipcMain.on("submitFormViaBrowser", async (_event, formDetails) => {
 
-    const { context, browserChannel } = await createPlaywrightContext(formDetails.browser, { width: 10, height: 10})
+    const { context, browserChannel, proxy } = await createPlaywrightContext(formDetails.browser, { width: 10, height: 10})
 
     const finalUrl = 
     `${formDetails.formUrl}?` 
@@ -19,7 +19,9 @@ const init = () => {
     + `${userDataFormFields.nameField}=${formDetails.name}`;
 
     const page = await context.newPage();
-    await page.goto(finalUrl);
+    await page.goto(finalUrl, {
+      ...(proxy && { waitUntil: 'networkidle'})
+    });
 
     await page.close();
     await context.close();
