@@ -18,7 +18,8 @@ const OnboardingComponent = ({
   name, 
   email
 }) => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
+
 
   const handleOnBackClick = () => {
     setStep(step - 1);

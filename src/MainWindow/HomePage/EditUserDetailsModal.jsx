@@ -17,7 +17,7 @@ const EditUserDetailsModal = ({
     
     const isSubmitDisabled = editedName.trim() === "" || editedEmail.trim() === ""
                                 || (editedName === initialName && editedEmail === initialEmail); 
-    
+
     const handleEditUserData = (e) => {
         e.preventDefault(); 
 

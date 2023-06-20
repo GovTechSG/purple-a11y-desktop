@@ -15,7 +15,7 @@ const Modal = ({
   const modalBodyClassName = isOnboarding ? "modal-body text-center" : "modal-body"; 
 
   return (
-    <div className={modalClassName} id={id}>
+    <div className={modalClassName} id={id} tabIndex={tabIndex}>
       <div className="modal-dialog">
         <div className="modal-content">
           <div className={modalHeaderClassName}>
