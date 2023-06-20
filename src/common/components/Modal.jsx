@@ -12,7 +12,7 @@ const Modal = ({
 }) => {
   const modalClassName = getModalClassName(showModal, isOnboarding);
   const modalHeaderClassName = showHeader ? "modal-header show" : "modal-header hide";  
-  const modalBodyClassName = isOnboarding ? "modal-body onboarding-modal text-center" : "modal-body"; 
+  const modalBodyClassName = isOnboarding ? "modal-body text-center" : "modal-body"; 
 
   return (
     <div className={modalClassName} id={id}>
@@ -28,7 +28,7 @@ const Modal = ({
               aria-controls={id}
             />
           </div>
-          <div className={modalBodyClassName}>{modalBody}</div>
+          <div className={modalBodyClassName} tabindex="-1">{modalBody}</div>
           <div className="modal-footer">{modalFooter}</div>
         </div>
       </div>
