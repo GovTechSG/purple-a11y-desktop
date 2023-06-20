@@ -18,8 +18,7 @@ const OnboardingComponent = ({
   name, 
   email
 }) => {
-  const [step, setStep] = useState(0);
-
+  const [step, setStep] = useState(1);
 
   const handleOnBackClick = () => {
     setStep(step - 1);
@@ -48,7 +47,6 @@ const OnboardingComponent = ({
 
   const setFocus = () => {
     const modalBody = document.querySelector('.modal-body'); 
-    console.log(modalBody); 
     modalBody.focus();  
   }
 
