@@ -367,7 +367,7 @@ const deleteClonedProfiles = (browserChannel) => {
   }
 };
 
-const createPlaywrightContext = async (browser, screenSize) => {
+const createPlaywrightContext = async (browser, screenSize, nonHeadless) => {
   const playwrightPath = path.join(
     backendPath,
     "purple-hats",
@@ -387,7 +387,7 @@ const createPlaywrightContext = async (browser, screenSize) => {
   if (browser == browserTypes.chrome && chromeDataDir) {
     browserChannel = browserTypes.chrome;
     userDataDir = cloneChromeProfiles();
-  } else if (browser == browserTypes.edge && edgeDataDir) {
+  } else if (browser == 'edge' && edgeDataDir) {
     browserChannel = browserTypes.edge;
     userDataDir = cloneEdgeProfiles();
   } else {
@@ -413,11 +413,13 @@ const createPlaywrightContext = async (browser, screenSize) => {
   const context = await chromium.launchPersistentContext(userDataDir, {
     ignoreDefaultArgs: ["--use-mock-keychain"],
     ...(browserChannel && { channel: browserChannel }),
-    ...(proxy && {headless: false}),
-    viewport: {
-      width: screenSize.width,
-      height: screenSize.height,
-    },
+    ...((proxy || nonHeadless) && {headless: false}),
+    ...(screenSize && {
+      viewport: {
+        width: screenSize.width,
+        height: screenSize.height,
+      }
+    }),
     args: launchOptionsArgs,
   });
 

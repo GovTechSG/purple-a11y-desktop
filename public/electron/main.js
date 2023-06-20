@@ -85,7 +85,7 @@ app.on("ready", async () => {
   });
 
   createMainWindow();
-  scanManager.init(mainWindow);  
+  scanManager.init();  
 
   ipcMain.on("openLink", (_event, url) => {
     shell.openExternal(url);
