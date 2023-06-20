@@ -13,9 +13,10 @@ const Modal = ({
   const modalClassName = getModalClassName(showModal, isOnboarding);
   const modalHeaderClassName = showHeader ? "modal-header show" : "modal-header hide";  
   const modalBodyClassName = isOnboarding ? "modal-body onboarding-modal text-center" : "modal-body"; 
+  const tabIndex = showModal ? "-1" : null;
 
   return (
-    <div className={modalClassName} id={id}>
+    <div className={modalClassName} id={id} tabIndex={tabIndex}>
       <div className="modal-dialog">
         <div className="modal-content">
           <div className={modalHeaderClassName}>
