@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import services from "../../services";
+import { useState } from "react";
 import { policyUrlElem } from "../../common/constants";
 import Modal from "../../common/components/Modal"; 
 import UserDetailsForm from "../../common/components/UserDetailsForm";

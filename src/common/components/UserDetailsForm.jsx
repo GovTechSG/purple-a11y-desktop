@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import services from "../../services";
 
 const UserDetailsForm = ({
@@ -36,11 +35,11 @@ const UserDetailsForm = ({
             <form id={formID} onSubmit={(e) => handleOnSubmit(e)}>
                 <div className="user-form-field">
                     <label className="user-form-label" for="name">Name</label>
-                    <input className="user-form-input" type="text" id="name" defaultValue={name} onChange={(e) => setName(e.target.value)}></input>
+                    <input className="user-form-input" type="text" id="name" value={name} onChange={(e) => setName(e.target.value)}></input>
                 </div>
                 <div className="user-form-field">
                     <label className="user-form-label" for="email">Work Email</label>
-                    <input className="user-form-input" type="text" id="email" defaultValue={email} onChange={(e) => onHandleEmailChange(e)} onBlur={(e) => onHandleEmailBlur(e)} aria-describedby="user-form-error"></input>
+                    <input className="user-form-input" type="text" id="email" value={email} onChange={(e) => onHandleEmailChange(e)} onBlur={(e) => onHandleEmailBlur(e)} aria-describedby="user-form-error"></input>
                 </div>
                 <div className="user-form-error error-text" id="user-form-error">{userInputErrorMessage}</div>
             </form>

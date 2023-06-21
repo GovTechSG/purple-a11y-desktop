@@ -131,6 +131,10 @@ a:hover {
     flex-direction: column;
   }
 
+  .onboarding-modal .modal-body:focus {
+    outline: none;
+  }
+
   .onboarding-modal .user-form {
     min-height: 160px;
   }

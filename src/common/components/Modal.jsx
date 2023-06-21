@@ -16,8 +16,6 @@ const Modal = ({
   const modalHeaderClassName = showHeader ? "modal-header show" : "modal-header hide";  
   const modalBodyClassName = isOnboarding ? "modal-body text-center" : "modal-body"; 
 
-  // const [modalIsVisible, setModalIsVisible] = useState(false); 
-
   useEffect(() => {
     if (keyboardTrap) {
       const modalElement = document.querySelector(`#${id}`);

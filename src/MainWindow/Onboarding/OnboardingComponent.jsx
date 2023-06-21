@@ -23,7 +23,7 @@ const OnboardingComponent = ({
   useEffect(() => {
     setFocus();
   }, [step])
-  
+
   const handleOnBackClick = () => {
     setStep(step - 1);
   };
@@ -73,7 +73,7 @@ const OnboardingComponent = ({
   );
 
   const formID = "first-timer-form";
-  const isSubmitDisabled = name.trim() === "" || email.trim() === "";
+  const isSubmitDisabled = name.trim() === "" || email.trim() === "" || userInputErrorMessage;
   
   const renderOnboardingBody = () => {
     switch (step) {
@@ -130,6 +130,7 @@ const OnboardingComponent = ({
               setEmail={setEmail}
               handleOnSubmit={handleSetUserData}
               userInputErrorMessage={userInputErrorMessage}
+              setUserInputErrorMessage={setUserInputErrorMessage}
               isOnboarding={true}
             />
             <p className="modal-desc fade-in">
