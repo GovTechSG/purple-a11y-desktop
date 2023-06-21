@@ -3,6 +3,8 @@ const os = require("os");
 const fs = require("fs");
 const { globSync } = require("glob");
 const { get } = require("http");
+const { silentLogger } = require("./logs.js");
+const { execSync } = require("child_process");
 
 const appPath =
   os.platform() === "win32"
@@ -173,7 +175,8 @@ const cloneChromeProfileCookieFiles = (options, destDir) => {
   }
 
   if (profileCookiesDir.length > 0) {
-    profileCookiesDir.map((dir) => {
+    let success = true;
+    profileCookiesDir.forEach((dir) => {
       const profileName = dir.match(profileNamesRegex)[1];
       if (profileName) {
         let destProfileDir = path.join(destDir, profileName);
@@ -190,14 +193,22 @@ const cloneChromeProfileCookieFiles = (options, destDir) => {
 
         // Prevents duplicate cookies file if the cookies already exist
         if (!fs.existsSync(path.join(destProfileDir, "Cookies"))) {
-          fs.copyFileSync(dir, path.join(destProfileDir, "Cookies"));
+          try {
+            fs.copyFileSync(dir, path.join(destProfileDir, "Cookies"));
+          } catch (err) {
+            silentLogger.error(err);
+            success = false;
+          }
         }
       }
     });
-  } else {
-    console.error("Unable to find Chrome profile cookies file in the system.");
-    return;
+    return success;
   }
+
+  silentLogger.warn(
+    "Unable to find Chrome profile cookies file in the system."
+  );
+  return false;
 };
 
 const cloneEdgeProfileCookieFiles = (options, destDir) => {
@@ -222,7 +233,8 @@ const cloneEdgeProfileCookieFiles = (options, destDir) => {
   }
 
   if (profileCookiesDir.length > 0) {
-    profileCookiesDir.map((dir) => {
+    let success = true;
+    profileCookiesDir.forEach((dir) => {
       const profileName = dir.match(profileNamesRegex)[1];
       if (profileName) {
         let destProfileDir = path.join(destDir, profileName);
@@ -239,14 +251,19 @@ const cloneEdgeProfileCookieFiles = (options, destDir) => {
 
         // Prevents duplicate cookies file if the cookies already exist
         if (!fs.existsSync(path.join(destProfileDir, "Cookies"))) {
-          fs.copyFileSync(dir, path.join(destProfileDir, "Cookies"));
+          try {
+            fs.copyFileSync(dir, path.join(destProfileDir, "Cookies"));
+          } catch (err) {
+            silentLogger.error(err);
+            success = false;
+          }
         }
       }
     });
-  } else {
-    console.error("Unable to find Edge profile cookies file in the system.");
-    return;
+    return success;
   }
+  silentLogger.warn("Unable to find Edge profile cookies file in the system.");
+  return false;
 };
 
 const cloneLocalStateFile = (options, destDir) => {
@@ -256,24 +273,34 @@ const cloneLocalStateFile = (options, destDir) => {
   });
 
   if (localState.length > 0) {
-    localState.map((dir) => {
-      fs.copyFileSync(dir, path.join(destDir, "Local State"));
+    let success = true;
+    localState.forEach((dir) => {
+      try {
+        fs.copyFileSync(dir, path.join(destDir, "Local State"));
+      } catch (err) {
+        silentLogger.error(err);
+        success = false;
+      }
     });
-  } else {
-    console.error("Unable to find local state file in the system.");
-    return;
+    return success;
   }
+  silentLogger.warn("Unable to find local state file in the system.");
+  return false;
 };
 
 const cloneChromeProfiles = () => {
   const baseDir = getDefaultChromeDataDir();
 
   if (!baseDir) {
-    console.error("Unable to find Chrome data directory in the system.");
+    console.warn("Unable to find Chrome data directory in the system.");
     return;
   }
 
   const destDir = path.join(baseDir, "Purple-HATS");
+
+  if (fs.existsSync(destDir)) {
+    deleteClonedChromeProfiles();
+  }
 
   if (!fs.existsSync(destDir)) {
     fs.mkdirSync(destDir);
@@ -285,21 +312,30 @@ const cloneChromeProfiles = () => {
     absolute: true,
     nodir: true,
   };
-  cloneChromeProfileCookieFiles(baseOptions, destDir);
-  cloneLocalStateFile(baseOptions, destDir);
-  // eslint-disable-next-line no-undef, consistent-return
-  return path.join(baseDir, "Purple-HATS");
+  const cloneLocalStateFileSucess = cloneLocalStateFile(baseOptions, destDir);
+  if (
+    cloneChromeProfileCookieFiles(baseOptions, destDir) &&
+    cloneLocalStateFileSucess
+  ) {
+    return destDir;
+  }
+
+  return null;
 };
 
 const cloneEdgeProfiles = () => {
   const baseDir = getDefaultEdgeDataDir();
 
   if (!baseDir) {
-    console.error("Unable to find Edge data directory in the system.");
+    console.warn("Unable to find Edge data directory in the system.");
     return;
   }
 
   const destDir = path.join(baseDir, "Purple-HATS");
+
+  if (fs.existsSync(destDir)) {
+    deleteClonedEdgeProfiles();
+  }
 
   if (!fs.existsSync(destDir)) {
     fs.mkdirSync(destDir);
@@ -311,58 +347,92 @@ const cloneEdgeProfiles = () => {
     absolute: true,
     nodir: true,
   };
-  cloneEdgeProfileCookieFiles(baseOptions, destDir);
-  cloneLocalStateFile(baseOptions, destDir);
-  // eslint-disable-next-line no-undef, consistent-return
-  return path.join(baseDir, "Purple-HATS");
+
+  const cloneLocalStateFileSucess = cloneLocalStateFile(baseOptions, destDir);
+  if (
+    cloneEdgeProfileCookieFiles(baseOptions, destDir) &&
+    cloneLocalStateFileSucess
+  ) {
+    return destDir;
+  }
+
+  return null;
 };
 
 const deleteClonedChromeProfiles = () => {
   const baseDir = getDefaultChromeDataDir();
 
   if (!baseDir) {
-    console.error("Unable to find Chrome data directory in the system.");
+    silentLogger.warn(`Unable to find Chrome data directory in the system.`);
     return;
   }
 
-  const destDir = path.join(baseDir, "Purple-HATS");
+  // Find all the Purple-HATS directories in the Chrome data directory
+  const destDir = globSync("**/Purple-HATS*", {
+    cwd: baseDir,
+    recursive: true,
+    absolute: true,
+  });
 
-  if (fs.existsSync(destDir)) {
-    fs.rmSync(destDir, { recursive: true });
-    return;
-  } else {
-    console.error(
-      "Unable to find Purple-HATS directory in the Chrome data directory."
-    );
+  if (destDir.length > 0) {
+    destDir.forEach((dir) => {
+      if (fs.existsSync(dir)) {
+        try {
+          fs.rmSync(dir, { recursive: true });
+        } catch (err) {
+          silentLogger.warn(
+            `Unable to delete ${dir} folder in the Chrome data directory. ${err}`
+          );
+        }
+      }
+    });
     return;
   }
+
+  silentLogger.warn(
+    "Unable to find Purple-HATS directory in the Chrome data directory."
+  );
 };
 
 const deleteClonedEdgeProfiles = () => {
   const baseDir = getDefaultEdgeDataDir();
 
   if (!baseDir) {
-    console.error("Unable to find Edge data directory in the system.");
+    silentLogger.warn(`Unable to find Edge data directory in the system.`);
     return;
   }
 
-  const destDir = path.join(baseDir, "Purple-HATS");
+  // Find all the Purple-HATS directories in the Chrome data directory
+  const destDir = globSync("**/Purple-HATS*", {
+    cwd: baseDir,
+    recursive: true,
+    absolute: true,
+  });
 
-  if (fs.existsSync(destDir)) {
-    fs.rmSync(destDir, { recursive: true });
-    return;
-  } else {
-    console.error(
-      "Unable to find Purple-HATS directory in the Edge data directory."
-    );
+  if (destDir.length > 0) {
+    destDir.forEach((dir) => {
+      if (fs.existsSync(dir)) {
+        try {
+          fs.rmSync(dir, { recursive: true });
+        } catch (err) {
+          silentLogger.warn(
+            `Unable to delete ${dir} folder in the Chrome data directory. ${err}`
+          );
+        }
+      }
+    });
     return;
   }
+
+  silentLogger.warn(
+    "Unable to find Purple-HATS directory in the Edge data directory."
+  );
 };
 
 const deleteClonedProfiles = (browserChannel) => {
-  if (browserChannel == browserTypes.chrome) {
+  if (browserChannel === browserTypes.chrome) {
     deleteClonedChromeProfiles();
-  } else if (browserChannel == browserTypes.edge) {
+  } else if (browserChannel === browserTypes.edge) {
     deleteClonedEdgeProfiles();
   }
 };
@@ -381,32 +451,46 @@ const createPlaywrightContext = async (browser, screenSize, nonHeadless) => {
   const chromeDataDir = getDefaultChromeDataDir();
   const edgeDataDir = getDefaultEdgeDataDir();
 
-  let browserChannel;
-  let userDataDir;
+  let browserChannel = null;
+  let userDataDir = "";
 
-  if (browser == browserTypes.chrome && chromeDataDir) {
-    browserChannel = browserTypes.chrome;
+  if (browser === browserTypes.chrome && chromeDataDir) {
     userDataDir = cloneChromeProfiles();
-  } else if (browser == 'edge' && edgeDataDir) {
-    browserChannel = browserTypes.edge;
+    if (userDataDir) {
+      browserChannel = browserTypes.chrome;
+    } else {
+      userDataDir = cloneEdgeProfiles();
+      if (edgeDataDir && userDataDir) {
+        browserChannel = browserTypes.edge;
+      }
+    }
+  } else if (browser === "edge" && edgeDataDir) {
     userDataDir = cloneEdgeProfiles();
-  } else {
-    hasUserProfile = false;
-    browserChannel = null;
-    userDataDir = "";
+    if (userDataDir) {
+      browserChannel = browserTypes.edge;
+    } else {
+      userDataDir = cloneChromeProfiles();
+      if (chromeDataDir && userDataDir) {
+        browserChannel = browserTypes.chrome;
+      }
+    }
   }
 
   let launchOptionsArgs = ["--window-size=10,10"];
 
   // Check if running in docker container
-  if (fs.existsSync('/.dockerenv')) {
-    launchOptionsArgs.push(['--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage']);
+  if (fs.existsSync("/.dockerenv")) {
+    launchOptionsArgs.push([
+      "--disable-gpu",
+      "--no-sandbox",
+      "--disable-dev-shm-usage",
+    ]);
   }
 
   const proxy = getProxy();
-  if (proxy && proxy.type === 'autoConfig') {
+  if (proxy && proxy.type === "autoConfig") {
     launchOptionsArgs.push(`--proxy-pac-url=${proxy.url}`);
-  } else if (proxy && proxy.type === 'manualProxy') {
+  } else if (proxy && proxy.type === "manualProxy") {
     launchOptionsArgs.push(`--proxy-server=${proxy.url}`);
   }
 
@@ -418,7 +502,7 @@ const createPlaywrightContext = async (browser, screenSize, nonHeadless) => {
       viewport: {
         width: screenSize.width,
         height: screenSize.height,
-      }
+      },
     }),
     args: launchOptionsArgs,
   });
@@ -436,31 +520,31 @@ const userDataFormFields = {
 };
 
 const getProxy = () => {
-  if (os.platform() === 'win32') {
+  if (os.platform() === "win32") {
     let internetSettings;
     try {
       internetSettings = execSync(
         'Get-ItemProperty -Path "Registry::HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"',
-        { shell: 'powershell.exe' },
+        { shell: "powershell.exe" }
       )
         .toString()
-        .split('\n');
+        .split("\n");
     } catch (e) {
       console.log(e.toString());
       silentLogger.error(e.toString());
     }
 
-    const getSettingValue = settingName =>
+    const getSettingValue = (settingName) =>
       internetSettings
-        .find(s => s.startsWith(settingName))
+        .find((s) => s.startsWith(settingName))
         // split only once at with ':' as the delimiter
         ?.split(/:(.*)/s)[1]
         ?.trim();
 
-    if (getSettingValue('AutoConfigURL')) {
-      return { type: 'autoConfig', url: getSettingValue('AutoConfigURL') };
-    } else if (getSettingValue('ProxyEnable') === '1') {
-      return { type: 'manualProxy', url: getSettingValue('ProxyServer') };
+    if (getSettingValue("AutoConfigURL")) {
+      return { type: "autoConfig", url: getSettingValue("AutoConfigURL") };
+    } else if (getSettingValue("ProxyEnable") === "1") {
+      return { type: "manualProxy", url: getSettingValue("ProxyServer") };
     } else {
       return null;
     }
