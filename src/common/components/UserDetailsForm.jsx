@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import services from "../../services";
+
 const UserDetailsForm = ({
     formID, 
     name,
@@ -6,9 +9,28 @@ const UserDetailsForm = ({
     setEmail,
     handleOnSubmit,
     userInputErrorMessage,
+    setUserInputErrorMessage,
     isOnboarding,
 }) => {
     const userFormClassName = isOnboarding ? "user-form fade-in" : "user-form";
+    const emailInput = document.querySelector('#email'); 
+
+    const onHandleEmailChange = (e) => {
+        setEmail(e.target.value); 
+        if (userInputErrorMessage) {
+            setUserInputErrorMessage(null);
+            emailInput.removeAttribute('aria-invalid');
+        }
+    }
+
+    const onHandleEmailBlur = (e) => {
+        if (!services.isValidEmail(e.target.value)) {
+            setUserInputErrorMessage('Please enter a valid email.'); 
+            emailInput.setAttribute('aria-invalid', 'true');
+            return;
+        }
+    }
+
     return (
         <div className={userFormClassName}>
             <form id={formID} onSubmit={(e) => handleOnSubmit(e)}>
@@ -18,9 +40,9 @@ const UserDetailsForm = ({
                 </div>
                 <div className="user-form-field">
                     <label className="user-form-label" for="email">Work Email</label>
-                    <input className="user-form-input" type="text" id="email" defaultValue={email} onChange={(e) => setEmail(e.target.value)}></input>
+                    <input className="user-form-input" type="text" id="email" defaultValue={email} onChange={(e) => onHandleEmailChange(e)} onBlur={(e) => onHandleEmailBlur(e)} aria-describedby="user-form-error"></input>
                 </div>
-                <div className="user-form-error error-text">{userInputErrorMessage}</div>
+                <div className="user-form-error error-text" id="user-form-error">{userInputErrorMessage}</div>
             </form>
         </div>
     );
