@@ -20,15 +20,17 @@ const OnboardingComponent = ({
 }) => {
   const [step, setStep] = useState(1);
 
+  useEffect(() => {
+    setFocus();
+  }, [step])
+  
   const handleOnBackClick = () => {
     setStep(step - 1);
-    setFocus();
   };
 
   const handleOnNextClick = () => {
     setStep(step + 1);
     resetFormInputs();
-    setFocus();
   };
 
   const resetFormInputs = () => {
@@ -47,6 +49,7 @@ const OnboardingComponent = ({
 
   const setFocus = () => {
     const modalBody = document.querySelector('.modal-body'); 
+    console.log(modalBody);
     modalBody.focus();  
   }
 
@@ -183,11 +186,14 @@ const OnboardingComponent = ({
 
   return (
     <Modal
+      id="onboarding-modal"
       showModal={true}
       showHeader={false}
       isOnboarding={true}
+      keyboardTrap={false}
       modalBody={renderOnboardingBody()}
       modalFooter={renderOnboardingFooter()}
+      key={step}
     />
   );
 };

@@ -132,7 +132,6 @@ a:hover {
   }
 
   .onboarding-modal .user-form {
-    margin-top: 1rem;
     min-height: 160px;
   }
 
@@ -234,6 +233,7 @@ a:hover {
     display: grid;
     grid-template-columns: 30% 70%; 
     margin-bottom: 1rem;
+    align-items: center;
   }
 
   .user-form-label {
@@ -251,7 +251,7 @@ a:hover {
 
   .user-form-error {
     position: absolute;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
   }
 
   .show {

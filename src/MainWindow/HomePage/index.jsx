@@ -140,7 +140,7 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
               onClick={() => setShowEditDataModal(true)}
             >
               Welcome <b>{name}</b> &nbsp;
-              <img src={editIcon}></img>
+              <img src={editIcon} aria-label="Edit profile"></img>
             </button>
           </div>
         )}
@@ -160,6 +160,7 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
         showHeader={true}
         showModal={showBasicAuthModal}
         setShowModal={setShowBasicAuthModal}
+        keyboardTrap={showBasicAuthModal}
         modalTitle={"Basic Authentication Required"}
         modalBody={
           <>
@@ -178,6 +179,7 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
       {areUserDetailsSet && (
         <>
           <EditUserDetailsModal
+            id={"edit-details-modal"}
             formID={"edit-details-form"}
             showModal={showEditDataModal}
             setShowEditDataModal={setShowEditDataModal}
