@@ -40,7 +40,7 @@ const EditUserDetailsModal = ({
             showModal={showModal}
             showHeader={true}
             keyboardTrap={showModal}
-            modalTitle={"Edit Form"}
+            modalTitle={"Edit your profile"}
             modalBody={
               <>
                 <UserDetailsForm
