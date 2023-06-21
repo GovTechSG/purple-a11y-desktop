@@ -39,9 +39,9 @@ const UserDetailsForm = ({
                 </div>
                 <div className="user-form-field">
                     <label className="user-form-label" for="email">Work Email</label>
-                    <input className="user-form-input" type="text" id="email" value={email} onChange={(e) => onHandleEmailChange(e)} onBlur={(e) => onHandleEmailBlur(e)} aria-describedby="user-form-error"></input>
+                    <input className="user-form-input" type="text" id="email" value={email} onChange={(e) => onHandleEmailChange(e)} onBlur={(e) => onHandleEmailBlur(e)} aria-describedby="invalid-email-error"></input>
                 </div>
-                <div className="user-form-error error-text" id="user-form-error">{userInputErrorMessage}</div>
+                <div className="user-form-error error-text" id="invalid-email-error">{userInputErrorMessage}</div>
             </form>
         </div>
     );
