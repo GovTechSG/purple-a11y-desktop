@@ -104,13 +104,15 @@ export const policyUrlElem = (
   <a
     role="link"
     className="link"
-    onClick={() => {handleClickLink("https://www.tech.gov.sg/privacy/")}}
+    href="#"
+    onClick={(e) => {handleClickLink(e, "https://www.tech.gov.sg/privacy/")}}
   >
     GovTech's Privacy Policy
     <img id="box-arrow-right" src={boxRightArrow}></img>
   </a>
 );
 
-const handleClickLink = (url) => {
-window.services.openLink(url);
+const handleClickLink = (e, url) => {
+  e.preventDefault();
+  window.services.openLink(url);
 }

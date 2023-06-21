@@ -157,7 +157,7 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
       </div>
       <Modal
         id="basic-auth-modal"
-        showCloseButton={true}
+        showHeader={true}
         showModal={showBasicAuthModal}
         setShowModal={setShowBasicAuthModal}
         modalTitle={"Basic Authentication Required"}

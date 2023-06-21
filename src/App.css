@@ -1,10 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Roboto:ital,wght@0,100;1,100&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Viga");
 
+body {
+  background-color: #f6f8f9;
+}
+
 #root {
   min-height: 100vh;
   width: 100vw;
-  background-color: #f6f8f9;
   font-family: "Open Sans", "Helvetica", sans-serif;
 }
 
@@ -101,26 +104,58 @@ a:hover {
     }
   }
 
-  .modal {
+  .onboarding-carousel {
+    list-style-type: none;
+    padding: 0; 
+    margin: 0;
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .onboarding-carousel-item {
+    flex: 0 0 100%; 
+  }
+
+  .onboarding-modal .modal-content {
+    max-width: 450px;
+    min-height: 600px;
+  }
+
+  .onboarding-modal .modal-title {
+    margin-bottom: 1rem;
+  }
+
+  .onboarding-modal .modal-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .onboarding-modal .user-form {
+    margin-top: 1rem;
+    min-height: 160px;
+  }
+
+  .onboarding-modal .modal-img-container {
+    height: 160px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(1, 1, 1, 0.1);
+    margin-bottom: 1rem;
+  }
+
+  .modal {
+    display: flex;
+    align-items: center;  
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.2);
   }
 
   .modal-content {
-    width: 450px;
     border: none;
     box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.1), 0px 8px 8px -4px rgba(16, 24, 40, 0.04);
     background-color: #F6F8F9;
-  }
-
-  .modal-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    color: #333333;
   }
 
   .modal-header {
@@ -128,15 +163,14 @@ a:hover {
     padding-bottom: 0px;
   }
 
-  .modal-img-container {
-    height: 160px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .modal-header .btn-close {
+    border-radius: 50%;
+    background-color: #E7ECEE;
+    margin: 0;
   }
 
   .modal-desc {
-    height: 180px;
+    flex-grow: 1;
   }
 
   .modal-button {
@@ -166,20 +200,25 @@ a:hover {
     flex-wrap: nowrap;
   }
 
-  .hide {
-    visibility: hidden;
+  .page-indicators {
+    display: flex;
+    justify-content: center;
   }
 
-  .show {
-    visibility: visible;
+  .page-indicator-circle {
+    width: 10px;
+    border-radius: 50%;
+    background-color: #B5C5CA;
+    height: 10px;
+    margin: 0 0.25rem;
+  }
+
+  .current {
+    background-color: #785EF0;
   }
 
   .display-block {
     display: block;
-  }
-  
-  .display-none {
-    display: none !important;
   }
 
   .user-form {
@@ -187,9 +226,8 @@ a:hover {
     display: flex;
     flex-direction: column;
     width: 100%;
-    gap: 10px;
-    height: 160px;
-    padding: 20px 0 40px 0;
+    margin-bottom: 1rem;
+    color: #333333;
   }
 
   .user-form-field {
@@ -208,6 +246,7 @@ a:hover {
     background: white;
     border: 1px solid #B5C5CA;;
     border-radius: 4px;
+    padding: 0.25rem 0.5rem;
   }
 
   .user-form-error {
@@ -215,7 +254,15 @@ a:hover {
     margin-bottom: 5px;
   }
 
-  @keyframes in {
+  .show {
+    visibility: visible;
+  }
+
+  .hide {
+    visibility: hidden;
+  }
+
+  @keyframes fade-in {
     from {
       opacity: 0;
       transform: translateX(20px);
@@ -225,8 +272,22 @@ a:hover {
     }
   }
 
-  .in {
-    animation: in 0.5s;
+  .fade-in {
+    animation: fade-in 0.5s;
+  }
+
+  @keyframes fade-out {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    } to {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+  }
+
+  .fade-out {
+    animation: fade-out 0.5s;
   }
   
 #first-timer-2-container {
@@ -252,6 +313,7 @@ a:hover {
   animation: typing 2s steps(200, end);
   animation-delay: 0.5s;
   animation-fill-mode: both;
+  max-width: max-content;
 }
 
 @keyframes typing {

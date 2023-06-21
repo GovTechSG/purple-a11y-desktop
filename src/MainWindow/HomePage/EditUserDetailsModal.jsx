@@ -17,7 +17,7 @@ const EditUserDetailsModal = ({
     
     const isSubmitDisabled = editedName.trim() === "" || editedEmail.trim() === ""
                                 || (editedName === initialName && editedEmail === initialEmail); 
-    
+
     const handleEditUserData = (e) => {
         e.preventDefault(); 
 
@@ -33,8 +33,9 @@ const EditUserDetailsModal = ({
     return (
         <Modal
             showModal={showModal}
-            showCloseButton={true}
-            modalTitle={"Edit Form"}
+            showHeader={true}
+            isOnboarding={false}
+            modalTitle={"Edit your profile"}
             modalBody={
                 <>
                     <UserDetailsForm
@@ -47,7 +48,7 @@ const EditUserDetailsModal = ({
                         userInputErrorMessage={userInputErrorMessage}
                         isSubmitDisabled={isSubmitDisabled}
                     />
-                    <p>We are collecting your name, email address and app usage data. Your information fully complies with {policyUrlElem}.</p>
+                    <p className="mb-0">We are collecting your name, email address and app usage data. Your information fully complies with {policyUrlElem}.</p>
                 </>
             }
             modalFooter = {
