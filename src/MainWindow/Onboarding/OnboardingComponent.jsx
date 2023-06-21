@@ -49,7 +49,6 @@ const OnboardingComponent = ({
 
   const setFocus = () => {
     const modalBody = document.querySelector('.modal-body'); 
-    console.log(modalBody);
     modalBody.focus();  
   }
 
