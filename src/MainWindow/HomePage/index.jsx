@@ -20,7 +20,6 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [autoSubmit, setAutoSubmit] = useState(false);
-  const [browser, setBrowser] = useState(null);
   const [showBasicAuthModal, setShowBasicAuthModal] = useState(false);
   const [showEditDataModal, setShowEditDataModal] = useState(false);
 
@@ -36,7 +35,6 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   useEffect(() => {
     const getUserData = async () => {
       const userData = await services.getUserData();
-      setBrowser(userData["browser"]);
       const isEvent = userData["event"];
       if (!isEvent) {
         setEmail(userData["email"]);
@@ -54,8 +52,6 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   };
 
   const startScan = async (scanDetails) => {
-    scanDetails.browser = browser;
-
     if (scanDetails.scanUrl.length === 0) {
       setPrevUrlErrorMessage("URL cannot be empty.");
       return;

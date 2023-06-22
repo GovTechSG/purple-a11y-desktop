@@ -1,16 +1,17 @@
 const fs = require("fs");
 const {
-    userDataFilePath 
+    userDataFilePath,
+    resultsPath
 } = require("./constants"); 
-const { ipcMain } = require("electron");
+const { ipcMain, dialog } = require("electron");
 
 const readUserDataFromFile = () => {
     return JSON.parse(fs.readFileSync(userDataFilePath));
 }
-const writeUserDataToFile = (userData) => {
+const writeUserDetailsToFile = (userDetails) => {
     const data = readUserDataFromFile();
-    data.name = userData.name; 
-    data.email = userData.email;
+    data.name = userDetails.name; 
+    data.email = userDetails.email;
     fs.writeFileSync(userDataFilePath, JSON.stringify(data));
 }
 
@@ -23,7 +24,8 @@ const init = async () => {
             autoSubmit: true, 
             event: false, 
             browser: "chrome", 
-            autoUpdate: true
+            autoUpdate: true,
+            exportDir: resultsPath
         }; 
         fs.writeFileSync(userDataFilePath, JSON.stringify(defaultSettings));
     }
@@ -33,8 +35,20 @@ const init = async () => {
         return data;
     })
 
-    ipcMain.on("editUserData", (_event, data) => {
-        writeUserDataToFile(data);
+    ipcMain.on("editUserDetails", (_event, data) => {
+        writeUserDetailsToFile(data);
+    })
+
+    ipcMain.handle("setExportDir", (_event) => {
+        const data = readUserDataFromFile();
+        const results = dialog.showOpenDialogSync({
+            properties: ['openDirectory'],
+            defaultPath: data.exportDir
+        }); 
+        const exportDir = results[0];
+        data.exportDir = exportDir; 
+        fs.writeFileSync(userDataFilePath, JSON.stringify(data));
+        return exportDir;
     })
 }
 
@@ -43,12 +57,12 @@ const setData = async (userDataEvent) => {
 
     if (data.name === "" || data.email === "") {
         const userData = new Promise((resolve) => {
-           userDataEvent.emit("userDataDoesNotExist", resolve);
+           userDataEvent.emit("userDetailsDoNotExist", resolve);
         })
-        const userDataReceived = await userData; 
-        writeUserDataToFile(userDataReceived);
+        const userDetailsReceived = await userData; 
+        writeUserDetailsToFile(userDetailsReceived);
     } else {
-        userDataEvent.emit("userDataDoesExist");
+        userDataEvent.emit("userDetailsDoExist");
     }
 }
 

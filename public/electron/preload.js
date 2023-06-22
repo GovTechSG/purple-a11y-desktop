@@ -20,12 +20,16 @@ contextBridge.exposeInMainWorld("services", {
   submitFormViaBrowser: (formDetails) => {
     ipcRenderer.send("submitFormViaBrowser", formDetails);
   },
+  setExportDir: async () => {
+    const exportDir = await ipcRenderer.invoke("setExportDir");
+    return exportDir;
+  },
   getUserData: async () => {
     const data = await ipcRenderer.invoke("getUserData"); 
     return data;
   },
-  editUserData: async (userData) => {
-    ipcRenderer.send("editUserData", userData);
+  editUserDetails: async (userDetails) => {
+    ipcRenderer.send("editUserDetails", userDetails);
   },
   guiReady: async () => {
     ipcRenderer.send("guiReady");
@@ -40,16 +44,16 @@ contextBridge.exposeInMainWorld("services", {
       callback(data);
     });
   },
-  userDataExists: (callback) => {
-    ipcRenderer.on("userDataExists", (event, data) => {
+  userDetailsExist: (callback) => {
+    ipcRenderer.on("userDetailsExist", (event, data) => {
       callback(data);
     })
   },
   proceedUpdate: (response) => {
     ipcRenderer.send("proceedUpdate", response);
   },
-  setUserData: (data) => {
-    ipcRenderer.send("userDataReceived", data);
+  setUserDetails: (data) => {
+    ipcRenderer.send("userDetailsReceived", data);
   },
   enableReportDownload: (callback) => {
     ipcRenderer.on("enableReportDownload", () => callback());

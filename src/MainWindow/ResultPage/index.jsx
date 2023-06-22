@@ -81,6 +81,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const handleDownloadResults = async () => {
     const data = await services.downloadResults(scanId);
     let blob = new Blob([data], { type: "application/zip" });
+    console.log(blob);
     let link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
     link.download = "results.zip";

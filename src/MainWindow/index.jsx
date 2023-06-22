@@ -6,47 +6,26 @@ import ScanningPage from "./ScanningPage";
 import ResultPage from "./ResultPage";
 import OnboardingComponent from "./Onboarding/OnboardingComponent";
 import ConnectionNotification from "./ConnectionNotification";
-import services from "../services";
 import "./MainWindow.css";
 
 
 const MainWindow = ({ appVersion }) => {
   const [completedScanId, setCompletedScanId] = useState(null);
-  const [email, setEmail] = useState(''); 
-  const [name, setName] = useState('');
-  const [userInputErrorMessage, setUserInputErrorMessage] = useState('');
   const [dataExistStatus, setDataExistStatus] = useState(null);
 
   useEffect(() => {
-    window.services.userDataExists((status) => {
+    window.services.userDetailsExist((status) => {
       setDataExistStatus(status)
     })
   }, []);
 
-  const handleSetUserData =  (event) =>  {
-    event.preventDefault();
-
-    console.log(event.target);
-    
-    window.services.setUserData({name: name, email: email});
-    setDataExistStatus("exists");
-  }
-
-  if (dataExistStatus === "doesNotExist") {
+  if (dataExistStatus === "doNotExist") {
     return (
-      <OnboardingComponent 
-        handleSetUserData={handleSetUserData} 
-        name={name}
-        email={email}
-        setName={setName}
-        setEmail={setEmail}
-        userInputErrorMessage={userInputErrorMessage}
-        setUserInputErrorMessage={setUserInputErrorMessage}
-      />
+      <OnboardingComponent setDataExistStatus={setDataExistStatus}/>
     )
   }
 
-  if (dataExistStatus === "exists") {
+  if (dataExistStatus === "exist") {
     return (
       <>
         <ConnectionNotification />

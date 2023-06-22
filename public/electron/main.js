@@ -96,14 +96,14 @@ app.on("ready", async () => {
   mainWindow.webContents.send("versionNumber", constants.appVersion);
 
   const userDataEvent = new EventEmitter(); 
-  userDataEvent.on("userDataDoesNotExist", (setUserData) => {  
-    mainWindow.webContents.send("userDataExists", "doesNotExist"); 
-    ipcMain.once("userDataReceived", (_event, data) => {
+  userDataEvent.on("userDetailsDoNotExist", (setUserData) => {  
+    mainWindow.webContents.send("userDetailsExist", "doNotExist"); 
+    ipcMain.once("userDetailsReceived", (_event, data) => {
       setUserData(data);
     });
   })
-  userDataEvent.on("userDataDoesExist", () => {
-    mainWindow.webContents.send("userDataExists", "exists"); 
+  userDataEvent.on("userDetailsDoExist", () => {
+    mainWindow.webContents.send("userDetailsExist", "exist"); 
   })
   
   await userDataManager.setData(userDataEvent);
@@ -111,15 +111,15 @@ app.on("ready", async () => {
 });
 
 app.on("quit", () => {
-  /* Synchrnously removes file upon quitting the app. Restarts/Shutdowns in
-  Windows will not trigger this event */
-  if (fs.existsSync(constants.scanResultsPath)){
-    fs.rmSync(constants.scanResultsPath, { recursive: true }, err => {
-      if (err) {
-        console.error(`Error while deleting ${constants.scanResultsPath}.`);
-      }
-    })
-  }
+  // /* Synchrnously removes file upon quitting the app. Restarts/Shutdowns in
+  // Windows will not trigger this event */
+  // if (fs.existsSync(constants.scanResultsPath)){
+  //   fs.rmSync(constants.scanResultsPath, { recursive: true }, err => {
+  //     if (err) {
+  //       console.error(`Error while deleting ${constants.scanResultsPath}.`);
+  //     }
+  //   })
+  // }
   updateManager.killChildProcess();
   scanManager.killChildProcess();
 });

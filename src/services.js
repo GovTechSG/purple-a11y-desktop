@@ -4,7 +4,6 @@ and the renderer. The APIs are provided via the window.services object, as defin
 
 import {
   scanTypes,
-  // userDataFormDetails,
   viewportTypes,
   devices,
 } from "./common/constants";
@@ -22,7 +21,6 @@ const startScan = async (scanDetails) => {
     device,
     viewportWidth,
     scanInBackground,
-    browser,
   } = scanDetails;
 
   currentScanUrl = scanUrl;
@@ -32,7 +30,6 @@ const startScan = async (scanDetails) => {
     scanType: scanTypes[selectedScanType],
     url: scanUrl,
     headlessMode: scanInBackground,
-    browser: browser,
   };
 
   if (selectedScanType !== Object.keys(scanTypes)[2]) {

@@ -22,12 +22,11 @@ const EditUserDetailsModal = ({
     const handleEditUserData = (e) => {
         e.preventDefault(); 
 
-        window.services.editUserData({name: editedName, email: editedEmail}); 
+        window.services.editUserDetails({name: editedName, email: editedEmail}); 
         setShowEditDataModal(false);
     }  
     
     const setShowModal = (show) => {
-      console.log(show)
       setEditedEmail(initialEmail);
       setEditedName(initialName);
       setUserInputErrorMessage(null);

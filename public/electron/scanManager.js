@@ -39,6 +39,7 @@ const getScanOptions = (details) => {
     maxPages,
     headlessMode,
     browser,
+    exportDir, 
   } = details;
   const options = ["-c", scanType, "-u", url];
 
@@ -62,12 +63,20 @@ const getScanOptions = (details) => {
     options.push("-b", browser);
   }
 
+  if (exportDir) {
+    options.push("-e", exportDir);
+  }
+
   return options;
 };
 
 const startScan = async (scanDetails) => {
   const { scanType, url } = scanDetails;
   console.log(`Starting new ${scanType} scan at ${url}.`);
+
+  const userData = readUserDataFromFile(); 
+  scanDetails.browser = userData.browser; 
+  scanDetails.exportDir = userData.exportDir; 
 
   let useChromium = false;
   if (
@@ -120,7 +129,6 @@ const startScan = async (scanDetails) => {
         resolve({ success: false, statusCode: code, message: stdout });
       }
       currentChildProcess = null;
-
       if (fs.existsSync(customFlowGeneratedScriptsPath)) {
         fs.rm(customFlowGeneratedScriptsPath, { recursive: true }, (err) => {
           if (err) {

@@ -6,18 +6,16 @@ import { policyUrlElem } from "../../common/constants";
 import firstTimer1 from "../../assets/first-timer-1.svg";
 import firstTimer2 from "../../assets/first-timer-2.svg";
 import firstTimer3 from "../../assets/first-timer-3.svg";
+import firstTimer4 from "../../assets/first-timer-4.svg"
 import arrowRight from "../../assets/arrow-right.png";
 import { useEffect, useState } from "react";
 
 const OnboardingComponent = ({
-  handleSetUserData,
-  setName,
-  setEmail,
-  userInputErrorMessage,
-  setUserInputErrorMessage,
-  name, 
-  email
+  setDataExistStatus
 }) => {
+  const [email, setEmail] = useState(''); 
+  const [name, setName] = useState('');
+  const [userInputErrorMessage, setUserInputErrorMessage] = useState('');
   const [step, setStep] = useState(1);
 
   useEffect(() => {
@@ -32,6 +30,20 @@ const OnboardingComponent = ({
     setStep(step + 1);
     resetFormInputs();
   };
+
+
+  const handleSetUserData =  (event) =>  {
+    event.preventDefault();
+ 
+    window.services.setUserDetails({name: name, email: email});
+    setDataExistStatus("exist");
+  }
+
+  const handleSetExportDir = async () => {
+    // need to open the dialog :) 
+    const exportDir = await window.services.setExportDir(); 
+    console.log(exportDir);
+  }
 
   const resetFormInputs = () => {
     if (userInputErrorMessage) {
@@ -79,7 +91,7 @@ const OnboardingComponent = ({
       case 1: {
         return (
           <>
-            <div className="visually-hidden" aria-live="polite" role="status">Item 1 of 4</div>
+            <div className="visually-hidden" aria-live="polite" role="status">Item 1 of 5</div>
             <div className="modal-img-container fade-in" aria-hidden="true">
               <img className="modal-img" src={firstTimer1}></img>
             </div>
@@ -92,7 +104,7 @@ const OnboardingComponent = ({
       case 2: {
         return (
           <>
-            <div className="visually-hidden" aria-live="polite" role="status">Item 2 of 4</div>
+            <div className="visually-hidden" aria-live="polite" role="status">Item 2 of 5</div>
             <div className="modal-img-container fade-in" aria-hidden="true">
               <div id="first-timer-2-container">
                 <div className="typewriter">https://www.</div>
@@ -108,7 +120,7 @@ const OnboardingComponent = ({
       case 3: {
        return (
         <>
-          <div className="visually-hidden" aria-live="polite" role="status">Item 3 of 4</div>
+          <div className="visually-hidden" aria-live="polite" role="status">Item 3 of 5</div>
           <div className="modal-img-container fade-in" aria-hidden="true">
             <img className="modal-img" src={firstTimer3}></img>
           </div>
@@ -121,7 +133,21 @@ const OnboardingComponent = ({
       case 4: {
         return (
           <>
-            <div className="visually-hidden" aria-live="polite" role="status">Item 4 of 4</div>
+            <div className="visually-hidden" aria-live="polite" role="status">Item 4 of 5</div>
+            <div className="modal-img-container fade-in" aria-hidden="true">
+              <img className="modal-img" src={firstTimer4}></img>
+            </div>
+            <h3 className="modal-title fade-in">Download report location</h3>
+            <button className="secondary" onClick={handleSetExportDir}>Browse</button>
+            <p className="modal-desc fade-in">All reports generated from Purple HATS will be auto-downloaded into this folder.</p>
+              <PageIndicator page={4}></PageIndicator>
+          </>
+        )
+      }
+      case 5: {
+        return (
+          <>
+            <div className="visually-hidden" aria-live="polite" role="status">Item 5 of 5</div>
             <h3 className="modal-title fade-in">Get to know you</h3>
             <UserDetailsForm
               formID={formID}
@@ -135,7 +161,7 @@ const OnboardingComponent = ({
             <p className="modal-desc fade-in">
               To personalise your experience, we will be collecting your name, email address and app usage data. Your information fully complies with {policyUrlElem}
             </p>
-            <PageIndicator page={4}></PageIndicator>
+            <PageIndicator page={5}></PageIndicator>
           </>
         )
       }
@@ -167,6 +193,11 @@ const OnboardingComponent = ({
         )
       }
       case 4: {
+        return (
+          <>{backButton}{nextButton}</>
+        )
+      }
+      case 5: {
         return (
           <>
             {backButton}
