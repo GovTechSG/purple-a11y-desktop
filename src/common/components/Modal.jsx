@@ -16,8 +16,17 @@ const Modal = ({
   const modalHeaderClassName = showHeader ? "modal-header show" : "modal-header hide";  
   const modalBodyClassName = isOnboarding ? "modal-body text-center" : "modal-body"; 
 
-  // const [modalIsVisible, setModalIsVisible] = useState(false); 
+  useEffect(() => {
+    const modalBodyElement = document.querySelector('.modal-body');
+    if (isOnboarding) {
+      modalBodyElement.setAttribute('tabindex', '-1');
+    }
 
+    return (() => {
+      modalBodyElement.removeAttribute('tabindex');
+    })
+  }, [isOnboarding])
+  
   useEffect(() => {
     if (keyboardTrap) {
       const modalElement = document.querySelector(`#${id}`);
@@ -64,7 +73,7 @@ const Modal = ({
               aria-controls={id}
             />
           </div>
-          <div className={modalBodyClassName} key={key} tabindex="-1">{modalBody}</div>
+          <div className={modalBodyClassName} key={key}>{modalBody}</div>
           <div className="modal-footer">{modalFooter}</div>
         </div>
       </div>

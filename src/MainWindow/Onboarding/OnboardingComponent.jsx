@@ -23,7 +23,7 @@ const OnboardingComponent = ({
   useEffect(() => {
     setFocus();
   }, [step])
-  
+
   const handleOnBackClick = () => {
     setStep(step - 1);
   };
@@ -49,7 +49,6 @@ const OnboardingComponent = ({
 
   const setFocus = () => {
     const modalBody = document.querySelector('.modal-body'); 
-    console.log(modalBody);
     modalBody.focus();  
   }
 
@@ -73,14 +72,14 @@ const OnboardingComponent = ({
   );
 
   const formID = "first-timer-form";
-  const isSubmitDisabled = name.trim() === "" || email.trim() === "";
+  const isSubmitDisabled = name.trim() === "" || email.trim() === "" || userInputErrorMessage;
   
   const renderOnboardingBody = () => {
     switch (step) {
       case 1: {
         return (
           <>
-            <div className="visually-hidden" aria-live="polite" role="status">Slide 1 of 4</div>
+            <div className="visually-hidden" aria-live="polite" role="status">Item 1 of 4</div>
             <div className="modal-img-container fade-in" aria-hidden="true">
               <img className="modal-img" src={firstTimer1}></img>
             </div>
@@ -93,7 +92,7 @@ const OnboardingComponent = ({
       case 2: {
         return (
           <>
-            <div className="visually-hidden" aria-live="polite" role="status">Slide 2 of 4</div>
+            <div className="visually-hidden" aria-live="polite" role="status">Item 2 of 4</div>
             <div className="modal-img-container fade-in" aria-hidden="true">
               <div id="first-timer-2-container">
                 <div className="typewriter">https://www.</div>
@@ -109,7 +108,7 @@ const OnboardingComponent = ({
       case 3: {
        return (
         <>
-          <div className="visually-hidden" aria-live="polite" role="status">Slide 3 of 4</div>
+          <div className="visually-hidden" aria-live="polite" role="status">Item 3 of 4</div>
           <div className="modal-img-container fade-in" aria-hidden="true">
             <img className="modal-img" src={firstTimer3}></img>
           </div>
@@ -122,7 +121,7 @@ const OnboardingComponent = ({
       case 4: {
         return (
           <>
-            <div className="visually-hidden" aria-live="polite" role="status">Slide 4 of 4</div>
+            <div className="visually-hidden" aria-live="polite" role="status">Item 4 of 4</div>
             <h3 className="modal-title fade-in">Get to know you</h3>
             <UserDetailsForm
               formID={formID}
@@ -130,6 +129,7 @@ const OnboardingComponent = ({
               setEmail={setEmail}
               handleOnSubmit={handleSetUserData}
               userInputErrorMessage={userInputErrorMessage}
+              setUserInputErrorMessage={setUserInputErrorMessage}
               isOnboarding={true}
             />
             <p className="modal-desc fade-in">
