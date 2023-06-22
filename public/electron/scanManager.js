@@ -10,13 +10,16 @@ const {
   customFlowGeneratedScriptsPath,
   playwrightBrowsersPath,
   resultsPath,
+  createPlaywrightContext,
+  deleteClonedProfiles,
 } = require("./constants");
 const {
   browserTypes,
   getDefaultChromeDataDir,
   getDefaultEdgeDataDir,
 } = require("./constants");
-const { env } = require("process");
+const { env, report } = require("process");
+const { readUserDataFromFile } = require("./userDataManager");
 const scanHistory = {};
 
 let currentChildProcess;
@@ -160,24 +163,32 @@ const getResultsZip = (scanId) => {
   return reportZip;
 };
 
-function createReportWindow(contextWindow, reportPath) {
-  let reportWindow = new BrowserWindow({
-    parent: contextWindow,
-  });
-  reportWindow.maximize();
-  reportWindow.loadFile(reportPath);
-  reportWindow.on("close", () => reportWindow.destroy());
+async function createReportWindow(reportPath) {
+  const url = "file://" + reportPath;
+  let browser = readUserDataFromFile().browser; 
+  const { context, browserChannel, proxy } = await createPlaywrightContext(browser, null, true);
+
+  const page = await context.newPage(); 
+  await page.goto(url, {
+    ...(proxy && { waitUntil: 'networkidle'})
+  }); 
+
+  page.on('close', async data => {
+      await context.close();
+      deleteClonedProfiles(browserChannel);
+    }
+  )
 }
 
-const init = (contextWindow) => {
+const init = () => {
   ipcMain.handle("startScan", async (_event, scanDetails) => {
     return await startScan(scanDetails);
   });
 
-  ipcMain.on("openReport", (_event, scanId) => {
+  ipcMain.on("openReport", async (_event, scanId) => {
     const reportPath = getReportPath(scanId);
     if (!reportPath) return;
-    createReportWindow(contextWindow, reportPath);
+    await createReportWindow(reportPath);
   });
 
   ipcMain.handle("downloadResults", (_event, scanId) => {

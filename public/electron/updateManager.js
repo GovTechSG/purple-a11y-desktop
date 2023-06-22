@@ -97,15 +97,14 @@ const cleanUpBackend = async () => {
 };
 
 const downloadBackend = async () => {
-  // if (os.platform() === "win32"){
-  //   return
-  // }
+  if (os.platform() === "win32"){
+    return
+  }
 
   let downloadUrl;
 
   try {
-    // const { data } = await axiosInstance.get(releaseUrl);
-    const data = await getBackendData();
+    const { data } = await axiosInstance.get(releaseUrl);
     downloadUrl = getDownloadUrlFromReleaseData(data);
   } catch (e) {
     console.log(
@@ -149,8 +148,7 @@ const unzipBackendAndCleanUp = async () => {
 
 const isLatestBackendVersion = async () => {
   try {
-    // const { data } = await axiosInstance.get(releaseUrl);
-    const data = await getBackendData();
+    const { data } = await axiosInstance.get(releaseUrl);
 
     const latestVersion = data.tag_name;
     const engineVersion = getEngineVersion();
@@ -164,29 +162,6 @@ const isLatestBackendVersion = async () => {
     return true;
   }
 };
-
-const parseResponse = (response) => {
-  // Remove HTML tags using regular expressions
-  const removedHTMLTags = response.replace(/<[^>]*>/g, ''); 
-  const data = JSON.parse(removedHTMLTags);
-  return data;
-}
-
-const getBackendData = async () => {
-  const browser = readUserDataFromFile().browser;
-  const {context, browserChannel} = await createPlaywrightContext(browser, { width: 10, height: 10}); 
-  const page = await context.newPage(); 
-  await page.goto(releaseUrl); 
-
-  const response = await page.content(); 
-  const data = parseResponse(response);
-
-  await page.close();
-  await context.close();
-
-  deleteClonedProfiles(browserChannel);
-  return data;
-}
 
 const run = async (updaterEventEmitter) => {
   const processesToRun = [];
