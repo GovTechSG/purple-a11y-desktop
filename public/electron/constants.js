@@ -92,6 +92,8 @@ const userDataFilePath =
 
 const phZipPath = path.join(appPath, "PHLatest.zip");
 
+const artifactInstallerPath = path.join(appPath, "Purple-Hats-setup.exe");
+
 const browserTypes = {
   chrome: "chrome",
   edge: "msedge",
@@ -586,4 +588,5 @@ module.exports = {
   getDefaultEdgeDataDir,
   deleteClonedProfiles,
   createPlaywrightContext,
+  artifactInstallerPath,
 };

@@ -21,7 +21,7 @@ contextBridge.exposeInMainWorld("services", {
     ipcRenderer.send("submitFormViaBrowser", formDetails);
   },
   getUserData: async () => {
-    const data = await ipcRenderer.invoke("getUserData"); 
+    const data = await ipcRenderer.invoke("getUserData");
     return data;
   },
   editUserData: async (userData) => {
@@ -43,7 +43,7 @@ contextBridge.exposeInMainWorld("services", {
   userDataExists: (callback) => {
     ipcRenderer.on("userDataExists", (event, data) => {
       callback(data);
-    })
+    });
   },
   proceedUpdate: (response) => {
     ipcRenderer.send("proceedUpdate", response);
@@ -55,6 +55,6 @@ contextBridge.exposeInMainWorld("services", {
     ipcRenderer.on("enableReportDownload", () => callback());
   },
   openLink: (url) => {
-    ipcRenderer.send("openLink", url)
-  }
+    ipcRenderer.send("openLink", url);
+  },
 });

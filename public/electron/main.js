@@ -40,7 +40,7 @@ function createMainWindow() {
 
 // TODO set ipcMain messages
 app.on("ready", async () => {
-  // create settings file if it does not exist 
+  // create settings file if it does not exist
   await userDataManager.init();
   const launchWindowReady = new Promise((resolve) => {
     ipcMain.once("guiReady", () => {
@@ -55,6 +55,13 @@ app.on("ready", async () => {
   // this is used for listening to messages that updateManager sends
   const updateEvent = new EventEmitter();
 
+  updateEvent.on("promptFrontendUpdate", (userResponse) => {
+    launchWindow.webContents.send("launchStatus", "promptFrontendUpdate");
+    ipcMain.once("proceedUpdate", (_event, response) => {
+      userResponse(response);
+    });
+  });
+
   updateEvent.on("settingUp", () => {
     launchWindow.webContents.send("launchStatus", "settingUp");
   });
@@ -63,18 +70,26 @@ app.on("ready", async () => {
     launchWindow.webContents.send("launchStatus", "checkingUpdates");
   });
 
-  updateEvent.on("promptUpdate", (userResponse) => {
-    launchWindow.webContents.send("launchStatus", "promptUpdate");
+  updateEvent.on("promptBackendUpdate", (userResponse) => {
+    launchWindow.webContents.send("launchStatus", "promptBackendUpdate");
     ipcMain.once("proceedUpdate", (_event, response) => {
       userResponse(response);
     });
   });
 
-  updateEvent.on("updating", () => {
-    launchWindow.webContents.send("launchStatus", "updatingApp");
+  updateEvent.on("updatingBackend", () => {
+    launchWindow.webContents.send("launchStatus", "updatingBackend");
   });
 
-  // await updateManager.run(updateEvent);
+  updateEvent.on("updatingFrontend", () => {
+    launchWindow.webContents.send("launchStatus", "updatingFrontend");
+  });
+
+  updateEvent.on("frontendDownloadComplete", () => {
+    launchWindow.webContents.send("launchStatus", "frontendDownloadComplete");
+  });
+
+  await updateManager.run(updateEvent);
 
   launchWindow.close();
 
@@ -85,27 +100,27 @@ app.on("ready", async () => {
   });
 
   createMainWindow();
-  scanManager.init();  
+  scanManager.init();
 
   ipcMain.on("openLink", (_event, url) => {
     shell.openExternal(url);
-  })
-  
+  });
+
   await mainReady;
   mainWindow.webContents.send("appStatus", "ready");
   mainWindow.webContents.send("versionNumber", constants.appVersion);
 
-  const userDataEvent = new EventEmitter(); 
-  userDataEvent.on("userDataDoesNotExist", (setUserData) => {  
-    mainWindow.webContents.send("userDataExists", "doesNotExist"); 
+  const userDataEvent = new EventEmitter();
+  userDataEvent.on("userDataDoesNotExist", (setUserData) => {
+    mainWindow.webContents.send("userDataExists", "doesNotExist");
     ipcMain.once("userDataReceived", (_event, data) => {
       setUserData(data);
     });
-  })
+  });
   userDataEvent.on("userDataDoesExist", () => {
-    mainWindow.webContents.send("userDataExists", "exists"); 
-  })
-  
+    mainWindow.webContents.send("userDataExists", "exists");
+  });
+
   await userDataManager.setData(userDataEvent);
   await userDataFormManager.init();
 });
@@ -113,12 +128,12 @@ app.on("ready", async () => {
 app.on("quit", () => {
   /* Synchrnously removes file upon quitting the app. Restarts/Shutdowns in
   Windows will not trigger this event */
-  if (fs.existsSync(constants.scanResultsPath)){
-    fs.rmSync(constants.scanResultsPath, { recursive: true }, err => {
+  if (fs.existsSync(constants.scanResultsPath)) {
+    fs.rmSync(constants.scanResultsPath, { recursive: true }, (err) => {
       if (err) {
         console.error(`Error while deleting ${constants.scanResultsPath}.`);
       }
-    })
+    });
   }
   updateManager.killChildProcess();
   scanManager.killChildProcess();

@@ -1,19 +1,22 @@
 const os = require("os");
 const fs = require("fs");
 const https = require("https");
-const { exec } = require("child_process");
+const { exec, spawn } = require("child_process");
 const axios = require("axios");
 const {
   releaseUrl,
   enginePath,
   getEngineVersion,
+  getFrontendVersion,
   appPath,
   backendPath,
+  frontendPath,
   updateBackupsFolder,
   scanResultsPath,
   phZipPath,
   createPlaywrightContext,
-  deleteClonedProfiles
+  deleteClonedProfiles,
+  artifactInstallerPath,
 } = require("./constants");
 const { silentLogger } = require("./logs");
 const { readUserDataFromFile } = require("./userDataManager");
@@ -97,8 +100,8 @@ const cleanUpBackend = async () => {
 };
 
 const downloadBackend = async () => {
-  if (os.platform() === "win32"){
-    return
+  if (os.platform() === "win32") {
+    return;
   }
 
   let downloadUrl;
@@ -117,7 +120,8 @@ const downloadBackend = async () => {
     //   downloadUrl =
     //     "https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-windows.zip";
     // } else {
-    downloadUrl ="https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-mac.zip";
+    downloadUrl =
+      "https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-mac.zip";
     //}
   }
 
@@ -163,6 +167,72 @@ const isLatestBackendVersion = async () => {
   }
 };
 
+const isLatestFrontendVersion = async () => {
+  try {
+    const { data } = await axiosInstance.get(
+      `https://api.github.com/repos/Georgetxm/purple-hats-desktop/releases/latest`
+    );
+
+    const latestVersion = data.tag_name;
+    const frontendVersion = getFrontendVersion();
+
+    console.log("Frontend version installed: ", frontendVersion);
+    console.log("Latest frontend version found: ", latestVersion);
+
+    return frontendVersion === latestVersion;
+  } catch (e) {
+    console.log(
+      `Unable to check latest frontend version, skipping\n${e.toString()}`
+    );
+    return true;
+  }
+};
+
+const downloadFrontend = async () => {
+  const downloadUrl =
+    "https://github.com/Georgetxm/purple-hats-desktop/releases/latest/download/Purple-Hats-setup.exe";
+
+  const command = `curl -L '${downloadUrl}' -o '${artifactInstallerPath}'`;
+
+  try {
+    await execCommand(command);
+
+    return true;
+  } catch (error) {
+    silentLogger.error(error);
+    return false;
+  }
+};
+
+const spawnPowershellUpdateScript = () => {
+  // Spawn a powershell script to update the frontend
+  const updateFrontendProcess = spawn(
+    "powershell.exe",
+    [
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "../../scripts/update-frontend.ps1",
+    ],
+    { detached: true, stdio: "ignore", shell: true }
+  );
+
+  updateFrontendProcess.unref();
+};
+
+/**
+ * 
+ *  // Windows frontend binaries cannot be updated while the app is running
+  // need to close the Electron app and update the frontend binaries
+  // before relaunching it automatically with powershell
+  if (os.platform() === "win32") {
+    
+  }
+  // MacOS frontend binaries can be updated while the app is running
+  else if (os.platform() === "darwin") {
+  }} updaterEventEmitter 
+ */
+
 const run = async (updaterEventEmitter) => {
   const processesToRun = [];
 
@@ -170,58 +240,81 @@ const run = async (updaterEventEmitter) => {
   const backendExists = fs.existsSync(backendPath);
   const phZipExists = fs.existsSync(phZipPath);
 
-  if (isInterruptedUpdate) {
-    updaterEventEmitter.emit("updating");
-    if (!backendExists) {
-      processesToRun.push(downloadBackend, unzipBackendAndCleanUp);
-    } else if (phZipExists) {
-      processesToRun.push(unzipBackendAndCleanUp);
-    } else {
-      processesToRun.push(
-        cleanUpBackend,
-        downloadBackend,
-        unzipBackendAndCleanUp
-      );
+  // If front
+  if (os.platform() === "win32" && !(await isLatestFrontendVersion())) {
+    updaterEventEmitter.emit("checking");
+    const userResponse = new Promise((resolve) => {
+      updaterEventEmitter.emit("promptFrontendUpdate", resolve);
+    });
+
+    const proceedUpdate = await userResponse;
+
+    if (proceedUpdate) {
+      // spawnPowershellUpdateScript();
+      updaterEventEmitter.emit("updatingFrontend");
+      const downloadStatus = await downloadFrontend();
+
+      if (downloadStatus) {
+        updaterEventEmitter.emit("frontendDownloadComplete");
+      } else {
+      }
     }
+
+    // spawnPowershellUpdateScript();
   } else {
-    if (!backendExists) {
-      updaterEventEmitter.emit("settingUp");
-      processesToRun.push(downloadBackend, unzipBackendAndCleanUp);
-    } else if (phZipExists) {
-      updaterEventEmitter.emit("settingUp");
-      processesToRun.push(unzipBackendAndCleanUp);
-    } else  {
-      if (os.platform() === "win32"){
-        return
-      }     
+    if (isInterruptedUpdate) {
+      updaterEventEmitter.emit("updatingBackend");
+      if (!backendExists) {
+        processesToRun.push(downloadBackend, unzipBackendAndCleanUp);
+      } else if (phZipExists) {
+        processesToRun.push(unzipBackendAndCleanUp);
+      } else {
+        processesToRun.push(
+          cleanUpBackend,
+          downloadBackend,
+          unzipBackendAndCleanUp
+        );
+      }
+    } else {
+      if (!backendExists) {
+        updaterEventEmitter.emit("settingUp");
+        processesToRun.push(downloadBackend, unzipBackendAndCleanUp);
+      } else if (phZipExists) {
+        updaterEventEmitter.emit("settingUp");
+        processesToRun.push(unzipBackendAndCleanUp);
+      } else {
+        if (os.platform() === "win32") {
+          return;
+        }
 
-      updaterEventEmitter.emit("checking");
-      let isUpdateAvailable;
-      isUpdateAvailable = !(await isLatestBackendVersion());
-      // if fetching of latest backend version from github api fails for any reason,
-      // isUpdateAvailable will be set to false so that the app will just launch straightaway
-      if (isUpdateAvailable) {
-        const userResponse = new Promise((resolve) => {
-          updaterEventEmitter.emit("promptUpdate", resolve);
-        });
+        updaterEventEmitter.emit("checking");
+        let isUpdateAvailable;
+        isUpdateAvailable = !(await isLatestBackendVersion());
+        // if fetching of latest backend version from github api fails for any reason,
+        // isUpdateAvailable will be set to false so that the app will just launch straightaway
+        if (isUpdateAvailable) {
+          const userResponse = new Promise((resolve) => {
+            updaterEventEmitter.emit("promptBackendUpdate", resolve);
+          });
 
-        const proceedUpdate = await userResponse;
+          const proceedUpdate = await userResponse;
 
-        if (proceedUpdate) {
-          updaterEventEmitter.emit("updating");
-          processesToRun.push(
-            backUpData,
-            cleanUpBackend,
-            downloadBackend,
-            unzipBackendAndCleanUp
-          );
+          if (proceedUpdate) {
+            updaterEventEmitter.emit("updatingBackend");
+            processesToRun.push(
+              backUpData,
+              cleanUpBackend,
+              downloadBackend,
+              unzipBackendAndCleanUp
+            );
+          }
         }
       }
     }
-  }
 
-  for (const proc of processesToRun) {
-    await proc();
+    for (const proc of processesToRun) {
+      await proc();
+    }
   }
 };
 

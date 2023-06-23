@@ -6,10 +6,11 @@ import "./LaunchWindow.scss";
 const LaunchWindow = () => {
   const [launchStatus, setLaunchStatus] = useState(null);
   const [promptUpdate, setPromptUpdate] = useState(false);
-  
+
   useEffect(() => {
     window.services.launchStatus((s) => {
-      if (s === "promptUpdate") {
+      console.log(s);
+      if (s === "promptFrontendUpdate" || s === "promptBackendUpdate") {
         setPromptUpdate(true);
       } else {
         setLaunchStatus(s);
@@ -32,15 +33,24 @@ const LaunchWindow = () => {
     });
   }, [launchStatus]);
 
+  useEffect(() => {
+    console.log(promptUpdate);
+    console.log(launchStatus);
+  }, [promptUpdate, launchStatus]);
+
   const messages = {
     settingUp: {
       main: "Setting up",
       sub: "This may take a few minutes. Please do not close the application.",
     },
     checkingUpdates: { main: "Checking for Updates" },
-    updatingApp: {
-      main: "Updating app",
+    updatingBackend: {
+      main: "Updating application",
       sub: "This may take a few minutes. Please do not close the application.",
+    },
+    updatingFrontend: {
+      main: "Downloading new installer",
+      sub: "This may take a few minutes. The application will close after and you will be guided through the reinstallation.",
     },
     offline: {
       main: "No internet connection",
@@ -60,6 +70,7 @@ const LaunchWindow = () => {
   const { main: displayedMessage, sub: displayedSub } = messages[launchStatus];
 
   if (promptUpdate) {
+    console.log("going to return prompt update");
     return (
       <div id="launch-window">
         <div>
