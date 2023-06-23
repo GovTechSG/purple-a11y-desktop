@@ -266,12 +266,50 @@ a:hover {
     visibility: hidden;
   }
 
-  .dir-info-container {
+  .download-dropdown {
+    position: relative;
+  }
+
+  .user-input-group .download-dropdown {
+    width: 80%;
+  }
+
+  .download-dropdown-btn {
     box-sizing: border-box;
     border: 1px solid #B5C5CA;
     border-radius: 4px;
-    display: inline-flex;
-    padding: 5px;
+    width: 100%;
+    display: flex;
+  }
+
+  #folder-img {
+    padding-top: 0.25rem;
+  }
+
+  #dir-info {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    direction: rtl;
+    padding: 0px 1px;
+    white-space: nowrap;
+  }
+
+  .dir-info-button {
+    background-color: white;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+  }
+
+  .choose-dir-button {
+    border: 0; 
+    position: absolute;
+    justify-content: center;
+  }
+
+  .choose-dir-button:hover {
+    background-color: #785EF0;
+    color: white;
   }
 
   .img-button {

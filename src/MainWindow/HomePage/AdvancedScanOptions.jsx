@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import Button from "../../common/components/Button";
-import SelectField from "../../common/components/SelectField";
+import SelectField from "./SelectField";
+import DownloadFolderDropdown from "../../common/components/DownloadFolderDropdown";
 import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
 import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
@@ -129,6 +130,12 @@ const AdvancedScanOptions = ({
             </div>
           )}
           <hr />
+          <div className="user-input-group">
+            <label className="bold-text">
+              Download:
+            </label>
+            <DownloadFolderDropdown></DownloadFolderDropdown>
+          </div>
           <div id="scan-in-background-toggle-group">
             <input
               type="checkbox"
