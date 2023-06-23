@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import Button from "../../common/components/Button";
-import SelectField from "./SelectField";
+import SelectField from "../../common/components/SelectField";
 import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
 import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
@@ -37,7 +37,7 @@ const AdvancedScanOptions = ({
       if (overrideVal) {
         val = overrideVal(event);
       } else {
-        val = event.target.value;
+          val = event.target.value;
       }
 
       const newOptions = { ...advancedOptions };

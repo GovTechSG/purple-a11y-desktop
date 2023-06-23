@@ -21,6 +21,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const [autoSubmit, setAutoSubmit] = useState(false);
   const [event, setEvent] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
+  const [resultsPath, setResultsPath] = useState(null);
 
   useEffect(() => {
     const getDataForForm = async () => {
@@ -46,6 +47,15 @@ const ResultPage = ({ completedScanId: scanId }) => {
 
     getDataForForm();
   }, []);
+
+  useEffect(() => {
+    const getResultsPath = async () => {
+      const resultsPath = await services.getResultsFolderPath(scanId); 
+      setResultsPath(resultsPath);
+    }
+
+    getResultsPath();
+  }, [])
 
   useEffect(() => {
     const submitForm = async () => {
@@ -78,19 +88,25 @@ const ResultPage = ({ completedScanId: scanId }) => {
     }
   }, [autoSubmit]);
 
-  const handleDownloadResults = async () => {
-    const data = await services.downloadResults(scanId);
-    let blob = new Blob([data], { type: "application/zip" });
-    console.log(blob);
-    let link = document.createElement("a");
-    link.href = window.URL.createObjectURL(blob);
-    link.download = "results.zip";
-    link.click();
-  };
+  // const handleDownloadResults = async () => {
+  //   const data = await services.downloadResults(scanId);
+  //   let blob = new Blob([data], { type: "application/zip" });
+  //   console.log(blob);
+  //   let link = document.createElement("a");
+  //   link.href = window.URL.createObjectURL(blob);
+  //   link.download = "results.zip";
+  //   link.click();
+  // };
 
   const handleViewReport = () => {
     services.openReport(scanId);
   };
+
+  const handleOpenResultsFolder = async (e) => {
+    e.preventDefault(); 
+
+    window.services.openResultsFolder(resultsPath);
+  }
 
   const handleSubmitForm = async (event) => {
     event.preventDefault();
@@ -142,32 +158,31 @@ const ResultPage = ({ completedScanId: scanId }) => {
           <h1>Scan completed</h1>
           {enableReportDownload && !event ? (
             <>
-              <Button
-                id="view-button"
-                type="primary"
-                className="bold-text"
-                onClick={handleViewReport}
-              >
-                <ButtonSvgIcon
-                  className={`box-arrow-up-right-icon`}
-                  svgIcon={<BoxArrowUpRightIcon />}
-                />
-                {/* <i className="bi bi-box-arrow-up-right" /> */}
-                View report
-              </Button>
-              <Button
-                id="download-button"
-                type="secondary"
-                onClick={handleDownloadResults}
-              >
-                <ButtonSvgIcon
-                  svgIcon={<DownloadIcon />}
-                  className={`download-icon`}
-                />
-                {/* <i className="bi bi-download" /> */}
-                Download results (.zip)
-              </Button>
-            </>
+              <div id="download-content">
+                You can find the downloaded report at 
+                <a href="#" onClick={handleOpenResultsFolder}>{resultsPath}</a>
+              </div>
+              <hr />
+              <div id="btn-container">
+                <Link id="scan-again" to="/">
+                    <ButtonSvgIcon svgIcon={<ReturnIcon/>} className={`return-icon`}/>
+                    Back to Home
+                  </Link>
+                  <Button
+                    id="view-button"
+                    type="primary"
+                    className="bold-text"
+                    onClick={handleViewReport}
+                  >
+                    <ButtonSvgIcon
+                      className={`box-arrow-up-right-icon`}
+                      svgIcon={<BoxArrowUpRightIcon />}
+                    />
+                    {/* <i className="bi bi-box-arrow-up-right" /> */}
+                    View report
+                  </Button>
+              </div>
+              </>
           ) : (
             <>
               <form
@@ -208,11 +223,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
               </form>
             </>
           )}
-          <hr />
-          <Link id="scan-again" to="/">
-            <ButtonSvgIcon svgIcon={<ReturnIcon/>} className={`return-icon`}/>
-            Scan again
-          </Link>
         </div>
       </div>
     </div>

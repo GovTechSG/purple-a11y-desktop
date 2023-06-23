@@ -266,6 +266,26 @@ a:hover {
     visibility: hidden;
   }
 
+  .dir-info-container {
+    box-sizing: border-box;
+    border: 1px solid #B5C5CA;
+    border-radius: 4px;
+    display: inline-flex;
+    padding: 5px;
+  }
+
+  .img-button {
+    background-color: transparent;
+    border: none;
+    margin-right: 5px;
+    padding-top: 0px;
+  }
+
+  .dir-info {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
   @keyframes fade-in {
     from {
       opacity: 0;

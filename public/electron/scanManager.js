@@ -113,10 +113,8 @@ const startScan = async (scanDetails) => {
         if (stdout.includes("No pages were scanned")) {
           resolve({ success: false });
         }
-
-        const resultsPath = stdout
-          .split("Results directory is at ")[1]
-          .split(" ")[0];
+        
+        const resultsPath = stdout.split("/").pop().split(" ")[0];
         const scanId = randomUUID();
         scanHistory[scanId] = resultsPath;
         resolve({ success: true, scanId });
@@ -146,9 +144,9 @@ const startScan = async (scanDetails) => {
 
 const getReportPath = (scanId) => {
   if (scanHistory[scanId]) {
-    return path.join(
+   const resultsPath = getResultsFolderPath(scanId);
+   return path.join(
       resultsPath,
-      scanHistory[scanId],
       "reports",
       "report.html"
     );
@@ -156,19 +154,19 @@ const getReportPath = (scanId) => {
   return null;
 };
 
+const getResultsFolderPath = (scanId) => {
+  const exportDir = readUserDataFromFile().exportDir; 
+  return path.join(
+    exportDir,
+    "results",
+    scanHistory[scanId]
+  )
+}
 const getResultsZipPath = (scanId) => {
   if (scanHistory[scanId]) {
     return path.join(resultsPath, "a11y-scan-results.zip");
   }
   return null;
-};
-
-const getResultsZip = (scanId) => {
-  const resultsZipPath = getResultsZipPath(scanId);
-  if (!resultsZipPath) return "";
-
-  const reportZip = fs.readFileSync(resultsZipPath);
-  return reportZip;
 };
 
 async function createReportWindow(reportPath) {
@@ -199,9 +197,14 @@ const init = () => {
     await createReportWindow(reportPath);
   });
 
-  ipcMain.handle("downloadResults", (_event, scanId) => {
-    return getResultsZip(scanId);
-  });
+  ipcMain.handle("getResultsFolderPath", async (_event, scanId) => {
+    const resultsPath = getResultsFolderPath(scanId);
+    return resultsPath;
+  })
+
+  // ipcMain.handle("downloadResults", (_event, scanId) => {
+  //   return getResultsZip(scanId);
+  // });
 };
 
 module.exports = {

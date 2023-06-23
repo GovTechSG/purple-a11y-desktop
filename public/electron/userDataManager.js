@@ -1,18 +1,26 @@
 const fs = require("fs");
 const {
     userDataFilePath,
-    resultsPath
+    defaultExportDir, 
 } = require("./constants"); 
-const { ipcMain, dialog } = require("electron");
+const { ipcMain, dialog, shell } = require("electron");
 
 const readUserDataFromFile = () => {
     return JSON.parse(fs.readFileSync(userDataFilePath));
 }
+
 const writeUserDetailsToFile = (userDetails) => {
     const data = readUserDataFromFile();
     data.name = userDetails.name; 
     data.email = userDetails.email;
     fs.writeFileSync(userDataFilePath, JSON.stringify(data));
+}
+
+const createExportDir = () => {
+    const exportDir = readUserDataFromFile().exportDir;
+    if (!fs.existsSync(exportDir)) {
+        fs.mkdirSync(exportDir, { recursive: true });
+    }
 }
 
 const init = async () => {
@@ -25,7 +33,7 @@ const init = async () => {
             event: false, 
             browser: "chrome", 
             autoUpdate: true,
-            exportDir: resultsPath
+            exportDir: defaultExportDir
         }; 
         fs.writeFileSync(userDataFilePath, JSON.stringify(defaultSettings));
     }
@@ -45,10 +53,15 @@ const init = async () => {
             properties: ['openDirectory'],
             defaultPath: data.exportDir
         }); 
-        const exportDir = results[0];
-        data.exportDir = exportDir; 
+        if (results) {
+            data.exportDir = results[0] + "/Purple HATS"; 
+        }    
         fs.writeFileSync(userDataFilePath, JSON.stringify(data));
-        return exportDir;
+        return data.exportDir;
+    })
+
+    ipcMain.on("openResultsFolder", (_event, resultsPath) => {
+        shell.openPath(resultsPath);
     })
 }
 
@@ -61,6 +74,7 @@ const setData = async (userDataEvent) => {
         })
         const userDetailsReceived = await userData; 
         writeUserDetailsToFile(userDetailsReceived);
+        createExportDir(); 
     } else {
         userDataEvent.emit("userDetailsDoExist");
     }

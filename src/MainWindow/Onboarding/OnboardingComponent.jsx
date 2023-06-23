@@ -7,20 +7,32 @@ import firstTimer1 from "../../assets/first-timer-1.svg";
 import firstTimer2 from "../../assets/first-timer-2.svg";
 import firstTimer3 from "../../assets/first-timer-3.svg";
 import firstTimer4 from "../../assets/first-timer-4.svg"
+import folder from "../../assets/folder.svg";
 import arrowRight from "../../assets/arrow-right.png";
 import { useEffect, useState } from "react";
+import services from "../../services";
 
 const OnboardingComponent = ({
   setDataExistStatus
 }) => {
   const [email, setEmail] = useState(''); 
   const [name, setName] = useState('');
+  const [exportDir, setExportDir] = useState();
   const [userInputErrorMessage, setUserInputErrorMessage] = useState('');
   const [step, setStep] = useState(1);
 
   useEffect(() => {
     setFocus();
   }, [step])
+
+  useEffect(() => {
+    const getExportDir = async () => {
+      const userData = await services.getUserData();
+      setExportDir(userData.exportDir);
+    };
+
+    getExportDir();
+  }, [])
 
   const handleOnBackClick = () => {
     setStep(step - 1);
@@ -40,9 +52,8 @@ const OnboardingComponent = ({
   }
 
   const handleSetExportDir = async () => {
-    // need to open the dialog :) 
     const exportDir = await window.services.setExportDir(); 
-    console.log(exportDir);
+    setExportDir(exportDir);
   }
 
   const resetFormInputs = () => {
@@ -138,9 +149,14 @@ const OnboardingComponent = ({
               <img className="modal-img" src={firstTimer4}></img>
             </div>
             <h3 className="modal-title fade-in">Download report location</h3>
-            <button className="secondary" onClick={handleSetExportDir}>Browse</button>
+            <div className="dir-info-container fade-in">
+              <Button className="img-button" onClick={handleSetExportDir}>
+                <img src={folder}></img>
+              </Button>
+              <span className="dir-info">{exportDir}</span>
+            </div>
             <p className="modal-desc fade-in">All reports generated from Purple HATS will be auto-downloaded into this folder.</p>
-              <PageIndicator page={4}></PageIndicator>
+            <PageIndicator page={4}></PageIndicator>
           </>
         )
       }

@@ -38,6 +38,8 @@ const appVersion = require(path.join(
 
 const preloadPath = path.join(__dirname, "preload.js");
 
+const defaultExportDir = path.join(process.env.HOME, "Documents", "Purple HATS");
+
 const userDataFormPreloadPath = path.join(__dirname, "userDataFormPreload.js");
 
 const indexPath = path.join(__dirname, "..", "..", "build", "index.html");
@@ -487,6 +489,7 @@ module.exports = {
   updateBackupsFolder,
   phZipPath,
   resultsPath,
+  defaultExportDir,
   userDataFilePath,
   userDataFormFields,
   browserTypes,
