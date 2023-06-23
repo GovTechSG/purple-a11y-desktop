@@ -20,7 +20,7 @@ const AdvancedScanOptions = ({
     if (!openAdvancedOptionsMenu) {
       setOpenAdvancedOptionsMenu(true);
     } else {
-      menu.current.style.animationName = "fade-out";
+      menu.current.style.animationName = "button-fade-out";
       setTimeout(() => setOpenAdvancedOptionsMenu(false), 200);
     }
   };

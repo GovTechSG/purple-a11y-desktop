@@ -1,43 +1,48 @@
 import { useState } from "react";
-import services from "../../services";
 import { policyUrlElem } from "../../common/constants";
 import Modal from "../../common/components/Modal";
 import UserDetailsForm from "../../common/components/UserDetailsForm";
 
 const EditUserDetailsModal = ({
+  id,
   formID,
   showModal,
   initialName,
   initialEmail,
   setShowEditDataModal,
 }) => {
-  const [userInputErrorMessage, setUserInputErrorMessage] = useState("");
   const [editedName, setEditedName] = useState(initialName);
   const [editedEmail, setEditedEmail] = useState(initialEmail);
+  const [userInputErrorMessage, setUserInputErrorMessage] = useState(null);
 
   const isSubmitDisabled =
     editedName.trim() === "" ||
     editedEmail.trim() === "" ||
-    (editedName === initialName && editedEmail === initialEmail);
+    (editedName === initialName && editedEmail === initialEmail) ||
+    userInputErrorMessage;
 
   const handleEditUserData = (e) => {
     e.preventDefault();
-
-    if (!services.isValidEmail(editedEmail)) {
-      setUserInputErrorMessage("Please enter a valid email.");
-      return;
-    }
 
     window.services.editUserData({ name: editedName, email: editedEmail });
     setShowEditDataModal(false);
   };
 
+  const setShowModal = (show) => {
+    setEditedEmail(initialEmail);
+    setEditedName(initialName);
+    setUserInputErrorMessage(null);
+    setShowEditDataModal(show);
+  };
+
   if (showModal) {
     return (
       <Modal
+        id={id}
         showModal={showModal}
-        showCloseButton={true}
-        modalTitle={"Edit Form"}
+        showHeader={true}
+        keyboardTrap={showModal}
+        modalTitle={"Edit your profile"}
         modalBody={
           <>
             <UserDetailsForm
@@ -48,6 +53,7 @@ const EditUserDetailsModal = ({
               setEmail={setEditedEmail}
               handleOnSubmit={handleEditUserData}
               userInputErrorMessage={userInputErrorMessage}
+              setUserInputErrorMessage={setUserInputErrorMessage}
               isSubmitDisabled={isSubmitDisabled}
             />
             <p>
@@ -66,7 +72,7 @@ const EditUserDetailsModal = ({
             Update
           </button>
         }
-        setShowModal={setShowEditDataModal}
+        setShowModal={setShowModal}
       />
     );
   }

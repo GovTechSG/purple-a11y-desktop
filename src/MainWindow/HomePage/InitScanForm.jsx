@@ -29,7 +29,7 @@ const InitScanForm = ({ startScan, prevUrlErrorMessage }) => {
     if (!openPageLimitAdjuster) {
       setOpenPageLimitAdjuster(true);
     } else {
-      pageLimitAdjuster.current.style.animationName = "fade-out";
+      pageLimitAdjuster.current.style.animationName = "button-fade-out";
       setTimeout(() => setOpenPageLimitAdjuster(false), 200);
     }
   };

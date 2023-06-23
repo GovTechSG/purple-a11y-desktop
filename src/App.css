@@ -1,10 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Roboto:ital,wght@0,100;1,100&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Viga");
 
+body {
+  background-color: #f6f8f9;
+}
+
 #root {
   min-height: 100vh;
   width: 100vw;
-  background-color: #f6f8f9;
   font-family: "Open Sans", "Helvetica", sans-serif;
 }
 
@@ -81,6 +84,7 @@ a:hover {
   width: 5rem;
   height: 5rem;
 }
+
 .loading-spinner:after {
   content: " ";
   display: block;
@@ -101,27 +105,49 @@ a:hover {
   }
 }
 
+.onboarding-modal .modal-content {
+  max-width: 450px;
+  min-height: 600px;
+}
+
+.onboarding-modal .modal-title {
+  margin-bottom: 1rem;
+}
+
+.onboarding-modal .modal-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.onboarding-modal .modal-body:focus {
+  outline: none;
+}
+
+.onboarding-modal .user-form {
+  min-height: 160px;
+}
+
+.onboarding-modal .modal-img-container {
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
 .modal {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(1, 1, 1, 0.1);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .modal-content {
-  width: 450px;
   border: none;
   box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.1),
     0px 8px 8px -4px rgba(16, 24, 40, 0.04);
   background-color: #f6f8f9;
-}
-
-.modal-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  color: #333333;
 }
 
 .modal-header {
@@ -139,15 +165,8 @@ a:hover {
   margin: 0;
 }
 
-.modal-img-container {
-  height: 160px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .modal-desc {
-  height: 180px;
+  flex-grow: 1;
 }
 
 .modal-button {
@@ -177,6 +196,23 @@ a:hover {
   flex-wrap: nowrap;
 }
 
+.page-indicators {
+  display: flex;
+  justify-content: center;
+}
+
+.page-indicator-circle {
+  width: 10px;
+  border-radius: 50%;
+  background-color: #b5c5ca;
+  height: 10px;
+  margin: 0 0.25rem;
+}
+
+.current {
+  background-color: #785ef0;
+}
+
 .hide {
   visibility: hidden;
 }
@@ -189,24 +225,20 @@ a:hover {
   display: block;
 }
 
-.display-none {
-  display: none !important;
-}
-
 .user-form {
   position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 10px;
-  height: 160px;
-  padding: 20px 0 40px 0;
+  margin-bottom: 1rem;
+  color: #333333;
 }
 
 .user-form-field {
   display: grid;
   grid-template-columns: 30% 70%;
   margin-bottom: 1rem;
+  align-items: center;
 }
 
 .user-form-label {
@@ -219,14 +251,15 @@ a:hover {
   background: white;
   border: 1px solid #b5c5ca;
   border-radius: 4px;
+  padding: 0.25rem 0.5rem;
 }
 
 .user-form-error {
-  position: absolute;
   margin-bottom: 5px;
+  text-align: left;
 }
 
-@keyframes in {
+@keyframes fade-in {
   from {
     opacity: 0;
     transform: translateX(20px);
@@ -237,8 +270,8 @@ a:hover {
   }
 }
 
-.in {
-  animation: in 0.5s;
+.fade-in {
+  animation: fade-in 0.5s;
 }
 
 #first-timer-2-container {
@@ -264,6 +297,7 @@ a:hover {
   animation: typing 2s steps(200, end);
   animation-delay: 0.5s;
   animation-fill-mode: both;
+  max-width: max-content;
 }
 
 @keyframes typing {

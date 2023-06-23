@@ -1,38 +1,98 @@
-import React from "react";
-import UserDetailsForm from "./UserDetailsForm";
-
+import React, { useEffect, useRef, useState } from "react";
 
 const Modal = ({
   id, 
+  key,
   showModal, 
-  showCloseButton, 
+  showHeader,
+  keyboardTrap,
+  isOnboarding,
   modalTitle,
   modalBody,
   modalFooter,
   setShowModal
 }) => {
-  const showHideClassName = showModal ? "modal display-flex" : "modal display-none";
-  const showCloseButtonClassName = showCloseButton ? "btn-close show" : "btn-close hide"
-  const modalTitleClassName = modalTitle ? "modal-title show" : "modal-title hide"; 
+  const modalClassName = getModalClassName(showModal, isOnboarding);
+  const modalHeaderClassName = showHeader ? "modal-header show" : "modal-header hide";  
+  const modalBodyClassName = isOnboarding ? "modal-body text-center" : "modal-body"; 
+
+  useEffect(() => {
+    const modalBodyElement = document.querySelector('.modal-body');
+    if (isOnboarding) {
+      modalBodyElement.setAttribute('tabindex', '-1');
+    }
+
+    return (() => {
+      modalBodyElement.removeAttribute('tabindex');
+    })
+  }, [isOnboarding])
+  
+  useEffect(() => {
+    if (keyboardTrap) {
+      const modalElement = document.querySelector(`#${id}`);
+      
+      const handleKeyDown = (event) => {
+        const focusableElements = modalElement.querySelectorAll('button:not([disabled]), a, input'); 
+        const firstFocusableElement = focusableElements[0]; 
+        const lastFocusableElement = focusableElements[focusableElements.length - 1];
+        
+        if (event.key === 'Tab') {
+          console.log(event.target);
+          if (!modalElement.contains(event.target)) {
+            event.preventDefault();
+            firstFocusableElement.focus(); 
+          } else if (event.shiftKey && event.target === firstFocusableElement) {
+            event.preventDefault(); 
+            lastFocusableElement.focus();
+          } else if (!event.shiftKey && event.target === lastFocusableElement) {
+            event.preventDefault();
+            firstFocusableElement.focus(); 
+          }
+        }
+      }
+
+      document.addEventListener('keydown', handleKeyDown); 
+
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+      }
+    }
+  }, [keyboardTrap])
 
   return (
-    <div className={showHideClassName} id={id}>
-      <div className="modal-content">
-        <div className="modal-header">
-          <h3 className={modalTitleClassName} defaultValue={"modalTitle"}>{modalTitle}</h3>
-          <button 
-            type="button" 
-            className={showCloseButtonClassName}
-            onClick={() => setShowModal(false)}
-            aria-label="Close"
-            aria-controls={id}
-          />
+    <div className={modalClassName} id={id}>
+      <div className="modal-dialog">
+        <div className="modal-content">
+          <div className={modalHeaderClassName}>
+            <h3 className="modal-title" defaultValue={"modalTitle"}>{modalTitle}</h3>
+            <button 
+              type="button" 
+              className="btn-close"
+              onClick={() => setShowModal(false)}
+              aria-label="Close"
+              aria-controls={id}
+            />
+          </div>
+          <div className={modalBodyClassName} key={key}>{modalBody}</div>
+          <div className="modal-footer">{modalFooter}</div>
         </div>
-        <div className="modal-body">{modalBody}</div>
-        <div className="modal-footer">{modalFooter}</div>
       </div>
     </div>
   )
+}
+
+
+const getModalClassName = (showModal, isOnboarding) => {
+  let modalClassName; 
+  if (showModal) {
+    modalClassName = "modal fade show"; 
+    if (isOnboarding) {
+      modalClassName = "onboarding-modal " + "modal fade show";
+    }
+  } else {
+    modalClassName = "modal d-none"; 
+  }
+  return modalClassName;
 }
 
 export default Modal;
