@@ -28,11 +28,6 @@ const MainWindow = ({ appVersion }) => {
 
     console.log(event.target);
     
-    if (!services.isValidEmail(email)) {
-      setUserInputErrorMessage('Please enter a valid email.'); 
-      return;
-    }
-
     window.services.setUserData({name: name, email: email});
     setDataExistStatus("exists");
   }

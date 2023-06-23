@@ -140,7 +140,7 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
               onClick={() => setShowEditDataModal(true)}
             >
               Welcome <b>{name}</b> &nbsp;
-              <img src={editIcon}></img>
+              <img src={editIcon} aria-label="Edit profile"></img>
             </button>
           </div>
         )}
@@ -155,29 +155,34 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
           prevUrlErrorMessage={prevUrlErrorMessage}
         />
       </div>
-      <Modal
-        id="basic-auth-modal"
-        showCloseButton={true}
-        showModal={showBasicAuthModal}
-        setShowModal={setShowBasicAuthModal}
-        modalTitle={"Basic Authentication Required"}
-        modalBody={
-          <>
-            <BasicAuthForm handleBasicAuthSubmit={handleBasicAuthSubmit} />
-            <p>
-              The site you are trying to scan requires basic authentication.
-              Please enter your credentials. Purple-HATS will not collect the
-              information and only use it for this scan instance.
-            </p>
-          </>
-        }
-        modalFooter={
-          <BasicAuthFormFooter setShowBasicAuthModal={setShowBasicAuthModal} />
-        }
-      />
+      {showBasicAuthModal && (
+        <Modal
+          id="basic-auth-modal"
+          showHeader={true}
+          showModal={showBasicAuthModal}
+          setShowModal={setShowBasicAuthModal}
+          keyboardTrap={showBasicAuthModal}
+          modalTitle={"Basic Authentication Required"}
+          modalBody={
+            <>
+              <BasicAuthForm handleBasicAuthSubmit={handleBasicAuthSubmit} />
+              <p className="mb-0">
+                Purple HATS will solely capture your credentials for this scan
+                and promptly remove them thereafter.
+              </p>
+            </>
+          }
+          modalFooter={
+            <BasicAuthFormFooter
+              setShowBasicAuthModal={setShowBasicAuthModal}
+            />
+          }
+        />
+      )}
       {areUserDetailsSet && (
         <>
           <EditUserDetailsModal
+            id={"edit-details-modal"}
             formID={"edit-details-form"}
             showModal={showEditDataModal}
             setShowEditDataModal={setShowEditDataModal}
