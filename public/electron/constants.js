@@ -25,11 +25,17 @@ const resultsPath =
     : appPath;
 
 const backendPath = path.join(appPath, "Purple HATS Backend");
+const frontendPath = path.join(appPath, "Purple HATS Frontend");
 
 const enginePath = path.join(backendPath, "purple-hats");
 
 const getEngineVersion = () =>
   require(path.join(enginePath, "package.json")).version;
+
+const getFrontendVersion = () => {
+  return require(path.join(frontendPath, "resources", "app", "package.json"))
+    .version;
+};
 
 const appVersion = require(path.join(
   __dirname,
@@ -497,7 +503,7 @@ const createPlaywrightContext = async (browser, screenSize, nonHeadless) => {
   const context = await chromium.launchPersistentContext(userDataDir, {
     ignoreDefaultArgs: ["--use-mock-keychain"],
     ...(browserChannel && { channel: browserChannel }),
-    ...((proxy || nonHeadless) && {headless: false}),
+    ...((proxy || nonHeadless) && { headless: false }),
     ...(screenSize && {
       viewport: {
         width: screenSize.width,
@@ -558,8 +564,10 @@ module.exports = {
   appPath,
   releaseUrl,
   backendPath,
+  frontendPath,
   enginePath,
   getEngineVersion,
+  getFrontendVersion,
   appVersion,
   preloadPath,
   userDataFormPreloadPath,
