@@ -162,7 +162,7 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
           showModal={showBasicAuthModal}
           setShowModal={setShowBasicAuthModal}
           keyboardTrap={showBasicAuthModal}
-          modalTitle={"Basic Authentication Required"}
+          modalTitle={"Your website requires basic authentication"}
           modalBody={
             <>
               <BasicAuthForm handleBasicAuthSubmit={handleBasicAuthSubmit} />
