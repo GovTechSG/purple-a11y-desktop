@@ -278,8 +278,15 @@ a:hover {
     box-sizing: border-box;
     border: 1px solid #B5C5CA;
     border-radius: 4px;
-    width: 100%;
     display: flex;
+    width: 100%;
+  }
+
+  .download-dropdown-list {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 100%;
   }
 
   #folder-img {
@@ -294,21 +301,25 @@ a:hover {
     white-space: nowrap;
   }
 
-  .dir-info-button {
+  .dir-info-btn {
     background-color: white;
     align-items: center;
     justify-content: space-between;
     padding: 4px 8px;
   }
 
-  .choose-dir-button {
+  .dropdown-list-btn {
     border: 0; 
-    position: absolute;
     justify-content: center;
   }
 
-  .choose-dir-button:hover {
+  .dropdown-list-btn:hover {
     background-color: #785EF0;
+    color: white;
+  }
+
+  .active {
+    background-color: #472BC4;
     color: white;
   }
 
@@ -317,11 +328,6 @@ a:hover {
     border: none;
     margin-right: 5px;
     padding-top: 0px;
-  }
-
-  .dir-info {
-    overflow-x: auto;
-    white-space: nowrap;
   }
 
   @keyframes fade-in {
