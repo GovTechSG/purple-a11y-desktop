@@ -64,7 +64,7 @@ const Modal = ({
       <div className="modal-dialog">
         <div className="modal-content">
           <div className={modalHeaderClassName}>
-            <h3 className="modal-title" defaultValue={"modalTitle"}>{modalTitle}</h3>
+            <h3 className="modal-title" defaultValue={"modalTitle"} aria-live="polite">{modalTitle}</h3>
             <button 
               type="button" 
               className="btn-close"

@@ -6,7 +6,9 @@ import folder from "../../assets/folder.svg";
 import { useEffect, useState } from "react";
 import services from "../../services";
 
-const DownloadFolderDropdown = () => {
+const DownloadFolderDropdown = ({
+    labelledBy
+}) => {
     const dropdownOptionActiveClass = "dropdown-list-item active";
     const dropdownOptionInactiveClass = "dropdown-list-item";
 
@@ -116,7 +118,7 @@ const DownloadFolderDropdown = () => {
 
     return (
         <div className="dropdown fade-in">
-        <button aria-controls="download-dropdown-list" aria-expanded={openDropDown} aria-haspopup="listbox" className="dropdown-btn" onClick={() => {setOpenDropDown(!openDropDown)}} onKeyDown={(e) => handleKeydownOpenDropdown(e)}>
+        <button aria-controls="download-dropdown-list" aria-expanded={openDropDown} aria-haspopup="listbox" aria-labelledBy={labelledBy} className="dropdown-btn" onClick={() => {setOpenDropDown(!openDropDown)}} onKeyDown={(e) => handleKeydownOpenDropdown(e)}>
           <img id="folder-img" src={folder}></img>
           <span id="dir-info">{exportDir}</span>
           {openDropDown ? (

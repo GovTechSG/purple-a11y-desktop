@@ -62,6 +62,7 @@ const AdvancedScanOptions = ({
           type="transparent"
           className={"purple-text" + (advancedOptionsDirty ? " bold-text" : "")}
           onClick={handleToggleMenu}
+          aria-expanded={openAdvancedOptionsMenu}
         >
           Advanced scan options{" "}
           {openAdvancedOptionsMenu ? (
@@ -131,10 +132,10 @@ const AdvancedScanOptions = ({
           )}
           <hr />
           <div className="user-input-group">
-            <label className="bold-text">
+            <label id='download-label' className="bold-text">
               Download:
             </label>
-            <DownloadFolderDropdown></DownloadFolderDropdown>
+            <DownloadFolderDropdown labelledBy={'download-label'}></DownloadFolderDropdown>
           </div>
           <div id="scan-in-background-toggle-group">
             <input
