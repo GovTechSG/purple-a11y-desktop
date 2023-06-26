@@ -9,11 +9,11 @@ const LaunchWindow = () => {
 
   useEffect(() => {
     window.services.launchStatus((s) => {
-      console.log(s);
       if (s === "promptFrontendUpdate" || s === "promptBackendUpdate") {
         setPromptUpdate(true);
       } else {
         setLaunchStatus(s);
+        setPromptUpdate(false);
       }
     });
   }, []);
@@ -31,12 +31,10 @@ const LaunchWindow = () => {
         { once: true }
       );
     });
+    if (launchStatus === "frontendDownloadComplete") {
+      setPromptUpdate(false);
+    }
   }, [launchStatus]);
-
-  useEffect(() => {
-    console.log(promptUpdate);
-    console.log(launchStatus);
-  }, [promptUpdate, launchStatus]);
 
   const messages = {
     settingUp: {
@@ -67,10 +65,14 @@ const LaunchWindow = () => {
     setPromptUpdate(false);
   };
 
+  const handlePromptLaunchInstallerResponse = (response) => () => {
+    window.services.launchInstaller(response);
+    // setPromptUpdate(false);
+  };
+
   const { main: displayedMessage, sub: displayedSub } = messages[launchStatus];
 
   if (promptUpdate) {
-    console.log("going to return prompt update");
     return (
       <div id="launch-window">
         <div>
@@ -90,6 +92,31 @@ const LaunchWindow = () => {
       </div>
     );
   }
+
+  if (launchStatus === "frontendDownloadComplete") {
+    return (
+      <div id="launch-window">
+        <div>
+          <h1>Installer has been downloaded</h1>
+          <p>Would you like to run the installer now?</p>
+          <Button
+            type="secondary"
+            onClick={handlePromptLaunchInstallerResponse(false)}
+          >
+            Later
+          </Button>
+          <Button
+            id="proceed-button"
+            type="primary"
+            onClick={handlePromptLaunchInstallerResponse(true)}
+          >
+            Run
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div id="launch-window">
       <LoadingSpinner />

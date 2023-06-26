@@ -48,6 +48,9 @@ contextBridge.exposeInMainWorld("services", {
   proceedUpdate: (response) => {
     ipcRenderer.send("proceedUpdate", response);
   },
+  launchInstaller: (response) => {
+    ipcRenderer.send("launchInstaller", response);
+  },
   setUserData: (data) => {
     ipcRenderer.send("userDataReceived", data);
   },

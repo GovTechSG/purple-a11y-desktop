@@ -71,7 +71,7 @@ app.on("ready", async () => {
   });
 
   updateEvent.on("promptBackendUpdate", (userResponse) => {
-    launchWindow.webContents.send("launchStatus", "promptBackendUpdate");
+    launchWindow.webContents.send("launchStatus", "promptBackendUpRdate");
     ipcMain.once("proceedUpdate", (_event, response) => {
       userResponse(response);
     });
@@ -85,8 +85,19 @@ app.on("ready", async () => {
     launchWindow.webContents.send("launchStatus", "updatingFrontend");
   });
 
-  updateEvent.on("frontendDownloadComplete", () => {
+  updateEvent.on("frontendDownloadComplete", (userResponse) => {
     launchWindow.webContents.send("launchStatus", "frontendDownloadComplete");
+    ipcMain.once("launchInstaller", (_event, response) => {
+      userResponse(response);
+    });
+  });
+
+  updateEvent.on("installerLaunched", () => {
+    app.exit();
+  });
+
+  updateEvent.on("frontendDownloadFailed", () => {
+    launchWindow.webContents.send("launchStatus", "frontendDownloadFailed");
   });
 
   await updateManager.run(updateEvent);

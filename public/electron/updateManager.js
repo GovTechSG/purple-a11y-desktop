@@ -1,4 +1,5 @@
 const os = require("os");
+const path = require("path");
 const fs = require("fs");
 const https = require("https");
 const { exec, spawn } = require("child_process");
@@ -17,6 +18,7 @@ const {
   createPlaywrightContext,
   deleteClonedProfiles,
   artifactInstallerPath,
+  resultsPath,
 } = require("./constants");
 const { silentLogger } = require("./logs");
 const { readUserDataFromFile } = require("./userDataManager");
@@ -189,49 +191,103 @@ const isLatestFrontendVersion = async () => {
 };
 
 const downloadFrontend = async () => {
-  const downloadUrl =
-    "https://github.com/Georgetxm/purple-hats-desktop/releases/latest/download/Purple-Hats-setup.exe";
+  // const scriptPath = "../../scripts/downloadFrontend.ps1";
+  const shellScript = `$artifactUrl = "https://github.com/Georgetxm/purple-hats-desktop/releases/latest/download/test.txt"
+  $destinationPath = "${resultsPath}\\test.txt"
+  $webClient = New-Object System.Net.WebClient
+  $webClient.DownloadFile($artifactUrl, $destinationPath)
+  Write-Output "Downloaded latest release from github"`;
 
-  const command = `curl -L '${downloadUrl}' -o '${artifactInstallerPath}'`;
+  return new Promise((resolve, reject) => {
+    const ps = spawn("powershell.exe", ["-Command", shellScript]);
+    // const args = [
+    //   "-Command",
+    //   `Start-Process -Verb RunAs powershell.exe -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File "${scriptPath}"'`,
+    // ];
 
-  try {
-    await execCommand(command);
+    // const ps = spawn("runas", ["powershell.exe", ...args]);
 
-    return true;
-  } catch (error) {
-    silentLogger.error(error);
-    return false;
-  }
+    ps.stdout.on("data", (data) => {
+      console.log(data.toString());
+    });
+
+    // Log any errors from the PowerShell script
+    ps.stderr.on("data", (data) => {
+      console.error(data.toString());
+    });
+
+    // Log when the PowerShell process exits
+    ps.on("exit", (code) => {
+      if (code === 0) {
+        resolve(true);
+      } else {
+        reject(false);
+      }
+    });
+  });
+
+  // return false;
+  // const downloadUrl =
+  //   "https://github.com/Georgetxm/purple-hats-desktop/releases/latest/download/Purple-Hats-setup.exe";
+
+  // const command = `curl -L '${downloadUrl}' -o "${artifactInstallerPath}"`;
+
+  // try {
+  //   await execCommand(command);
+
+  //   return true;
+  // } catch (error) {
+  //   silentLogger.error(error);
+  //   return false;
+  // }
 };
 
 const spawnPowershellUpdateScript = () => {
-  // Spawn a powershell script to update the frontend
-  const updateFrontendProcess = spawn(
-    "powershell.exe",
-    [
-      "-ExecutionPolicy",
-      "Bypass",
-      "-File",
-      "../../scripts/update-frontend.ps1",
-    ],
-    { detached: true, stdio: "ignore", shell: true }
-  );
+  const shellScript = `$executablePath = "C:\\Users\\Xuan Ming\\AppData\\Roaming\\Purple HATS\\Purple-Hats-setup.exe"
+  Start-Process -FilePath $executablePath`;
 
-  updateFrontendProcess.unref();
+  return new Promise((resolve, reject) => {
+    const ps = spawn("powershell.exe", ["-Command", shellScript]);
+    // const args = [
+    //   "-Command",
+    //   `Start-Process -Verb RunAs powershell.exe -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File "${scriptPath}"'`,
+    // ];
+
+    // const ps = spawn("runas", ["powershell.exe", ...args]);
+
+    ps.stdout.on("data", (data) => {
+      console.log(data.toString());
+    });
+
+    // Log any errors from the PowerShell script
+    ps.stderr.on("data", (data) => {
+      console.error(data.toString());
+    });
+
+    // Log when the PowerShell process exits
+    ps.on("exit", (code) => {
+      if (code === 0) {
+        resolve(true);
+      } else {
+        reject(false);
+      }
+    });
+  });
+
+  // // Spawn a powershell script to update the frontend
+  // const updateFrontendProcess = spawn(
+  //   "powershell.exe",
+  //   [
+  //     "-ExecutionPolicy",
+  //     "Bypass",
+  //     "-File",
+  //     "../../scripts/launch-installer.ps1",
+  //   ]
+  //   // { detached: true, stdio: "ignore", shell: true }
+  // );
+
+  // updateFrontendProcess.unref();
 };
-
-/**
- * 
- *  // Windows frontend binaries cannot be updated while the app is running
-  // need to close the Electron app and update the frontend binaries
-  // before relaunching it automatically with powershell
-  if (os.platform() === "win32") {
-    
-  }
-  // MacOS frontend binaries can be updated while the app is running
-  else if (os.platform() === "darwin") {
-  }} updaterEventEmitter 
- */
 
 const run = async (updaterEventEmitter) => {
   const processesToRun = [];
@@ -240,7 +296,7 @@ const run = async (updaterEventEmitter) => {
   const backendExists = fs.existsSync(backendPath);
   const phZipExists = fs.existsSync(phZipPath);
 
-  // If front
+  // If a new tag has been
   if (os.platform() === "win32" && !(await isLatestFrontendVersion())) {
     updaterEventEmitter.emit("checking");
     const userResponse = new Promise((resolve) => {
@@ -255,8 +311,22 @@ const run = async (updaterEventEmitter) => {
       const downloadStatus = await downloadFrontend();
 
       if (downloadStatus) {
-        updaterEventEmitter.emit("frontendDownloadComplete");
+        const launchInstallerResponse = new Promise((resolve) => {
+          updaterEventEmitter.emit("frontendDownloadComplete", resolve);
+        });
+
+        const proceedLaunchInstaller = await launchInstallerResponse;
+
+        if (proceedLaunchInstaller) {
+          const scriptResponseCode = await spawnPowershellUpdateScript();
+          if (scriptResponseCode) {
+            updaterEventEmitter.emit("installerLaunched");
+          }
+        } else {
+          // TODO: Handle user not wanting to update after download success
+        }
       } else {
+        updaterEventEmitter.emit("frontendDownloadFailed");
       }
     }
 
@@ -283,9 +353,9 @@ const run = async (updaterEventEmitter) => {
         updaterEventEmitter.emit("settingUp");
         processesToRun.push(unzipBackendAndCleanUp);
       } else {
-        if (os.platform() === "win32") {
-          return;
-        }
+        // if (os.platform() === "win32") {
+        //   return;
+        // }
 
         updaterEventEmitter.emit("checking");
         let isUpdateAvailable;

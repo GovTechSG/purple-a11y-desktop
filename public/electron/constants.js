@@ -17,7 +17,7 @@ const appPath =
       );
 
 const releaseUrl =
-  "https://api.github.com/repos/GovTechSG/purple-hats/releases/latest";
+  "https://api.github.com/repos/Georgetxm/purple-hats/releases/latest";
 
 const resultsPath =
   os.platform() === "win32"
