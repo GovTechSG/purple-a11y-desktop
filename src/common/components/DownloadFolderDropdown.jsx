@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 import services from "../../services";
 
 const DownloadFolderDropdown = () => {
-    const dropdownOptionActiveClass = "download-dropdown-btn dropdown-list-btn active";
-    const dropdownOptionInactiveClass = "download-dropdown-btn dropdown-list-btn";
+    const dropdownOptionActiveClass = "dropdown-list-item active";
+    const dropdownOptionInactiveClass = "dropdown-list-item";
 
     const [active, setActive] = useState(true); 
     const [exportDir, setExportDir] = useState();
@@ -24,11 +24,12 @@ const DownloadFolderDropdown = () => {
 
     useEffect(() => {
         const handleKeyDown = (event) =>  {
-            const dropdownListElement = document.querySelector('.download-dropdown-list'); 
-            const dropdownOptions = dropdownListElement.querySelectorAll('.dropdown-list-btn'); 
+            const dropdownListElement = document.querySelector('.dropdown-list'); 
+            const dropdownOptions = dropdownListElement.querySelectorAll('.dropdown-list-item'); 
 
+            console.log(event.key);
+            console.log(event.target);
             if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-                console.log(event.key);
                 if (!dropdownListElement.contains(event.target)) {
                     event.preventDefault();
                     dropdownOptions[0].focus();
@@ -45,22 +46,41 @@ const DownloadFolderDropdown = () => {
                 }
             }
 
-            if (event.key === 'Tab') {
-                event.preventDefault();
-                const dropdownButton = document.querySelector('.dir-info-btn'); 
+            const focusOnButton = () => {
+                const dropdownButton = document.querySelector('.dropdown-btn'); 
                 dropdownButton.focus();
-                setOpenDropDown(false);
             }
 
-            if (event.key === 'Escape') {
+            if (event.key === 'Enter') {
+                if (!dropdownListElement.contains(event.target)) {
+                    event.preventDefault();
+                    dropdownOptions[0].focus();
+                }
+                if (event.target === dropdownOptions[0]) {
+                    event.preventDefault();
+                    handleClickCurrent();
+                    focusOnButton();
+                }
+                if (event.target === dropdownOptions[1]) {
+                    event.preventDefault();
+                    dropdownOptions[1].blur();
+                    handleSetExportDir();
+                    focusOnButton();
+                }
+            }
+
+            if (event.key === 'Tab' || event.key === 'Escape') {
                 event.preventDefault();
-                const dropdownButton = document.querySelector('.dir-info-btn'); 
-                dropdownButton.focus();
+                focusOnButton();
                 setOpenDropDown(false);
             }
         }
         if (openDropDown) {
             document.addEventListener('keydown', handleKeyDown); 
+
+            return (() => {
+                document.removeEventListener('keydown', handleKeyDown); 
+            })
         }
     }, [openDropDown])
 
@@ -77,6 +97,7 @@ const DownloadFolderDropdown = () => {
 
         if (event.key === 'Enter') {
             event.preventDefault();
+            setOpenDropDown(true);
         }
     }
 
@@ -94,8 +115,8 @@ const DownloadFolderDropdown = () => {
     }
 
     return (
-        <div className="download-dropdown fade-in">
-        <button aria-haspopup="menu" className="dir-info-btn download-dropdown-btn" onClick={() => {setOpenDropDown(!openDropDown)}} onKeyDown={(e) => handleKeydownOpenDropdown(e)}>
+        <div className="dropdown fade-in">
+        <button aria-controls="download-dropdown-list" aria-expanded={openDropDown} aria-haspopup="listbox" className="dropdown-btn" onClick={() => {setOpenDropDown(!openDropDown)}} onKeyDown={(e) => handleKeydownOpenDropdown(e)}>
           <img id="folder-img" src={folder}></img>
           <span id="dir-info">{exportDir}</span>
           {openDropDown ? (
@@ -111,12 +132,16 @@ const DownloadFolderDropdown = () => {
           )}
         </button>
         {openDropDown && 
-            <div className="download-dropdown-list" role="menu">
-                <button className={active ? dropdownOptionActiveClass : dropdownOptionInactiveClass} onClick={handleClickCurrent} role="menuitem" aria-selected="true">
+            <>
+            <ul id="download-dropdown-list" className="dropdown-list" role="listbox">
+                <li className={active ? dropdownOptionActiveClass : dropdownOptionInactiveClass}  role="option" aria-selected={active} onClick={handleClickCurrent} tabindex="-1">
                     <span id="dir-info">{exportDir}</span>
-                </button>
-                <button className={!active ? dropdownOptionActiveClass : dropdownOptionInactiveClass} role="menuitem" onClick={handleSetExportDir}>Choose Another</button>
-            </div>
+                </li>
+                <li className={!active ? dropdownOptionActiveClass : dropdownOptionInactiveClass}  role="option" aria-selected={!active} onClick={handleSetExportDir} tabindex="-1">
+                    Choose Another
+                </li>
+            </ul>
+            </>
         }
       </div>
     )                                     

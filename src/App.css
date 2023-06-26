@@ -266,25 +266,26 @@ a:hover {
     visibility: hidden;
   }
 
-  .download-dropdown {
+  .dropdown {
     position: relative;
   }
 
-  .user-input-group .download-dropdown {
+  .user-input-group .dropdown {
     width: 80%;
   }
 
-  .download-dropdown-btn {
-    box-sizing: border-box;
+  .dropdown-btn {
     border: 1px solid #B5C5CA;
     border-radius: 4px;
     display: flex;
     width: 100%;
+    background-color: white;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
   }
 
-  .download-dropdown-list {
-    display: flex;
-    flex-direction: column;
+  .dropdown-list {
     position: absolute;
     width: 100%;
   }
@@ -301,19 +302,12 @@ a:hover {
     white-space: nowrap;
   }
 
-  .dir-info-btn {
+  .dropdown-list-item {
+    list-style: none;
     background-color: white;
-    align-items: center;
-    justify-content: space-between;
-    padding: 4px 8px;
   }
 
-  .dropdown-list-btn {
-    border: 0; 
-    justify-content: center;
-  }
-
-  .dropdown-list-btn:hover {
+  .dropdown-list-item:hover {
     background-color: #785EF0;
     color: white;
   }
