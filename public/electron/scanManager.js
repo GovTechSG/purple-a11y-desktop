@@ -158,16 +158,15 @@ const getResultsFolderPath = (scanId) => {
   const exportDir = readUserDataFromFile().exportDir; 
   return path.join(
     exportDir,
-    "results",
     scanHistory[scanId]
   )
 }
-const getResultsZipPath = (scanId) => {
-  if (scanHistory[scanId]) {
-    return path.join(resultsPath, "a11y-scan-results.zip");
-  }
-  return null;
-};
+// const getResultsZipPath = (scanId) => {
+//   if (scanHistory[scanId]) {
+//     return path.join(resultsPath, "a11y-scan-results.zip");
+//   }
+//   return null;
+// };
 
 async function createReportWindow(reportPath) {
   const url = "file://" + reportPath;
