@@ -34,11 +34,11 @@ Source: "Purple HATS Backend\*"; DestDir: "{app}\Purple HATS Backend"; Flags: ig
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{autoprograms}\Purple HATS Desktop"; Filename: "{app}\Purple HATS Frontend\Purple HATS-win32-x64\chrome.exe"
-Name: "{autodesktop}\Purple HATS Desktop"; Filename: "{app}\Purple HATS Frontend\Purple HATS-win32-x64\chrome.exe"; Tasks: desktopicon
+Name: "{autoprograms}\Purple HATS Desktop"; Filename: "{app}\Purple HATS Frontend\Purple HATS-win32-x64\Purple Hats.exe"
+Name: "{autodesktop}\Purple HATS Desktop"; Filename: "{app}\Purple HATS Frontend\Purple HATS-win32-x64\Purple Hats.exe"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\Purple HATS Frontend\Purple HATS-win32-x64\chrome.exe"; Description: "{cm:LaunchProgram,Purple HATS Desktop}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\Purple HATS Frontend\Purple HATS-win32-x64\Purple Hats.exe"; Description: "{cm:LaunchProgram,Purple HATS Desktop}"; Flags: nowait postinstall skipifsilent
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\Purple HATS Frontend"
