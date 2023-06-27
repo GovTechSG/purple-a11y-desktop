@@ -15,7 +15,7 @@ DefaultDirName=C:\Program Files\Purple HATS Desktop
 DisableDirPage=yes
 ChangesAssociations=yes
 DisableProgramGroupPage=yes
-LicenseFile=Purple HATS-win32-x64\LICENSE
+LicenseFile=Purple HATS-win32-x64\Purple HATS-win32-x64\LICENSE
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 Compression=lzma
@@ -41,5 +41,9 @@ Name: "{autodesktop}\Purple HATS Desktop"; Filename: "{app}\Purple HATS Frontend
 Filename: "{app}\Purple HATS Frontend\Purple HATS.exe"; Description: "{cm:LaunchProgram,Purple HATS Desktop}"; Flags: nowait postinstall skipifsilent
 
 [UninstallDelete]
+Type: filesandordirs; Name: "{app}\Purple HATS Frontend"
+Type: filesandordirs; Name: "{app}\Purple HATS Backend"
+
+[InstallDelete]
 Type: filesandordirs; Name: "{app}\Purple HATS Frontend"
 Type: filesandordirs; Name: "{app}\Purple HATS Backend"
