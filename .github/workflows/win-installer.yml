@@ -53,7 +53,7 @@ jobs:
           run: |
             cd $env:APPDATA
             mkdir setup
-            move mysetup.exe setup/mysetup.exe
+            move mysetup.exe setup/Purple-Hats-Setup.exe
         
         - name: Get AppData Directory
           run: echo ("APPDATA_DIR=" + $env:APPDATA) >> $env:GITHUB_ENV
