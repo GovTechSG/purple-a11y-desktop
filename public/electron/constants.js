@@ -445,6 +445,43 @@ const deleteClonedProfiles = (browserChannel) => {
   }
 };
 
+const getProxy = () => {
+  if (os.platform() === "win32") {
+    let internetSettings;
+    try {
+      internetSettings = execSync(
+        'Get-ItemProperty -Path "Registry::HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"',
+        { shell: "powershell.exe" }
+      )
+        .toString()
+        .split("\n");
+    } catch (e) {
+      console.log(e.toString());
+      silentLogger.error(e.toString());
+    }
+
+    const getSettingValue = (settingName) =>
+      internetSettings
+        .find((s) => s.startsWith(settingName))
+        // split only once at with ':' as the delimiter
+        ?.split(/:(.*)/s)[1]
+        ?.trim();
+
+    if (getSettingValue("AutoConfigURL")) {
+      return { type: "autoConfig", url: getSettingValue("AutoConfigURL") };
+    } else if (getSettingValue("ProxyEnable") === "1") {
+      return { type: "manualProxy", url: getSettingValue("ProxyServer") };
+    } else {
+      return null;
+    }
+  } else {
+    // develop for mac
+    return null;
+  }
+};
+
+const proxy = getProxy();
+
 const createPlaywrightContext = async (browser, screenSize, nonHeadless) => {
   const playwrightPath = path.join(
     backendPath,
@@ -495,7 +532,6 @@ const createPlaywrightContext = async (browser, screenSize, nonHeadless) => {
     ]);
   }
 
-  const proxy = getProxy();
   if (proxy && proxy.type === "autoConfig") {
     launchOptionsArgs.push(`--proxy-pac-url=${proxy.url}`);
   } else if (proxy && proxy.type === "manualProxy") {
@@ -527,40 +563,6 @@ const userDataFormFields = {
   nameField: "entry.1787318910",
 };
 
-const getProxy = () => {
-  if (os.platform() === "win32") {
-    let internetSettings;
-    try {
-      internetSettings = execSync(
-        'Get-ItemProperty -Path "Registry::HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"',
-        { shell: "powershell.exe" }
-      )
-        .toString()
-        .split("\n");
-    } catch (e) {
-      console.log(e.toString());
-      silentLogger.error(e.toString());
-    }
-
-    const getSettingValue = (settingName) =>
-      internetSettings
-        .find((s) => s.startsWith(settingName))
-        // split only once at with ':' as the delimiter
-        ?.split(/:(.*)/s)[1]
-        ?.trim();
-
-    if (getSettingValue("AutoConfigURL")) {
-      return { type: "autoConfig", url: getSettingValue("AutoConfigURL") };
-    } else if (getSettingValue("ProxyEnable") === "1") {
-      return { type: "manualProxy", url: getSettingValue("ProxyServer") };
-    } else {
-      return null;
-    }
-  } else {
-    // develop for mac
-    return null;
-  }
-};
 
 module.exports = {
   appPath,
@@ -588,5 +590,6 @@ module.exports = {
   getDefaultEdgeDataDir,
   deleteClonedProfiles,
   createPlaywrightContext,
+  proxy
   artifactInstallerPath,
 };

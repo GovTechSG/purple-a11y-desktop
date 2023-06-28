@@ -11,7 +11,7 @@ import Modal from "../../common/components/Modal";
 import { BasicAuthForm, BasicAuthFormFooter } from "./BasicAuthForm";
 import EditUserDetailsModal from "./EditUserDetailsModal";
 
-const HomePage = ({ appVersion, setCompletedScanId }) => {
+const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [prevUrlErrorMessage, setPrevUrlErrorMessage] = useState(
@@ -73,7 +73,6 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
 
     navigate("/scanning");
     const response = await services.startScan(scanDetails);
-    console.log(response.success);
 
     if (response.success) {
       setCompletedScanId(response.scanId);
@@ -151,6 +150,7 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
         />
         <h1 id="app-title">Accessibility Site Scanner</h1>
         <InitScanForm
+          isProxy = {isProxy}
           startScan={startScan}
           prevUrlErrorMessage={prevUrlErrorMessage}
         />
@@ -162,7 +162,7 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
           showModal={showBasicAuthModal}
           setShowModal={setShowBasicAuthModal}
           keyboardTrap={showBasicAuthModal}
-          modalTitle={"Basic Authentication Required"}
+          modalTitle={"Your website requires basic authentication"}
           modalBody={
             <>
               <BasicAuthForm handleBasicAuthSubmit={handleBasicAuthSubmit} />

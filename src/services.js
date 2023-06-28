@@ -39,15 +39,15 @@ const startScan = async (scanDetails) => {
     scanArgs.maxPages = pageLimit;
   }
 
-  if (viewport === viewportTypes[1]) {
+  if (viewport === viewportTypes.mobile) {
     scanArgs.customDevice = "Mobile";
   }
   
-  if (viewport === viewportTypes[2]) {
+  if (viewport === viewportTypes.specific) {
     scanArgs.customDevice = devices[device];
   }
 
-  if (viewport === viewportTypes[3]) {
+  if (viewport === viewportTypes.custom) {
     scanArgs.viewportWidth = viewportWidth;
   }
 
