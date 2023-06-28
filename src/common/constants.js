@@ -6,12 +6,12 @@ export const scanTypes = {
   "Custom flow": "custom",
 };
 
-export const viewportTypes = [
-  "Desktop",
-  "Mobile",
-  "Specific device...",
-  "Custom width...",
-];
+export const viewportTypes = {
+  desktop: "Desktop",
+  mobile: "Mobile",
+  specific: "Specific device...",
+  custom: "Custom width...",
+};
 
 // key is what will be displayed on the GUI, value is the internal value that Playwright recognises
 export const devices = {

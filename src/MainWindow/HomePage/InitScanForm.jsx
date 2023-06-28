@@ -6,7 +6,7 @@ import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
 import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
 
-const InitScanForm = ({ startScan, prevUrlErrorMessage }) => {
+const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage }) => {
   const [openPageLimitAdjuster, setOpenPageLimitAdjuster] = useState(false);
   const pageLimitAdjuster = useRef();
 
@@ -14,12 +14,17 @@ const InitScanForm = ({ startScan, prevUrlErrorMessage }) => {
   const [pageLimit, setPageLimit] = useState("100");
 
   const scanTypeOptions = Object.keys(scanTypes);
+  
+  if (isProxy) {
+    delete viewportTypes.specific;
+  }
+
   const viewportOptions = viewportTypes;
-  const deviceOptions = Object.keys(devices);
+  const deviceOptions = isProxy ? [] : Object.keys(devices);
 
   const [advancedOptions, setAdvancedOptions] = useState({
     scanType: scanTypeOptions[0],
-    viewport: viewportOptions[0],
+    viewport: viewportOptions.desktop,
     device: deviceOptions[0],
     viewportWidth: "320",
     scanInBackground: false,
@@ -35,6 +40,15 @@ const InitScanForm = ({ startScan, prevUrlErrorMessage }) => {
   };
 
   const handleScanButtonClicked = () => {
+    // If chosen device is Mobile in proxy environment, we override the default "Mobile"
+    // sent to cli.js with iPhone's width 414px
+    // Prevents the user-agent from triggering in cli.js
+    if (isProxy && advancedOptions.viewport === viewportTypes.mobile) {
+      {
+        advancedOptions.viewport = viewportTypes.custom
+        advancedOptions.viewportWidth = 414
+      }
+    }
     startScan({ scanUrl: scanUrl.trim(), pageLimit, ...advancedOptions });
   };
 
@@ -108,6 +122,7 @@ const InitScanForm = ({ startScan, prevUrlErrorMessage }) => {
         )}
       </div>
       <AdvancedScanOptions
+        isProxy={isProxy}
         scanTypeOptions={scanTypeOptions}
         viewportOptions={viewportOptions}
         deviceOptions={deviceOptions}
