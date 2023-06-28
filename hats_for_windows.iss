@@ -5,7 +5,7 @@
 [SETUP]
 AppId={{10A741B8-E330-4DC5-A86C-7F7B8DE775A9}
 AppName=Purple HATS Desktop
-AppVersion=0.0.13.0
+AppVersion=0.9.0
 AppVerName=Purple HATS Desktop
 AppPublisher=GovTech
 AppPublisherURL=https://github.com/GovTechSG/purple-hats-desktop
@@ -15,7 +15,7 @@ DefaultDirName=C:\Program Files\Purple HATS Desktop
 DisableDirPage=yes
 ChangesAssociations=yes
 DisableProgramGroupPage=yes
-LicenseFile=Purple HATS Desktop\Purple HATS-win32-x64\LICENSE
+LicenseFile=Purple HATS-win32-x64\LICENSE
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 Compression=lzma
