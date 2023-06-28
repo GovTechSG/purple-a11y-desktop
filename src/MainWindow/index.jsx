@@ -10,7 +10,7 @@ import services from "../services";
 import "./MainWindow.css";
 
 
-const MainWindow = ({ appVersion }) => {
+const MainWindow = ({ isProxy, appVersion }) => {
   const [completedScanId, setCompletedScanId] = useState(null);
   const [email, setEmail] = useState(''); 
   const [name, setName] = useState('');
@@ -56,6 +56,7 @@ const MainWindow = ({ appVersion }) => {
               path="/"
               element={
                 <HomePage
+                  isProxy = {isProxy}
                   appVersion={appVersion}
                   setCompletedScanId={setCompletedScanId}
                 />

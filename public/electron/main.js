@@ -1,4 +1,10 @@
-const { app: electronApp, BrowserWindow, ipcMain, shell } = require("electron");
+const {
+  app: electronApp,
+  BrowserWindow,
+  ipcMain,
+  shell,
+  session,
+} = require("electron");
 const fs = require("fs");
 const EventEmitter = require("events");
 const constants = require("./constants");
@@ -36,47 +42,51 @@ function createMainWindow() {
   });
   // and load the index.html of the app.
   mainWindow.loadFile(constants.indexPath);
+  // mainWindow.loadURL(`http://localhost:3000`)
 }
 
 // TODO set ipcMain messages
 app.on("ready", async () => {
-  // create settings file if it does not exist 
+  // create settings file if it does not exist
   await userDataManager.init();
-  const launchWindowReady = new Promise((resolve) => {
-    ipcMain.once("guiReady", () => {
-      resolve();
+
+  if (constants.proxy === null) {
+    const launchWindowReady = new Promise((resolve) => {
+      ipcMain.once("guiReady", () => {
+        resolve();
+      });
     });
-  });
 
-  createLaunchWindow();
-  await launchWindowReady;
-  launchWindow.webContents.send("appStatus", "launch");
+    createLaunchWindow();
+    await launchWindowReady;
+    launchWindow.webContents.send("appStatus", "launch");
 
-  // this is used for listening to messages that updateManager sends
-  const updateEvent = new EventEmitter();
+    // this is used for listening to messages that updateManager sends
+    const updateEvent = new EventEmitter();
 
-  updateEvent.on("settingUp", () => {
-    launchWindow.webContents.send("launchStatus", "settingUp");
-  });
-
-  updateEvent.on("checking", () => {
-    launchWindow.webContents.send("launchStatus", "checkingUpdates");
-  });
-
-  updateEvent.on("promptUpdate", (userResponse) => {
-    launchWindow.webContents.send("launchStatus", "promptUpdate");
-    ipcMain.once("proceedUpdate", (_event, response) => {
-      userResponse(response);
+    updateEvent.on("settingUp", () => {
+      launchWindow.webContents.send("launchStatus", "settingUp");
     });
-  });
 
-  updateEvent.on("updating", () => {
-    launchWindow.webContents.send("launchStatus", "updatingApp");
-  });
+    updateEvent.on("checking", () => {
+      launchWindow.webContents.send("launchStatus", "checkingUpdates");
+    });
 
-  await updateManager.run(updateEvent);
+    updateEvent.on("promptUpdate", (userResponse) => {
+      launchWindow.webContents.send("launchStatus", "promptUpdate");
+      ipcMain.once("proceedUpdate", (_event, response) => {
+        userResponse(response);
+      });
+    });
 
-  launchWindow.close();
+    updateEvent.on("updating", () => {
+      launchWindow.webContents.send("launchStatus", "updatingApp");
+    });
+
+    await updateManager.run(updateEvent);
+
+    launchWindow.close();
+  }
 
   const mainReady = new Promise((resolve) => {
     ipcMain.once("guiReady", () => {
@@ -85,29 +95,37 @@ app.on("ready", async () => {
   });
 
   createMainWindow();
-  scanManager.init();  
+  scanManager.init();
 
   ipcMain.on("openLink", (_event, url) => {
     shell.openExternal(url);
-  })
-  
+  });
+
   await mainReady;
+  
   mainWindow.webContents.send("appStatus", "ready");
   mainWindow.webContents.send("versionNumber", constants.appVersion);
+  mainWindow.webContents.send("isProxy", constants.proxy);
 
-  const userDataEvent = new EventEmitter(); 
-  userDataEvent.on("userDataDoesNotExist", (setUserData) => {  
-    mainWindow.webContents.send("userDataExists", "doesNotExist"); 
+  const userDataEvent = new EventEmitter();
+  userDataEvent.on("userDataDoesNotExist", (setUserData) => {
+    mainWindow.webContents.send("userDataExists", "doesNotExist");
     ipcMain.once("userDataReceived", (_event, data) => {
       setUserData(data);
     });
-  })
+  });
   userDataEvent.on("userDataDoesExist", () => {
-    mainWindow.webContents.send("userDataExists", "exists"); 
-  })
-  
+    mainWindow.webContents.send("userDataExists", "exists");
+  });
+
   await userDataManager.setData(userDataEvent);
   await userDataFormManager.init();
+
+  if (constants.proxy) {
+    session.defaultSession.enableNetworkEmulation({
+      offline: true,
+    });
+  }
 });
 
 app.on("quit", () => {

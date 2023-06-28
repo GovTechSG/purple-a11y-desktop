@@ -6,6 +6,11 @@ contextBridge.exposeInMainWorld("services", {
       callback(data);
     });
   },
+  getIsProxy: (callback) => {
+    ipcRenderer.on("isProxy", (event, data) => {
+      callback(data);
+    });
+  },
   startScan: async (scanDetails) => {
     const results = await ipcRenderer.invoke("startScan", scanDetails);
     return results;
