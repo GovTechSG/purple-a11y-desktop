@@ -19,13 +19,19 @@ const appPath =
 const releaseUrl =
   "https://api.github.com/repos/Georgetxm/purple-hats/releases/latest";
 
+// TODO: Change URL to GovTech's after testing
+const frontendReleaseUrl = "https://github.com/Georgetxm/purple-hats-desktop/releases/latest/download/PurpleHATSSetup.zip"
+// const frontendReleaseUrl = "https://github.com/Georgetxm/purple-hats-desktop/releases/latest/download/test.txt"
+
 const resultsPath =
   os.platform() === "win32"
     ? path.join(process.env.APPDATA, "Purple HATS")
     : appPath;
 
+const installerExePath = path.join(resultsPath, "purpleHATSSetup", "Purple-Hats-Setup.exe");
+
 const backendPath = path.join(appPath, "Purple HATS Backend");
-const frontendPath = path.join(appPath, "Purple HATS Frontend");
+const frontendPath = path.join(appPath, "Purple HATS Frontend", "Purple HATS-win32-x64");
 
 const enginePath = path.join(backendPath, "purple-hats");
 
@@ -33,6 +39,11 @@ const getEngineVersion = () =>
   require(path.join(enginePath, "package.json")).version;
 
 const getFrontendVersion = () => {
+  // Directory is only valid for and used by Windows
+  if (os.platform() !== "win32") {
+    return;
+  }
+
   return require(path.join(frontendPath, "resources", "app", "package.json"))
     .version;
 };
@@ -590,6 +601,8 @@ module.exports = {
   getDefaultEdgeDataDir,
   deleteClonedProfiles,
   createPlaywrightContext,
-  proxy
+  proxy,
   artifactInstallerPath,
+  frontendReleaseUrl,
+  installerExePath
 };

@@ -13,7 +13,6 @@ const LaunchWindow = () => {
         setPromptUpdate(true);
       } else {
         setLaunchStatus(s);
-        setPromptUpdate(false);
       }
     });
   }, []);
@@ -34,7 +33,10 @@ const LaunchWindow = () => {
     if (launchStatus === "frontendDownloadComplete") {
       setPromptUpdate(false);
     }
+
   }, [launchStatus]);
+
+  useEffect(() => {console.log(launchStatus)}, [launchStatus])
 
   const messages = {
     settingUp: {
@@ -69,8 +71,6 @@ const LaunchWindow = () => {
     window.services.launchInstaller(response);
     // setPromptUpdate(false);
   };
-
-  const { main: displayedMessage, sub: displayedSub } = messages[launchStatus];
 
   if (promptUpdate) {
     return (
@@ -117,6 +117,7 @@ const LaunchWindow = () => {
     );
   }
 
+  const { main: displayedMessage, sub: displayedSub } = messages[launchStatus];
   return (
     <div id="launch-window">
       <LoadingSpinner />

@@ -64,12 +64,12 @@ app.on("ready", async () => {
     // this is used for listening to messages that updateManager sends
     const updateEvent = new EventEmitter();
 
-    updateEvent.on("checking", () => {
-      launchWindow.webContents.send("launchStatus", "checkingUpdates");
-    });
-
     updateEvent.on("settingUp", () => {
       launchWindow.webContents.send("launchStatus", "settingUp");
+    });
+
+    updateEvent.on("checking", () => {
+      launchWindow.webContents.send("launchStatus", "checkingUpdates");
     });
 
     updateEvent.on("promptFrontendUpdate", (userResponse) => {
@@ -80,18 +80,18 @@ app.on("ready", async () => {
     });
 
     updateEvent.on("promptBackendUpdate", (userResponse) => {
-      launchWindow.webContents.send("launchStatus", "promptBackendUpRdate");
+      launchWindow.webContents.send("launchStatus", "promptBackendUpdate");
       ipcMain.once("proceedUpdate", (_event, response) => {
         userResponse(response);
       });
     });
 
-    updateEvent.on("updatingBackend", () => {
-      launchWindow.webContents.send("launchStatus", "updatingBackend");
-    });
-
     updateEvent.on("updatingFrontend", () => {
       launchWindow.webContents.send("launchStatus", "updatingFrontend");
+    });
+
+    updateEvent.on("updatingBackend", () => {
+      launchWindow.webContents.send("launchStatus", "updatingBackend");
     });
 
     updateEvent.on("frontendDownloadComplete", (userResponse) => {

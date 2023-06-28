@@ -19,6 +19,8 @@ const {
   deleteClonedProfiles,
   artifactInstallerPath,
   resultsPath,
+  frontendReleaseUrl,
+  installerExePath,
 } = require("./constants");
 const { silentLogger } = require("./logs");
 const { readUserDataFromFile } = require("./userDataManager");
@@ -78,13 +80,13 @@ const getDownloadUrlFromReleaseData = (data) => {
 const backUpData = async () => {
   let command;
 
-  if (os.platform() === "win32") {
-    command = `mkdir "${updateBackupsFolder}" &&\
-    move "${scanResultsPath}" "${updateBackupsFolder}"`;
-  } else {
+  // if (os.platform() === "win32") {
+  //   command = `mkdir "${updateBackupsFolder}" &&\
+  //   move "${scanResultsPath}" "${updateBackupsFolder}"`;
+  // } else {
     command = `mkdir '${updateBackupsFolder}' &&
     (mv '${scanResultsPath}' '${updateBackupsFolder}' || true)`;
-  }
+  // }
 
   await execCommand(command);
 };
@@ -92,19 +94,19 @@ const backUpData = async () => {
 const cleanUpBackend = async () => {
   let command;
 
-  if (os.platform() === "win32") {
-    command = `rmdir /s /q '${backendPath}'`;
-  } else {
+  // if (os.platform() === "win32") {
+  //   command = `rmdir /s /q '${backendPath}'`;
+  // } else {
     command = `rm -rf '${backendPath}'`;
-  }
+  // }
 
   await execCommand(command);
 };
 
 const downloadBackend = async () => {
-  if (os.platform() === "win32") {
-    return;
-  }
+  // if (os.platform() === "win32") {
+  //   return;
+  // }
 
   let downloadUrl;
 
@@ -133,23 +135,20 @@ const downloadBackend = async () => {
 };
 
 const unzipBackendAndCleanUp = async () => {
-  let command;
-
-  if (os.platform() === "win32") {
-    // command = `tar -xf "${phZipPath}" -C "${backendPath}" &&\
-    // del "${phZipPath}" &&\
-    command = `cd '${backendPath}' &&\
-    ".\\hats_shell.cmd" echo "Initialise" 
-    `;
-  } else {
-    command = `tar -xf '${phZipPath}' -C '${backendPath}' &&
+  // if (os.platform() === "win32") {
+  //   // command = `tar -xf "${phZipPath}" -C "${backendPath}" &&\
+  //   // del "${phZipPath}" &&\
+  //   command = `cd '${backendPath}' &&\
+  //   ".\\hats_shell.cmd" echo "Initialise" 
+  //   `;
+  // } else {
+    const command = `tar -xf '${phZipPath}' -C '${backendPath}' &&
     rm '${phZipPath}' &&
     cd '${backendPath}' &&
     './hats_shell.sh' echo "Initialise"
     `;
-  }
-
-  await execCommand(command);
+    await execCommand(command);
+  // }
 };
 
 const isLatestBackendVersion = async () => {
@@ -191,32 +190,26 @@ const isLatestFrontendVersion = async () => {
 };
 
 const downloadFrontend = async () => {
-  // const scriptPath = "../../scripts/downloadFrontend.ps1";
-  const shellScript = `$artifactUrl = "https://github.com/Georgetxm/purple-hats-desktop/releases/latest/download/test.txt"
-  $destinationPath = "${resultsPath}\\test.txt"
-  $webClient = New-Object System.Net.WebClient
-  $webClient.DownloadFile($artifactUrl, $destinationPath)
-  Write-Output "Downloaded latest release from github"`;
+  // const shellScript =
+  // `$webClient = New-Object System.Net.WebClient
+  // $webClient.DownloadFile("${frontendReleaseUrl}", "${resultsPath}\\Purple-Hats-Setup.exe")`;
+  const shellScript = `$webClient = New-Object System.Net.WebClient
+  $webClient.DownloadFile("${frontendReleaseUrl}", "${resultsPath}\\purpleHATSSetup.zip")`;
 
   return new Promise((resolve, reject) => {
     const ps = spawn("powershell.exe", ["-Command", shellScript]);
-    // const args = [
-    //   "-Command",
-    //   `Start-Process -Verb RunAs powershell.exe -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File "${scriptPath}"'`,
-    // ];
-
-    // const ps = spawn("runas", ["powershell.exe", ...args]);
 
     ps.stdout.on("data", (data) => {
+      silentLogger.log(data.toString());
       console.log(data.toString());
     });
 
     // Log any errors from the PowerShell script
     ps.stderr.on("data", (data) => {
+      silentLogger.log(data.toString());
       console.error(data.toString());
     });
 
-    // Log when the PowerShell process exits
     ps.on("exit", (code) => {
       if (code === 0) {
         resolve(true);
@@ -225,46 +218,46 @@ const downloadFrontend = async () => {
       }
     });
   });
-
-  // return false;
-  // const downloadUrl =
-  //   "https://github.com/Georgetxm/purple-hats-desktop/releases/latest/download/Purple-Hats-setup.exe";
-
-  // const command = `curl -L '${downloadUrl}' -o "${artifactInstallerPath}"`;
-
-  // try {
-  //   await execCommand(command);
-
-  //   return true;
-  // } catch (error) {
-  //   silentLogger.error(error);
-  //   return false;
-  // }
 };
 
-const spawnPowershellUpdateScript = () => {
-  const shellScript = `$executablePath = "C:\\Users\\Xuan Ming\\AppData\\Roaming\\Purple HATS\\Purple-Hats-setup.exe"
-  Start-Process -FilePath $executablePath`;
+const unzipFrontend = async () => {
+  const shellScript = `Expand-Archive -Path "${resultsPath}\\purpleHATSSetup.zip" -DestinationPath "${resultsPath}\\purpleHATSSetup" -Force`;
+  const ps = spawn("powershell.exe", ["-Command", shellScript]);
+
+  ps.stdout.on("data", (data) => {
+    silentLogger.log(data.toString());
+    console.log(data.toString());
+  });
+
+  // Log any errors from the PowerShell script
+  ps.stderr.on("data", (data) => {
+    silentLogger.log(data.toString());
+    console.error(data.toString());
+  });
+
+  ps.on("exit", (code) => {
+    if (code === 0) {
+      resolve(true);
+    } else {
+      reject(false);
+    }
+  });
+};
+
+const spawnScriptToLaunchInstaller = () => {
+  const shellScript = `Start-Process -FilePath "${installerExePath}"`;
 
   return new Promise((resolve, reject) => {
     const ps = spawn("powershell.exe", ["-Command", shellScript]);
-    // const args = [
-    //   "-Command",
-    //   `Start-Process -Verb RunAs powershell.exe -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File "${scriptPath}"'`,
-    // ];
-
-    // const ps = spawn("runas", ["powershell.exe", ...args]);
 
     ps.stdout.on("data", (data) => {
       console.log(data.toString());
     });
 
-    // Log any errors from the PowerShell script
     ps.stderr.on("data", (data) => {
       console.error(data.toString());
     });
 
-    // Log when the PowerShell process exits
     ps.on("exit", (code) => {
       if (code === 0) {
         resolve(true);
@@ -289,6 +282,41 @@ const spawnPowershellUpdateScript = () => {
   // updateFrontendProcess.unref();
 };
 
+/**
+ * Spawns a powershell child_process which then runs a powershell script with admin priviledges
+ * This will cause a pop-up on the user's ends
+ */
+const downloadAndUnzipBackendWindows = async () => {
+  const scriptPath = path.join(__dirname, "..", "..", "scripts", "downloadAndUnzipBackend.ps1")
+  return new Promise((resolve, reject) => {
+    const ps = spawn("powershell.exe", [
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      scriptPath
+    ]); // Log any output from the PowerShell script
+
+    ps.stdout.on("data", (data) => {
+      silentLogger.log(data.toString());
+      console.log(data.toString());
+    });
+
+    // Log any errors from the PowerShell script
+    ps.stderr.on("data", (data) => {
+      silentLogger.log(data.toString());
+      console.error(data.toString());
+    });
+
+    ps.on("exit", (code) => {
+      if (code === 0) {
+        resolve(true);
+      } else {
+        reject(false);
+      }
+    });
+  });
+};
+
 const run = async (updaterEventEmitter) => {
   const processesToRun = [];
 
@@ -296,41 +324,53 @@ const run = async (updaterEventEmitter) => {
   const backendExists = fs.existsSync(backendPath);
   const phZipExists = fs.existsSync(phZipPath);
 
-  // If a new tag has been
-  if (os.platform() === "win32" && !(await isLatestFrontendVersion())) {
-    updaterEventEmitter.emit("checking");
-    const userResponse = new Promise((resolve) => {
-      updaterEventEmitter.emit("promptFrontendUpdate", resolve);
-    });
-
-    const proceedUpdate = await userResponse;
-
-    if (proceedUpdate) {
-      // spawnPowershellUpdateScript();
-      updaterEventEmitter.emit("updatingFrontend");
-      const downloadStatus = await downloadFrontend();
-
-      if (downloadStatus) {
-        const launchInstallerResponse = new Promise((resolve) => {
-          updaterEventEmitter.emit("frontendDownloadComplete", resolve);
-        });
-
-        const proceedLaunchInstaller = await launchInstallerResponse;
-
-        if (proceedLaunchInstaller) {
-          const scriptResponseCode = await spawnPowershellUpdateScript();
-          if (scriptResponseCode) {
-            updaterEventEmitter.emit("installerLaunched");
+  // Auto updates via installer is only applicable for Windows
+  if (os.platform() === "win32") {
+    if (!(await isLatestFrontendVersion())){
+      updaterEventEmitter.emit("checking");
+      const userResponse = new Promise((resolve) => {
+        updaterEventEmitter.emit("promptFrontendUpdate", resolve);
+      });
+  
+      const proceedUpdate = await userResponse;
+  
+      if (proceedUpdate) {
+        updaterEventEmitter.emit("updatingFrontend");
+        const isDownloadFrontendSuccess = await downloadFrontend();
+  
+        if (isDownloadFrontendSuccess) {
+          await unzipFrontend();
+          const launchInstallerPrompt = new Promise((resolve) => {
+            updaterEventEmitter.emit("frontendDownloadComplete", resolve);
+          });
+  
+          const proceedInstall = await launchInstallerPrompt;
+  
+          if (proceedInstall) {
+            const isInstallerScriptLaunched =
+              await spawnScriptToLaunchInstaller();
+            if (isInstallerScriptLaunched) {
+              updaterEventEmitter.emit("installerLaunched");
+            }
           }
         } else {
-          // TODO: Handle user not wanting to update after download success
+          updaterEventEmitter.emit("frontendDownloadFailed");
         }
-      } else {
-        updaterEventEmitter.emit("frontendDownloadFailed");
+      }
+    } else if (!(await isLatestBackendVersion())) {
+      updaterEventEmitter.emit("checking");
+      const userResponse = new Promise((resolve) => {
+        updaterEventEmitter.emit("promptBackendUpdate", resolve);
+      });
+  
+      const proceedUpdate = await userResponse;
+  
+      if (proceedUpdate) {
+        updaterEventEmitter.emit("updatingBackend");
+        const isDownloadAndUnzipBackendWindowsSuccess =
+          await downloadAndUnzipBackendWindows();
       }
     }
-
-    // spawnPowershellUpdateScript();
   } else {
     if (isInterruptedUpdate) {
       updaterEventEmitter.emit("updatingBackend");
@@ -353,9 +393,6 @@ const run = async (updaterEventEmitter) => {
         updaterEventEmitter.emit("settingUp");
         processesToRun.push(unzipBackendAndCleanUp);
       } else {
-        // if (os.platform() === "win32") {
-        //   return;
-        // }
 
         updaterEventEmitter.emit("checking");
         let isUpdateAvailable;
