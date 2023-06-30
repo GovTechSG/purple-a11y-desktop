@@ -2,7 +2,7 @@
 
 Purple hats Desktop is a desktop frontend for [Purple HATS](https://github.com/GovTechSG/purple-hats) accessibility site scanner - a customisable, automated web accessibility testing tool that allows software development teams to find and fix accessibility problems to improve persons with disabilities (PWDs) access to digital services.
 
-<img alt="Purple HATS Desktop main screen" src="https://github.com/GovTechSG/purple-hats-desktop/assets/2021525/dc388870-2bec-41d9-a0fa-2371435b1b5a">
+<img alt="Purple HATS Desktop main screen" src="https://github.com/GovTechSG/purple-hats-desktop/assets/2021525/8eb8268e-80dd-4aff-b004-a4e7b8949ebc">
 
 ## Technology Stack
 
@@ -196,4 +196,4 @@ Enter a custom width in pixels. Minimum width is 320px and maximum width is 1080
 
 Purple HATS Desktop uses third-party open-source tools that may be downloaded over the Internet during the installation process of Purple HATS. Users should be aware of the libraries used by examining `package.json`.
 
-Purple HATS Desktop may send information to the website or URL where the user chooses to initiate a Purple HATS scan. By default, data collected by Purple HATS is processed and stored locally on the machine where the tool is run.  Limited user information such as e-mail address, name, and basic analytics is collected for the purpose of knowing our usage patterns better.
+Purple HATS Desktop may send information to the website or URL where the user chooses to initiate a Purple HATS scan. Limited user information such as e-mail address, name, and basic analytics is collected for the purpose of knowing our usage patterns better.
