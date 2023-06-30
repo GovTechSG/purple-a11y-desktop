@@ -121,9 +121,9 @@ jobs:
           CI: ""
         working-directory: ${{github.workspace}}
 
-      - name: Zip universal binary folder (Mac)
+      - name: Move and rename universal binary zip (Mac)
         run: |
-          zip purple-hats-desktop-macos.zip -y -r "${{github.workspace}}/out/make/zip/darwin/universal"
+          mv "${{github.workspace}}/out/make/zip/darwin/universal/*.zip" "./purple-hats-desktop-macos.zip"
         working-directory: ${{github.workspace}}
         
       - name: Upload Mac artifact
