@@ -1,37 +1,116 @@
-mac-install-purple:
-    runs-on: macos-latest  
+name: Build MacOS and Windows image
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+  push:
+    branches: [main, master, dev]
+
+jobs:
+  windows-install-purple:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Download node.js version from nodejs.org
+        run: |
+          curl -o ./nodejs-win.zip --create-dirs https://nodejs.org/dist/v18.15.0/node-v18.15.0-win-x64.zip     
+          mkdir nodejs-win && tar -xzf nodejs-win.zip -C nodejs-win --strip-components=1 && rm ./nodejs-win.zip
+        working-directory: ${{github.workspace}}
+
+      - name: Install Node Modules and Build for Windows
+        run: |
+          $env:Path = "${{github.workspace}}\nodejs-win;${{github.workspace}}\purple-hats-desktop\node_modules\.bin;$env:Path;";
+          npm install
+          npm run make-win
+        env:
+          CI: ""
+        working-directory: ${{github.workspace}}
+
+      - name: Move build to root
+        shell: pwsh
+        run: |
+          Move-Item  "${{github.workspace}}\out\Purple HATS-win32-x64" -Destination "${{github.workspace}}\Purple HATS-win32-x64" -Force
+
+      - name: Download Purple HATS Backend
+        shell: pwsh
+        run: |
+          $PHbackendUrl = "https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-windows.zip"
+          $BEdestinationPath = "${{github.workspace}}\PHLatest.zip"
+          $BEextractPath = "${{github.workspace}}\Purple HATS Backend"
+          Invoke-WebRequest -Uri $PHbackendUrl -OutFile $BEdestinationPath
+          Expand-Archive -Path $BEdestinationPath -DestinationPath $BEextractPath -Force
+          Remove-Item -Path $BEdestinationPath
+
+      - name: Move Inno Setup script to root
+        shell: pwsh
+        run: Copy-Item -Path "${{github.workspace}}\Purple HATS-win32-x64\resources\app\hats_for_windows.iss" -Destination "${{github.workspace}}\hats_for_windows.iss" -Force
+
+      - name: Download Inno Setup
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "${{github.workspace}}\is.exe" 
+          $env:path = "$env:path" + ";${env:programfiles(x86)}\Inno Setup 6"
+
+      - name: Execute Inno Setup script to run installer
+        shell: pwsh
+        run: ISCC /O"${{github.workspace}}" "${{github.workspace}}\hats_for_windows.iss"
+
+      - name: Create folder
+        run: |
+          mkdir setup
+          move mysetup.exe setup/Purple-Hats-Setup.exe
+        working-directory: ${{github.workspace}}
+
+      - name: Upload Purple HATS Windows setup artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: purple-hats-desktop-windows
+          path: ${{github.workspace}}/setup
+
+  mac-install-purple:
+    runs-on: self-hosted
 
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
         with:
-          path: purple-hats
-      
-      - name: Grant execute permissions for user
-        run: chmod ugo+rwx ./scripts/*.command ./scripts/*.sh
-        working-directory: purple-hats
+          path: ${{github.workspace}}
 
-      - name: Copy scripts to parent directory
+      - name: Download node.js version from nodejs.org
         run: |
-          cp ./purple-hats/scripts/{*.command,*.sh}  ${{ github.workspace }}
+          curl -o ./nodejs-mac-arm64.tar.gz --create-dirs https://nodejs.org/dist/v18.15.0/node-v18.15.0-darwin-arm64.tar.gz
+          mkdir nodejs-mac-arm64 && tar -xzf nodejs-mac-arm64.tar.gz -C nodejs-mac-arm64 --strip-components=1 && rm ./nodejs-mac-arm64.tar.gz
+          curl -o ./nodejs-mac-x64.tar.gz --create-dirs https://nodejs.org/dist/v18.15.0/node-v18.15.0-darwin-x64.tar.gz
+          mkdir nodejs-mac-x64 && tar -xzf nodejs-mac-x64.tar.gz -C nodejs-mac-x64 --strip-components=1 && rm ./nodejs-mac-x64.tar.gz
+        working-directory: ${{github.workspace}}
 
-      - name: Install Purple dependencies for MacOS
+      - name: Set environment variables for Node
         run: |
-          ./install_purple_dependencies.command
+          if [[ $(uname -m) == 'arm64' ]]; then
+            export PATH_TO_NODE="${{github.workspace}}/nodejs-mac-arm64/bin"
+          else
+            export PATH_TO_NODE="${{github.workspace}}/nodejs-mac-x64/bin"
+          fi
+          export PATH="$PATH_TO_NODE:$PATH"
+          export PATH="$PWD/purple-hats-desktop/node_modules/.bin:$PATH"
+        env:
+          CI: ""
+        working-directory: ${{github.workspace}}
 
-      - name: Zip entire Purple folder (Mac)
+      - name: Install Node Modules and Build for Mac0S
         run: |
-          zip purple-hats-portable-mac.zip -y -r ./
-      
+          npm install
+          npm run make-mac
+        env:
+          CI: ""
+        working-directory: ${{github.workspace}}
+
       - name: Upload Mac artifact
         uses: actions/upload-artifact@v3
         with:
-          name: purple-hats-portable-mac
-          path: ./purple-hats-portable-mac.zip
-          
-      - name: Release Mac artifact
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: |
-            purple-hats-portable-mac.zip
+          name: purple-hats-desktop-mac
+          path: ${{github.workspace}}/out/make/zip/darwin/universal

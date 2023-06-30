@@ -4,7 +4,7 @@ and the renderer. The APIs are provided via the window.services object, as defin
 
 import {
   scanTypes,
-  userDataFormDetails,
+  // userDataFormDetails,
   viewportTypes,
   devices,
 } from "./common/constants";
@@ -22,6 +22,7 @@ const startScan = async (scanDetails) => {
     device,
     viewportWidth,
     scanInBackground,
+    browser,
   } = scanDetails;
 
   currentScanUrl = scanUrl;
@@ -31,21 +32,22 @@ const startScan = async (scanDetails) => {
     scanType: scanTypes[selectedScanType],
     url: scanUrl,
     headlessMode: scanInBackground,
+    browser: browser,
   };
 
   if (selectedScanType !== Object.keys(scanTypes)[2]) {
     scanArgs.maxPages = pageLimit;
   }
 
-  if (viewport === viewportTypes[1]) {
-    scanArgs.customDevice = Object.keys(devices)[0];
+  if (viewport === viewportTypes.mobile) {
+    scanArgs.customDevice = "Mobile";
   }
-
-  if (viewport === viewportTypes[2]) {
+  
+  if (viewport === viewportTypes.specific) {
     scanArgs.customDevice = devices[device];
   }
 
-  if (viewport === viewportTypes[3]) {
+  if (viewport === viewportTypes.custom) {
     scanArgs.viewportWidth = viewportWidth;
   }
 
@@ -62,29 +64,41 @@ const downloadResults = async (scanId) => {
   return reportZip;
 };
 
-const getUserDataFormUrl = () => {
-  const { formUrl, urlScannedField, scanTypeField } = userDataFormDetails;
-  const encodedUrl = encodeURIComponent(currentScanUrl);
-  const encodedScanType = encodeURIComponent(currentScanType);
-
-  return `${formUrl}/?${urlScannedField}=${encodedUrl}&${scanTypeField}=${encodedScanType}`;
+const getUserData = async () => {
+  const userData = await window.services.getUserData();
+  return userData;
 };
 
-const openUserDataForm = () => {
-  window.services.openUserDataForm(getUserDataFormUrl());
+const getDataForForm = async () => {
+  const userData = await getUserData();
+  const email = userData["email"];
+  const name = userData["name"];
+  const autoSubmit = userData["autoSubmit"];
+  const event = userData["event"];
+  const browser = userData["browser"];
+  return {
+    websiteUrl: currentScanUrl,
+    scanType: currentScanType,
+    email: email,
+    name: name,
+    autoSubmit: autoSubmit,
+    event: event,
+    browser: browser,
+  };
 };
 
-const closeUserDataForm = () => {
-  window.services.closeUserDataForm();
+const isValidEmail = (email) => {
+  let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
+  return regex.test(email);
 };
 
 const services = {
   startScan,
   openReport,
   downloadResults,
-  getUserDataFormUrl,
-  openUserDataForm,
-  closeUserDataForm,
+  getUserData,
+  getDataForForm,
+  isValidEmail,
 };
 
 export default services;

@@ -6,6 +6,11 @@ contextBridge.exposeInMainWorld("services", {
       callback(data);
     });
   },
+  getIsProxy: (callback) => {
+    ipcRenderer.on("isProxy", (event, data) => {
+      callback(data);
+    });
+  },
   startScan: async (scanDetails) => {
     const results = await ipcRenderer.invoke("startScan", scanDetails);
     return results;
@@ -17,11 +22,15 @@ contextBridge.exposeInMainWorld("services", {
     const reportZip = await ipcRenderer.invoke("downloadResults", scanId);
     return reportZip;
   },
-  openUserDataForm: (url) => {
-    ipcRenderer.send("openUserDataForm", url);
+  submitFormViaBrowser: (formDetails) => {
+    ipcRenderer.send("submitFormViaBrowser", formDetails);
   },
-  closeUserDataForm: (url) => {
-    ipcRenderer.send("closeUserDataForm", url);
+  getUserData: async () => {
+    const data = await ipcRenderer.invoke("getUserData");
+    return data;
+  },
+  editUserData: async (userData) => {
+    ipcRenderer.send("editUserData", userData);
   },
   guiReady: async () => {
     ipcRenderer.send("guiReady");
@@ -36,16 +45,24 @@ contextBridge.exposeInMainWorld("services", {
       callback(data);
     });
   },
+  userDataExists: (callback) => {
+    ipcRenderer.on("userDataExists", (event, data) => {
+      callback(data);
+    });
+  },
   proceedUpdate: (response) => {
     ipcRenderer.send("proceedUpdate", response);
+  },
+  launchInstaller: (response) => {
+    ipcRenderer.send("launchInstaller", response);
+  },
+  setUserData: (data) => {
+    ipcRenderer.send("userDataReceived", data);
   },
   enableReportDownload: (callback) => {
     ipcRenderer.on("enableReportDownload", () => callback());
   },
-  handleRetryOpenForm: (callback) => {
-    ipcRenderer.on("retryOpenForm", () => callback());
-  },
-  handleFormOpenFailure: (callback) => {
-    ipcRenderer.on("formOpenFailure", () => callback());
+  openLink: (url) => {
+    ipcRenderer.send("openLink", url);
   },
 });

@@ -25,6 +25,7 @@
     align-items: center;
     flex-direction: column;
   }
+
   #url-bar-label {
     text-align: center;
   }
@@ -61,6 +62,7 @@
     border: none;
     background-color: transparent;
     font-size: 0.875rem;
+    white-space: nowrap;
   }
 
   #page-limit-adjuster {
@@ -71,7 +73,7 @@
     padding: 0.5rem;
     border: 1px solid #b5c5ca;
     border-radius: 0.25rem;
-    animation: 0.2s fade-in;
+    animation: 0.2s button-fade-in;
     z-index: 10;
     box-shadow: 0.25rem 0.25rem 0.5rem #b5c5ca;
 
@@ -125,7 +127,7 @@
     margin: auto;
     margin-top: 1rem;
     z-index: 10;
-    animation: 0.2s fade-in;
+    animation: 0.2s button-fade-in;
   }
 
   #scan-type-dropdown,
@@ -194,6 +196,16 @@
     padding: 0.25rem 1.5rem 0.25rem 0.5rem;
   }
 
+  #edit-user-details {
+    background-color: #E7ECEE;
+    border: none;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+  }
+  
+  #auto-submit {
+    padding-bottom: 8px; 
+  }
+
   #home-page-footer {
     text-align: center;
   }
@@ -209,7 +221,7 @@
     font-size: 0.875rem;
   }
 
-  @keyframes fade-in {
+  @keyframes button-fade-in {
     from {
       opacity: 0;
     }
@@ -218,7 +230,7 @@
     }
   }
 
-  @keyframes fade-out {
+  @keyframes button-fade-out {
     from {
       opacity: 1;
     }
