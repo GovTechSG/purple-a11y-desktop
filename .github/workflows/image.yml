@@ -33,7 +33,7 @@ jobs:
       - name: Move build to root
         shell: pwsh
         run: |
-          Move-Item  "${{github.workspace}}\purple-hats-desktop\out\Purple HATS-win32-x64" -Destination "${{github.workspace}}\Purple HATS-win32-x64" -Force
+          Move-Item  "${{github.workspace}}\out\Purple HATS-win32-x64" -Destination "${{github.workspace}}\Purple HATS-win32-x64" -Force
 
       - name: Download Purple HATS Backend
         shell: pwsh
