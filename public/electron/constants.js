@@ -19,17 +19,22 @@ const appPath =
 const releaseUrl =
   "https://api.github.com/repos/GovTechSG/purple-hats/releases/latest";
 
-const frontendReleaseUrl = "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/PurpleHATSSetup.zip"
+const frontendReleaseUrl =
+  "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/PurpleHATSSetup.zip";
 
 const resultsPath =
   os.platform() === "win32"
     ? path.join(process.env.APPDATA, "Purple HATS")
     : appPath;
 
-const installerExePath = path.join(resultsPath, "purpleHATSSetup", "Purple-Hats-Setup.exe");
+const installerExePath = path.join(
+  resultsPath,
+  "purpleHATSSetup",
+  "Purple-Hats-Setup.exe"
+);
 
 const backendPath = path.join(appPath, "Purple HATS Backend");
-const frontendPath = path.join(appPath, "Purple HATS Frontend", "Purple HATS-win32-x64");
+const frontendPath = path.join(appPath, "Purple HATS Frontend");
 
 const enginePath = path.join(backendPath, "purple-hats");
 
