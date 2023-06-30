@@ -88,7 +88,7 @@ const backUpData = async () => {
 const cleanUpBackend = async () => {
   let command;
 
-  command = `rm -rf '${backendPath}'`;
+  command = `rm -rf '${updateBackupsFolder}'`;
 
   await execCommand(command);
 };
