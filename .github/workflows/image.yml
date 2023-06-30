@@ -28,7 +28,7 @@ jobs:
           npm run make-win
         env:
           CI: ""
-        working-directory: ${{github.workspace}}/purple-hats-desktop
+        working-directory: ${{github.workspace}}
 
       - name: Move build to root
         shell: pwsh
@@ -45,15 +45,15 @@ jobs:
           Expand-Archive -Path $BEdestinationPath -DestinationPath $BEextractPath -Force
           Remove-Item -Path $BEdestinationPath
 
+      - name: Move Inno Setup script to root
+        shell: pwsh
+        run: Copy-Item -Path "${{github.workspace}}\Purple HATS-win32-x64\resources\app\hats_for_windows.iss" -Destination "${{github.workspace}}\hats_for_windows.iss" -Force
+
       - name: Download Inno Setup
         shell: pwsh
         run: |
           Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "${{github.workspace}}\is.exe" 
           $env:path = "$env:path" + ";${env:programfiles(x86)}\Inno Setup 6"
-
-      - name: Move Inno Setup script to root
-        shell: pwsh
-        run: Copy-Item -Path "${{github.workspace}}\Purple HATS-win32-x64\resources\app\hats_for_windows.iss" -Destination "${{github.workspace}}\hats_for_windows.iss" -Force
 
       - name: Execute Inno Setup script to run installer
         shell: pwsh
@@ -64,9 +64,6 @@ jobs:
           cd ${{github.workspace}}
           mkdir setup
           move mysetup.exe setup/Purple-Hats-Setup.exe
-
-      - name: Get AppData Directory
-        run: echo ("APPDATA_DIR=" + ${{github.workspace}}) >> $env:GITHUB_ENV
 
       - name: Upload Purple HATS Windows setup artifact
         uses: actions/upload-artifact@v3
