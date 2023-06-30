@@ -123,8 +123,8 @@ jobs:
 
       - name: Move and rename universal binary zip (Mac)
         run: |
-          mv "${{github.workspace}}/out/make/zip/darwin/universal/*.zip" "./purple-hats-desktop-macos.zip"
-        working-directory: ${{github.workspace}}
+          mv *.zip "${{github.workspace}}/purple-hats-desktop-macos.zip"
+        working-directory: ${{github.workspace}}/out/make/zip/darwin/universal
         
       - name: Upload Mac artifact
         uses: actions/upload-artifact@v3
