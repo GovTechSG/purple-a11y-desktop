@@ -40,7 +40,7 @@ jobs:
         run: |
           $PHbackendUrl = "https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-windows.zip"
           $BEdestinationPath = "${{github.workspace}}\PHLatest.zip"
-          $BEextractPath = "${{github.workspace}}$\Purple HATS Backend"
+          $BEextractPath = "${{github.workspace}}\Purple HATS Backend"
           Invoke-WebRequest -Uri $PHbackendUrl -OutFile $BEdestinationPath
           Expand-Archive -Path $BEdestinationPath -DestinationPath $BEextractPath -Force
           Remove-Item -Path $BEdestinationPath
@@ -61,9 +61,9 @@ jobs:
 
       - name: Create folder
         run: |
-          cd ${{github.workspace}}
           mkdir setup
           move mysetup.exe setup/Purple-Hats-Setup.exe
+        working-directory: ${{github.workspace}}
 
       - name: Upload Purple HATS Windows setup artifact
         uses: actions/upload-artifact@v3
