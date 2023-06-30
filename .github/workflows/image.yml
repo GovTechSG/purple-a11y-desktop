@@ -78,7 +78,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
         with:
-          path: purple-hats-desktop
+          path: ${{github.workspace}}
 
       - name: Download node.js version from nodejs.org
         run: |
@@ -88,7 +88,7 @@ jobs:
           mkdir nodejs-mac-x64 && tar -xzf nodejs-mac-x64.tar.gz -C nodejs-mac-x64 --strip-components=1 && rm ./nodejs-mac-x64.tar.gz
         working-directory: ${{github.workspace}}
 
-      - name: Install Node Modules and Build for Mac0S
+      - name: Set environment variables for Node
         run: |
           if [[ $(uname -m) == 'arm64' ]]; then
             export PATH_TO_NODE="${{github.workspace}}/nodejs-mac-arm64/bin"
@@ -97,14 +97,20 @@ jobs:
           fi
           export PATH="$PATH_TO_NODE:$PATH"
           export PATH="$PWD/purple-hats-desktop/node_modules/.bin:$PATH"
+        env:
+          CI: ""
+        working-directory: ${{github.workspace}}
+
+      - name: Install Node Modules and Build for Mac0S
+        run: |
           npm install
           npm run make-mac
         env:
           CI: ""
-        working-directory: ${{github.workspace}}/purple-hats-desktop
+        working-directory: ${{github.workspace}}
 
       - name: Upload Mac artifact
         uses: actions/upload-artifact@v3
         with:
           name: purple-hats-desktop-mac
-          path: ${{github.workspace}}/purple-hats-desktop/out
+          path: ${{github.workspace}}/out/make/zip/darwin/universal
