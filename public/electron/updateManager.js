@@ -165,7 +165,7 @@ const downloadAndUnzipFrontendWindows = async () => {
   const shellScript = `
   $webClient = New-Object System.Net.WebClient
   try {
-    $webClient.DownloadFile("${frontendReleaseUrl}", "${resultsPath}\\purpleHATSSetup.zip")
+    $webClient.DownloadFile("${frontendReleaseUrl}", "${resultsPath}\\purple-hats-desktop-windows.zip")
   } catch {
     Write-Host "Error: Unable to download frontend"
     throw "Unable to download frontend"
@@ -173,7 +173,7 @@ const downloadAndUnzipFrontendWindows = async () => {
   }
 
   try {
-    Expand-Archive -Path "${resultsPath}\\purpleHATSSetup.zip" -DestinationPath "${resultsPath}\\purpleHATSSetup" -Force
+    Expand-Archive -Path "${resultsPath}\\purple-hats-desktop-windows.zip" -DestinationPath "${resultsPath}\\purple-hats-desktop-windows" -Force
   } catch {
     Write-Host "Error: Unable to unzip frontend"
     throw "Unable to unzip frontend"

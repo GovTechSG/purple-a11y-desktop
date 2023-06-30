@@ -68,7 +68,7 @@ jobs:
       - name: Upload Purple HATS Windows setup artifact
         uses: actions/upload-artifact@v3
         with:
-          name: purpleHATSSetup
+          name: purple-hats-desktop-windows
           path: ${{github.workspace}}/setup
 
   mac-install-purple:

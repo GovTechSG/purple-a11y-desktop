@@ -20,7 +20,7 @@ const releaseUrl =
   "https://api.github.com/repos/GovTechSG/purple-hats/releases/latest";
 
 const frontendReleaseUrl =
-  "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/PurpleHATSSetup.zip";
+  "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-hats-desktop-windows.zip";
 
 const resultsPath =
   os.platform() === "win32"
@@ -29,7 +29,7 @@ const resultsPath =
 
 const installerExePath = path.join(
   resultsPath,
-  "purpleHATSSetup",
+  "purple-hats-desktop-windows",
   "Purple-Hats-Setup.exe"
 );
 
