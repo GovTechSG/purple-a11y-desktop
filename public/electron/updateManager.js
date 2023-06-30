@@ -185,17 +185,14 @@ const downloadAndUnzipFrontendWindows = async () => {
     currentChildProcess = ps;
 
     ps.stdout.on("data", (data) => {
-      if (data.toString().includes("Error")) {
-        silentLogger.log(data.toString());
-        currentChildProcess = null;
-        resolve(false);
-      }
+      silentLogger.log(data.toString());
     });
 
     // Log any errors from the PowerShell script
     ps.stderr.on("data", (data) => {
-      silentLogger.log(data.toString());
+      silentLogger.error(data.toString());
       currentChildProcess = null;
+      reject(new Error(data.toString()));
       resolve(false);
     });
 
@@ -204,6 +201,7 @@ const downloadAndUnzipFrontendWindows = async () => {
       if (code === 0) {
         resolve(true);
       } else {
+        reject(new Error(code.toString()));
         resolve(false);
       }
     });
@@ -305,10 +303,13 @@ const run = async (updaterEventEmitter) => {
 
       if (proceedUpdate) {
         updaterEventEmitter.emit("updatingFrontend");
-        const isDownloadFrontendSuccess =
-          await downloadAndUnzipFrontendWindows();
+        let isDownloadFrontendSuccess = null;
 
-        console.log(isDownloadFrontendSuccess);
+        try {
+          isDownloadFrontendSuccess = await downloadAndUnzipFrontendWindows();
+        } catch (e) {
+          silentLogger.error(e.toString());
+        }
 
         if (isDownloadFrontendSuccess) {
           const launchInstallerPrompt = new Promise((resolve) => {
@@ -324,10 +325,9 @@ const run = async (updaterEventEmitter) => {
               updaterEventEmitter.emit("installerLaunched");
             }
           }
+        } else {
+          updaterEventEmitter.emit("frontendDownloadFailed");
         }
-        // else {
-        //   updaterEventEmitter.emit("frontendDownloadFailed");
-        // }
       }
     }
     // Backend update via GitHub for Windows

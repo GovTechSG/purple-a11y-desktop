@@ -19,7 +19,6 @@ const appPath =
 const releaseUrl =
   "https://api.github.com/repos/GovTechSG/purple-hats/releases/latest";
 
-// TODO: Change URL to GovTech's after testing
 const frontendReleaseUrl = "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/PurpleHATSSetup.zip"
 
 const resultsPath =
@@ -573,7 +572,6 @@ const userDataFormFields = {
   nameField: "entry.1787318910",
 };
 
-
 module.exports = {
   appPath,
   releaseUrl,
@@ -603,5 +601,5 @@ module.exports = {
   proxy,
   artifactInstallerPath,
   frontendReleaseUrl,
-  installerExePath
+  installerExePath,
 };
