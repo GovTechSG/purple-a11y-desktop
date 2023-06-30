@@ -6,36 +6,34 @@ import ScanningPage from "./ScanningPage";
 import ResultPage from "./ResultPage";
 import OnboardingComponent from "./Onboarding/OnboardingComponent";
 import ConnectionNotification from "./ConnectionNotification";
-import services from "../services";
 import "./MainWindow.css";
-
 
 const MainWindow = ({ isProxy, appVersion }) => {
   const [completedScanId, setCompletedScanId] = useState(null);
-  const [email, setEmail] = useState(''); 
-  const [name, setName] = useState('');
-  const [userInputErrorMessage, setUserInputErrorMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [userInputErrorMessage, setUserInputErrorMessage] = useState("");
   const [dataExistStatus, setDataExistStatus] = useState(null);
 
   useEffect(() => {
     window.services.userDataExists((status) => {
-      setDataExistStatus(status)
-    })
+      setDataExistStatus(status);
+    });
   }, []);
 
-  const handleSetUserData =  (event) =>  {
+  const handleSetUserData = (event) => {
     event.preventDefault();
 
     console.log(event.target);
-    
-    window.services.setUserData({name: name, email: email});
+
+    window.services.setUserData({ name: name, email: email });
     setDataExistStatus("exists");
-  }
+  };
 
   if (dataExistStatus === "doesNotExist") {
     return (
-      <OnboardingComponent 
-        handleSetUserData={handleSetUserData} 
+      <OnboardingComponent
+        handleSetUserData={handleSetUserData}
         name={name}
         email={email}
         setName={setName}
@@ -43,7 +41,7 @@ const MainWindow = ({ isProxy, appVersion }) => {
         userInputErrorMessage={userInputErrorMessage}
         setUserInputErrorMessage={setUserInputErrorMessage}
       />
-    )
+    );
   }
 
   if (dataExistStatus === "exists") {
@@ -56,7 +54,7 @@ const MainWindow = ({ isProxy, appVersion }) => {
               path="/"
               element={
                 <HomePage
-                  isProxy = {isProxy}
+                  isProxy={isProxy}
                   appVersion={appVersion}
                   setCompletedScanId={setCompletedScanId}
                 />
@@ -75,7 +73,6 @@ const MainWindow = ({ isProxy, appVersion }) => {
   }
 
   return null;
-}
-
+};
 
 export default MainWindow;

@@ -115,7 +115,7 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
     return;
   };
 
-  const areUserDetailsSet = name != "" && email != "";
+  const areUserDetailsSet = name !== "" && email !== "";
 
   const handleBasicAuthSubmit = (e) => {
     e.preventDefault();

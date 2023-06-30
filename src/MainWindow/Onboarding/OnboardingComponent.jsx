@@ -15,14 +15,14 @@ const OnboardingComponent = ({
   setEmail,
   userInputErrorMessage,
   setUserInputErrorMessage,
-  name, 
-  email
+  name,
+  email,
 }) => {
   const [step, setStep] = useState(1);
 
   useEffect(() => {
     setFocus();
-  }, [step])
+  }, [step]);
 
   const handleOnBackClick = () => {
     setStep(step - 1);
@@ -43,14 +43,14 @@ const OnboardingComponent = ({
     }
 
     if (email) {
-      setEmail("")
+      setEmail("");
     }
-  }
+  };
 
   const setFocus = () => {
-    const modalBody = document.querySelector('.modal-body'); 
-    modalBody.focus();  
-  }
+    const modalBody = document.querySelector(".modal-body");
+    modalBody.focus();
+  };
 
   const backButton = (
     <Button
@@ -72,56 +72,88 @@ const OnboardingComponent = ({
   );
 
   const formID = "first-timer-form";
-  const isSubmitDisabled = name.trim() === "" || email.trim() === "" || userInputErrorMessage;
-  
+  const isSubmitDisabled =
+    name.trim() === "" || email.trim() === "" || userInputErrorMessage;
+
   const renderOnboardingBody = () => {
     switch (step) {
       case 1: {
         return (
           <>
-            <div className="visually-hidden" aria-live="polite" role="status">Item 1 of 4</div>
+            <div className="visually-hidden" aria-live="polite" role="status">
+              Item 1 of 4
+            </div>
             <div className="modal-img-container fade-in" aria-hidden="true">
-              <img className="modal-img" src={firstTimer1}></img>
+              <img
+                className="modal-img"
+                src={firstTimer1}
+                alt="person saying hello"
+              ></img>
             </div>
             <h3 className="modal-title fade-in">Hi There!</h3>
-            <p className="modal-desc fade-in">Making your website accessible is within reach. Let’s get started by taking a quick look at how Purple HATS work.</p>
+            <p className="modal-desc fade-in">
+              Making your website accessible is within reach. Let’s get started
+              by taking a quick look at how Purple HATS work.
+            </p>
             <PageIndicator page={1}></PageIndicator>
           </>
-        )
+        );
       }
       case 2: {
         return (
           <>
-            <div className="visually-hidden" aria-live="polite" role="status">Item 2 of 4</div>
+            <div className="visually-hidden" aria-live="polite" role="status">
+              Item 2 of 4
+            </div>
             <div className="modal-img-container fade-in" aria-hidden="true">
               <div id="first-timer-2-container">
                 <div className="typewriter">https://www.</div>
-                <img className="modal-img" src={firstTimer2}></img>
+                <img
+                  className="modal-img"
+                  src={firstTimer2}
+                  alt="search bar"
+                ></img>
               </div>
             </div>
             <h3 className="modal-title fade-in">Get started</h3>
-            <p className="modal-desc fade-in">You just need to enter your website/sitemap URL and Purple HATS will crawl through all the web pages to analyse for accessibility issues.</p>
+            <p className="modal-desc fade-in">
+              You just need to enter your website/sitemap URL and Purple HATS
+              will crawl through all the web pages to analyse for accessibility
+              issues.
+            </p>
             <PageIndicator page={2}></PageIndicator>
           </>
-        )
+        );
       }
       case 3: {
-       return (
-        <>
-          <div className="visually-hidden" aria-live="polite" role="status">Item 3 of 4</div>
-          <div className="modal-img-container fade-in" aria-hidden="true">
-            <img className="modal-img" src={firstTimer3}></img>
-          </div>
-          <h3 className="modal-title fade-in">Custom Flow</h3>
-          <p className="modal-desc fade-in">Custom flow scan type allows you to specify a user journey of your choice by recording a series of actions on the browser and re-play them automatically.</p>
-          <PageIndicator page={3}></PageIndicator>
-        </>
-       )
+        return (
+          <>
+            <div className="visually-hidden" aria-live="polite" role="status">
+              Item 3 of 4
+            </div>
+            <div className="modal-img-container fade-in" aria-hidden="true">
+              <img
+                className="modal-img"
+                src={firstTimer3}
+                alt="custom flow step-by-step animation illustration"
+              ></img>
+            </div>
+            <h3 className="modal-title fade-in">Custom Flow</h3>
+            <p className="modal-desc fade-in">
+              Custom flow scan type allows you to specify a user journey of your
+              choice by recording a series of actions on the browser and re-play
+              them automatically.
+            </p>
+            <PageIndicator page={3}></PageIndicator>
+          </>
+        );
       }
       case 4: {
         return (
           <>
-            <div className="visually-hidden" aria-live="polite" role="status">Item 4 of 4</div>
+            <div className="visually-hidden" aria-live="polite" role="status">
+              Item 4 of 4
+            </div>
             <h3 className="modal-title fade-in">Get to know you</h3>
             <UserDetailsForm
               formID={formID}
@@ -133,38 +165,49 @@ const OnboardingComponent = ({
               isOnboarding={true}
             />
             <p className="modal-desc fade-in">
-              To personalise your experience, we will be collecting your name, email address and app usage data. Your information fully complies with {policyUrlElem}
+              To personalise your experience, we will be collecting your name,
+              email address and app usage data. Your information fully complies
+              with {policyUrlElem}
             </p>
             <PageIndicator page={4}></PageIndicator>
           </>
-        )
+        );
+      }
+      default: {
+        return <></>;
       }
     }
-  }
+  };
 
   const renderOnboardingFooter = () => {
     switch (step) {
       case 1: {
         return (
           <Button
-          type="primary"
-          className="modal-button modal-full-button"
-          onClick={handleOnNextClick}
+            type="primary"
+            className="modal-button modal-full-button"
+            onClick={handleOnNextClick}
           >
             Let's go &nbsp;
-            <img src={arrowRight}></img>
+            <img src={arrowRight} alt="right arrow"></img>
           </Button>
-        )
+        );
       }
       case 2: {
         return (
-          <>{backButton}{nextButton}</>
-        )
+          <>
+            {backButton}
+            {nextButton}
+          </>
+        );
       }
       case 3: {
         return (
-          <>{backButton}{nextButton}</>
-        )
+          <>
+            {backButton}
+            {nextButton}
+          </>
+        );
       }
       case 4: {
         return (
@@ -179,10 +222,13 @@ const OnboardingComponent = ({
               I consent
             </button>
           </>
-       )
+        );
+      }
+      default: {
+        return <></>;
       }
     }
-  }
+  };
 
   return (
     <Modal

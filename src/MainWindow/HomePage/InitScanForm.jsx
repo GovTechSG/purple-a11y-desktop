@@ -14,7 +14,7 @@ const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage }) => {
   const [pageLimit, setPageLimit] = useState("100");
 
   const scanTypeOptions = Object.keys(scanTypes);
-  
+
   if (isProxy) {
     delete viewportTypes.specific;
   }
@@ -44,11 +44,10 @@ const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage }) => {
     // sent to cli.js with iPhone's width 414px
     // Prevents the user-agent from triggering in cli.js
     if (isProxy && advancedOptions.viewport === viewportTypes.mobile) {
-      {
-        advancedOptions.viewport = viewportTypes.custom
-        advancedOptions.viewportWidth = 414
-      }
+      advancedOptions.viewport = viewportTypes.custom;
+      advancedOptions.viewportWidth = 414;
     }
+
     startScan({ scanUrl: scanUrl.trim(), pageLimit, ...advancedOptions });
   };
 
