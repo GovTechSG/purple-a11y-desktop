@@ -36,8 +36,6 @@ const LaunchWindow = () => {
 
   }, [launchStatus]);
 
-  useEffect(() => {console.log(launchStatus)}, [launchStatus])
-
   const messages = {
     settingUp: {
       main: "Setting up",

@@ -79,14 +79,8 @@ const getDownloadUrlFromReleaseData = (data) => {
 
 const backUpData = async () => {
   let command;
-
-  // if (os.platform() === "win32") {
-  //   command = `mkdir "${updateBackupsFolder}" &&\
-  //   move "${scanResultsPath}" "${updateBackupsFolder}"`;
-  // } else {
-    command = `mkdir '${updateBackupsFolder}' &&
+  command = `mkdir '${updateBackupsFolder}' &&
     (mv '${scanResultsPath}' '${updateBackupsFolder}' || true)`;
-  // }
 
   await execCommand(command);
 };
@@ -94,20 +88,12 @@ const backUpData = async () => {
 const cleanUpBackend = async () => {
   let command;
 
-  // if (os.platform() === "win32") {
-  //   command = `rmdir /s /q '${backendPath}'`;
-  // } else {
-    command = `rm -rf '${backendPath}'`;
-  // }
+  command = `rm -rf '${backendPath}'`;
 
   await execCommand(command);
 };
 
 const downloadBackend = async () => {
-  // if (os.platform() === "win32") {
-  //   return;
-  // }
-
   let downloadUrl;
 
   try {
@@ -119,14 +105,8 @@ const downloadBackend = async () => {
       e.toString()
     );
     console.log("Attemping to download latest from GitHub directly");
-
-    // if (os.platform() === "win32") {
-    //   downloadUrl =
-    //     "https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-windows.zip";
-    // } else {
     downloadUrl =
       "https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-mac.zip";
-    //}
   }
 
   const command = `curl '${downloadUrl}' -o '${phZipPath}' -L && mkdir '${backendPath}'`;
@@ -135,20 +115,12 @@ const downloadBackend = async () => {
 };
 
 const unzipBackendAndCleanUp = async () => {
-  // if (os.platform() === "win32") {
-  //   // command = `tar -xf "${phZipPath}" -C "${backendPath}" &&\
-  //   // del "${phZipPath}" &&\
-  //   command = `cd '${backendPath}' &&\
-  //   ".\\hats_shell.cmd" echo "Initialise" 
-  //   `;
-  // } else {
-    const command = `tar -xf '${phZipPath}' -C '${backendPath}' &&
+  const command = `tar -xf '${phZipPath}' -C '${backendPath}' &&
     rm '${phZipPath}' &&
     cd '${backendPath}' &&
     './hats_shell.sh' echo "Initialise"
     `;
-    await execCommand(command);
-  // }
+  await execCommand(command);
 };
 
 const isLatestBackendVersion = async () => {
@@ -171,7 +143,7 @@ const isLatestBackendVersion = async () => {
 const isLatestFrontendVersion = async () => {
   try {
     const { data } = await axiosInstance.get(
-      `https://api.github.com/repos/Georgetxm/purple-hats-desktop/releases/latest`
+      `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases/latest`
     );
 
     const latestVersion = data.tag_name;
@@ -189,58 +161,52 @@ const isLatestFrontendVersion = async () => {
   }
 };
 
-const downloadFrontend = async () => {
-  // const shellScript =
-  // `$webClient = New-Object System.Net.WebClient
-  // $webClient.DownloadFile("${frontendReleaseUrl}", "${resultsPath}\\Purple-Hats-Setup.exe")`;
-  const shellScript = `$webClient = New-Object System.Net.WebClient
-  $webClient.DownloadFile("${frontendReleaseUrl}", "${resultsPath}\\purpleHATSSetup.zip")`;
+const downloadAndUnzipFrontendWindows = async () => {
+  const shellScript = `
+  $webClient = New-Object System.Net.WebClient
+  try {
+    $webClient.DownloadFile("${frontendReleaseUrl}", "${resultsPath}\\purpleHATSSetup.zip")
+  } catch {
+    Write-Host "Error: Unable to download frontend"
+    throw "Unable to download frontend"
+    exit 1
+  }
+
+  try {
+    Expand-Archive -Path "${resultsPath}\\purpleHATSSetup.zip" -DestinationPath "${resultsPath}\\purpleHATSSetup" -Force
+  } catch {
+    Write-Host "Error: Unable to unzip frontend"
+    throw "Unable to unzip frontend"
+    exit 2
+  }`;
 
   return new Promise((resolve, reject) => {
     const ps = spawn("powershell.exe", ["-Command", shellScript]);
+    currentChildProcess = ps;
 
     ps.stdout.on("data", (data) => {
-      silentLogger.log(data.toString());
-      console.log(data.toString());
+      if (data.toString().includes("Error")) {
+        silentLogger.log(data.toString());
+        currentChildProcess = null;
+        resolve(false);
+      }
     });
 
     // Log any errors from the PowerShell script
     ps.stderr.on("data", (data) => {
       silentLogger.log(data.toString());
-      console.error(data.toString());
+      currentChildProcess = null;
+      resolve(false);
     });
 
     ps.on("exit", (code) => {
+      currentChildProcess = null;
       if (code === 0) {
         resolve(true);
       } else {
-        reject(false);
+        resolve(false);
       }
     });
-  });
-};
-
-const unzipFrontend = async () => {
-  const shellScript = `Expand-Archive -Path "${resultsPath}\\purpleHATSSetup.zip" -DestinationPath "${resultsPath}\\purpleHATSSetup" -Force`;
-  const ps = spawn("powershell.exe", ["-Command", shellScript]);
-
-  ps.stdout.on("data", (data) => {
-    silentLogger.log(data.toString());
-    console.log(data.toString());
-  });
-
-  // Log any errors from the PowerShell script
-  ps.stderr.on("data", (data) => {
-    silentLogger.log(data.toString());
-    console.error(data.toString());
-  });
-
-  ps.on("exit", (code) => {
-    if (code === 0) {
-      resolve(true);
-    } else {
-      reject(false);
-    }
   });
 };
 
@@ -249,37 +215,26 @@ const spawnScriptToLaunchInstaller = () => {
 
   return new Promise((resolve, reject) => {
     const ps = spawn("powershell.exe", ["-Command", shellScript]);
+    currentChildProcess = ps;
 
     ps.stdout.on("data", (data) => {
       console.log(data.toString());
     });
 
     ps.stderr.on("data", (data) => {
+      currentChildProcess = null;
       console.error(data.toString());
     });
 
     ps.on("exit", (code) => {
+      currentChildProcess = null;
       if (code === 0) {
         resolve(true);
       } else {
-        reject(false);
+        resolve(false);
       }
     });
   });
-
-  // // Spawn a powershell script to update the frontend
-  // const updateFrontendProcess = spawn(
-  //   "powershell.exe",
-  //   [
-  //     "-ExecutionPolicy",
-  //     "Bypass",
-  //     "-File",
-  //     "../../scripts/launch-installer.ps1",
-  //   ]
-  //   // { detached: true, stdio: "ignore", shell: true }
-  // );
-
-  // updateFrontendProcess.unref();
 };
 
 /**
@@ -287,14 +242,22 @@ const spawnScriptToLaunchInstaller = () => {
  * This will cause a pop-up on the user's ends
  */
 const downloadAndUnzipBackendWindows = async () => {
-  const scriptPath = path.join(__dirname, "..", "..", "scripts", "downloadAndUnzipBackend.ps1")
+  const scriptPath = path.join(
+    __dirname,
+    "..",
+    "..",
+    "scripts",
+    "downloadAndUnzipBackend.ps1"
+  );
   return new Promise((resolve, reject) => {
     const ps = spawn("powershell.exe", [
       "-ExecutionPolicy",
       "Bypass",
       "-File",
-      scriptPath
+      scriptPath,
     ]); // Log any output from the PowerShell script
+
+    currentChildProcess = ps;
 
     ps.stdout.on("data", (data) => {
       silentLogger.log(data.toString());
@@ -305,13 +268,16 @@ const downloadAndUnzipBackendWindows = async () => {
     ps.stderr.on("data", (data) => {
       silentLogger.log(data.toString());
       console.error(data.toString());
+      currentChildProcess = null;
+      resolve(false);
     });
 
     ps.on("exit", (code) => {
+      currentChildProcess = null;
       if (code === 0) {
         resolve(true);
       } else {
-        reject(false);
+        resolve(false);
       }
     });
   });
@@ -325,27 +291,32 @@ const run = async (updaterEventEmitter) => {
   const phZipExists = fs.existsSync(phZipPath);
 
   // Auto updates via installer is only applicable for Windows
+  // Auto updates for backend on Windows will be done via a powershell script due to %ProgramFiles% permission
   if (os.platform() === "win32") {
-    if (!(await isLatestFrontendVersion())){
+    // Frontend update via Installer for Windows
+    // Will also update backend as it is packaged in the installer
+    if (!(await isLatestFrontendVersion())) {
       updaterEventEmitter.emit("checking");
       const userResponse = new Promise((resolve) => {
         updaterEventEmitter.emit("promptFrontendUpdate", resolve);
       });
-  
+
       const proceedUpdate = await userResponse;
-  
+
       if (proceedUpdate) {
         updaterEventEmitter.emit("updatingFrontend");
-        const isDownloadFrontendSuccess = await downloadFrontend();
-  
+        const isDownloadFrontendSuccess =
+          await downloadAndUnzipFrontendWindows();
+
+        console.log(isDownloadFrontendSuccess);
+
         if (isDownloadFrontendSuccess) {
-          await unzipFrontend();
           const launchInstallerPrompt = new Promise((resolve) => {
             updaterEventEmitter.emit("frontendDownloadComplete", resolve);
           });
-  
+
           const proceedInstall = await launchInstallerPrompt;
-  
+
           if (proceedInstall) {
             const isInstallerScriptLaunched =
               await spawnScriptToLaunchInstaller();
@@ -353,22 +324,24 @@ const run = async (updaterEventEmitter) => {
               updaterEventEmitter.emit("installerLaunched");
             }
           }
-        } else {
-          updaterEventEmitter.emit("frontendDownloadFailed");
         }
+        // else {
+        //   updaterEventEmitter.emit("frontendDownloadFailed");
+        // }
       }
-    } else if (!(await isLatestBackendVersion())) {
+    }
+    // Backend update via GitHub for Windows
+    else if (!(await isLatestBackendVersion())) {
       updaterEventEmitter.emit("checking");
       const userResponse = new Promise((resolve) => {
         updaterEventEmitter.emit("promptBackendUpdate", resolve);
       });
-  
+
       const proceedUpdate = await userResponse;
-  
+
       if (proceedUpdate) {
         updaterEventEmitter.emit("updatingBackend");
-        const isDownloadAndUnzipBackendWindowsSuccess =
-          await downloadAndUnzipBackendWindows();
+        await downloadAndUnzipBackendWindows();
       }
     }
   } else {
@@ -393,7 +366,6 @@ const run = async (updaterEventEmitter) => {
         updaterEventEmitter.emit("settingUp");
         processesToRun.push(unzipBackendAndCleanUp);
       } else {
-
         updaterEventEmitter.emit("checking");
         let isUpdateAvailable;
         isUpdateAvailable = !(await isLatestBackendVersion());
