@@ -17,11 +17,10 @@ const appPath =
       );
 
 const releaseUrl =
-  "https://api.github.com/repos/Georgetxm/purple-hats/releases/latest";
+  "https://api.github.com/repos/GovTechSG/purple-hats/releases/latest";
 
 // TODO: Change URL to GovTech's after testing
-const frontendReleaseUrl = "https://github.com/Georgetxm/purple-hats-desktop/releases/latest/download/PurpleHATSSetup.zip"
-// const frontendReleaseUrl = "https://github.com/Georgetxm/purple-hats-desktop/releases/latest/download/test.txt"
+const frontendReleaseUrl = "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/PurpleHATSSetup.zip"
 
 const resultsPath =
   os.platform() === "win32"
