@@ -1,8 +1,6 @@
 name: Playwright Tests
 on: 
   workflow_dispatch:
-  release:
-    types: [published]
   push:
     branches: [ main, master, feat/happyflow-test ]
 jobs:

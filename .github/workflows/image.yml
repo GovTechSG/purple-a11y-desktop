@@ -4,8 +4,6 @@ on:
   workflow_dispatch:
   release:
     types: [published]
-  push:
-    branches: [main, master, dev]
 
 jobs:
   windows-install-purple:
@@ -55,14 +53,14 @@ jobs:
           Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "${{github.workspace}}\is.exe" 
           $env:path = "$env:path" + ";${env:programfiles(x86)}\Inno Setup 6"
 
-      - name: Execute Inno Setup script to run installer
+      - name: Execute Inno Setup script to compile installer
         shell: pwsh
         run: ISCC /O"${{github.workspace}}" "${{github.workspace}}\hats_for_windows.iss"
 
-      - name: Create folder
+      - name: Move compiled installer to Workspace
         run: |
-          mkdir setup
-          move mysetup.exe setup/Purple-Hats-Setup.exe
+          New-Item -Path setup -ItemType Directory
+          Move-Item -Path mysetup.exe -Destination setup\Purple-Hats-Setup.exe
         working-directory: ${{github.workspace}}
 
       - name: Zip Setup file (Windows)
@@ -74,7 +72,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: purple-hats-desktop-windows
-          path: ./purple-hats-desktop-windows.zip
+          path: purple-hats-desktop-windows.zip
 
       - name: Release Windows artifact
         uses: softprops/action-gh-release@v1
@@ -139,7 +137,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: purple-hats-desktop-macos
-          path: ./purple-hats-desktop-macos.zip
+          path: purple-hats-desktop-macos.zip
 
       - name: Release Mac artifact
         uses: softprops/action-gh-release@v1
