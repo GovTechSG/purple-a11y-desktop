@@ -65,12 +65,24 @@ jobs:
           move mysetup.exe setup/Purple-Hats-Setup.exe
         working-directory: ${{github.workspace}}
 
+      - name: Zip Setup file (Windows)
+        shell: pwsh
+        run: Compress-Archive -Path ${{github.workspace}}/setup/* -DestinationPath purple-hats-desktop-windows.zip
+        working-directory: ${{github.workspace}}
+        
       - name: Upload Purple HATS Windows setup artifact
         uses: actions/upload-artifact@v3
         with:
           name: purple-hats-desktop-windows
-          path: ${{github.workspace}}/setup
+          path: ./purple-hats-desktop-windows.zip
 
+      - name: Release Windows artifact
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            purple-hats-desktop-windows.zip
+            
   mac-install-purple:
     runs-on: self-hosted
 
@@ -109,8 +121,20 @@ jobs:
           CI: ""
         working-directory: ${{github.workspace}}
 
+      - name: Zip universal binary folder (Mac)
+        run: |
+          zip purple-hats-desktop-macos.zip -y -r "${{github.workspace}}/out/make/zip/darwin/universal"
+        working-directory: ${{github.workspace}}
+        
       - name: Upload Mac artifact
         uses: actions/upload-artifact@v3
         with:
-          name: purple-hats-desktop-mac
-          path: ${{github.workspace}}/out/make/zip/darwin/universal
+          name: purple-hats-desktop-macos
+          path: ./purple-hats-desktop-macos.zip
+
+      - name: Release Mac artifact
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            purple-hats-desktop-macos.zip
