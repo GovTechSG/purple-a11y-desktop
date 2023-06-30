@@ -57,7 +57,7 @@ jobs:
 
       - name: Execute Inno Setup script to run installer
         shell: pwsh
-        run: ISCC /O"${${{github.workspace}}}" "${{github.workspace}}\hats_for_windows.iss"
+        run: ISCC /O"${{github.workspace}}" "${{github.workspace}}\hats_for_windows.iss"
 
       - name: Create folder
         run: |
@@ -107,4 +107,4 @@ jobs:
   #       uses: actions/upload-artifact@v3
   #       with:
   #         name: purple-hats-desktop-mac
-  #         path: ./purple-hats-desktop
+  #         path: ${{github.workspace}}/purple-hats-desktop/purple-hats-desktop
