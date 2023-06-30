@@ -6,10 +6,10 @@ import "./LaunchWindow.scss";
 const LaunchWindow = () => {
   const [launchStatus, setLaunchStatus] = useState(null);
   const [promptUpdate, setPromptUpdate] = useState(false);
-  
+
   useEffect(() => {
     window.services.launchStatus((s) => {
-      if (s === "promptUpdate") {
+      if (s === "promptFrontendUpdate" || s === "promptBackendUpdate") {
         setPromptUpdate(true);
       } else {
         setLaunchStatus(s);
@@ -30,6 +30,10 @@ const LaunchWindow = () => {
         { once: true }
       );
     });
+    if (launchStatus === "frontendDownloadComplete") {
+      setPromptUpdate(false);
+    }
+
   }, [launchStatus]);
 
   const messages = {
@@ -38,9 +42,13 @@ const LaunchWindow = () => {
       sub: "This may take a few minutes. Please do not close the application.",
     },
     checkingUpdates: { main: "Checking for Updates" },
-    updatingApp: {
-      main: "Updating app",
+    updatingBackend: {
+      main: "Updating application",
       sub: "This may take a few minutes. Please do not close the application.",
+    },
+    updatingFrontend: {
+      main: "Downloading new installer",
+      sub: "This may take a few minutes. The application will close after and you will be guided through the reinstallation.",
     },
     offline: {
       main: "No internet connection",
@@ -57,7 +65,10 @@ const LaunchWindow = () => {
     setPromptUpdate(false);
   };
 
-  const { main: displayedMessage, sub: displayedSub } = messages[launchStatus];
+  const handlePromptLaunchInstallerResponse = (response) => () => {
+    window.services.launchInstaller(response);
+    // setPromptUpdate(false);
+  };
 
   if (promptUpdate) {
     return (
@@ -79,6 +90,32 @@ const LaunchWindow = () => {
       </div>
     );
   }
+
+  if (launchStatus === "frontendDownloadComplete") {
+    return (
+      <div id="launch-window">
+        <div>
+          <h1>Installer has been downloaded</h1>
+          <p>Would you like to run the installer now?</p>
+          <Button
+            type="secondary"
+            onClick={handlePromptLaunchInstallerResponse(false)}
+          >
+            Later
+          </Button>
+          <Button
+            id="proceed-button"
+            type="primary"
+            onClick={handlePromptLaunchInstallerResponse(true)}
+          >
+            Run
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  const { main: displayedMessage, sub: displayedSub } = messages[launchStatus];
   return (
     <div id="launch-window">
       <LoadingSpinner />

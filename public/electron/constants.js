@@ -19,17 +19,32 @@ const appPath =
 const releaseUrl =
   "https://api.github.com/repos/GovTechSG/purple-hats/releases/latest";
 
+const frontendReleaseUrl = "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/PurpleHATSSetup.zip"
+
 const resultsPath =
   os.platform() === "win32"
     ? path.join(process.env.APPDATA, "Purple HATS")
     : appPath;
 
+const installerExePath = path.join(resultsPath, "purpleHATSSetup", "Purple-Hats-Setup.exe");
+
 const backendPath = path.join(appPath, "Purple HATS Backend");
+const frontendPath = path.join(appPath, "Purple HATS Frontend", "Purple HATS-win32-x64");
 
 const enginePath = path.join(backendPath, "purple-hats");
 
 const getEngineVersion = () =>
   require(path.join(enginePath, "package.json")).version;
+
+const getFrontendVersion = () => {
+  // Directory is only valid for and used by Windows
+  if (os.platform() !== "win32") {
+    return;
+  }
+
+  return require(path.join(frontendPath, "resources", "app", "package.json"))
+    .version;
+};
 
 const appVersion = require(path.join(
   __dirname,
@@ -85,6 +100,8 @@ const userDataFilePath =
     : path.join(appPath, "userData.txt");
 
 const phZipPath = path.join(appPath, "PHLatest.zip");
+
+const artifactInstallerPath = path.join(appPath, "Purple-Hats-setup.exe");
 
 const browserTypes = {
   chrome: "chrome",
@@ -533,7 +550,7 @@ const createPlaywrightContext = async (browser, screenSize, nonHeadless) => {
   const context = await chromium.launchPersistentContext(userDataDir, {
     ignoreDefaultArgs: ["--use-mock-keychain"],
     ...(browserChannel && { channel: browserChannel }),
-    ...((proxy || nonHeadless) && {headless: false}),
+    ...((proxy || nonHeadless) && { headless: false }),
     ...(screenSize && {
       viewport: {
         width: screenSize.width,
@@ -555,13 +572,14 @@ const userDataFormFields = {
   nameField: "entry.1787318910",
 };
 
-
 module.exports = {
   appPath,
   releaseUrl,
   backendPath,
+  frontendPath,
   enginePath,
   getEngineVersion,
+  getFrontendVersion,
   appVersion,
   preloadPath,
   userDataFormPreloadPath,
@@ -580,5 +598,8 @@ module.exports = {
   getDefaultEdgeDataDir,
   deleteClonedProfiles,
   createPlaywrightContext,
-  proxy
+  proxy,
+  artifactInstallerPath,
+  frontendReleaseUrl,
+  installerExePath,
 };
