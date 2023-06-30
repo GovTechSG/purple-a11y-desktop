@@ -14,8 +14,6 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
-        with:
-          path: purple-hats-desktop
 
       - name: Download node.js version from nodejs.org
         run: |
@@ -30,12 +28,12 @@ jobs:
           npm run make-win
         env:
           CI: ""
-        working-directory: ${{github.workspace}}
+        working-directory: ${{github.workspace}}/purple-hats-desktop
 
       - name: Move build to root
         shell: pwsh
         run: |
-          Move-Item purple-hats-desktop\out\Purple HATS-win32-x64 -Destination ${{github.workspace}}\Purple HATS-win32-x64 -Force
+          Move-Item  "${{github.workspace}}\purple-hats-desktop\out\Purple HATS-win32-x64" -Destination "${{github.workspace}}\Purple HATS-win32-x64" -Force
 
       - name: Download Purple HATS Backend
         shell: pwsh
