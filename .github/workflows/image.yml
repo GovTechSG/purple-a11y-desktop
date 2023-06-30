@@ -30,7 +30,12 @@ jobs:
           npm run make-win
         env:
           CI: ""
-        working-directory: ${{github.workspace}}/purple-hats-desktop
+        working-directory: ${{github.workspace}}
+
+      - name: Move build to root
+        shell: pwsh
+        run: |
+          Move-Item purple-hats-desktop\out\Purple HATS-win32-x64 -Destination ${{github.workspace}}\Purple HATS-win32-x64 -Force
 
       - name: Download Purple HATS Backend
         shell: pwsh
@@ -48,9 +53,9 @@ jobs:
           Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "${{github.workspace}}\is.exe" 
           $env:path = "$env:path" + ";${env:programfiles(x86)}\Inno Setup 6"
 
-      - name: Move Inno Setup script to APPDATA
+      - name: Move Inno Setup script to root
         shell: pwsh
-        run: Copy-Item -Path "./hats_for_windows.iss" -Destination "${{github.workspace}}\hats_for_windows.iss" -Force
+        run: Copy-Item -Path "${{github.workspace}}\Purple HATS-win32-x64\resources\app\hats_for_windows.iss" -Destination "${{github.workspace}}\hats_for_windows.iss" -Force
 
       - name: Execute Inno Setup script to run installer
         shell: pwsh
@@ -71,40 +76,40 @@ jobs:
           name: purpleHATSSetup
           path: ${{github.workspace}}/setup
 
-  mac-install-purple:
-    runs-on: macos-latest
+  # mac-install-purple:
+  #   runs-on: macos-latest
 
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-        with:
-          path: purple-hats-desktop
+  #   steps:
+  #     - name: Check out repository code
+  #       uses: actions/checkout@v3
+  #       with:
+  #         path: purple-hats-desktop
 
-      - name: Download node.js version from nodejs.org
-        run: |
-          curl -o ./nodejs-mac-arm64.tar.gz --create-dirs https://nodejs.org/dist/v18.15.0/node-v18.15.0-darwin-arm64.tar.gz      
-          mkdir nodejs-mac-arm64 && tar -xzf nodejs-mac-arm64.tar.gz -C nodejs-mac-arm64 --strip-components=1 && rm ./nodejs-mac-arm64.tar.gz
-          curl -o ./nodejs-mac-x64.tar.gz --create-dirs https://nodejs.org/dist/v18.15.0/node-v18.15.0-darwin-x64.tar.gz    
-          mkdir nodejs-mac-x64 && tar -xzf nodejs-mac-x64.tar.gz -C nodejs-mac-x64 --strip-components=1 && rm ./nodejs-mac-x64.tar.gz
-        working-directory: ${{github.workspace}}
+  #     - name: Download node.js version from nodejs.org
+  #       run: |
+  #         curl -o ./nodejs-mac-arm64.tar.gz --create-dirs https://nodejs.org/dist/v18.15.0/node-v18.15.0-darwin-arm64.tar.gz
+  #         mkdir nodejs-mac-arm64 && tar -xzf nodejs-mac-arm64.tar.gz -C nodejs-mac-arm64 --strip-components=1 && rm ./nodejs-mac-arm64.tar.gz
+  #         curl -o ./nodejs-mac-x64.tar.gz --create-dirs https://nodejs.org/dist/v18.15.0/node-v18.15.0-darwin-x64.tar.gz
+  #         mkdir nodejs-mac-x64 && tar -xzf nodejs-mac-x64.tar.gz -C nodejs-mac-x64 --strip-components=1 && rm ./nodejs-mac-x64.tar.gz
+  #       working-directory: ${{github.workspace}}
 
-      - name: Install Node Modules and Build for Mac0S
-        run: |
-          if [[ $(uname -m) == 'arm64' ]]; then
-            export PATH_TO_NODE="${{github.workspace}}/nodejs-mac-arm64/bin"
-          else
-            export PATH_TO_NODE="${{github.workspace}}/nodejs-mac-x64/bin"
-          fi
-          export PATH="$PATH_TO_NODE:$PATH"
-          export PATH="$PWD/purple-hats-desktop/node_modules/.bin:$PATH"
-          npm install
-          npm run make-mac
-        env:
-          CI: ""
-        working-directory: ${{github.workspace}}/purple-hats-desktop
+  #     - name: Install Node Modules and Build for Mac0S
+  #       run: |
+  #         if [[ $(uname -m) == 'arm64' ]]; then
+  #           export PATH_TO_NODE="${{github.workspace}}/nodejs-mac-arm64/bin"
+  #         else
+  #           export PATH_TO_NODE="${{github.workspace}}/nodejs-mac-x64/bin"
+  #         fi
+  #         export PATH="$PATH_TO_NODE:$PATH"
+  #         export PATH="$PWD/purple-hats-desktop/node_modules/.bin:$PATH"
+  #         npm install
+  #         npm run make-mac
+  #       env:
+  #         CI: ""
+  #       working-directory: ${{github.workspace}}/purple-hats-desktop
 
-      - name: Upload Mac artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: purple-hats-desktop-mac
-          path: ./purple-hats-desktop
+  #     - name: Upload Mac artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: purple-hats-desktop-mac
+  #         path: ./purple-hats-desktop
