@@ -85,8 +85,17 @@ jobs:
             
   mac-install-purple:
     runs-on: self-hosted
+    
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
+      - name: Clean Workspace Folder
+        run: |
+         rm -rf ./* || true
+         rm -rf ./.??* || true
+
       - name: Check out repository code
         uses: actions/checkout@v3
         with:
