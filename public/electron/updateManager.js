@@ -6,24 +6,18 @@ const { exec, spawn } = require("child_process");
 const axios = require("axios");
 const {
   releaseUrl,
-  enginePath,
   getEngineVersion,
   getFrontendVersion,
   appPath,
   backendPath,
-  frontendPath,
   updateBackupsFolder,
   scanResultsPath,
   phZipPath,
-  createPlaywrightContext,
-  deleteClonedProfiles,
-  artifactInstallerPath,
   resultsPath,
   frontendReleaseUrl,
   installerExePath,
 } = require("./constants");
 const { silentLogger } = require("./logs");
-const { readUserDataFromFile } = require("./userDataManager");
 
 let currentChildProcess;
 
@@ -161,6 +155,10 @@ const isLatestFrontendVersion = async () => {
   }
 };
 
+/**
+ * Spawns a PowerShell process to download and unzip the frontend
+ * @returns {Promise<boolean>} true if the frontend was downloaded and unzipped successfully, false otherwise
+ */
 const downloadAndUnzipFrontendWindows = async () => {
   const shellScript = `
   $webClient = New-Object System.Net.WebClient
@@ -208,6 +206,19 @@ const downloadAndUnzipFrontendWindows = async () => {
   });
 };
 
+/**
+ * Spawns an AppleScript process to download and unzip the frontend
+ * @returns {Promise<boolean>} true if the frontend was downloaded and unzipped successfully, false otherwise
+ */
+const downloadAndUnzipFrontendMac = async () => {
+
+}
+
+/**
+ * Spawn a PowerShell process to launch the InnoSetup installer executable, which contains the frontend and backend
+ * upon confirmation from the user, the installer will be launched & Electron will exit
+ * @returns {Promise<boolean>} true if the installer executable was launched successfully, false otherwise
+ */
 const spawnScriptToLaunchInstaller = () => {
   const shellScript = `Start-Process -FilePath "${installerExePath}"`;
 
