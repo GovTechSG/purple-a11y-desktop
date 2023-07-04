@@ -221,7 +221,8 @@ const downloadAndUnzipFrontendMac = async () => {
     ".."
   )}' &&
   rm '${resultsPath}/purple-hats-desktop-mac.zip' &&
-  rm -rf '${path.join(macOSExecutablePath, "..")}/Purple Hats Old.app' && wait`;
+  rm -rf '${path.join(macOSExecutablePath, "..")}/Purple Hats Old.app' &&
+  find '${macOSExecutablePath}' -exec xattr -d com.apple.quarantine {} \\`;
 
   await execCommand(command);
 };
