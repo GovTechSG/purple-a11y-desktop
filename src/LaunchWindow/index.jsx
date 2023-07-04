@@ -47,8 +47,8 @@ const LaunchWindow = () => {
       sub: "This may take a few minutes. Please do not close the application.",
     },
     updatingFrontend: {
-      main: "Downloading new installer",
-      sub: "This may take a few minutes. The application will close after and you will be guided through the reinstallation.",
+      main: "Downloading",
+      sub: "This may take a few minutes. Please do not close the application.",
     },
     offline: {
       main: "No internet connection",
@@ -67,6 +67,11 @@ const LaunchWindow = () => {
 
   const handlePromptLaunchInstallerResponse = (response) => () => {
     window.services.launchInstaller(response);
+    // setPromptUpdate(false);
+  };
+
+  const handlePromptRestartAppResponse = (response) => () => {
+    window.services.restartAppAfterMacOSFrontendUpdate(response);
     // setPromptUpdate(false);
   };
 
@@ -95,7 +100,7 @@ const LaunchWindow = () => {
     return (
       <div id="launch-window">
         <div>
-          <h1>Installer has been downloaded</h1>
+          <h1>New installer has been downloaded</h1>
           <p>Would you like to run the installer now?</p>
           <Button
             type="secondary"
@@ -107,6 +112,30 @@ const LaunchWindow = () => {
             id="proceed-button"
             type="primary"
             onClick={handlePromptLaunchInstallerResponse(true)}
+          >
+            Run
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (launchStatus === "frontendDownloadCompleteMacOS") {
+    return (
+      <div id="launch-window">
+        <div>
+          <h1>New App has been downloaded</h1>
+          <p>Would you like to restart the application?</p>
+          <Button
+            type="secondary"
+            onClick={handlePromptRestartAppResponse(false)}
+          >
+            Later
+          </Button>
+          <Button
+            id="proceed-button"
+            type="primary"
+            onClick={handlePromptRestartAppResponse(true)}
           >
             Run
           </Button>

@@ -101,7 +101,22 @@ app.on("ready", async () => {
       });
     });
 
+    updateEvent.on("frontendDownloadCompleteMacOS", (userResponse) => {
+      launchWindow.webContents.send(
+        "launchStatus",
+        "frontendDownloadCompleteMacOS"
+      );
+      ipcMain.once("restartAppAfterMacOSFrontendUpdate", (_event, response) => {
+        userResponse(response);
+      });
+    });
+
     updateEvent.on("installerLaunched", () => {
+      app.exit();
+    });
+
+    updateEvent.on("restartTriggered", () => {
+      app.relaunch();
       app.exit();
     });
 

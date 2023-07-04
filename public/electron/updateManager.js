@@ -16,6 +16,7 @@ const {
   resultsPath,
   frontendReleaseUrl,
   installerExePath,
+  macOSExecutablePath,
 } = require("./constants");
 const { silentLogger } = require("./logs");
 
@@ -142,7 +143,6 @@ const isLatestFrontendVersion = async () => {
 
     const latestVersion = data.tag_name;
     const frontendVersion = getFrontendVersion();
-
     console.log("Frontend version installed: ", frontendVersion);
     console.log("Latest frontend version found: ", latestVersion);
 
@@ -207,12 +207,37 @@ const downloadAndUnzipFrontendWindows = async () => {
 };
 
 /**
- * Spawns an AppleScript process to download and unzip the frontend
+ * Spawns a Shell Command process to download and unzip the frontend
  * @returns {Promise<boolean>} true if the frontend was downloaded and unzipped successfully, false otherwise
  */
 const downloadAndUnzipFrontendMac = async () => {
+  // curl -L "${frontendReleaseUrl}" -o "${resultsPath}/purple-hats-desktop-mac.zip" &&
+  const command = `
+  curl -L '${frontendReleaseUrl}' -o '${resultsPath}/purple-hats-desktop-mac.zip' &&
+  mv '${macOSExecutablePath}' '${path.join("..", macOSExecutablePath)}/Purple Hats old.app' &&
+  ditto -xk '${resultsPath}/purple-hats-desktop-mac.zip' '${path.join("..", macOSExecutablePath)}' && 
+  rm '${resultsPath}/purple-hats-desktop-mac.zip' &&
+  rm -rf '${path.join("..", macOSExecutablePath)}/Purple Hats old.app'`;
 
-}
+  return new Promise((resolve, reject) => {
+    const child = exec(command, (error, stdout, stderr) => {
+      if (error) {
+        silentLogger.error(error);
+        reject(error);
+        return;
+      }
+      if (stderr) {
+        silentLogger.error(stderr);
+        reject(stderr);
+        return;
+      }
+      resolve(true);
+    });
+    currentChildProcess = child;
+  });
+
+  // await execCommand(command);
+};
 
 /**
  * Spawn a PowerShell process to launch the InnoSetup installer executable, which contains the frontend and backend
@@ -356,6 +381,41 @@ const run = async (updaterEventEmitter) => {
       }
     }
   } else {
+    if (!(await isLatestFrontendVersion())) {
+      updaterEventEmitter.emit("checking");
+      const userResponse = new Promise((resolve) => {
+        updaterEventEmitter.emit("promptFrontendUpdate", resolve);
+      });
+
+      const proceedUpdate = await userResponse;
+
+      if (proceedUpdate) {
+        updaterEventEmitter.emit("updatingFrontend");
+        let isDownloadFrontendSuccess = null;
+
+        try {
+          isDownloadFrontendSuccess = await downloadAndUnzipFrontendMac();
+        } catch (e) {
+          silentLogger.error(e.toString());
+        }
+
+        console.log(`isDownloadFrontendSuccess: ${isDownloadFrontendSuccess}`);
+
+        if (isDownloadFrontendSuccess) {
+          updaterEventEmitter.emit("restartTriggered");
+          // const launchRestartPrompt = new Promise((resolve) => {
+          //   updaterEventEmitter.emit("frontendDownloadCompleteMacOS", resolve);
+          // });
+          // const proceedRestart = await launchRestartPrompt;
+          // if (proceedRestart) {
+          //   updaterEventEmitter.emit("restartTriggered");
+          // }
+        } else {
+          updaterEventEmitter.emit("frontendDownloadFailed");
+        }
+      }
+    }
+
     if (isInterruptedUpdate) {
       updaterEventEmitter.emit("updatingBackend");
       if (!backendExists) {
