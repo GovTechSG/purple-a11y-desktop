@@ -56,6 +56,9 @@ contextBridge.exposeInMainWorld("services", {
   launchInstaller: (response) => {
     ipcRenderer.send("launchInstaller", response);
   },
+  restartAppAfterMacOSFrontendUpdate: (response) => {
+    ipcRenderer.send("restartAppAfterMacOSFrontendUpdate", response);
+  },
   setUserData: (data) => {
     ipcRenderer.send("userDataReceived", data);
   },

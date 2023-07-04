@@ -1,7 +1,5 @@
 const fs = require("fs");
-const {
-    userDataFilePath 
-} = require("./constants"); 
+const { userDataFilePath, proxy } = require("./constants");
 const { ipcMain } = require("electron");
 
 const readUserDataFromFile = () => {
@@ -15,18 +13,18 @@ const writeUserDataToFile = (userData) => {
 }
 
 const init = async () => {
-    const userDataExists = fs.existsSync(userDataFilePath);
-    if (!userDataExists) {
-        const defaultSettings = {
-            name: "", 
-            email: "",
-            autoSubmit: true, 
-            event: false, 
-            browser: "chrome", 
-            autoUpdate: true
-        }; 
-        fs.writeFileSync(userDataFilePath, JSON.stringify(defaultSettings));
-    }
+  const userDataExists = fs.existsSync(userDataFilePath);
+  if (!userDataExists) {
+    const defaultSettings = {
+      name: "",
+      email: "",
+      autoSubmit: true,
+      event: false,
+      browser: proxy ? "edge" : "chrome",
+      autoUpdate: true,
+    };
+    fs.writeFileSync(userDataFilePath, JSON.stringify(defaultSettings));
+  }
 
     ipcMain.handle("getUserData", (_event) => { 
         const data = readUserDataFromFile();

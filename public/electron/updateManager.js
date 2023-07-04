@@ -6,24 +6,19 @@ const { exec, spawn } = require("child_process");
 const axios = require("axios");
 const {
   releaseUrl,
-  enginePath,
   getEngineVersion,
   getFrontendVersion,
   appPath,
   backendPath,
-  frontendPath,
   updateBackupsFolder,
   scanResultsPath,
   phZipPath,
-  createPlaywrightContext,
-  deleteClonedProfiles,
-  artifactInstallerPath,
   resultsPath,
   frontendReleaseUrl,
   installerExePath,
+  macOSExecutablePath,
 } = require("./constants");
 const { silentLogger } = require("./logs");
-const { readUserDataFromFile } = require("./userDataManager");
 
 let currentChildProcess;
 
@@ -148,7 +143,6 @@ const isLatestFrontendVersion = async () => {
 
     const latestVersion = data.tag_name;
     const frontendVersion = getFrontendVersion();
-
     console.log("Frontend version installed: ", frontendVersion);
     console.log("Latest frontend version found: ", latestVersion);
 
@@ -161,6 +155,10 @@ const isLatestFrontendVersion = async () => {
   }
 };
 
+/**
+ * Spawns a PowerShell process to download and unzip the frontend
+ * @returns {Promise<boolean>} true if the frontend was downloaded and unzipped successfully, false otherwise
+ */
 const downloadAndUnzipFrontendWindows = async () => {
   const shellScript = `
   $webClient = New-Object System.Net.WebClient
@@ -208,6 +206,32 @@ const downloadAndUnzipFrontendWindows = async () => {
   });
 };
 
+/**
+ * Spawns a Shell Command process to download and unzip the frontend
+ */
+const downloadAndUnzipFrontendMac = async () => {
+  const command = `
+  curl -L '${frontendReleaseUrl}' -o '${resultsPath}/purple-hats-desktop-mac.zip' &&
+  mv '${macOSExecutablePath}' '${path.join(
+    macOSExecutablePath,
+    ".."
+  )}/Purple Hats Old.app' &&
+  ditto -xk '${resultsPath}/purple-hats-desktop-mac.zip' '${path.join(
+    macOSExecutablePath,
+    ".."
+  )}' &&
+  rm '${resultsPath}/purple-hats-desktop-mac.zip' &&
+  rm -rf '${path.join(macOSExecutablePath, "..")}/Purple Hats Old.app' &&
+  find '${macOSExecutablePath}' -exec xattr -d com.apple.quarantine {} \\`;
+
+  await execCommand(command);
+};
+
+/**
+ * Spawn a PowerShell process to launch the InnoSetup installer executable, which contains the frontend and backend
+ * upon confirmation from the user, the installer will be launched & Electron will exit
+ * @returns {Promise<boolean>} true if the installer executable was launched successfully, false otherwise
+ */
 const spawnScriptToLaunchInstaller = () => {
   const shellScript = `Start-Process -FilePath "${installerExePath}"`;
 
@@ -345,6 +369,29 @@ const run = async (updaterEventEmitter) => {
       }
     }
   } else {
+    if (!(await isLatestFrontendVersion())) {
+      updaterEventEmitter.emit("checking");
+      const userResponse = new Promise((resolve) => {
+        updaterEventEmitter.emit("promptFrontendUpdate", resolve);
+      });
+
+      const proceedUpdate = await userResponse;
+
+      if (proceedUpdate) {
+        updaterEventEmitter.emit("updatingFrontend");
+
+        // Relaunch the app with new binaries if the frontend update is successful
+        // If unsuccessful, the app will be launched with existing frontend
+        try {
+          await downloadAndUnzipFrontendMac();
+          currentChildProcess = null;
+          updaterEventEmitter.emit("restartTriggered");
+        } catch (e) {
+          silentLogger.error(e.toString());
+        }
+      }
+    }
+
     if (isInterruptedUpdate) {
       updaterEventEmitter.emit("updatingBackend");
       if (!backendExists) {

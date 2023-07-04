@@ -5,6 +5,7 @@ const { globSync } = require("glob");
 const { get } = require("http");
 const { silentLogger } = require("./logs.js");
 const { execSync } = require("child_process");
+const { app } = require("electron");
 
 const appPath =
   os.platform() === "win32"
@@ -20,10 +21,29 @@ const releaseUrl =
   "https://api.github.com/repos/GovTechSG/purple-hats/releases/latest";
 
 const frontendReleaseUrl =
-  "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-hats-desktop-windows.zip";
+  os.platform() === "win32"
+    ? "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-hats-desktop-windows.zip"
+    : "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-hats-desktop-macos.zip";
 
 const backendPath = path.join(appPath, "Purple HATS Backend");
 const frontendPath = path.join(appPath, "Purple HATS Frontend");
+
+const getMacOSExecutablePath = () => {
+  let executablePath = require("path").dirname(
+    require("electron").app.getPath("exe")
+  );
+
+  // Retrieve the path to the executable up to the .app folder
+  if (executablePath !== null) {
+    executablePath = executablePath.substring(
+      0,
+      executablePath.lastIndexOf(".app") + 4
+    );
+  }
+
+  return executablePath;
+};
+const macOSExecutablePath = getMacOSExecutablePath();
 
 const resultsPath =
   os.platform() === "win32"
@@ -43,12 +63,12 @@ const getEngineVersion = () =>
 
 const getFrontendVersion = () => {
   // Directory is only valid for and used by Windows
-  if (os.platform() !== "win32") {
-    return;
+  if (os.platform() === "win32") {
+    return require(path.join(frontendPath, "resources", "app", "package.json"))
+      .version;
+  } else {
+    return appVersion;
   }
-
-  return require(path.join(frontendPath, "resources", "app", "package.json"))
-    .version;
 };
 
 const appVersion = require(path.join(
@@ -607,4 +627,5 @@ module.exports = {
   artifactInstallerPath,
   frontendReleaseUrl,
   installerExePath,
+  macOSExecutablePath,
 };

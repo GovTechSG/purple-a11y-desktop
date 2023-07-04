@@ -54,7 +54,7 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
   };
 
   const startScan = async (scanDetails) => {
-    scanDetails.browser = browser;
+    scanDetails.browser = isProxy ? "edge" : browser;
 
     if (scanDetails.scanUrl.length === 0) {
       setPrevUrlErrorMessage("URL cannot be empty.");
@@ -150,7 +150,7 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
         />
         <h1 id="app-title">Accessibility Site Scanner</h1>
         <InitScanForm
-          isProxy = {isProxy}
+          isProxy={isProxy}
           startScan={startScan}
           prevUrlErrorMessage={prevUrlErrorMessage}
         />
