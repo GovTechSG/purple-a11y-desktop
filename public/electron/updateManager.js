@@ -208,35 +208,22 @@ const downloadAndUnzipFrontendWindows = async () => {
 
 /**
  * Spawns a Shell Command process to download and unzip the frontend
- * @returns {Promise<boolean>} true if the frontend was downloaded and unzipped successfully, false otherwise
  */
 const downloadAndUnzipFrontendMac = async () => {
-  // curl -L "${frontendReleaseUrl}" -o "${resultsPath}/purple-hats-desktop-mac.zip" &&
   const command = `
   curl -L '${frontendReleaseUrl}' -o '${resultsPath}/purple-hats-desktop-mac.zip' &&
-  mv '${macOSExecutablePath}' '${path.join("..", macOSExecutablePath)}/Purple Hats old.app' &&
-  ditto -xk '${resultsPath}/purple-hats-desktop-mac.zip' '${path.join("..", macOSExecutablePath)}' && 
+  mv '${macOSExecutablePath}' '${path.join(
+    macOSExecutablePath,
+    ".."
+  )}/Purple Hats Old.app' &&
+  ditto -xk '${resultsPath}/purple-hats-desktop-mac.zip' '${path.join(
+    macOSExecutablePath,
+    ".."
+  )}' &&
   rm '${resultsPath}/purple-hats-desktop-mac.zip' &&
-  rm -rf '${path.join("..", macOSExecutablePath)}/Purple Hats old.app'`;
+  rm -rf '${path.join(macOSExecutablePath, "..")}/Purple Hats Old.app' && wait`;
 
-  return new Promise((resolve, reject) => {
-    const child = exec(command, (error, stdout, stderr) => {
-      if (error) {
-        silentLogger.error(error);
-        reject(error);
-        return;
-      }
-      if (stderr) {
-        silentLogger.error(stderr);
-        reject(stderr);
-        return;
-      }
-      resolve(true);
-    });
-    currentChildProcess = child;
-  });
-
-  // await execCommand(command);
+  await execCommand(command);
 };
 
 /**
@@ -391,27 +378,15 @@ const run = async (updaterEventEmitter) => {
 
       if (proceedUpdate) {
         updaterEventEmitter.emit("updatingFrontend");
-        let isDownloadFrontendSuccess = null;
 
+        // Relaunch the app with new binaries if the frontend update is successful
+        // If unsuccessful, the app will be launched with existing frontend
         try {
-          isDownloadFrontendSuccess = await downloadAndUnzipFrontendMac();
+          await downloadAndUnzipFrontendMac();
+          currentChildProcess = null;
+          updaterEventEmitter.emit("restartTriggered");
         } catch (e) {
           silentLogger.error(e.toString());
-        }
-
-        console.log(`isDownloadFrontendSuccess: ${isDownloadFrontendSuccess}`);
-
-        if (isDownloadFrontendSuccess) {
-          updaterEventEmitter.emit("restartTriggered");
-          // const launchRestartPrompt = new Promise((resolve) => {
-          //   updaterEventEmitter.emit("frontendDownloadCompleteMacOS", resolve);
-          // });
-          // const proceedRestart = await launchRestartPrompt;
-          // if (proceedRestart) {
-          //   updaterEventEmitter.emit("restartTriggered");
-          // }
-        } else {
-          updaterEventEmitter.emit("frontendDownloadFailed");
         }
       }
     }
