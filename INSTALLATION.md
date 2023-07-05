@@ -8,7 +8,8 @@ Purple HATS is a customisable, automated accessibility testing tool that allows 
 
 ## System Requirements
 
-* Purple HATS Desktop can run on MacOS Big Sur or above, and Windows 10 (64-bit) or above.
+* Purple HATS Desktop can run on MacOS Big Sur or above, and a [supported](https://learn.microsoft.com/en-us/windows/release-health/supported-versions-windows-client) version of Windows 10 (64-bit) or Windows 11.
+* Google Chrome browser is [installed](https://www.google.com/chrome).
 * One-time Internet access is needed to download and install Purple HATS Desktop.
 * You are recommended to be logged on to an admin user to run Purple HATS Desktop.
 
