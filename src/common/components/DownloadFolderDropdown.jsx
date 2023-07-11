@@ -5,6 +5,7 @@ import Button from "../../common/components/Button";
 import folder from "../../assets/folder.svg";
 import { useEffect, useState } from "react";
 import services from "../../services";
+import editIcon from "../../assets/edit-icon.svg";
 
 const DownloadFolderDropdown = () => {
     const [exportDir, setExportDir] = useState();
@@ -26,23 +27,16 @@ const DownloadFolderDropdown = () => {
     }
 
     return (
-        <div className="download-dropdown fade-in">
-        <Button className="dir-info-button download-dropdown-btn" onClick={() => {setOpenDropDown(!openDropDown)}}>
-          <img id="folder-img" src={folder}></img>
-          <span id="dir-info">{exportDir}</span>
-          {openDropDown ? (
-            <ButtonSvgIcon
-              className={`chevron-up-icon`}
-              svgIcon={<ChevronUpIcon />}
-            />
-          ) : (
-            <ButtonSvgIcon
-              className={`chevron-down-icon`}
-              svgIcon={<ChevronDownIcon />}
-            />
-          )}
+        <div className="download-dropdown">
+          <Button className="dir-info-button download-dropdown-btn" aria-describedby="download-folder-label" onClick={handleSetExportDir}>
+            <div className="d-flex download-path">
+              <img src={folder}></img>
+              <span id="dir-info">{exportDir}</span>
+            </div>
+            <div className="change-download-btn">
+              <img src={editIcon} aria-label="Change download directory"></img>
+            </div>
         </Button>
-        {openDropDown && <Button className="download-dropdown-btn choose-dir-button" onClick={handleSetExportDir}>Choose Another</Button>}
       </div>
     )
 }

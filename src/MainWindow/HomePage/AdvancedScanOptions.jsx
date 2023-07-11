@@ -131,7 +131,7 @@ const AdvancedScanOptions = ({
           )}
           <hr />
           <div className="user-input-group">
-            <label className="bold-text">
+            <label id="download-folder-label" className="bold-text">
               Download:
             </label>
             <DownloadFolderDropdown></DownloadFolderDropdown>
