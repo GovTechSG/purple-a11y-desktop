@@ -266,7 +266,7 @@ a:hover {
     visibility: hidden;
   }
 
-  .download-dropdown {
+  .dropdown {
     position: relative;
   }
 
@@ -274,12 +274,15 @@ a:hover {
     width: 77%;
   }
 
-  .download-dropdown-btn {
-    box-sizing: border-box;
+  .dropdown-btn {
     border: 1px solid #B5C5CA;
     border-radius: 4px;
-    width: 100%;
     display: flex;
+  }
+
+  .dropdown-list {
+    position: absolute;
+    width: 100%;
   }
 
   #dir-info {
@@ -290,7 +293,8 @@ a:hover {
     white-space: nowrap;
   }
 
-  .dir-info-button {
+  .dropdown-list-item {
+    list-style: none;
     background-color: white;
     align-items: center;
     justify-content: space-between;
@@ -318,16 +322,16 @@ a:hover {
     color: white;
   }
 
+  .active {
+    background-color: #472BC4;
+    color: white;
+  }
+
   .img-button {
     background-color: transparent;
     border: none;
     margin-right: 5px;
     padding-top: 0px;
-  }
-
-  .dir-info {
-    overflow-x: auto;
-    white-space: nowrap;
   }
 
   @keyframes fade-in {

@@ -155,7 +155,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
             svgIcon={<CheckCircleIcon />}
           />
           {/* <i className="bi bi-check-circle"></i> */}
-          <h1>Scan completed</h1>
+          <h1 aria-live="polite">Scan completed</h1>
           {enableReportDownload && !event ? (
             <>
               <div id="download-content">

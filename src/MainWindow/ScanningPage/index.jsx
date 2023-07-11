@@ -5,7 +5,7 @@ const ScanningPage = () => {
   return (
     <div id="scanning-page">
       <LoadingSpinner />
-      <h1>Please wait while we scan your site...</h1>
+      <h1 aria-live="polite">Please wait while we scan your site...</h1>
     </div>
   );
 };
