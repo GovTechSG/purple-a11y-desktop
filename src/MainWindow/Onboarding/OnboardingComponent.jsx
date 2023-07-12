@@ -88,11 +88,11 @@ const OnboardingComponent = ({
         return (
           <>
             <div className="visually-hidden" aria-live="polite" role="status">Item 1 of 5</div>
-            <div className="modal-img-container fade-in" aria-hidden="true">
+            <div className="modal-img-container slide-in" aria-hidden="true">
               <img className="modal-img" src={firstTimer1}></img>
             </div>
-            <h3 className="modal-title fade-in">Hi There!</h3>
-            <p className="modal-desc fade-in">Making your website accessible is within reach. Let’s get started by taking a quick look at how Purple HATS work.</p>
+            <h3 className="modal-title slide-in">Hi There!</h3>
+            <p className="modal-desc slide-in">Making your website accessible is within reach. Let’s get started by taking a quick look at how Purple HATS work.</p>
             <PageIndicator page={1}></PageIndicator>
           </>
         )
@@ -101,14 +101,14 @@ const OnboardingComponent = ({
         return (
           <>
             <div className="visually-hidden" aria-live="polite" role="status">Item 2 of 5</div>
-            <div className="modal-img-container fade-in" aria-hidden="true">
+            <div className="modal-img-container slide-in" aria-hidden="true">
               <div id="first-timer-2-container">
                 <div className="typewriter">https://www.</div>
                 <img className="modal-img" src={firstTimer2}></img>
               </div>
             </div>
-            <h3 className="modal-title fade-in">Get started</h3>
-            <p className="modal-desc fade-in">You just need to enter your website/sitemap URL and Purple HATS will crawl through all the web pages to analyse for accessibility issues.</p>
+            <h3 className="modal-title slide-in">Get started</h3>
+            <p className="modal-desc slide-in">You just need to enter your website/sitemap URL and Purple HATS will crawl through all the web pages to analyse for accessibility issues.</p>
             <PageIndicator page={2}></PageIndicator>
           </>
         )
@@ -117,11 +117,11 @@ const OnboardingComponent = ({
        return (
         <>
           <div className="visually-hidden" aria-live="polite" role="status">Item 3 of 5</div>
-          <div className="modal-img-container fade-in" aria-hidden="true">
+          <div className="modal-img-container slide-in" aria-hidden="true">
             <img className="modal-img" src={firstTimer3}></img>
           </div>
-          <h3 className="modal-title fade-in">Custom Flow</h3>
-          <p className="modal-desc fade-in">Custom flow scan type allows you to specify a user journey of your choice by recording a series of actions on the browser and re-play them automatically.</p>
+          <h3 className="modal-title slide-in">Custom Flow</h3>
+          <p className="modal-desc slide-in">Custom flow scan type allows you to specify a user journey of your choice by recording a series of actions on the browser and re-play them automatically.</p>
           <PageIndicator page={3}></PageIndicator>
         </>
        )
@@ -130,12 +130,12 @@ const OnboardingComponent = ({
         return (
           <>
             <div className="visually-hidden" aria-live="polite" role="status">Item 4 of 5</div>
-            <div className="modal-img-container fade-in" aria-hidden="true">
+            <div className="modal-img-container slide-in" aria-hidden="true">
               <img className="modal-img" src={firstTimer4}></img>
             </div>
-            <h3 className="modal-title fade-in">Download report location</h3>
-            <DownloadFolderDropdown></DownloadFolderDropdown>
-            <p className="modal-desc fade-in">All reports generated from Purple HATS will be auto-downloaded into this folder.</p>
+            <h3 className="modal-title slide-in">Download report location</h3>
+            <DownloadFolderDropdown isOnboarding={true}></DownloadFolderDropdown>
+            <p className="modal-desc slide-in">All reports generated from Purple HATS will be auto-downloaded into this folder.</p>
             <PageIndicator page={4}></PageIndicator>
           </>
         )
@@ -144,7 +144,7 @@ const OnboardingComponent = ({
         return (
           <>
             <div className="visually-hidden" aria-live="polite" role="status">Item 5 of 5</div>
-            <h3 className="modal-title fade-in">Get to know you</h3>
+            <h3 className="modal-title slide-in">Get to know you</h3>
             <UserDetailsForm
               formID={formID}
               setName={setName}
@@ -154,7 +154,7 @@ const OnboardingComponent = ({
               setUserInputErrorMessage={setUserInputErrorMessage}
               isOnboarding={true}
             />
-            <p className="modal-desc fade-in">
+            <p className="modal-desc slide-in">
               To personalise your experience, we will be collecting your name, email address and app usage data. Your information fully complies with {policyUrlElem}
             </p>
             <PageIndicator page={5}></PageIndicator>

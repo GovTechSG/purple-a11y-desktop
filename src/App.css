@@ -147,6 +147,10 @@ a:hover {
     margin-bottom: 1rem;
   }
 
+  .onboarding-modal .download-dropdown {
+    padding-bottom: 1rem;
+  }
+  
   .modal {
     display: flex;
     align-items: center;  
@@ -330,7 +334,7 @@ a:hover {
     white-space: nowrap;
   }
 
-  @keyframes fade-in {
+  @keyframes slide-in {
     from {
       opacity: 0;
       transform: translateX(20px);
@@ -340,24 +344,10 @@ a:hover {
     }
   }
 
-  .fade-in {
-    animation: fade-in 0.5s;
+  .slide-in {
+    animation: slide-in 0.5s;
   }
 
-  @keyframes fade-out {
-    from {
-      opacity: 0;
-      transform: translateX(-20px);
-    } to {
-      opacity: 1;
-      transform: translateX(0px);
-    }
-  }
-
-  .fade-out {
-    animation: fade-out 0.5s;
-  }
-  
 #first-timer-2-container {
   position: relative;
   display: flex;

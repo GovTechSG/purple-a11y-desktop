@@ -7,10 +7,12 @@ import { useEffect, useState } from "react";
 import services from "../../services";
 import editIcon from "../../assets/edit-icon.svg";
 
-const DownloadFolderDropdown = () => {
+const DownloadFolderDropdown = ({
+  isOnboarding
+}) => {
+    const dropdownClassName = isOnboarding ? "download-dropdown slide-in" : "download-dropdown";
     const [exportDir, setExportDir] = useState();
-    const [openDropDown, setOpenDropDown] = useState(false);
-   
+    
     useEffect(() => {
         const getExportDir = async () => {
             const userData = await services.getUserData();
@@ -23,12 +25,11 @@ const DownloadFolderDropdown = () => {
     const handleSetExportDir = async () => {
         const exportDir = await window.services.setExportDir(); 
         setExportDir(exportDir);
-        setOpenDropDown(false);
     }
 
     return (
-        <div className="download-dropdown">
-          <Button className="dir-info-button download-dropdown-btn" aria-describedby="download-folder-label" onClick={handleSetExportDir}>
+        <div className={dropdownClassName}>
+          <button className="dir-info-button download-dropdown-btn" aria-describedby="download-folder-label" onClick={handleSetExportDir}>
             <div className="d-flex download-path">
               <img src={folder}></img>
               <span id="dir-info">{exportDir}</span>
@@ -36,7 +37,7 @@ const DownloadFolderDropdown = () => {
             <div className="change-download-btn">
               <img src={editIcon} aria-label="Change download directory"></img>
             </div>
-        </Button>
+        </button>
       </div>
     )
 }

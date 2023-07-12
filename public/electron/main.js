@@ -107,7 +107,7 @@ app.on("ready", async () => {
   })
   
   await userDataManager.setData(userDataEvent);
-  await userDataFormManager.init();
+  // await userDataFormManager.init();
 });
 
 app.on("quit", () => {

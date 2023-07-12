@@ -54,7 +54,7 @@ const init = async () => {
             defaultPath: data.exportDir
         }); 
         if (results) {
-            data.exportDir = results[0] + "/Purple HATS"; 
+            data.exportDir = results[0]; 
         }    
         fs.writeFileSync(userDataFilePath, JSON.stringify(data));
         return data.exportDir;
