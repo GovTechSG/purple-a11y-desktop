@@ -63,9 +63,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
       const formUrl = userDataFormInputFields.formUrl;
       await submitFormViaBrowser(formUrl);
 
-      // const formData = new FormData(event.target);
-      // await axios.post(formUrl, formData);
-
       // Form submission successful
       console.log("Form submitted successfully!");
     } catch (error) {
@@ -84,7 +81,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
       email: email,
       browser: browser,
     };
-    await window.services.submitFormViaBrowser(formDetails);
+    await window.services.v(formDetails);
   };
 
   return (

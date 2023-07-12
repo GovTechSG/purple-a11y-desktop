@@ -595,6 +595,7 @@ const userDataFormFields = {
   scanTypeField: "entry.1148680657",
   emailField: "entry.52161304",
   nameField: "entry.1787318910",
+  resultsField: "entry.904051439",
 };
 
 module.exports = {
