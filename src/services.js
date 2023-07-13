@@ -42,7 +42,7 @@ const startScan = async (scanDetails) => {
   if (viewport === viewportTypes.mobile) {
     scanArgs.customDevice = "Mobile";
   }
-  
+
   if (viewport === viewportTypes.specific) {
     scanArgs.customDevice = devices[device];
   }
@@ -88,8 +88,12 @@ const getDataForForm = async () => {
 };
 
 const isValidEmail = (email) => {
-  let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
-  return regex.test(email);
+  const emailRegex = new RegExp(
+    /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/,
+    "gm"
+  );
+
+  return emailRegex.test(email);
 };
 
 const services = {
