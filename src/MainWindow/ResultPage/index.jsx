@@ -158,11 +158,9 @@ const ResultPage = ({ completedScanId: scanId }) => {
           <h1>Scan completed</h1>
           {enableReportDownload && !event ? (
             <>
-              <div id="download-content">
-                You can find the downloaded report at 
-                <a href="#" onClick={handleOpenResultsFolder}>{resultsPath}</a>
-              </div>
-              <hr />
+              <p id="download-content">
+                You can find the downloaded report at <a href="#" onClick={handleOpenResultsFolder}>{resultsPath}</a>
+              </p>
               <div id="btn-container">
                 <Link id="scan-again" to="/">
                     <ButtonSvgIcon svgIcon={<ReturnIcon/>} className={`return-icon`}/>
@@ -171,11 +169,10 @@ const ResultPage = ({ completedScanId: scanId }) => {
                   <Button
                     id="view-button"
                     type="primary"
-                    className="bold-text"
                     onClick={handleViewReport}
                   >
                     <ButtonSvgIcon
-                      className={`box-arrow-up-right-icon`}
+                      className={`box-arrow-up-right-icon `}
                       svgIcon={<BoxArrowUpRightIcon />}
                     />
                     {/* <i className="bi bi-box-arrow-up-right" /> */}

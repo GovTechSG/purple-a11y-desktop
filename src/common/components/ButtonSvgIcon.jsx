@@ -1,8 +1,8 @@
 const ButtonSvgIcon = ({ className, focusable = false, svgIcon }) => {
   return (
-    <i aria-hidden focusable={focusable} className={`${className}`}>
+    <span aria-hidden focusable={focusable} className={`${className}`}>
       {svgIcon}
-    </i>
+    </span>
   );
 };
 

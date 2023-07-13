@@ -97,7 +97,7 @@ const InitScanForm = ({ startScan, prevUrlErrorMessage }) => {
               )}
             </div>
           )}
-          <Button type="primary" onClick={handleScanButtonClicked}>
+          <Button type="primary" className="scan-btn" onClick={handleScanButtonClicked}>
             Scan
           </Button>
         </div>
