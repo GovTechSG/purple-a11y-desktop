@@ -10,7 +10,6 @@ import { ReactComponent as BoxArrowUpRightIcon } from "../../assets/box-arrow-up
 import { ReactComponent as DownloadIcon } from "../../assets/download.svg";
 import { ReactComponent as ReturnIcon } from "../../assets/return.svg";
 
-
 const ResultPage = ({ completedScanId: scanId }) => {
   const [enableReportDownload, setEnableReportDownload] = useState(false);
   const [websiteUrl, setWebsiteUrl] = useState(null);
@@ -18,7 +17,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [browser, setBrowser] = useState("");
-  const [autoSubmit, setAutoSubmit] = useState(false);
   const [event, setEvent] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
 
@@ -28,56 +26,16 @@ const ResultPage = ({ completedScanId: scanId }) => {
       setWebsiteUrl(data["websiteUrl"]);
       setScanType(data["scanType"]);
       setBrowser(data["browser"]);
-      let isAutoSubmit = data["autoSubmit"];
       let isEvent = data["event"];
-
-      if (isAutoSubmit && !isEvent) {
-        setEmail(data["email"]);
-        setName(data["name"]);
-      } else {
-        if (!isEvent) {
-          setEnableReportDownload(true);
-        }
-      }
-
+      setEmail(data["email"]);
+      setName(data["name"]);
       setEvent(data["event"]);
-      setAutoSubmit(data["autoSubmit"]);
+      if (!isEvent) {
+        setEnableReportDownload(true);
+      }
     };
-
     getDataForForm();
   }, []);
-
-  useEffect(() => {
-    const submitForm = async () => {
-      const formUrl = userDataFormInputFields.formUrl;
-
-      try {
-        await submitFormViaBrowser(formUrl);
-
-        // axios
-        // // Collect form data
-        // const formData = new FormData();
-        // formData.append(userDataFormInputFields.websiteUrlField, websiteUrl);
-        // formData.append(userDataFormInputFields.scanTypeField, scanType);
-        // formData.append(userDataFormInputFields.emailField, email);
-        // formData.append(userDataFormInputFields.nameField, name);
-
-        // // Send POST request to Google Form
-        // await axios.post(formUrl, formData);
-
-        // Form submission successful
-        console.log("Form submitted successfully!");
-      } catch (error) {
-        // Handle error
-        console.error("Form submission error:", error);
-      }
-    };
-    if (autoSubmit) {
-      submitForm();
-      setEnableReportDownload(true);
-    }
-  }, [autoSubmit]);
-
   const handleDownloadResults = async () => {
     const data = await services.downloadResults(scanId);
     let blob = new Blob([data], { type: "application/zip" });
@@ -105,9 +63,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
       const formUrl = userDataFormInputFields.formUrl;
       await submitFormViaBrowser(formUrl);
 
-      // const formData = new FormData(event.target);
-      // await axios.post(formUrl, formData);
-
       // Form submission successful
       console.log("Form submitted successfully!");
     } catch (error) {
@@ -126,7 +81,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
       email: email,
       browser: browser,
     };
-    await window.services.submitFormViaBrowser(formDetails);
+    await window.services.v(formDetails);
   };
 
   return (
@@ -209,7 +164,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
           )}
           <hr />
           <Link id="scan-again" to="/">
-            <ButtonSvgIcon svgIcon={<ReturnIcon/>} className={`return-icon`}/>
+            <ButtonSvgIcon svgIcon={<ReturnIcon />} className={`return-icon`} />
             Scan again
           </Link>
         </div>

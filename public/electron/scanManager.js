@@ -39,8 +39,10 @@ const getScanOptions = (details) => {
     maxPages,
     headlessMode,
     browser,
+    email,
+    name,
   } = details;
-  const options = ["-c", scanType, "-u", url];
+  const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`];
 
   if (customDevice) {
     options.push("-d", customDevice);
@@ -68,6 +70,13 @@ const getScanOptions = (details) => {
 const startScan = async (scanDetails) => {
   const { scanType, url } = scanDetails;
   console.log(`Starting new ${scanType} scan at ${url}.`);
+
+  const userData = readUserDataFromFile();
+
+  if (userData) {
+    scanDetails.email = userData.email;
+    scanDetails.name = userData.name;
+  }
 
   let useChromium = false;
   if (
@@ -165,19 +174,22 @@ const getResultsZip = (scanId) => {
 
 async function createReportWindow(reportPath) {
   const url = "file://" + reportPath;
-  let browser = readUserDataFromFile().browser; 
-  const { context, browserChannel, proxy } = await createPlaywrightContext(browser, null, true);
+  let browser = readUserDataFromFile().browser;
+  const { context, browserChannel, proxy } = await createPlaywrightContext(
+    browser,
+    null,
+    true
+  );
 
-  const page = await context.newPage(); 
+  const page = await context.newPage();
   await page.goto(url, {
-    ...(proxy && { waitUntil: 'networkidle'})
-  }); 
+    ...(proxy && { waitUntil: "networkidle" }),
+  });
 
-  page.on('close', async data => {
-      await context.close();
-      deleteClonedProfiles(browserChannel);
-    }
-  )
+  page.on("close", async (data) => {
+    await context.close();
+    deleteClonedProfiles(browserChannel);
+  });
 }
 
 const init = () => {
