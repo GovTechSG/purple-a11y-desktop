@@ -129,9 +129,23 @@ const AdvancedScanOptions = ({
               />
             </div>
           )}
+          <hr />
+          <div id="max-concurrency-toggle-group">
+            <input
+              type="checkbox"
+              id="max-concurrency-toggle"
+              checked={advancedOptions.maxConcurrency}
+              onChange={handleSetAdvancedOption(
+                "maxConcurrency",
+                (e) => e.target.checked
+              )}
+            />
+            <label htmlFor="max-concurrency-toggle">
+              Max Concurrency
+            </label>
+          </div>
           {!isProxy && (
             <>
-              <hr />
               <div id="scan-in-background-toggle-group">
                 <input
                   type="checkbox"

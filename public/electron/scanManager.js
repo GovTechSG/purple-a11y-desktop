@@ -41,6 +41,7 @@ const getScanOptions = (details) => {
     browser,
     email,
     name,
+    maxConcurrency
   } = details;
   const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`];
 
@@ -64,12 +65,17 @@ const getScanOptions = (details) => {
     options.push("-b", browser);
   }
 
+  if (maxConcurrency) {
+    options.push("-T", 1);
+  }
+
   return options;
 };
 
 const startScan = async (scanDetails) => {
   const { scanType, url } = scanDetails;
   console.log(`Starting new ${scanType} scan at ${url}.`);
+  console.log(getScanOptions(scanDetails));
 
   const userData = readUserDataFromFile();
 
