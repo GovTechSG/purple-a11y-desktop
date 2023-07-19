@@ -1,8 +1,12 @@
 import { useState, useRef } from "react";
 import Button from "../../common/components/Button";
 import SelectField from "./SelectField";
+import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
+import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
+import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 
 const AdvancedScanOptions = ({
+  isProxy,
   scanTypeOptions,
   viewportOptions,
   deviceOptions,
@@ -17,7 +21,7 @@ const AdvancedScanOptions = ({
     if (!openAdvancedOptionsMenu) {
       setOpenAdvancedOptionsMenu(true);
     } else {
-      menu.current.style.animationName = "fade-out";
+      menu.current.style.animationName = "button-fade-out";
       setTimeout(() => setOpenAdvancedOptionsMenu(false), 200);
     }
   };
@@ -43,7 +47,7 @@ const AdvancedScanOptions = ({
 
       if (
         newOptions.scanType === scanTypeOptions[0] &&
-        newOptions.viewport === viewportOptions[0]
+        newOptions.viewport === viewportOptions.desktop
       ) {
         setAdvancedOptionsDirty(false);
       } else {
@@ -61,9 +65,15 @@ const AdvancedScanOptions = ({
         >
           Advanced scan options{" "}
           {openAdvancedOptionsMenu ? (
-            <i className="bi bi-chevron-up" />
+            <ButtonSvgIcon
+              className={`chevron-up-icon`}
+              svgIcon={<ChevronUpIcon />}
+            />
           ) : (
-            <i className="bi bi-chevron-down" />
+            <ButtonSvgIcon
+              className={`chevron-down-icon`}
+              svgIcon={<ChevronDownIcon />}
+            />
           )}
         </Button>
       </div>
@@ -80,10 +90,10 @@ const AdvancedScanOptions = ({
             id="viewport-type-dropdown"
             label="Viewport:"
             initialValue={advancedOptions.viewport}
-            options={viewportOptions}
+            options={Object.values(viewportOptions)}
             onChange={handleSetAdvancedOption("viewport")}
           />
-          {advancedOptions.viewport === viewportOptions[2] && (
+          {advancedOptions.viewport === viewportOptions.specific && !isProxy && (
             <SelectField
               id="specific-device-dropdown"
               label="Device:"
@@ -92,7 +102,7 @@ const AdvancedScanOptions = ({
               onChange={handleSetAdvancedOption("device")}
             />
           )}
-          {advancedOptions.viewport === viewportOptions[3] && (
+          {advancedOptions.viewport === viewportOptions.custom && (
             <div className="user-input-group">
               <label htmlFor="viewport-width-input" className="bold-text">
                 Width (px)
@@ -119,21 +129,25 @@ const AdvancedScanOptions = ({
               />
             </div>
           )}
-          <hr />
-          <div id="scan-in-background-toggle-group">
-            <input
-              type="checkbox"
-              id="scan-in-background-toggle"
-              checked={advancedOptions.scanInBackground}
-              onChange={handleSetAdvancedOption(
-                "scanInBackground",
-                (e) => e.target.checked
-              )}
-            />
-            <label htmlFor="scan-in-background-toggle">
-              Scan in background
-            </label>
-          </div>
+          {!isProxy && (
+            <>
+              <hr />
+              <div id="scan-in-background-toggle-group">
+                <input
+                  type="checkbox"
+                  id="scan-in-background-toggle"
+                  checked={advancedOptions.scanInBackground}
+                  onChange={handleSetAdvancedOption(
+                    "scanInBackground",
+                    (e) => e.target.checked
+                  )}
+                />
+                <label htmlFor="scan-in-background-toggle">
+                  Scan in background
+                </label>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

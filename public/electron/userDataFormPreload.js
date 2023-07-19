@@ -1,6 +1,7 @@
 // const { formFieldIds } = require("./constants.js");
 const { ipcRenderer } = require("electron");
 
+
 const formFieldIds = {
   urlScannedField: "641d6f416e65530012b57e29",
   scanTypeField: "641d6fc6448fc900122f8684",
