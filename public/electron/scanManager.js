@@ -1,7 +1,7 @@
 const { BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const { fork } = require("child_process");
-const fs = require("fs");
+const fs = require("fs-extra");
 const os = require("os");
 const { randomUUID } = require("crypto");
 const {
@@ -12,6 +12,7 @@ const {
   resultsPath,
   createPlaywrightContext,
   deleteClonedProfiles,
+  backendPath,
 } = require("./constants");
 const {
   browserTypes,
@@ -69,6 +70,7 @@ const getScanOptions = (details) => {
 
 const startScan = async (scanDetails) => {
   const { scanType, url } = scanDetails;
+  console.log(getScanOptions(scanDetails));
   console.log(`Starting new ${scanType} scan at ${url}.`);
 
   const userData = readUserDataFromFile();
@@ -113,10 +115,15 @@ const startScan = async (scanDetails) => {
         if (stdout.includes("No pages were scanned")) {
           resolve({ success: false });
         }
+        
+        if (scanDetails.scanType === 'custom') {
+          const generatedScriptName = stdout.split("/").pop().split(" ").slice(-2)[0];
+          const generatedScript = path.join(enginePath, 'custom_flow_scripts', generatedScriptName);
+          resolve({ success: true, generatedScript: generatedScript});
+        }
 
-        const resultsPath = stdout
-          .split("Results directory is at ")[1]
-          .split(" ")[0];
+        const resultsPath = stdout.split("/").pop().split(" ")[0];
+        console.log(resultsPath);
         const scanId = randomUUID();
         scanHistory[scanId] = resultsPath;
         resolve({ success: true, scanId });
@@ -129,21 +136,120 @@ const startScan = async (scanDetails) => {
         resolve({ success: false, statusCode: code, message: stdout });
       }
       currentChildProcess = null;
-
-      if (fs.existsSync(customFlowGeneratedScriptsPath)) {
-        fs.rm(customFlowGeneratedScriptsPath, { recursive: true }, (err) => {
-          if (err) {
-            console.error(
-              `Error while deleting ${customFlowGeneratedScriptsPath}.`
-            );
-          }
-        });
-      }
+      // if (fs.existsSync(customFlowGeneratedScriptsPath)) {
+      //   fs.rm(customFlowGeneratedScriptsPath, { recursive: true }, (err) => {
+      //     if (err) {
+      //       console.error(
+      //         `Error while deleting ${customFlowGeneratedScriptsPath}.`
+      //       );
+      //     }
+      //   });
+      // }
     });
   });
 
   return response;
 };
+
+const startReplay = async (generatedScript, scanDetails) => {
+  let useChromium = false;
+  if (
+    scanDetails.browser === browserTypes.chromium ||
+    (!getDefaultChromeDataDir() && !getDefaultEdgeDataDir())
+  ) {
+    useChromium = true;
+  }
+
+  const response = await new Promise((resolve, reject) => {
+    const replay = fork(
+      generatedScript,
+      [],
+      {
+        silent: true,
+        cwd: resultsPath,
+        env: {
+          ...process.env,
+          RUNNING_FROM_PH_GUI: true,
+          ...(useChromium && {
+            PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
+          }),
+          PATH: getPathVariable(),
+        },
+      }
+    )
+   
+    replay.on("exit", (code) => {
+     if (code === 0) {
+      const stdout = replay.stdout.read().toString().trim();
+  
+      console.log(stdout);
+      const currentResultsPath = stdout.split(" ").slice(-2)[0];
+      console.log(currentResultsPath);
+    
+      const resultsPath = currentResultsPath.split("/").pop();
+      console.log(resultsPath);
+      const scanId = randomUUID();
+      scanHistory[scanId] = resultsPath;
+      const newResultsPath = getResultsFolderPath(scanId);
+      console.log(newResultsPath);
+
+      fs.move(currentResultsPath, newResultsPath, (err) => {
+        if (err) return console.log(err);
+        console.log(success);
+      })
+
+      resolve({ success: true, scanId });
+     } else {
+      resolve({
+        success: false,
+        message: "An error has occurred when running the custom flow scan.",
+      });
+     }
+    })
+  });
+
+  return response;
+  // how to get the scan id :")
+
+
+  // const replay = fork(
+  //   generatedScript,
+  //   {
+  //     silent: true,
+  //     cwd: resultsPath,
+  //     env: {
+  //       ...process.env,
+  //       RUNNING_FROM_PH_GUI: true,
+  //       ...(useChromium && {
+  //         PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
+  //       }),
+  //       PATH: getPathVariable(),
+  //     },
+  //   }
+  // );
+
+  // currentChildProcess = replay;
+
+  // replay.on("exit", (code) => {
+  //   const stdout = scan.stdout.read().toString().trim();
+  //   console.log(stdout);
+  // })
+  // currentChildProcess = null; 
+}
+
+const generateReport = (customFlowLabel, scanId) => {
+  const currentResultsPath = scanHistory[scanId]; 
+  console.log(currentResultsPath);
+
+  const reportPath = getReportPath(scanId);
+  console.log(reportPath);
+  fs.readFile(reportPath, "utf-8", (err, data) => {
+    var result = data.replace(/Custom Flow/g, customFlowLabel); 
+    fs.writeFile(reportPath, result, 'utf-8', function (err) {
+      if (err) return console.log(err);
+    }); 
+  })
+}
 
 const getReportPath = (scanId) => {
   if (scanHistory[scanId]) {
@@ -196,6 +302,14 @@ const init = () => {
   ipcMain.handle("startScan", async (_event, scanDetails) => {
     return await startScan(scanDetails);
   });
+
+  ipcMain.handle("startReplay", async (_event, generatedScript, scanDetails) => {
+    return await startReplay(generatedScript, scanDetails);
+  })
+
+  ipcMain.on("generateReport", (_event, customFlowLabel, scanId) => {
+    return generateReport(customFlowLabel, scanId);
+  })
 
   ipcMain.on("openReport", async (_event, scanId) => {
     const reportPath = getReportPath(scanId);

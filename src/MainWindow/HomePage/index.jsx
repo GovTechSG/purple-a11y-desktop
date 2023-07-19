@@ -71,11 +71,23 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
 
     window.localStorage.setItem("scanDetails", JSON.stringify(scanDetails));
 
+    console.log(scanDetails);
+    if (scanDetails.scanType === 'Custom flow') {
+      navigate('/custom_flow', {state: {scanDetails: scanDetails}});
+      return;
+    } 
+
     navigate("/scanning");
     const response = await services.startScan(scanDetails);
+    console.log(response);
+    console.log(response.success);
 
     if (response.success) {
       setCompletedScanId(response.scanId);
+      if (scanDetails.scanType === 'Custom flow') {
+        navigate("/custom_flow");
+        return;
+      }
       navigate("/result");
       return;
     }

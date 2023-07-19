@@ -15,6 +15,13 @@ contextBridge.exposeInMainWorld("services", {
     const results = await ipcRenderer.invoke("startScan", scanDetails);
     return results;
   },
+  startReplay: async (generatedScript, scanDetails) => {
+    const results = await ipcRenderer.invoke("startReplay", generatedScript, scanDetails); 
+    return results;
+  },
+  generateReport: (customFormLabel, scanId) => {
+    ipcRenderer.send("generateReport", customFormLabel, scanId);
+  },
   openReport: (scanId) => {
     ipcRenderer.send("openReport", scanId);
   },
