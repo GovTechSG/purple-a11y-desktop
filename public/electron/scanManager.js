@@ -41,7 +41,7 @@ const getScanOptions = (details) => {
     browser,
     email,
     name,
-    maxConcurrency
+    maxConcurrency,
   } = details;
   const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`];
 
@@ -66,7 +66,7 @@ const getScanOptions = (details) => {
   }
 
   if (maxConcurrency) {
-    options.push("-T", 1);
+    options.push("-t", 1);
   }
 
   return options;
