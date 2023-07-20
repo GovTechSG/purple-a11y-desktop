@@ -10,6 +10,7 @@ const {
   customFlowGeneratedScriptsPath,
   playwrightBrowsersPath,
   resultsPath,
+  scanResultsPath,
   createPlaywrightContext,
   deleteClonedProfiles,
   backendPath,
@@ -70,7 +71,6 @@ const getScanOptions = (details) => {
 
 const startScan = async (scanDetails) => {
   const { scanType, url } = scanDetails;
-  console.log(getScanOptions(scanDetails));
   console.log(`Starting new ${scanType} scan at ${url}.`);
 
   const userData = readUserDataFromFile();
@@ -80,6 +80,7 @@ const startScan = async (scanDetails) => {
     scanDetails.name = userData.name;
   }
 
+  console.log(getScanOptions(scanDetails));
   let useChromium = false;
   if (
     scanDetails.browser === browserTypes.chromium ||
@@ -110,6 +111,8 @@ const startScan = async (scanDetails) => {
 
     scan.on("exit", (code) => {
       const stdout = scan.stdout.read().toString().trim();
+      console.log(stdout);
+      console.log(code);
       if (code === 0) {
         // Output from combine.js which prints the string "No pages were scanned" if crawled URL <= 0
         if (stdout.includes("No pages were scanned")) {
@@ -117,7 +120,7 @@ const startScan = async (scanDetails) => {
         }
         
         if (scanDetails.scanType === 'custom') {
-          const generatedScriptName = stdout.split("/").pop().split(" ").slice(-2)[0];
+          const generatedScriptName = stdout.split("\n").pop();
           const generatedScript = path.join(enginePath, 'custom_flow_scripts', generatedScriptName);
           resolve({ success: true, generatedScript: generatedScript});
         }
@@ -181,22 +184,32 @@ const startReplay = async (generatedScript, scanDetails) => {
     replay.on("exit", (code) => {
      if (code === 0) {
       const stdout = replay.stdout.read().toString().trim();
-  
-      console.log(stdout);
-      const currentResultsPath = stdout.split(" ").slice(-2)[0];
-      console.log(currentResultsPath);
-    
-      const resultsPath = currentResultsPath.split("/").pop();
-      console.log(resultsPath);
       const scanId = randomUUID();
-      scanHistory[scanId] = resultsPath;
-      const newResultsPath = getResultsFolderPath(scanId);
-      console.log(newResultsPath);
+      console.log(stdout.split(" ").slice(-2)[0]);
+      scanHistory[scanId] =  stdout.split(" ").slice(-2)[0].split("/").pop();
+  
+      // console.log(stdout);
+      // const currentResultsPath = path.join(
+      //   enginePath,
+      //   stdout.split(" ").slice(-2)[0]
+      // );
+      // console.log(currentResultsPath);
+    
+      // // const resultsName = currentResultsPath.split("/").pop();
+      // // console.log(resultsName);
+      // const scanId = randomUUID();
+      // scanHistory[scanId] =  stdout.split(" ").slice(-2)[0];
+      // const newResultsPath = path.join(
+      //   resultsPath,
+      //   scanHistory[scanId]
+      // );;
+      // console.log(newResultsPath);
 
-      fs.move(currentResultsPath, newResultsPath, (err) => {
-        if (err) return console.log(err);
-        console.log(success);
-      })
+      // fs.move(currentResultsPath, newResultsPath, (err) => {
+      //   if (err) return console.log(err);
+      //   console.log(success);
+      // })
+      // console.log(newResultsPath);
 
       resolve({ success: true, scanId });
      } else {
@@ -243,18 +256,15 @@ const generateReport = (customFlowLabel, scanId) => {
 
   const reportPath = getReportPath(scanId);
   console.log(reportPath);
-  fs.readFile(reportPath, "utf-8", (err, data) => {
-    var result = data.replace(/Custom Flow/g, customFlowLabel); 
-    fs.writeFile(reportPath, result, 'utf-8', function (err) {
-      if (err) return console.log(err);
-    }); 
-  })
+  const data = fs.readFileSync(reportPath, {encoding: "utf-8"}); 
+  const result = data.replaceAll(/Custom Flow/g, customFlowLabel); 
+  fs.writeFileSync(reportPath, result);
 }
 
 const getReportPath = (scanId) => {
   if (scanHistory[scanId]) {
     return path.join(
-      resultsPath,
+      scanResultsPath,
       scanHistory[scanId],
       "reports",
       "report.html"
