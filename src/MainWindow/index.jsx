@@ -7,7 +7,7 @@ import ResultPage from "./ResultPage";
 import OnboardingComponent from "./Onboarding/OnboardingComponent";
 import ConnectionNotification from "./ConnectionNotification";
 import "./MainWindow.css";
-import CustomFlowPage from "./Custom Flow";
+import CustomFlowPage from "./CustomFlow";
 
 const MainWindow = ({ isProxy, appVersion }) => {
   const [completedScanId, setCompletedScanId] = useState(null);

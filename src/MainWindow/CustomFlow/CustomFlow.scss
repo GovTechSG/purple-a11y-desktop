@@ -1,0 +1,29 @@
+#custom-flow {
+    padding: 1rem;
+
+    .custom-flow-header {
+        margin-bottom: 1rem;
+    }
+
+    .custom-flow-header-content {
+        display: flex;
+        flex-direction: row; 
+    }
+
+    .custom-flow-header-img {
+        
+    }
+
+    .custom-flow-header-title-container {
+        padding: 1rem;
+    }
+
+    .custom-flow-header-step {
+        color: #4A6168;
+        font-weight: 700;
+     }
+
+    .custom-flow-header-url {
+        color: #4A6168; 
+    }
+}
