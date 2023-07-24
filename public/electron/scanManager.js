@@ -1,6 +1,6 @@
 const { BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
-const { fork } = require("child_process");
+const { fork, spawn } = require("child_process");
 const fs = require("fs");
 const os = require("os");
 const { randomUUID } = require("crypto");
@@ -187,70 +187,74 @@ const mailResults = async (formDetails, scanId) => {
 
   const { websiteURL, scanType, emailAddress } = formDetails;
 
+  console.log(websiteURL);
+  console.log(scanType);
+  console.log(emailAddress);
+
   const shellCommand = `
-if ((Split-Path -Path $pwd -Leaf) -eq "scripts") {
-  cd ..
-}
+    if ((Split-Path -Path $pwd -Leaf) -eq "scripts") {
+      cd ..
+    }
 
-$attachmentCount = 0
+    $attachmentCount = 0
 
-#Get an Outlook application object
-$o = New-Object -com Outlook.Application
+    #Get an Outlook application object
+    $o = New-Object -com Outlook.Application
 
-if ($null -eq $o) {
-  throw "Unable to open outlook"
-  exit
-}
+    if ($null -eq $o) {
+      throw "Unable to open outlook"
+      exit
+    }
 
-$mail = $o.CreateItem(0)
+    $mail = $o.CreateItem(0)
 
-$mail.subject = "[A11y] ${scanType
-    .split(" ")
-    .shift()} Scan Results for: ${websiteURL} (${scanType})"
+    $mail.subject = "[A11y] ${scanType
+        .split(" ")
+        .shift()} Scan Results for: ${websiteURL} (${scanType})"
 
-$mail.body = "Hi there,
+    $mail.body = "Hi there,
 
-Please see the attached accessibility scan results with Purple HATS (report.html).
-Feel free to reach us at accessibility@tech.gov.sg if you have any questions.
+    Please see the attached accessibility scan results with Purple HATS (report.html).
+    Feel free to reach us at accessibility@tech.gov.sg if you have any questions.
 
-Thank you.
-Accessibility Enabling Team"
+    Thank you.
+    Accessibility Enabling Team"
 
 
-$mail.To = "<${emailAddress}>"
+    $mail.To = "<${emailAddress}>"
 
-$mail.cc = "<accessibility@tech.gov.sg>"
+    $mail.cc = "<accessibility@tech.gov.sg>"
 
-# # Iterate over all files and only add the ones that have an .html extension
-$files = Get-ChildItem '${reportPath}'
+    # # Iterate over all files and only add the ones that have an .html extension
+    $files = Get-ChildItem '${reportPath}'
 
-for ($i = 0; $i -lt $files.Count; $i++) {
-  $outfileName = $files[$i].FullName
-  $outfileNameExtension = $files[$i].Extension
+    for ($i = 0; $i -lt $files.Count; $i++) {
+      $outfileName = $files[$i].FullName
+      $outfileNameExtension = $files[$i].Extension
 
-  if ($outfileNameExtension -eq ".html") {
-      $mail.Attachments.Add($outfileName);
-      $attachmentCount++
-  }
-}
+      if ($outfileNameExtension -eq ".html") {
+          $mail.Attachments.Add($outfileName);
+          $attachmentCount++
+      }
+    }
 
-if ($attachmentCount -eq 0) {
-  throw "No files were found in the specified folder. Exiting."
-  $o.Quit()
-  exit
-}
+    if ($attachmentCount -eq 0) {
+      throw "No files were found in the specified folder. Exiting."
+      $o.Quit()
+      exit
+    }
 
-$mail.Send()
+    $mail.Send()
 
-# give time to send the email
-Start-Sleep -Seconds 5
+    # give time to send the email
+    Start-Sleep -Seconds 5
 
-# quit Outlook
-$o.Quit()
+    # quit Outlook
+    $o.Quit()
 
-#end the script
-exit
-`;
+    #end the script
+    exit
+  `;
 
   const response = await new Promise((resolve) => {
     const mailProcess = spawn("powershell.exe", [

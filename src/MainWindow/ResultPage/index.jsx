@@ -56,7 +56,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const handleMailReport = async () => {
     setMailStatus({ ...mailStatus, sendingMail: true });
     const response = await services.mailReport(
-      { websiteUrl, scanType, email },
+      { websiteUrl, scanType, emailAddress: email },
       scanId
     );
     if (response.success) {
@@ -84,7 +84,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
             className={`check-circle-icon`}
             svgIcon={<CheckCircleIcon />}
           />
-          {/* <i className="bi bi-check-circle"></i> */}
           <h1>Scan completed</h1>
           {enableReportDownload &&
             enableMailReport &&
@@ -132,21 +131,27 @@ const ResultPage = ({ completedScanId: scanId }) => {
             />
             Download results (.zip)
           </Button>
-          {isEvent && (
-            <Button
-              id="download-button"
-              type="secondary"
-              onClick={handleMailReport}
-            >
-              <ButtonSvgIcon
-                svgIcon={<DownloadIcon />}
-                className={`download-icon`}
-                disabled={mailStatus.sendingMail ? true : false}
-              />
-              <i className="bi bi-envelope" />
-              Mail results
-            </Button>
-          )}
+          {isEvent && 
+          mailStatus.mailSentSucessful === false && (
+              <>
+                <Button
+                  id="mail-button"
+                  type="secondary"
+                  className="bold-text"
+                  onClick={handleMailReport}
+                  disabled={mailStatus.sendingMail ? "disabled" : null}
+                >
+                  {mailStatus.sendingMail ? (
+                    <> Sending mail...</>
+                  ) : (
+                    <>
+                      <i className="bi bi-envelope" />
+                      Mail report
+                    </>
+                  )}
+                </Button>
+              </>
+            )}
           <hr />
           <Link id="scan-again" to="/">
             <ButtonSvgIcon svgIcon={<ReturnIcon />} className={`return-icon`} />
