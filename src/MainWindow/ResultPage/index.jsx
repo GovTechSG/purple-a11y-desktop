@@ -85,28 +85,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
             svgIcon={<CheckCircleIcon />}
           />
           <h1>Scan completed</h1>
-          {enableReportDownload &&
-            enableMailReport &&
-            mailStatus.mailSentSucessful === false && (
-              <>
-                <Button
-                  id="mail-button"
-                  type="secondary"
-                  className="bold-text"
-                  onClick={handleMailReport}
-                  disabled={mailStatus.sendingMail ? "disabled" : null}
-                >
-                  {mailStatus.sendingMail ? (
-                    <>Sending mail...</>
-                  ) : (
-                    <>
-                      <i className="bi bi-envelope" />
-                      Mail report
-                    </>
-                  )}
-                </Button>
-              </>
-            )}
           <Button
             id="view-button"
             type="primary"
@@ -131,27 +109,26 @@ const ResultPage = ({ completedScanId: scanId }) => {
             />
             Download results (.zip)
           </Button>
-          {isEvent && 
-          mailStatus.mailSentSucessful === false && (
-              <>
-                <Button
-                  id="mail-button"
-                  type="secondary"
-                  className="bold-text"
-                  onClick={handleMailReport}
-                  disabled={mailStatus.sendingMail ? "disabled" : null}
-                >
-                  {mailStatus.sendingMail ? (
-                    <> Sending mail...</>
-                  ) : (
-                    <>
-                      <i className="bi bi-envelope" />
-                      Mail report
-                    </>
-                  )}
-                </Button>
-              </>
-            )}
+          {isEvent && mailStatus.mailSentSucessful === false && (
+            <>
+              <Button
+                id="mail-button"
+                type="primary"
+                className="bold-text"
+                onClick={handleMailReport}
+                disabled={mailStatus.sendingMail ? "disabled" : null}
+              >
+                {mailStatus.sendingMail ? (
+                  <> Sending mail...</>
+                ) : (
+                  <>
+                    <i className="bi bi-envelope" />
+                    Mail report
+                  </>
+                )}
+              </Button>
+            </>
+          )}
           <hr />
           <Link id="scan-again" to="/">
             <ButtonSvgIcon svgIcon={<ReturnIcon />} className={`return-icon`} />
