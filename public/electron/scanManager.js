@@ -267,6 +267,7 @@ exit
 
   return response;
 };
+
 async function createReportWindow(reportPath) {
   const url = "file://" + reportPath;
   let browser = readUserDataFromFile().browser;
@@ -300,6 +301,10 @@ const init = () => {
 
   ipcMain.handle("downloadResults", (_event, scanId) => {
     return getResultsZip(scanId);
+  });
+
+  ipcMain.handle("mailReport", (_event, formDetails, scanId) => {
+    return mailResults(formDetails, scanId);
   });
 };
 

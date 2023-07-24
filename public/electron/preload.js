@@ -67,7 +67,8 @@ contextBridge.exposeInMainWorld("services", {
   },
   openLink: (url) => {
     ipcRenderer.send("openLink", url);
-  },enableMailReport: (callback) => {
+  },
+  enableMailReport: (callback) => {
     ipcRenderer.on("enableMailReport", (event, formDetails) => {
       callback(formDetails);
     });

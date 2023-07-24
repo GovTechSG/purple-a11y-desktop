@@ -9,7 +9,6 @@ import { ReactComponent as CheckCircleIcon } from "../../assets/check-circle.svg
 import { ReactComponent as BoxArrowUpRightIcon } from "../../assets/box-arrow-up-right.svg";
 import { ReactComponent as DownloadIcon } from "../../assets/download.svg";
 import { ReactComponent as ReturnIcon } from "../../assets/return.svg";
-import LoadingSpinner from "../../common/components/LoadingSpinner";
 
 const ResultPage = ({ completedScanId: scanId }) => {
   const [enableReportDownload, setEnableReportDownload] = useState(false);
@@ -18,7 +17,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [browser, setBrowser] = useState("");
-  const [event, setEvent] = useState(false);
+  const [isEvent, setIsEvent] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
   const [enableMailReport, setEnableMailReport] = useState();
   const [mailStatus, setMailStatus] = useState({
@@ -33,13 +32,10 @@ const ResultPage = ({ completedScanId: scanId }) => {
       setWebsiteUrl(data["websiteUrl"]);
       setScanType(data["scanType"]);
       setBrowser(data["browser"]);
-      let isEvent = data["event"];
       setEmail(data["email"]);
       setName(data["name"]);
-      setEvent(data["event"]);
-      if (!isEvent) {
-        setEnableReportDownload(true);
-      }
+      setIsEvent(data["event"]);
+      setEnableReportDownload(true);
     };
     getDataForForm();
   }, []);
@@ -57,32 +53,12 @@ const ResultPage = ({ completedScanId: scanId }) => {
     services.openReport(scanId);
   };
 
-  const handleSubmitForm = async (event) => {
-    event.preventDefault();
-
-    try {
-      if (!services.isValidEmail(email)) {
-        setErrorMessage("Please enter a valid email");
-        return;
-      }
-
-      setEnableReportDownload(true);
-      setEvent(false);
-      const formUrl = userDataFormInputFields.formUrl;
-      await submitFormViaBrowser(formUrl);
-
-      // Form submission successful
-      console.log("Form submitted successfully!");
-    } catch (error) {
-      // Handle error
-      console.error("Form submission error:", error);
-      // Write to error log
-    }
-  };
-
   const handleMailReport = async () => {
     setMailStatus({ ...mailStatus, sendingMail: true });
-    const response = await services.mailReport(enableMailReport, scanId);
+    const response = await services.mailReport(
+      { websiteUrl, scanType, email },
+      scanId
+    );
     if (response.success) {
       alert("Report successfully mailed");
       setMailStatus({
@@ -98,18 +74,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
         mailError: true,
       });
     }
-  };
-
-  const submitFormViaBrowser = async (formUrl) => {
-    const formDetails = {
-      formUrl: formUrl,
-      websiteUrl: websiteUrl,
-      scanType: scanType,
-      name: name,
-      email: email,
-      browser: browser,
-    };
-    await window.services.v(formDetails);
   };
 
   return (
@@ -144,73 +108,44 @@ const ResultPage = ({ completedScanId: scanId }) => {
                 </Button>
               </>
             )}
-          {enableReportDownload ? (
-            <>
-              <Button
-                id="view-button"
-                type="primary"
-                className="bold-text"
-                onClick={handleViewReport}
-              >
-                <ButtonSvgIcon
-                  className={`box-arrow-up-right-icon`}
-                  svgIcon={<BoxArrowUpRightIcon />}
-                />
-                {/* <i className="bi bi-box-arrow-up-right" /> */}
-                View report
-              </Button>
-              <Button
-                id="download-button"
-                type="secondary"
-                onClick={handleDownloadResults}
-              >
-                <ButtonSvgIcon
-                  svgIcon={<DownloadIcon />}
-                  className={`download-icon`}
-                />
-                {/* <i className="bi bi-download" /> */}
-                Download results (.zip)
-              </Button>
-            </>
-          ) : (
-            <>
-              <form
-                id="form-container"
-                className=""
-                onSubmit={(e) => handleSubmitForm(e)}
-              >
-                <input
-                  type="hidden"
-                  id="form-website-url"
-                  name={userDataFormInputFields.websiteUrlField}
-                  value={websiteUrl}
-                ></input>
-                <input
-                  type="hidden"
-                  id="form-scan-type"
-                  name={userDataFormInputFields.scanTypeField}
-                  value={scanType}
-                ></input>
-                <label for="form-name">Name:</label>
-                <input
-                  type="text"
-                  id="form-name"
-                  name={userDataFormInputFields.nameField}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                ></input>
-                <label for="form-email">Email:</label>
-                <input
-                  type="text"
-                  id="form-email"
-                  name={userDataFormInputFields.emailField}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                ></input>
-                {errorMessage && <p className="error-text">{errorMessage}</p>}
-                <Button type="submit">View Results</Button>
-              </form>
-            </>
+          <Button
+            id="view-button"
+            type="primary"
+            className="bold-text"
+            onClick={handleViewReport}
+          >
+            <ButtonSvgIcon
+              className={`box-arrow-up-right-icon`}
+              svgIcon={<BoxArrowUpRightIcon />}
+            />
+            {/* <i className="bi bi-box-arrow-up-right" /> */}
+            View report
+          </Button>
+          <Button
+            id="mail-button"
+            type="secondary"
+            onClick={handleDownloadResults}
+          >
+            <ButtonSvgIcon
+              svgIcon={<DownloadIcon />}
+              className={`download-icon`}
+            />
+            Download results (.zip)
+          </Button>
+          {isEvent && (
+            <Button
+              id="download-button"
+              type="secondary"
+              onClick={handleMailReport}
+            >
+              <ButtonSvgIcon
+                svgIcon={<DownloadIcon />}
+                className={`download-icon`}
+                disabled={mailStatus.sendingMail ? true : false}
+              />
+              <i className="bi bi-envelope" />
+              Mail results
+            </Button>
           )}
           <hr />
           <Link id="scan-again" to="/">

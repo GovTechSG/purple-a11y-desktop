@@ -69,8 +69,6 @@ const mailReport = async (formDetails, scanId) => {
   return response;
 };
 
-
-
 const getUserData = async () => {
   const userData = await window.services.getUserData();
   return userData;
