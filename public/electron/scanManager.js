@@ -181,13 +181,14 @@ const startReplay = async (generatedScript, scanDetails) => {
       }
     )
    
-    replay.on("exit", (code) => {
+    replay.on("exit", async (code) => {
      if (code === 0) {
       const stdout = replay.stdout.read().toString().trim();
       const scanId = randomUUID();
       console.log(stdout.split(" ").slice(-2)[0]);
       scanHistory[scanId] =  stdout.split(" ").slice(-2)[0].split("/").pop();
   
+      await cleanUp(scanHistory[scanId].split('_').slice(0, -1).toString().replaceAll(',', '_'));
       // console.log(stdout);
       // const currentResultsPath = path.join(
       //   enginePath,
@@ -307,6 +308,15 @@ async function createReportWindow(reportPath) {
     deleteClonedProfiles(browserChannel);
   });
 }
+
+const cleanUp = async (folderName, setDefaultFolders = false) => {
+  const pathToDelete = path.join(resultsPath, folderName);
+  await fs.pathExists(pathToDelete).then(exists => {
+    if (exists) {
+      fs.removeSync(pathToDelete);
+    }
+  });
+};
 
 const init = () => {
   ipcMain.handle("startScan", async (_event, scanDetails) => {
