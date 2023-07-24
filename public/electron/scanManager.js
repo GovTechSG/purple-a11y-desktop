@@ -1,6 +1,6 @@
 const { BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
-const { fork } = require("child_process");
+const { fork, spawn } = require("child_process");
 const fs = require("fs-extra");
 const os = require("os");
 const { randomUUID } = require("crypto");
@@ -80,7 +80,6 @@ const startScan = async (scanDetails) => {
     scanDetails.name = userData.name;
   }
 
-  console.log(getScanOptions(scanDetails));
   let useChromium = false;
   if (
     scanDetails.browser === browserTypes.chromium ||
@@ -90,11 +89,10 @@ const startScan = async (scanDetails) => {
   }
 
   const response = await new Promise((resolve) => {
-    const scan = fork(
-      path.join(enginePath, "cli.js"),
-      getScanOptions(scanDetails),
+    const scan = spawn(
+      `node`,
+      [path.join(enginePath, "cli.js"), ...getScanOptions(scanDetails)],
       {
-        silent: true,
         cwd: resultsPath,
         env: {
           ...process.env,
@@ -109,34 +107,53 @@ const startScan = async (scanDetails) => {
 
     currentChildProcess = scan;
 
-    scan.on("exit", (code) => {
-      const stdout = scan.stdout.read().toString().trim();
-      console.log(stdout);
-      console.log(code);
-      if (code === 0) {
-        // Output from combine.js which prints the string "No pages were scanned" if crawled URL <= 0
-        if (stdout.includes("No pages were scanned")) {
-          resolve({ success: false });
-        }
-        
-        if (scanDetails.scanType === 'custom') {
-          const generatedScriptName = stdout.split("\n").pop();
-          const generatedScript = path.join(enginePath, 'custom_flow_scripts', generatedScriptName);
-          resolve({ success: true, generatedScript: generatedScript});
-        }
+    scan.stderr.setEncoding("utf8");
+    scan.stderr.on("data", function (data) {
+      console.log("stderr: " + data);
+    });
 
-        const resultsPath = stdout.split("/").pop().split(" ")[0];
+    scan.stdout.setEncoding("utf8");
+    scan.stdout.on("data", (data) => {
+      /** Code 0 handled indirectly here (i.e. successful process run),
+      as unable to get stdout on close event after changing to spawn from fork */
+
+      // Output from combine.js which prints the string "No pages were scanned" if crawled URL <= 0
+      // consider this as successful that the process ran,
+      // but failure in the sense that no pages were scanned so that we can display a message to the user
+      if (data.includes("No pages were scanned")) {
+        scan.kill("SIGKILL");
+        currentChildProcess = null;
+        resolve({ success: false });
+      }
+
+      // The true success where the process ran and pages were scanned
+      if (data.includes("Results directory is at")) {
+        console.log(data);
+        const resultsPath = data
+          .split("Results directory is at ")[1]
+          .split("/")
+          .pop()
+          .split(" ")[0];
         console.log(resultsPath);
         const scanId = randomUUID();
         scanHistory[scanId] = resultsPath;
+        scan.kill("SIGKILL");
+        currentChildProcess = null;
         resolve({ success: true, scanId });
-      } else if (code === 2) {
-        resolve({
-          success: false,
-          message: "An error has occurred when running the custom flow scan.",
-        });
-      } else {
-        resolve({ success: false, statusCode: code, message: stdout });
+      }
+
+      // Handle live crawling output
+      if (data.includes("Electron crawling:")) {
+        // const url = data.split("Electron crawling: ")[1].split(" ")[0];
+        console.log(data);
+      }
+    });
+
+    // Only handles error code closes (i.e. code > 0)
+    // as successful resolves are handled above
+    scan.on("close", (code) => {
+      if (code !== 0) {
+        resolve({ success: false, statusCode: code });
       }
       currentChildProcess = null;
       // if (fs.existsSync(customFlowGeneratedScriptsPath)) {
