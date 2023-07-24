@@ -93,7 +93,7 @@ const OnboardingComponent = ({
             <h3 className="modal-title fade-in">Hi There!</h3>
             <p className="modal-desc fade-in">
               Making your website accessible is within reach. Let’s get started
-              by taking a quick look at how Purple HATS work.
+              by taking a quick look at how Purple HATS works.
             </p>
             <PageIndicator page={1}></PageIndicator>
           </>
@@ -117,9 +117,7 @@ const OnboardingComponent = ({
             </div>
             <h3 className="modal-title fade-in">Get started</h3>
             <p className="modal-desc fade-in">
-              You just need to enter your website/sitemap URL and Purple HATS
-              will crawl through all the web pages to analyse for accessibility
-              issues.
+              Enter your website or sitemap URL and Purple HATS will crawl through them to analyse and identify accessibility issues.
             </p>
             <PageIndicator page={2}></PageIndicator>
           </>
@@ -138,11 +136,9 @@ const OnboardingComponent = ({
                 alt="custom flow step-by-step animation illustration"
               ></img>
             </div>
-            <h3 className="modal-title fade-in">Custom Flow</h3>
+            <h3 className="modal-title fade-in">Custom Flow Scan</h3>
             <p className="modal-desc fade-in">
-              Custom flow scan type allows you to specify a user journey of your
-              choice by recording a series of actions on the browser and re-play
-              them automatically.
+              This scan type allows you to specify a user journey of choice by recording a series of actions on the browser and replaying them.
             </p>
             <PageIndicator page={3}></PageIndicator>
           </>
@@ -165,9 +161,7 @@ const OnboardingComponent = ({
               isOnboarding={true}
             />
             <p className="modal-desc fade-in">
-              To personalise your experience, we will be collecting your name,
-              email address and app usage data. Your information fully complies
-              with {policyUrlElem}
+              To personalise your experience, we will be collecting your name, email address and app usage data. The collection and usage of your data will fully comply with {policyUrlElem}
             </p>
             <PageIndicator page={4}></PageIndicator>
           </>

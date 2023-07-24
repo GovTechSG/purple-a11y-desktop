@@ -23,6 +23,8 @@ const startScan = async (scanDetails) => {
     viewportWidth,
     scanInBackground,
     browser,
+    maxConcurrency,
+    falsePositive
   } = scanDetails;
 
   currentScanUrl = scanUrl;
@@ -33,6 +35,8 @@ const startScan = async (scanDetails) => {
     url: scanUrl,
     headlessMode: scanInBackground,
     browser: browser,
+    maxConcurrency: maxConcurrency,
+    falsePositive: falsePositive
   };
 
   if (selectedScanType !== Object.keys(scanTypes)[2]) {

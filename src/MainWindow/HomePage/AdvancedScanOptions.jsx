@@ -1,9 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "../../common/components/Button";
 import SelectField from "./SelectField";
 import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
 import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
+import questionMarkIcon from "../../assets/question-mark.svg";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
+import ToolTip from "../../common/components/ToolTip";
 
 const AdvancedScanOptions = ({
   isProxy,
@@ -15,6 +17,10 @@ const AdvancedScanOptions = ({
 }) => {
   const [openAdvancedOptionsMenu, setOpenAdvancedOptionsMenu] = useState(false);
   const [advancedOptionsDirty, setAdvancedOptionsDirty] = useState(false);
+  const [isMaxConcurrencyMouseEvent, setIsMaxConcurrencyMouseEvent] = useState(false);
+  const [showMaxConcurrencyTooltip, setShowMaxConcurrencyTooltip] = useState(false);
+  const [isFalsePositiveMouseEvent, setIsFalsePositiveMouseEvent] = useState(false);
+  const [showFalsePositiveTooltip, setShowFalsePositiveTooltip] = useState(false);
   const menu = useRef();
 
   const handleToggleMenu = () => {
@@ -25,6 +31,28 @@ const AdvancedScanOptions = ({
       setTimeout(() => setOpenAdvancedOptionsMenu(false), 200);
     }
   };
+
+  const handleMaxConcurrencyOnFocus = () => {
+    if (!isMaxConcurrencyMouseEvent) {
+      setShowMaxConcurrencyTooltip(true); 
+    }
+  }
+
+  const handleMaxConcurrencyOnMouseEnter = () => {
+    setShowMaxConcurrencyTooltip(false);
+    setIsMaxConcurrencyMouseEvent(true); 
+  }
+
+  const handleFalsePositiveOnFocus = () => {
+    if (!isFalsePositiveMouseEvent) {
+      setShowFalsePositiveTooltip(true);
+    }
+  }
+
+  const handleFalsePositiveOnMouseEnter = () => {
+    setShowFalsePositiveTooltip(false); 
+    setIsFalsePositiveMouseEvent(true);
+  }
 
   /*
   by default, new value of the selected option will be set to event.target.value
@@ -129,9 +157,76 @@ const AdvancedScanOptions = ({
               />
             </div>
           )}
+          <hr />
+          <div id="max-concurrency-toggle-group">
+            <input
+              type="checkbox"
+              id="max-concurrency-toggle"
+              aria-describedby='max-concurrency-tooltip'
+              checked={advancedOptions.maxConcurrency}
+              onFocus={() => handleMaxConcurrencyOnFocus()}
+              onBlur={() => setShowMaxConcurrencyTooltip(false)}
+              onMouseEnter={() => handleMaxConcurrencyOnMouseEnter()}
+              onMouseLeave={() => setIsMaxConcurrencyMouseEvent(false)}
+              onChange={handleSetAdvancedOption(
+                "maxConcurrency",
+                (e) => e.target.checked
+              )}
+            />
+            <label htmlFor="max-concurrency-toggle">
+              Slow Scan Mode
+            </label>
+            <div className="custom-tooltip-container">
+              <ToolTip 
+                description={'Scan 1 page at a time instead of multiple pages concurrently.'} 
+                id='max-concurrency-tooltip'
+                showToolTip={showMaxConcurrencyTooltip}
+              />
+              <img 
+                className='tooltip-img' 
+                src={questionMarkIcon} 
+                aria-describedby='max-concurrency-tooltip' 
+                onMouseEnter={() => setShowMaxConcurrencyTooltip(true)} 
+                onMouseLeave={() => setShowMaxConcurrencyTooltip(false)} 
+                alt="tooltip icon for slow scan mode"
+              />
+            </div>
+          </div>
+          <div id='false-positive-toggle-group'>
+              <input 
+                type="checkbox"
+                id="false-positive-toggle" 
+                aria-describedby="false-positive-tooltip"
+                checked={advancedOptions.falsePositive}
+                onFocus={() => handleFalsePositiveOnFocus()}
+                onBlur={() => setShowFalsePositiveTooltip(false)}
+                onMouseEnter={() => handleFalsePositiveOnMouseEnter()}
+                onMouseLeave={() => setIsFalsePositiveMouseEvent(false)}
+                onChange={handleSetAdvancedOption(
+                  "falsePositive", 
+                  (e) => e.target.checked
+                )} 
+              /> 
+              <label htmlFor="false-positive-toggle">
+                False Positive Items
+              </label>
+              <div className="custom-tooltip-container">
+                <ToolTip 
+                  description={'Display false positive items that will require manual review.'} 
+                  id='false-positive-tooltip'
+                  showToolTip={showFalsePositiveTooltip}
+                />
+                <img 
+                  className='tooltip-img' 
+                  src={questionMarkIcon} 
+                  aria-describedby='false-positive-tooltip' 
+                  onMouseEnter={() => setShowFalsePositiveTooltip(true)} 
+                  onMouseLeave={() => setShowFalsePositiveTooltip(false)} 
+                  alt="tooltip icon for false positive"/>
+            </div>
+          </div>
           {!isProxy && (
             <>
-              <hr />
               <div id="scan-in-background-toggle-group">
                 <input
                   type="checkbox"

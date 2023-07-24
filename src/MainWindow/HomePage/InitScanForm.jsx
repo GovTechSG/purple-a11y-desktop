@@ -28,6 +28,8 @@ const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage }) => {
     device: deviceOptions[0],
     viewportWidth: "320",
     scanInBackground: false,
+    maxConcurrency: false, 
+    falsePositive: false,
   });
 
   const togglePageLimitAdjuster = () => {
