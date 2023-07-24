@@ -126,8 +126,8 @@ const startScan = async (scanDetails) => {
         resolve({ success: false });
       }
 
-      if (scanDetails.scanType === 'custom') {
-        const generatedScriptName = stdout.split("/").pop().split(" ").slice(-2)[0];
+      if (scanDetails.scanType === 'custom' && data.includes('generatedScript')) {
+        const generatedScriptName = data.split('\n')[0];
         const generatedScript = path.join(customFlowGeneratedScriptsPath, generatedScriptName);
         resolve({ success: true, generatedScript: generatedScript});
       }
