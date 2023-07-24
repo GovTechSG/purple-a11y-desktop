@@ -6,7 +6,9 @@ import './CustomFlow.scss';
 import recordIcon from "../../assets/record-icon.svg";
 import replayIcon from "../../assets/replay-icon.svg"; 
 import labelIcon from "../../assets/label-icon.svg";
+import purpleCheckIcon from "../../assets/purple-check-circle.svg";
 import Button from "../../common/components/Button";
+import LoadingSpinner from "../../common/components/LoadingSpinner";
 
 const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
     const { state }= useLocation(); 
@@ -14,12 +16,32 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
     const [scanDetails, setScanDetails] = useState(null);
     const [generatedScript, setGeneratedScript] = useState(null);
     const [customFlowLabel, setCustomFlowLabel] = useState('Custom Flow');
+    const [loading, setLoading] = useState(false);
+    const [done, setDone] = useState(false);
     const [step, setStep] = useState(1); 
 
     useEffect(() => {
         console.log(state.scanDetails);
         setScanDetails(state.scanDetails);
     }, [])
+
+    useEffect(() => {
+      if (done) {
+        const timer = setTimeout(() => {
+          setStep(step + 1);
+          setDone(false);
+        }, 3000)
+
+        return () => {
+          window.clearTimeout(timer);
+        }
+      }
+    }, [done])
+
+    const onClickRecord = async () => {
+      setLoading(true); 
+      await startRecording();
+    }
         
     const startRecording = async () => {
         const response = await services.startScan(scanDetails);
@@ -28,7 +50,8 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
         if (response.success) {
           console.log(response.generatedScript);
           setGeneratedScript(response.generatedScript);
-          setStep(2);
+          setLoading(false);
+          setDone(true);
           return;
         }
 
@@ -67,6 +90,11 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
           return;
     }
 
+    const onClickReplay = async () => {
+      setLoading(true); 
+      await startReplaying();
+    }
+
     const startReplaying = async () => {
         console.log(scanDetails);
         console.log(generatedScript);
@@ -75,7 +103,8 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
         if (response.success) {
             console.log(response);
             setCompletedScanId(response.scanId);   
-            setStep(3);
+            setLoading(false);
+            setDone(true);
             return;         
         }
 
@@ -131,7 +160,12 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                   url={scanDetails.scanUrl}
                   description={"Record your custom flow by manually navigating on a new browser window. In the event of a login page, we will solely capture your credentials for this scan and promptly remove them thereafter. \nAfter finishing your flow, please close the browser to continue to the next step."}
                 />
-                <Button type="primary" onClick={startRecording}>Start Recording</Button>
+                { !loading 
+                  ? done 
+                    ? <img src={purpleCheckIcon}></img>
+                    : <><Button type="primary" onClick={onClickRecord}>Start Recording</Button></>
+                  : <><LoadingSpinner/></>
+                }
               </>
             )
           }
@@ -145,7 +179,12 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                   url={scanDetails.scanUrl}
                   description={"Purple HATS will replay and scan the recorded flow on a new browser window."}
                 />
-                <Button type="primary" onClick={startReplaying}>Start Replaying</Button>
+                { !loading 
+                    ? done 
+                      ? <img src={purpleCheckIcon}></img>
+                      : <Button type="primary" onClick={onClickReplay}>Start Replaying</Button>
+                    : <LoadingSpinner/>
+                }
               </>
             )
           }
