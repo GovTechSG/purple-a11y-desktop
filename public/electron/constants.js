@@ -110,7 +110,7 @@ const getPathVariable = () => {
 const scanResultsPath = path.join(resultsPath, "results");
 
 const customFlowGeneratedScriptsPath = path.join(
-  resultsPath,
+  enginePath,
   "custom_flow_scripts"
 );
 

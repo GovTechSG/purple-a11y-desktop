@@ -126,6 +126,12 @@ const startScan = async (scanDetails) => {
         resolve({ success: false });
       }
 
+      if (scanDetails.scanType === 'custom') {
+        const generatedScriptName = stdout.split("/").pop().split(" ").slice(-2)[0];
+        const generatedScript = path.join(customFlowGeneratedScriptsPath, generatedScriptName);
+        resolve({ success: true, generatedScript: generatedScript});
+      }
+
       // The true success where the process ran and pages were scanned
       if (data.includes("Results directory is at")) {
         console.log(data);
@@ -156,15 +162,6 @@ const startScan = async (scanDetails) => {
         resolve({ success: false, statusCode: code });
       }
       currentChildProcess = null;
-      // if (fs.existsSync(customFlowGeneratedScriptsPath)) {
-      //   fs.rm(customFlowGeneratedScriptsPath, { recursive: true }, (err) => {
-      //     if (err) {
-      //       console.error(
-      //         `Error while deleting ${customFlowGeneratedScriptsPath}.`
-      //       );
-      //     }
-      //   });
-      // }
     });
   });
 
@@ -333,6 +330,16 @@ const cleanUp = async (folderName, setDefaultFolders = false) => {
       fs.removeSync(pathToDelete);
     }
   });
+
+  if (fs.existsSync(customFlowGeneratedScriptsPath)) {
+    fs.rm(customFlowGeneratedScriptsPath, { recursive: true }, (err) => {
+      if (err) {
+        console.error(
+          `Error while deleting ${customFlowGeneratedScriptsPath}.`
+        );
+      }
+    });
+  }
 };
 
 const init = () => {
