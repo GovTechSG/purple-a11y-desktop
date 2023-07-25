@@ -180,67 +180,115 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
   }
 
   const response = await new Promise((resolve, reject) => {
-    const replay = fork(
-      generatedScript,
-      [],
-      {
-        silent: true,
-        cwd: resultsPath,
-        env: {
-          ...process.env,
-          RUNNING_FROM_PH_GUI: true,
-          ...(useChromium && {
-            PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
-          }),
-          PATH: getPathVariable(),
-        },
+    const replay = spawn(`node`, [generatedScript], {
+      cwd: resultsPath,
+      env: {
+        ...process.env,
+        RUNNING_FROM_PH_GUI: true,
+        ...(useChromium && {
+          PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
+        }),
+        PATH: getPathVariable(),
+      },
+    });
+
+    currentChildProcess = replay;
+
+    replay.stderr.setEncoding("utf8");
+    replay.stderr.on("data", function (data) {
+      console.log("stderr: " + data);
+    });
+
+    replay.stdout.setEncoding("utf8");
+    replay.stdout.on("data", async (data) => {
+      if (
+        data.includes(
+          "An error has occurred when running the custom flow scan."
+        )
+      ) {
+        replay.kill("SIGKILL");
+        currentChildProcess = null;
+        resolve({ success: false });
       }
-    )
-   
-    replay.on("exit", async (code) => {
-     if (code === 0) {
-      const stdout = replay.stdout.read().toString().trim();
-      const scanId = randomUUID();
-      console.log(stdout.split(" ").slice(-2)[0]);
-      scanHistory[scanId] =  stdout.split(" ").slice(-2)[0].split("/").pop();
-  
-      await cleanUp(scanHistory[scanId].split('_').slice(0, -1).toString().replaceAll(',', '_'));
-      // console.log(stdout);
-      // const currentResultsPath = path.join(
-      //   enginePath,
-      //   stdout.split(" ").slice(-2)[0]
-      // );
-      // console.log(currentResultsPath);
-    
-      // // const resultsName = currentResultsPath.split("/").pop();
-      // // console.log(resultsName);
-      // const scanId = randomUUID();
-      // scanHistory[scanId] =  stdout.split(" ").slice(-2)[0];
-      // const newResultsPath = path.join(
-      //   resultsPath,
-      //   scanHistory[scanId]
-      // );;
-      // console.log(newResultsPath);
+      if (data.includes("Results directory is at")) {
+        const resultsPath = data
+          .split("Results directory is at ")[1]
+          .split("/")
+          .pop()
+          .split(" ")[0];
+        const scanId = randomUUID();
+        scanHistory[scanId] = resultsPath;
+        replay.kill("SIGKILL");
+        currentChildProcess = null;
+        await cleanUp(scanHistory[scanId].split('_').slice(0, -1).toString().replaceAll(',', '_'));
+        resolve({ success: true, scanId });
+      }
+    });
 
-      // fs.move(currentResultsPath, newResultsPath, (err) => {
-      //   if (err) return console.log(err);
-      //   console.log(success);
-      // })
-      // console.log(newResultsPath);
+    replay.on("close", (code) => {
+      if (code !== 0) {
+        resolve({ success: false, statusCode: code });
+      }
+    });
+    // const replay = (
+    //   generatedScript,
+    //   [],
+    //   {
+    //     silent: true,
+    //     cwd: resultsPath,
+    //     env: {
+    //       ...process.env,
+    //       RUNNING_FROM_PH_GUI: true,
+    //       ...(useChromium && {
+    //         PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
+    //       }),
+    //       PATH: getPathVariable(),
+    //     },
+    //   }
+    // )
 
-      resolve({ success: true, scanId });
-     } else {
-      resolve({
-        success: false,
-        message: "An error has occurred when running the custom flow scan.",
-      });
-     }
-    })
+    // replay.on("exit", (code) => {
+    //   if (code === 0) {
+    //     const stdout = replay.stdout.read().toString().trim();
+    //     const scanId = randomUUID();
+    //     console.log(stdout.split(" ").slice(-2)[0]);
+    //     scanHistory[scanId] = stdout.split(" ").slice(-2)[0].split("/").pop();
+
+    //     // console.log(stdout);
+    //     // const currentResultsPath = path.join(
+    //     //   enginePath,
+    //     //   stdout.split(" ").slice(-2)[0]
+    //     // );
+    //     // console.log(currentResultsPath);
+
+    //     // // const resultsName = currentResultsPath.split("/").pop();
+    //     // // console.log(resultsName);
+    //     // const scanId = randomUUID();
+    //     // scanHistory[scanId] =  stdout.split(" ").slice(-2)[0];
+    //     // const newResultsPath = path.join(
+    //     //   resultsPath,
+    //     //   scanHistory[scanId]
+    //     // );;
+    //     // console.log(newResultsPath);
+
+    //     // fs.move(currentResultsPath, newResultsPath, (err) => {
+    //     //   if (err) return console.log(err);
+    //     //   console.log(success);
+    //     // })
+    //     // console.log(newResultsPath);
+
+    //     resolve({ success: true, scanId });
+    //   } else {
+    //     resolve({
+    //       success: false,
+    //       message: "An error has occurred when running the custom flow scan.",
+    //     });
+    //   }
+    // });
   });
 
   return response;
   // how to get the scan id :")
-
 
   // const replay = fork(
   //   generatedScript,
@@ -264,19 +312,19 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
   //   const stdout = scan.stdout.read().toString().trim();
   //   console.log(stdout);
   // })
-  // currentChildProcess = null; 
-}
+  // currentChildProcess = null;
+};
 
 const generateReport = (customFlowLabel, scanId) => {
-  const currentResultsPath = scanHistory[scanId]; 
+  const currentResultsPath = scanHistory[scanId];
   console.log(currentResultsPath);
 
   const reportPath = getReportPath(scanId);
   console.log(reportPath);
-  const data = fs.readFileSync(reportPath, {encoding: "utf-8"}); 
-  const result = data.replaceAll(/Custom Flow/g, customFlowLabel); 
+  const data = fs.readFileSync(reportPath, { encoding: "utf-8" });
+  const result = data.replaceAll(/Custom Flow/g, customFlowLabel);
   fs.writeFileSync(reportPath, result);
-}
+};
 
 const getReportPath = (scanId) => {
   if (scanHistory[scanId]) {
@@ -355,7 +403,7 @@ const init = (scanEvent) => {
 
   ipcMain.on("generateReport", (_event, customFlowLabel, scanId) => {
     return generateReport(customFlowLabel, scanId);
-  })
+  });
 
   ipcMain.on("openReport", async (_event, scanId) => {
     const reportPath = getReportPath(scanId);
