@@ -77,7 +77,7 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
       return;
     } 
 
-    navigate("/scanning");
+    navigate("/scanning", {state: {url: scanDetails.scanUrl}});
     const response = await services.startScan(scanDetails);
     console.log(response);
     console.log(response.success);

@@ -69,7 +69,7 @@ const getScanOptions = (details) => {
   return options;
 };
 
-const startScan = async (scanDetails) => {
+const startScan = async (scanDetails, scanEvent) => {
   const { scanType, url } = scanDetails;
   console.log(`Starting new ${scanType} scan at ${url}.`);
 
@@ -150,8 +150,10 @@ const startScan = async (scanDetails) => {
 
       // Handle live crawling output
       if (data.includes("Electron crawling:")) {
-        // const url = data.split("Electron crawling: ")[1].split(" ")[0];
         console.log(data);
+        const url = data.split("Electron crawling: ")[1].split(" ")[0];
+        console.log(url);
+        scanEvent.emit("scanningUrl", url);
       }
     });
 
@@ -168,7 +170,7 @@ const startScan = async (scanDetails) => {
   return response;
 };
 
-const startReplay = async (generatedScript, scanDetails) => {
+const startReplay = async (generatedScript, scanDetails, scanEvent) => {
   let useChromium = false;
   if (
     scanDetails.browser === browserTypes.chromium ||
@@ -342,13 +344,13 @@ const cleanUp = async (folderName, setDefaultFolders = false) => {
   }
 };
 
-const init = () => {
+const init = (scanEvent) => {
   ipcMain.handle("startScan", async (_event, scanDetails) => {
-    return await startScan(scanDetails);
+    return await startScan(scanDetails, scanEvent);
   });
 
   ipcMain.handle("startReplay", async (_event, generatedScript, scanDetails) => {
-    return await startReplay(generatedScript, scanDetails);
+    return await startReplay(generatedScript, scanDetails, scanEvent);
   })
 
   ipcMain.on("generateReport", (_event, customFlowLabel, scanId) => {

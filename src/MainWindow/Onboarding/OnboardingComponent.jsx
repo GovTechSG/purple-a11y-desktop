@@ -83,15 +83,15 @@ const OnboardingComponent = ({
             <div className="visually-hidden" aria-live="polite" role="status">
               Item 1 of 4
             </div>
-            <div className="modal-img-container fade-in" aria-hidden="true">
+            <div className="modal-img-container fade-in-left" aria-hidden="true">
               <img
                 className="modal-img"
                 src={firstTimer1}
                 alt="person saying hello"
               ></img>
             </div>
-            <h3 className="modal-title fade-in">Hi There!</h3>
-            <p className="modal-desc fade-in">
+            <h3 className="modal-title fade-in-left">Hi There!</h3>
+            <p className="modal-desc fade-in-left">
               Making your website accessible is within reach. Let’s get started
               by taking a quick look at how Purple HATS work.
             </p>
@@ -105,7 +105,7 @@ const OnboardingComponent = ({
             <div className="visually-hidden" aria-live="polite" role="status">
               Item 2 of 4
             </div>
-            <div className="modal-img-container fade-in" aria-hidden="true">
+            <div className="modal-img-container fade-in-left" aria-hidden="true">
               <div id="first-timer-2-container">
                 <div className="typewriter">https://www.</div>
                 <img
@@ -115,8 +115,8 @@ const OnboardingComponent = ({
                 ></img>
               </div>
             </div>
-            <h3 className="modal-title fade-in">Get started</h3>
-            <p className="modal-desc fade-in">
+            <h3 className="modal-title fade-in-left">Get started</h3>
+            <p className="modal-desc fade-in-left">
               You just need to enter your website/sitemap URL and Purple HATS
               will crawl through all the web pages to analyse for accessibility
               issues.
@@ -131,15 +131,15 @@ const OnboardingComponent = ({
             <div className="visually-hidden" aria-live="polite" role="status">
               Item 3 of 4
             </div>
-            <div className="modal-img-container fade-in" aria-hidden="true">
+            <div className="modal-img-container fade-in-left" aria-hidden="true">
               <img
                 className="modal-img"
                 src={firstTimer3}
                 alt="custom flow step-by-step animation illustration"
               ></img>
             </div>
-            <h3 className="modal-title fade-in">Custom Flow</h3>
-            <p className="modal-desc fade-in">
+            <h3 className="modal-title fade-in-left">Custom Flow</h3>
+            <p className="modal-desc fade-in-left">
               Custom flow scan type allows you to specify a user journey of your
               choice by recording a series of actions on the browser and re-play
               them automatically.
@@ -154,7 +154,7 @@ const OnboardingComponent = ({
             <div className="visually-hidden" aria-live="polite" role="status">
               Item 4 of 4
             </div>
-            <h3 className="modal-title fade-in">Get to know you</h3>
+            <h3 className="modal-title fade-in-left">Get to know you</h3>
             <UserDetailsForm
               formID={formID}
               setName={setName}
@@ -164,7 +164,7 @@ const OnboardingComponent = ({
               setUserInputErrorMessage={setUserInputErrorMessage}
               isOnboarding={true}
             />
-            <p className="modal-desc fade-in">
+            <p className="modal-desc fade-in-left">
               To personalise your experience, we will be collecting your name,
               email address and app usage data. Your information fully complies
               with {policyUrlElem}

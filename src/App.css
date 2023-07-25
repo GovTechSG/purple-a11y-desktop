@@ -262,7 +262,7 @@ a:hover {
   text-align: left;
 }
 
-@keyframes fade-in {
+@keyframes fade-in-left {
   from {
     opacity: 0;
     transform: translateX(20px);
@@ -273,8 +273,8 @@ a:hover {
   }
 }
 
-.fade-in {
-  animation: fade-in 0.5s;
+.fade-in-left {
+  animation: fade-in-left 0.5s;
 }
 
 #first-timer-2-container {
@@ -320,6 +320,67 @@ a {
 #box-arrow-right {
   padding-left: 0.25rem;
   padding-bottom: 0.5rem;
+}
+
+.scanning-url {
+  padding-left: 0.5em;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.scanning-component .loading-spinner {
+  height: 2rem;
+  width: 2rem;
+}
+
+.scanning-component .loading-spinner::after {
+  height: 2rem;
+  width: 2rem; 
+  margin: 0rem;
+  border-width: 4px;
+}
+
+.scanning-url-list {
+  list-style-type: none;
+  text-align: left;
+  width: 600px;
+  max-height: 300px;
+  overflow: hidden;
+}
+
+.scanning-component {
+  text-align: left;
+}
+
+.scanning-component h1 {
+  padding-left: 2em;
+}
+
+@keyframes fade-in-top {
+  from {
+    opacity: 0;
+    transform: translateY(-5px)
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+.fade-in-top {
+  animation: fade-in-top 0.5s;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  } to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fade-in 0.5s;
 }
 
 /* @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Roboto:ital,wght@0,100;1,100&display=swap");
