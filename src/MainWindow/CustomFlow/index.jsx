@@ -9,6 +9,7 @@ import labelIcon from "../../assets/label-icon.svg";
 import purpleCheckIcon from "../../assets/purple-check-circle.svg";
 import Button from "../../common/components/Button";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
+import ScanningComponent from "../../common/components/ScanningComponent";
 
 const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
     const { state }= useLocation(); 
@@ -183,7 +184,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                     ? done 
                       ? <img src={purpleCheckIcon}></img>
                       : <Button type="primary" onClick={onClickReplay}>Start Replaying</Button>
-                    : <LoadingSpinner/>
+                    : <ScanningComponent></ScanningComponent>
                 }
               </>
             )

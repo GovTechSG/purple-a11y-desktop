@@ -201,21 +201,23 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
 
     replay.stdout.setEncoding("utf8");
     replay.stdout.on("data", async (data) => {
-      if (
-        data.includes(
-          "An error has occurred when running the custom flow scan."
-        )
-      ) {
+      if (data.includes("An error has occurred when running the custom flow scan.")) {
         replay.kill("SIGKILL");
         currentChildProcess = null;
         resolve({ success: false });
       }
-      if (data.includes("Results directory is at")) {
-        const resultsPath = data
-          .split("Results directory is at ")[1]
-          .split("/")
-          .pop()
-          .split(" ")[0];
+
+      // Handle live crawling output
+        if (data.includes("Electron crawling:")) {
+        console.log(data);
+        const url = data.split("Electron crawling: ")[1].trim();
+        console.log(url);
+        scanEvent.emit("scanningUrl", url);
+      }
+
+      if (data.includes("results/")) {
+        const resultsPath = data.split(" ").slice(-2)[0].split("/").pop();
+        console.log(resultsPath);
         const scanId = randomUUID();
         scanHistory[scanId] = resultsPath;
         replay.kill("SIGKILL");
