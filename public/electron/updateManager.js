@@ -209,7 +209,7 @@ const downloadAndUnzipFrontendWindows = async () => {
 /**
  * Spawns a Shell Command process to download and unzip the frontend
  */
-const downloadAndUnzipFrontendMac = async () => {
+const downloadAndUnzipFrontendMac = async (updaterEventEmitter) => {
   const command = `
   curl -L '${frontendReleaseUrl}' -o '${resultsPath}/purple-hats-desktop-mac.zip' &&
   mv '${macOSExecutablePath}' '${path.join(
@@ -225,6 +225,8 @@ const downloadAndUnzipFrontendMac = async () => {
   find '${macOSExecutablePath}' -exec xattr -d com.apple.quarantine {} \\`;
 
   await execCommand(command);
+  updaterEventEmitter.emit("restartTriggered");
+  return;
 };
 
 /**
@@ -369,29 +371,8 @@ const run = async (updaterEventEmitter) => {
       }
     }
   } else {
-    if (!(await isLatestFrontendVersion())) {
-      updaterEventEmitter.emit("checking");
-      const userResponse = new Promise((resolve) => {
-        updaterEventEmitter.emit("promptFrontendUpdate", resolve);
-      });
-
-      const proceedUpdate = await userResponse;
-
-      if (proceedUpdate) {
-        updaterEventEmitter.emit("updatingFrontend");
-
-        // Relaunch the app with new binaries if the frontend update is successful
-        // If unsuccessful, the app will be launched with existing frontend
-        try {
-          await downloadAndUnzipFrontendMac();
-          currentChildProcess = null;
-          updaterEventEmitter.emit("restartTriggered");
-        } catch (e) {
-          silentLogger.error(e.toString());
-        }
-      }
-    }
-
+    let hasPromptedUser = false;
+    let userAgreeToUpdate = false;
     if (isInterruptedUpdate) {
       updaterEventEmitter.emit("updatingBackend");
       if (!backendExists) {
@@ -419,11 +400,12 @@ const run = async (updaterEventEmitter) => {
         // if fetching of latest backend version from github api fails for any reason,
         // isUpdateAvailable will be set to false so that the app will just launch straightaway
         if (isUpdateAvailable) {
-          const userResponse = new Promise((resolve) => {
+          hasPromptedUser = true;
+          userAgreeToUpdate = new Promise((resolve) => {
             updaterEventEmitter.emit("promptBackendUpdate", resolve);
           });
 
-          const proceedUpdate = await userResponse;
+          const proceedUpdate = await userAgreeToUpdate;
 
           if (proceedUpdate) {
             updaterEventEmitter.emit("updatingBackend");
@@ -435,6 +417,30 @@ const run = async (updaterEventEmitter) => {
             );
           }
         }
+      }
+    }
+
+    if (!(await isLatestFrontendVersion())) {
+      updaterEventEmitter.emit("checking");
+      if (!hasPromptedUser) {
+        hasPromptedUser = true;
+        userAgreeToUpdate = new Promise((resolve) => {
+          updaterEventEmitter.emit("promptFrontendUpdate", resolve);
+        });
+      }
+
+      const proceedUpdate = await userAgreeToUpdate;
+
+      if (proceedUpdate) {
+        // Relaunch the app with new binaries if the frontend update is successful
+        // If unsuccessful, the app will be launched with existing frontend
+        // try {
+        //   await downloadAndUnzipFrontendMac(updaterEventEmitter);
+        //   currentChildProcess = null;
+        // } catch (e) {
+        //   silentLogger.error(e.toString());
+        // }
+        processesToRun.push(downloadAndUnzipFrontendMac(updaterEventEmitter));
       }
     }
 
