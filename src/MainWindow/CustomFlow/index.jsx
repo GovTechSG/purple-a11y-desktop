@@ -11,6 +11,7 @@ import boxRightArrowIcon from "../../assets/box-arrow-up-right.svg";
 import Button from "../../common/components/Button";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 import ScanningComponent from "../../common/components/ScanningComponent";
+import ProgressStepComponent from "./ProgressStepComponent";
 
 const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
     const { state }= useLocation(); 
@@ -247,7 +248,12 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
 
     return (
       <div id="custom-flow">
-        {scanDetails && currentDisplay()}
+        {scanDetails &&
+          <>
+            <ProgressStepComponent step={step}></ProgressStepComponent>
+            <div className="custom-flow-content">{currentDisplay()}</div>
+          </>
+        }
       </div>
     )
 }

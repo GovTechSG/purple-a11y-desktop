@@ -321,7 +321,7 @@ a {
 }
 
 .scanning-url {
-  width: 600px;
+  width: 500px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
