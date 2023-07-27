@@ -1,11 +1,15 @@
+import fullPurpleCheckIcon from "../../assets/full-purple-check-circle.svg"; 
+
 const ProgressStepComponent = ({step}) => {
 
     const ProgressStepItemComponent = ({num, label}) => {
-        const classNameToUse = num <= step ? 'progress-step active' : 'progress-step';
+        const classNameToUse = num === step ? 'progress-step active' : 'progress-step';
 
         return (
             <div className="progress-step-item">
-                <div class={classNameToUse}>{num}</div>
+                {num < step 
+                    ? <img src={fullPurpleCheckIcon}></img>
+                    : <div class={classNameToUse}>{num}</div>}
                 <span className="progress-step-label">{label}</span>
             </div>
         )
