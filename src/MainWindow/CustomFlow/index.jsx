@@ -7,6 +7,7 @@ import recordIcon from "../../assets/record-icon.svg";
 import replayIcon from "../../assets/replay-icon.svg"; 
 import labelIcon from "../../assets/label-icon.svg";
 import purpleCheckIcon from "../../assets/purple-check-circle.svg";
+import boxRightArrowIcon from "../../assets/box-arrow-up-right.svg";
 import Button from "../../common/components/Button";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 import ScanningComponent from "../../common/components/ScanningComponent";
@@ -159,13 +160,34 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                   step={1}
                   title={"Record"}
                   url={scanDetails.scanUrl}
-                  description={"Record your custom flow by manually navigating on a new browser window. In the event of a login page, we will solely capture your credentials for this scan and promptly remove them thereafter. \nAfter finishing your flow, please close the browser to continue to the next step."}
+                  description={"Record your custom flow by manually navigating on a new browser window. In the event of a login page, we will solely capture your credentials for this scan and promptly remove them thereafter. \n After finishing your flow, please close the browser to continue to the next step."}
                 />
                 { !loading 
                   ? done 
-                    ? <img src={purpleCheckIcon}></img>
-                    : <><Button type="primary" onClick={onClickRecord}>Start Recording</Button></>
-                  : <><LoadingSpinner/></>
+                    ?
+                  (
+                    <>
+                      <div className="scanning-status-container">
+                         <img className="scanning-check-icon" src={purpleCheckIcon}></img>
+                         <p className="scanning-status-label"><b>Done!</b></p>
+                      </div>
+                    </>
+                  )
+                    : <>
+                        <Button type="primary" onClick={onClickRecord}>
+                            Start Recording &nbsp;
+                            <img src={boxRightArrowIcon}></img>
+                        </Button>
+                      </>
+                  : 
+                  (
+                    <>
+                      <div className="scanning-status-container">
+                        <LoadingSpinner></LoadingSpinner>
+                        <p className="scanning-status-label">Recording...</p>
+                      </div>
+                    </>
+                  )
                 }
               </>
             )
@@ -182,9 +204,23 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                 />
                 { !loading 
                     ? done 
-                      ? <img src={purpleCheckIcon}></img>
-                      : <Button type="primary" onClick={onClickReplay}>Start Replaying</Button>
-                    : <ScanningComponent></ScanningComponent>
+                      ? 
+                      (
+                        <>
+                          <div className="scanning-status-container">
+                            <img className="scanning-check-icon" src={purpleCheckIcon}></img>
+                            <p className="scanning-status-label"><b>Done!</b></p>
+                          </div>
+                        </>
+                      )
+                      : 
+                      <>
+                        <Button type="primary" onClick={onClickReplay}>
+                          Start Replaying &nbsp;
+                          <img src={boxRightArrowIcon}></img>
+                        </Button>
+                      </>
+                    : <ScanningComponent scanningMessage={"Replaying & Scanning..."}></ScanningComponent>
                 }
               </>
             )
@@ -199,9 +235,9 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                   url={scanDetails.scanUrl}
                   description={"Assign a recognisable label to this custom flow for convenient reference in the report."}
                 />
-                <form onSubmit={() => {generateReport()}}>
-                  <input type="text" value={customFlowLabel} onChange={(e) => setCustomFlowLabel(e.target.value)}></input>
-                  <button type="submit" className="primary">Generate Report</button>
+                <form className="custom-label-form" onSubmit={() => {generateReport()}}>
+                  <input className="custom-label-input" type="text" value={customFlowLabel} onChange={(e) => setCustomFlowLabel(e.target.value)}></input>
+                  <button type="submit" className="primary custom-label-button">Generate Report</button>
                 </form>
               </>
             )

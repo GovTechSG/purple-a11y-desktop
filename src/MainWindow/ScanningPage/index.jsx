@@ -23,7 +23,7 @@ const ScanningPage = () => {
             <span><b>URL: </b>{url}</span>
           </div>
           <hr/>
-          <ScanningComponent></ScanningComponent>
+          <ScanningComponent scanningMessage={"Preparing Scan..."}></ScanningComponent>
           </>}
     </div>
   );

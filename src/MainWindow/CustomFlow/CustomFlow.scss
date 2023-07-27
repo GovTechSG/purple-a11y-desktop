@@ -10,10 +10,6 @@
         flex-direction: row; 
     }
 
-    .custom-flow-header-img {
-        
-    }
-
     .custom-flow-header-title-container {
         padding: 1rem;
     }
@@ -25,5 +21,20 @@
 
     .custom-flow-header-url {
         color: #4A6168; 
+    }
+
+    .custom-label-form {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .custom-label-input {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+
+    .custom-label-button {
+        align-self: flex-end;
     }
 }

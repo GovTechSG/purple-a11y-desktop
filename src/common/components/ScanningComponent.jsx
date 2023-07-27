@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 import purpleCheckIcon from "../../assets/purple-check-circle.svg";
 
-const ScanningComponent = () => {
+const ScanningComponent = ({scanningMessage}) => {
   const [urls, setUrls] = useState(new Array());
   const [urlItems, setUrlItems] = useState(new Array());
   const [pagesScanned, setPagesScanned] = useState(0);
@@ -53,8 +53,8 @@ const ScanningComponent = () => {
 
   const CompletedUrlComponent = ({key, url}) => {
    return (
-    <li className="scanning-url-list-item fade-in-top" key={key}>
-      <img src={purpleCheckIcon}></img>
+    <li className="scanning-url-list-item" key={key}>
+      <img className="scanning-check-icon" src={purpleCheckIcon}></img>
       <p className="scanning-url">{url}</p>
     </li>
    )
@@ -65,13 +65,15 @@ const ScanningComponent = () => {
       { urls.length > 0 
         ?
         <>
-          <h1>Scanned: {pagesScanned} pages</h1>
+          <h1 className="scanning-url-title">Scanned: {pagesScanned} pages</h1>
           <ul className="scanning-url-list">{urlItems}</ul> 
         </>
         :
         <>
-        <LoadingSpinner></LoadingSpinner>
-        <span>Preparing Scan...</span>
+            <div className="scanning-status-container text-left">
+                <LoadingSpinner></LoadingSpinner>
+                <p className="scanning-status-label">{scanningMessage}</p>
+            </div>
         </>
       }
     </div>

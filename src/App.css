@@ -295,7 +295,6 @@ a:hover {
   font-size: 16px;
   font-weight: 700;
   overflow: hidden;
-  white-space: nowrap;
   margin: 0 auto;
   animation: typing 2s steps(200, end);
   animation-delay: 0.5s;
@@ -319,20 +318,30 @@ a {
 
 #box-arrow-right {
   padding-left: 0.25rem;
-  padding-bottom: 0.5rem;
 }
 
 .scanning-url {
+  width: 600px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   padding-left: 0.5em;
   display: inline-block;
   vertical-align: middle;
 }
 
+.scanning-check-icon {
+  display: inline-block;
+  vertical-align: unset;
+}
+
+.scanning-status-container .loading-spinner, 
 .scanning-component .loading-spinner {
   height: 2rem;
   width: 2rem;
 }
 
+.scanning-status-container .loading-spinner::after,
 .scanning-component .loading-spinner::after {
   height: 2rem;
   width: 2rem; 
@@ -340,20 +349,28 @@ a {
   border-width: 4px;
 }
 
-.scanning-url-list {
-  list-style-type: none;
-  text-align: left;
-  width: 600px;
-  max-height: 300px;
-  overflow: hidden;
+.scanning-url-title {
+  color: #785EF0;
+  margin-bottom: 1em;
 }
 
-.scanning-component {
-  text-align: left;
+.scanning-url-list {
+  list-style-type: none;
+  max-height: 280px;
+  overflow: hidden;
+  padding: 0;
 }
 
 .scanning-component h1 {
-  padding-left: 2em;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.scanning-status-label {
+  color: #785EF0;
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: 0.5em;
 }
 
 @keyframes fade-in-top {
