@@ -38,3 +38,40 @@
         align-self: flex-end;
     }
 }
+
+.progress-step-container {
+    background-color: white;
+    width: fit-content;
+    padding: 16px;
+}
+
+.progress-step-container h4 {
+    color: #333333;
+    margin-bottom: 16px;
+}
+
+.progress-step-list {
+    list-style-type: none;
+}
+
+.progress-step {
+    border: 2px solid #B5C5CA;
+    border-radius: 100%;
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    line-height: 28px;
+    display: inline-block;
+}
+
+.progress-step-label {
+    display: inline-block;
+    padding-left: 1em;
+}
+
+.progress-step-bar {
+    background-color: #B5C5CA;
+    height: 24px;
+    width: 2px;
+    margin: 8px 16px;
+}
