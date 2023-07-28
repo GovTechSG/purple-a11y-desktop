@@ -44,7 +44,6 @@ const Modal = ({
           focusableElements[focusableElements.length - 1];
 
         if (event.key === "Tab") {
-          console.log(event.target);
           if (!modalElement.contains(event.target)) {
             event.preventDefault();
             firstFocusableElement.focus();

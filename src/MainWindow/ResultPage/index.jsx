@@ -14,6 +14,7 @@ import { ReactComponent as MailSuccessIcon } from "../../assets/mail-success.svg
 const ResultPage = ({ completedScanId: scanId }) => {
   const [scanType, setScanType] = useState(null);
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [isEvent, setIsEvent] = useState(false);
   const [mailStatus, setMailStatus] = useState({
     mailSentSucessful: false,
@@ -25,6 +26,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
     const getDataForForm = async () => {
       const data = await services.getDataForForm();
       setScanType(data["scanType"]);
+      setName(data["name"]);
       setEmail(data["email"]);
       setIsEvent(data["event"]);
     };
@@ -49,7 +51,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
     const { scanUrl } = JSON.parse(window.localStorage.getItem("scanDetails"));
 
     const response = await services.mailReport(
-      { websiteUrl: scanUrl, scanType, emailAddress: email },
+      { websiteUrl: scanUrl, scanType, emailAddress: email, name },
       scanId
     );
     if (response.success) {

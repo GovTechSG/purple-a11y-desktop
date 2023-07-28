@@ -82,7 +82,6 @@ const getDataForForm = async () => {
   const userData = await getUserData();
   const email = userData["email"];
   const name = userData["name"];
-  const autoSubmit = userData["autoSubmit"];
   const event = userData["event"];
   const browser = userData["browser"];
   return {
@@ -90,7 +89,6 @@ const getDataForForm = async () => {
     scanType: currentScanType,
     email: email,
     name: name,
-    autoSubmit: autoSubmit,
     event: event,
     browser: browser,
   };
