@@ -19,7 +19,6 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
   );
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [autoSubmit, setAutoSubmit] = useState(false);
   const [browser, setBrowser] = useState(null);
   const [showBasicAuthModal, setShowBasicAuthModal] = useState(false);
   const [showEditDataModal, setShowEditDataModal] = useState(false);
@@ -37,12 +36,8 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
     const getUserData = async () => {
       const userData = await services.getUserData();
       setBrowser(userData["browser"]);
-      const isEvent = userData["event"];
-      if (!isEvent) {
-        setEmail(userData["email"]);
-        setName(userData["name"]);
-        setAutoSubmit(userData["autoSubmit"]);
-      }
+      setEmail(userData["email"]);
+      setName(userData["name"]);
     };
 
     getUserData();
@@ -132,17 +127,16 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
   return (
     <div id="home-page">
       <div id="home-page-main">
-        {autoSubmit && (
-          <div>
-            <button
-              id="edit-user-details"
-              onClick={() => setShowEditDataModal(true)}
-            >
-              Welcome <b>{name}</b> &nbsp;
-              <img src={editIcon} aria-label="Edit profile"></img>
-            </button>
-          </div>
-        )}
+        <div>
+          <button
+            id="edit-user-details"
+            onClick={() => setShowEditDataModal(true)}
+          >
+            Welcome <b>{name}</b> &nbsp;
+            <img src={editIcon} aria-label="Edit profile"></img>
+          </button>
+        </div>
+
         <img
           id="a11y-logo"
           src={a11yLogo}
