@@ -184,12 +184,7 @@ const getResultsZip = (scanId) => {
 
 const mailResults = async (formDetails, scanId) => {
   const reportPath = getReportPath(scanId);
-
-  const { websiteURL, scanType, emailAddress } = formDetails;
-
-  console.log(websiteURL);
-  console.log(scanType);
-  console.log(emailAddress);
+  const { websiteUrl, scanType, emailAddress } = formDetails;
 
   const shellCommand = `
     if ((Split-Path -Path $pwd -Leaf) -eq "scripts") {
@@ -209,8 +204,8 @@ const mailResults = async (formDetails, scanId) => {
     $mail = $o.CreateItem(0)
 
     $mail.subject = "[A11y] ${scanType
-        .split(" ")
-        .shift()} Scan Results for: ${websiteURL} (${scanType})"
+      .split(" ")
+      .shift()} Scan Results for: ${websiteUrl} (${scanType})"
 
     $mail.body = "Hi there,
 

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Button from "../../common/components/Button";
-import { userDataFormInputFields } from "../../common/constants";
 import "./ResultPage.scss";
 import services from "../../services";
 import { Link } from "react-router-dom";
@@ -9,17 +8,13 @@ import { ReactComponent as CheckCircleIcon } from "../../assets/check-circle.svg
 import { ReactComponent as BoxArrowUpRightIcon } from "../../assets/box-arrow-up-right.svg";
 import { ReactComponent as DownloadIcon } from "../../assets/download.svg";
 import { ReactComponent as ReturnIcon } from "../../assets/return.svg";
+import { ReactComponent as MailIcon } from "../../assets/mail.svg";
+import { ReactComponent as MailSuccessIcon } from "../../assets/mail-success.svg";
 
 const ResultPage = ({ completedScanId: scanId }) => {
-  const [enableReportDownload, setEnableReportDownload] = useState(false);
-  const [websiteUrl, setWebsiteUrl] = useState(null);
   const [scanType, setScanType] = useState(null);
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [browser, setBrowser] = useState("");
   const [isEvent, setIsEvent] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(false);
-  const [enableMailReport, setEnableMailReport] = useState();
   const [mailStatus, setMailStatus] = useState({
     mailSentSucessful: false,
     sendingMail: false,
@@ -29,13 +24,9 @@ const ResultPage = ({ completedScanId: scanId }) => {
   useEffect(() => {
     const getDataForForm = async () => {
       const data = await services.getDataForForm();
-      setWebsiteUrl(data["websiteUrl"]);
       setScanType(data["scanType"]);
-      setBrowser(data["browser"]);
       setEmail(data["email"]);
-      setName(data["name"]);
       setIsEvent(data["event"]);
-      setEnableReportDownload(true);
     };
     getDataForForm();
   }, []);
@@ -55,8 +46,10 @@ const ResultPage = ({ completedScanId: scanId }) => {
 
   const handleMailReport = async () => {
     setMailStatus({ ...mailStatus, sendingMail: true });
+    const { scanUrl } = JSON.parse(window.localStorage.getItem("scanDetails"));
+
     const response = await services.mailReport(
-      { websiteUrl, scanType, emailAddress: email },
+      { websiteUrl: scanUrl, scanType, emailAddress: email },
       scanId
     );
     if (response.success) {
@@ -95,11 +88,10 @@ const ResultPage = ({ completedScanId: scanId }) => {
               className={`box-arrow-up-right-icon`}
               svgIcon={<BoxArrowUpRightIcon />}
             />
-            {/* <i className="bi bi-box-arrow-up-right" /> */}
             View report
           </Button>
           <Button
-            id="mail-button"
+            id="download-button"
             type="secondary"
             onClick={handleDownloadResults}
           >
@@ -112,22 +104,44 @@ const ResultPage = ({ completedScanId: scanId }) => {
           {isEvent && mailStatus.mailSentSucessful === false && (
             <>
               <Button
-                id="mail-button"
+                id="mail-report-button"
                 type="primary"
                 className="bold-text"
                 onClick={handleMailReport}
                 disabled={mailStatus.sendingMail ? "disabled" : null}
               >
                 {mailStatus.sendingMail ? (
-                  <> Sending mail...</>
+                  <>
+                    <ButtonSvgIcon
+                      svgIcon={<MailIcon />}
+                      className={`mail-icon`}
+                    />
+                    Sending mail...
+                  </>
                 ) : (
                   <>
-                    <i className="bi bi-envelope" />
+                    <ButtonSvgIcon
+                      svgIcon={<MailIcon />}
+                      className={`mail-icon`}
+                    />
                     Mail report
                   </>
                 )}
               </Button>
             </>
+          )}
+          {isEvent && mailStatus.mailSentSucessful && (
+            <Button
+              id="mail-report-button"
+              type="primary"
+              disabled={"disabled"}
+            >
+              <ButtonSvgIcon
+                svgIcon={<MailSuccessIcon />}
+                className={`mail-icon`}
+              />
+              Report mailed
+            </Button>
           )}
           <hr />
           <Link id="scan-again" to="/">
