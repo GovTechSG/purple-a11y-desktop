@@ -44,7 +44,7 @@ const ScanningComponent = ({scanningMessage}) => {
 
   const InProgressUrlComponent = ({key, url}) => {
     return (
-      <li className="scanning-url-list-item" key={key}>
+      <li className="scanning-url-list-item fade-in" key={key}>
         <LoadingSpinner></LoadingSpinner>
         <p className="scanning-url">{url}</p>
       </li>
@@ -53,7 +53,7 @@ const ScanningComponent = ({scanningMessage}) => {
 
   const CompletedUrlComponent = ({key, url}) => {
    return (
-    <li className="scanning-url-list-item" key={key}>
+    <li className="scanning-url-list-item fade-in-top" key={key}>
       <img className="scanning-check-icon" src={purpleCheckIcon}></img>
       <p className="scanning-url">{url}</p>
     </li>
