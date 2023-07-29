@@ -38,7 +38,7 @@ export const BasicAuthFormFooter = ({ setShowBasicAuthModal }) => {
   return (
     <>
       <button
-        className="button secondary"
+        className="modal-button secondary"
         aria-controls="basic-auth-modal"
         onClick={() => setShowBasicAuthModal(false)}
       >
@@ -46,7 +46,7 @@ export const BasicAuthFormFooter = ({ setShowBasicAuthModal }) => {
       </button>
       <button
         form="home-page-basic-auth-form"
-        className="button primary"
+        className="modal-button primary"
         type="submit"
       >
         Scan

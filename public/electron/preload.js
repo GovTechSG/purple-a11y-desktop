@@ -6,6 +6,11 @@ contextBridge.exposeInMainWorld("services", {
       callback(data);
     });
   },
+  getIsProxy: (callback) => {
+    ipcRenderer.on("isProxy", (event, data) => {
+      callback(data);
+    });
+  },
   startScan: async (scanDetails) => {
     const results = await ipcRenderer.invoke("startScan", scanDetails);
     return results;
@@ -27,12 +32,15 @@ contextBridge.exposeInMainWorld("services", {
     const exportDir = await ipcRenderer.invoke("setExportDir");
     return exportDir;
   },
+  submitFormViaBrowser: (formDetails) => {
+    ipcRenderer.send("submitFormViaBrowser", formDetails);
+  },
   getUserData: async () => {
-    const data = await ipcRenderer.invoke("getUserData"); 
+    const data = await ipcRenderer.invoke("getUserData");
     return data;
   },
-  editUserDetails: async (userDetails) => {
-    ipcRenderer.send("editUserDetails", userDetails);
+  editUserData: async (userData) => {
+    ipcRenderer.send("editUserData", userData);
   },
   guiReady: async () => {
     ipcRenderer.send("guiReady");
@@ -47,21 +55,27 @@ contextBridge.exposeInMainWorld("services", {
       callback(data);
     });
   },
-  userDetailsExist: (callback) => {
-    ipcRenderer.on("userDetailsExist", (event, data) => {
+  userDataExists: (callback) => {
+    ipcRenderer.on("userDataExists", (event, data) => {
       callback(data);
-    })
+    });
   },
   proceedUpdate: (response) => {
     ipcRenderer.send("proceedUpdate", response);
   },
-  setUserDetails: (data) => {
-    ipcRenderer.send("userDetailsReceived", data);
+  launchInstaller: (response) => {
+    ipcRenderer.send("launchInstaller", response);
+  },
+  restartAppAfterMacOSFrontendUpdate: (response) => {
+    ipcRenderer.send("restartAppAfterMacOSFrontendUpdate", response);
+  },
+  setUserData: (data) => {
+    ipcRenderer.send("userDataReceived", data);
   },
   enableReportDownload: (callback) => {
     ipcRenderer.on("enableReportDownload", () => callback());
   },
   openLink: (url) => {
-    ipcRenderer.send("openLink", url)
-  }
+    ipcRenderer.send("openLink", url);
+  },
 });

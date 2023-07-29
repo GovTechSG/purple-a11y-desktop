@@ -2,6 +2,7 @@ const fs = require("fs");
 const {
     userDataFilePath,
     defaultExportDir, 
+    proxy
 } = require("./constants"); 
 const { ipcMain, dialog, shell } = require("electron");
 
@@ -31,7 +32,7 @@ const init = async () => {
             email: "",
             autoSubmit: true, 
             event: false, 
-            browser: "chrome", 
+            browser: proxy ? "edge" : "chrome",
             autoUpdate: true,
             exportDir: defaultExportDir
         }; 

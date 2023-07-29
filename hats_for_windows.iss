@@ -5,7 +5,7 @@
 [SETUP]
 AppId={{10A741B8-E330-4DC5-A86C-7F7B8DE775A9}
 AppName=Purple HATS Desktop
-AppVersion=0.0.13.0
+AppVersion=0.9.0
 AppVerName=Purple HATS Desktop
 AppPublisher=GovTech
 AppPublisherURL=https://github.com/GovTechSG/purple-hats-desktop
@@ -38,8 +38,12 @@ Name: "{autoprograms}\Purple HATS Desktop"; Filename: "{app}\Purple HATS Fronten
 Name: "{autodesktop}\Purple HATS Desktop"; Filename: "{app}\Purple HATS Frontend\Purple HATS.exe"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\Purple HATS Frontend\Purple HATS.exe"; Description: "{cm:LaunchProgram,Purple HATS Desktop}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\Purple HATS Frontend\Purple Hats.exe"; Description: "{cm:LaunchProgram,Purple HATS Desktop}"; Flags: nowait postinstall skipifsilent
 
 [UninstallDelete]
+Type: filesandordirs; Name: "{app}\Purple HATS Frontend"
+Type: filesandordirs; Name: "{app}\Purple HATS Backend"
+
+[InstallDelete]
 Type: filesandordirs; Name: "{app}\Purple HATS Frontend"
 Type: filesandordirs; Name: "{app}\Purple HATS Backend"

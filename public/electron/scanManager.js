@@ -39,9 +39,11 @@ const getScanOptions = (details) => {
     maxPages,
     headlessMode,
     browser,
-    exportDir, 
+    email,
+    name,
+    exportDir
   } = details;
-  const options = ["-c", scanType, "-u", url];
+  const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`];
 
   if (customDevice) {
     options.push("-d", customDevice);
@@ -74,9 +76,13 @@ const startScan = async (scanDetails) => {
   const { scanType, url } = scanDetails;
   console.log(`Starting new ${scanType} scan at ${url}.`);
 
-  const userData = readUserDataFromFile(); 
-  scanDetails.browser = userData.browser; 
-  scanDetails.exportDir = userData.exportDir; 
+  const userData = readUserDataFromFile();
+
+  if (userData) {
+    scanDetails.email = userData.email;
+    scanDetails.name = userData.name;
+    scanDetails.exportDir = userData.exportDir;
+  }
 
   let useChromium = false;
   if (
@@ -144,9 +150,9 @@ const startScan = async (scanDetails) => {
 
 const getReportPath = (scanId) => {
   if (scanHistory[scanId]) {
-   const resultsPath = getResultsFolderPath(scanId);
-   return path.join(
+    return path.join(
       resultsPath,
+      scanHistory[scanId],
       "reports",
       "report.html"
     );
@@ -173,16 +179,28 @@ async function createReportWindow(reportPath) {
   let browser = readUserDataFromFile().browser; 
   const { context, browserChannel, proxy } = await createPlaywrightContext(browser, null, true);
 
-  const page = await context.newPage(); 
-  await page.goto(url, {
-    ...(proxy && { waitUntil: 'networkidle'})
-  }); 
+  const reportZip = fs.readFileSync(resultsZipPath);
+  return reportZip;
+};
 
-  page.on('close', async data => {
-      await context.close();
-      deleteClonedProfiles(browserChannel);
-    }
-  )
+async function createReportWindow(reportPath) {
+  const url = "file://" + reportPath;
+  let browser = readUserDataFromFile().browser;
+  const { context, browserChannel, proxy } = await createPlaywrightContext(
+    browser,
+    null,
+    true
+  );
+
+  const page = await context.newPage();
+  await page.goto(url, {
+    ...(proxy && { waitUntil: "networkidle" }),
+  });
+
+  page.on("close", async (data) => {
+    await context.close();
+    deleteClonedProfiles(browserChannel);
+  });
 }
 
 const init = () => {

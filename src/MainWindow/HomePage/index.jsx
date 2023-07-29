@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import a11yLogo from "../../assets/a11y-logo.svg";
 import appIllustration from "../../assets/app-illustration.svg";
-import editIcon from "../../assets/edit-icon.svg";
+import editIcon from "../../assets/edit-icon.png";
 import InitScanForm from "./InitScanForm";
 import "./HomePage.scss";
 import services from "../../services";
@@ -11,7 +11,7 @@ import Modal from "../../common/components/Modal";
 import { BasicAuthForm, BasicAuthFormFooter } from "./BasicAuthForm";
 import EditUserDetailsModal from "./EditUserDetailsModal";
 
-const HomePage = ({ appVersion, setCompletedScanId }) => {
+const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [prevUrlErrorMessage, setPrevUrlErrorMessage] = useState(
@@ -20,6 +20,7 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [autoSubmit, setAutoSubmit] = useState(false);
+  const [browser, setBrowser] = useState(null);
   const [showBasicAuthModal, setShowBasicAuthModal] = useState(false);
   const [showEditDataModal, setShowEditDataModal] = useState(false);
 
@@ -35,6 +36,7 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   useEffect(() => {
     const getUserData = async () => {
       const userData = await services.getUserData();
+      setBrowser(userData["browser"]);
       const isEvent = userData["event"];
       if (!isEvent) {
         setEmail(userData["email"]);
@@ -52,6 +54,8 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
   };
 
   const startScan = async (scanDetails) => {
+    scanDetails.browser = isProxy ? "edge" : browser;
+
     if (scanDetails.scanUrl.length === 0) {
       setPrevUrlErrorMessage("URL cannot be empty.");
       return;
@@ -69,7 +73,6 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
 
     navigate("/scanning");
     const response = await services.startScan(scanDetails);
-    console.log(response.success);
 
     if (response.success) {
       setCompletedScanId(response.scanId);
@@ -112,7 +115,7 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
     return;
   };
 
-  const areUserDetailsSet = name != "" && email != "";
+  const areUserDetailsSet = name !== "" && email !== "";
 
   const handleBasicAuthSubmit = (e) => {
     e.preventDefault();
@@ -147,31 +150,35 @@ const HomePage = ({ appVersion, setCompletedScanId }) => {
         />
         <h1 id="app-title">Accessibility Site Scanner</h1>
         <InitScanForm
+          isProxy={isProxy}
           startScan={startScan}
           prevUrlErrorMessage={prevUrlErrorMessage}
         />
       </div>
-      <Modal
-        id="basic-auth-modal"
-        showHeader={true}
-        showModal={showBasicAuthModal}
-        setShowModal={setShowBasicAuthModal}
-        keyboardTrap={showBasicAuthModal}
-        modalTitle={"Basic Authentication Required"}
-        modalBody={
-          <>
-            <BasicAuthForm handleBasicAuthSubmit={handleBasicAuthSubmit} />
-            <p>
-              The site you are trying to scan requires basic authentication.
-              Please enter your credentials. Purple-HATS will not collect the
-              information and only use it for this scan instance.
-            </p>
-          </>
-        }
-        modalFooter={
-          <BasicAuthFormFooter setShowBasicAuthModal={setShowBasicAuthModal} />
-        }
-      />
+      {showBasicAuthModal && (
+        <Modal
+          id="basic-auth-modal"
+          showHeader={true}
+          showModal={showBasicAuthModal}
+          setShowModal={setShowBasicAuthModal}
+          keyboardTrap={showBasicAuthModal}
+          modalTitle={"Your website requires basic authentication"}
+          modalBody={
+            <>
+              <BasicAuthForm handleBasicAuthSubmit={handleBasicAuthSubmit} />
+              <p className="mb-0">
+                Purple HATS will solely capture your credentials for this scan
+                and promptly remove them thereafter.
+              </p>
+            </>
+          }
+          modalFooter={
+            <BasicAuthFormFooter
+              setShowBasicAuthModal={setShowBasicAuthModal}
+            />
+          }
+        />
+      )}
       {areUserDetailsSet && (
         <>
           <EditUserDetailsModal

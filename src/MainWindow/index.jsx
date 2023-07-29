@@ -8,24 +8,43 @@ import OnboardingComponent from "./Onboarding/OnboardingComponent";
 import ConnectionNotification from "./ConnectionNotification";
 import "./MainWindow.css";
 
-
-const MainWindow = ({ appVersion }) => {
+const MainWindow = ({ isProxy, appVersion }) => {
   const [completedScanId, setCompletedScanId] = useState(null);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [userInputErrorMessage, setUserInputErrorMessage] = useState("");
   const [dataExistStatus, setDataExistStatus] = useState(null);
 
   useEffect(() => {
-    window.services.userDetailsExist((status) => {
-      setDataExistStatus(status)
-    })
+    window.services.userDataExists((status) => {
+      setDataExistStatus(status);
+    });
   }, []);
 
-  if (dataExistStatus === "doNotExist") {
+  const handleSetUserData = (event) => {
+    event.preventDefault();
+
+    console.log(event.target);
+
+    window.services.setUserData({ name: name, email: email });
+    setDataExistStatus("exists");
+  };
+
+  if (dataExistStatus === "doesNotExist") {
     return (
-      <OnboardingComponent setDataExistStatus={setDataExistStatus}/>
-    )
+      <OnboardingComponent
+        handleSetUserData={handleSetUserData}
+        name={name}
+        email={email}
+        setName={setName}
+        setEmail={setEmail}
+        userInputErrorMessage={userInputErrorMessage}
+        setUserInputErrorMessage={setUserInputErrorMessage}
+      />
+    );
   }
 
-  if (dataExistStatus === "exist") {
+  if (dataExistStatus === "exists") {
     return (
       <>
         <ConnectionNotification />
@@ -35,6 +54,7 @@ const MainWindow = ({ appVersion }) => {
               path="/"
               element={
                 <HomePage
+                  isProxy={isProxy}
                   appVersion={appVersion}
                   setCompletedScanId={setCompletedScanId}
                 />
@@ -53,7 +73,6 @@ const MainWindow = ({ appVersion }) => {
   }
 
   return null;
-}
-
+};
 
 export default MainWindow;
