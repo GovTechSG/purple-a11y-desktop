@@ -4,7 +4,7 @@ $purpleHatsBackendDirectory = 'C:\Program Files\Purple HATS Desktop\Purple HATS 
 $purpleHatsBackendPHDirectory = 'C:\Program Files\Purple HATS Desktop\Purple HATS Backend\purple-hats';
 $backendReleaseUrl = 'https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-windows.zip'
 $backendZipPath = 'C:\Program Files\Purple HATS Desktop\purple-hats-portable-windows.zip';
-$backendUnzipPath = 'C:\Program Files\Purple HATS Desktop\Purple HATS Backend\purple-hats';
+$backendUnzipPath = 'C:\Program Files\Purple HATS Desktop\Purple HATS Backend';
 
 $command = 
 @" 
