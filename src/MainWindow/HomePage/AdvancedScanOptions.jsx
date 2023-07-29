@@ -4,6 +4,7 @@ import SelectField from "./SelectField";
 import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
 import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
+import ToolTip from "../../common/components/ToolTip";
 
 const AdvancedScanOptions = ({
   isProxy,
@@ -15,6 +16,7 @@ const AdvancedScanOptions = ({
 }) => {
   const [openAdvancedOptionsMenu, setOpenAdvancedOptionsMenu] = useState(false);
   const [advancedOptionsDirty, setAdvancedOptionsDirty] = useState(false);
+  const [showToolTip, setShowToolTip] = useState(false);
   const menu = useRef();
 
   const handleToggleMenu = () => {
@@ -132,17 +134,26 @@ const AdvancedScanOptions = ({
           <hr />
           <div id="max-concurrency-toggle-group">
             <input
+              aria-describedby={'max-concurrency-tooltip'}
               type="checkbox"
               id="max-concurrency-toggle"
               checked={advancedOptions.maxConcurrency}
+              onFocus={() => setShowToolTip(true)}
+              onBlur={() => setShowToolTip(false)}
               onChange={handleSetAdvancedOption(
                 "maxConcurrency",
                 (e) => e.target.checked
               )}
             />
             <label htmlFor="max-concurrency-toggle">
-              Max Concurrency
+              Slow Scan Mode
             </label>
+            <ToolTip 
+              description={'Scan 1 page at a time instead of multiple pages concurrently.'} 
+              id={'max-concurrency-tooltip'}
+              showToolTip={showToolTip}
+              setShowToolTip={setShowToolTip}
+            />
           </div>
           {!isProxy && (
             <>
