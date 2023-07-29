@@ -1,0 +1,100 @@
+#custom-flow {
+    padding: 2em 2em 0 2em;
+    display: flex;
+    flex-direction: row;
+    color: #333333;
+    justify-content: center;
+    
+    .custom-flow-content {
+        width: 600px;
+    }
+
+    .custom-flow-header {
+        margin-bottom: 1rem;
+    }
+
+    .custom-flow-header-content {
+        display: flex;
+        flex-direction: row; 
+    }
+
+    .custom-flow-header-title-container {
+        padding-left: 1rem;
+    }
+
+    .custom-flow-header-step {
+        color: #4A6168;
+        font-weight: 700;
+     }
+
+    .custom-flow-header-url {
+        color: #4A6168; 
+    }
+
+    .custom-label-form {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .custom-label-input {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+
+    .custom-label-button {
+        align-self: flex-end;
+    }
+
+    .custom-flow-description {
+       font-size: 16px; 
+    }  
+
+    .progress-step-container {
+        background-color: white;
+        padding: 24px;
+        white-space: nowrap;
+        margin-right: 32px;
+        height: fit-content;
+    }
+    
+    .progress-step-container h4 {
+        color: #333333;
+        margin-bottom: 16px;
+    }
+    
+    .progress-step-list {
+        list-style-type: none;
+    }
+    
+    .progress-step {
+        border: 2px solid #B5C5CA;
+        border-radius: 100%;
+        width: 32px;
+        height: 32px;
+        text-align: center;
+        line-height: 28px;
+        display: inline-block;
+    }
+    
+    .progress-step-label {
+        display: inline-block;
+        padding-left: 1em;
+    }
+    
+    .progress-step-bar {
+        background-color: #B5C5CA;
+        height: 24px;
+        width: 2px;
+        margin: 8px 16px;
+    }
+    
+    .progress-step.active {
+        border-color: #785EF0;
+        color: #785EF0;
+    }
+
+    .progress-step-bar.active {
+        background-color: #785EF0;
+    }
+}

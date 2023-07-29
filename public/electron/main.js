@@ -135,7 +135,12 @@ app.on("ready", async () => {
   });
 
   createMainWindow();
-  scanManager.init();
+
+  const scanEvent = new EventEmitter();
+  scanManager.init(scanEvent);
+  scanEvent.on("scanningUrl", (url) => {
+    mainWindow.webContents.send("scanningUrl", url);
+  })
 
   ipcMain.on("openLink", (_event, url) => {
     shell.openExternal(url);

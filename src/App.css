@@ -262,7 +262,7 @@ a:hover {
   text-align: left;
 }
 
-@keyframes fade-in {
+@keyframes fade-in-left {
   from {
     opacity: 0;
     transform: translateX(20px);
@@ -273,8 +273,8 @@ a:hover {
   }
 }
 
-.fade-in {
-  animation: fade-in 0.5s;
+.fade-in-left {
+  animation: fade-in-left 0.5s;
 }
 
 #first-timer-2-container {
@@ -295,7 +295,6 @@ a:hover {
   font-size: 16px;
   font-weight: 700;
   overflow: hidden;
-  white-space: nowrap;
   margin: 0 auto;
   animation: typing 2s steps(200, end);
   animation-delay: 0.5s;
@@ -319,7 +318,84 @@ a {
 
 #box-arrow-right {
   padding-left: 0.25rem;
-  padding-bottom: 0.5rem;
+}
+
+.scanning-url {
+  width: 500px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 0.5em;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.scanning-check-icon {
+  display: inline-block;
+  vertical-align: unset;
+}
+
+.scanning-status-container .loading-spinner, 
+.scanning-component .loading-spinner {
+  height: 2rem;
+  width: 2rem;
+}
+
+.scanning-status-container .loading-spinner::after,
+.scanning-component .loading-spinner::after {
+  height: 2rem;
+  width: 2rem; 
+  margin: 0rem;
+  border-width: 4px;
+}
+
+.scanning-url-title {
+  color: #785EF0;
+  margin-bottom: 1em;
+}
+
+.scanning-url-list {
+  list-style-type: none;
+  max-height: 280px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.scanning-component h1 {
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.scanning-status-label {
+  color: #785EF0;
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: 0.5em;
+}
+
+@keyframes fade-in-top {
+  from {
+    transform: translateY(-20px);
+  }
+  to {
+    transform: translateY(0px);
+  }
+}
+
+.fade-in-top {
+  animation: fade-in-top 0.5s;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  } to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fade-in 0.7s;
 }
 
 .custom-tooltip-container {
