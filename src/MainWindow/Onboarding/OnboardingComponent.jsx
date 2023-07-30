@@ -36,9 +36,9 @@ const OnboardingComponent = ({
 
   const handleSetUserData =  (event) =>  {
     event.preventDefault();
- 
-    window.services.setUserDetails({name: name, email: email});
-    setDataExistStatus("exist");
+    console.log('hi');
+    window.services.setUserData({name: name, email: email});
+    setDataExistStatus("exists");
   }
 
   const resetFormInputs = () => {

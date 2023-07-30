@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Button from "../../common/components/Button";
 import { userDataFormInputFields } from "../../common/constants";
-import { userDataFormInputFields } from "../../common/constants";
 import "./ResultPage.scss";
 import services from "../../services";
 import { Link } from "react-router-dom";
@@ -112,7 +111,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
           />
           {/* <i className="bi bi-check-circle"></i> */}
           <h1>Scan completed</h1>
-          {enableReportDownload && !event ? (
           {enableReportDownload && !event ? (
             <>
               <p id="download-content">

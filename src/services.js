@@ -101,7 +101,7 @@ const isValidEmail = (email) => {
 const services = {
   startScan,
   openReport,
-  downloadResults,
+  // downloadResults,
   getResultsFolderPath,
   getUserData,
   getDataForForm,

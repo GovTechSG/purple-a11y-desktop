@@ -71,13 +71,13 @@ const setData = async (userDataEvent) => {
 
     if (data.name === "" || data.email === "") {
         const userData = new Promise((resolve) => {
-           userDataEvent.emit("userDetailsDoNotExist", resolve);
+           userDataEvent.emit("userDataDoesNotExist", resolve);
         })
         const userDetailsReceived = await userData; 
         writeUserDetailsToFile(userDetailsReceived);
         createExportDir(); 
     } else {
-        userDataEvent.emit("userDetailsDoExist");
+        userDataEvent.emit("userDataDoesExist");
     }
 }
 

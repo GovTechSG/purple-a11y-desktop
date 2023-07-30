@@ -68,5 +68,3 @@ const UserDetailsForm = ({
 };
 
 export default UserDetailsForm;
-
-export default UserDetailsForm;
