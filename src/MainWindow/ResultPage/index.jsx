@@ -105,11 +105,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
             svgIcon={<CheckCircleIcon />}
           />
           {/* <i className="bi bi-check-circle"></i> */}
-          <ButtonSvgIcon
-            className={`check-circle-icon`}
-            svgIcon={<CheckCircleIcon />}
-          />
-          {/* <i className="bi bi-check-circle"></i> */}
           <h1>Scan completed</h1>
           {enableReportDownload && !event ? (
             <>
@@ -173,46 +168,8 @@ const ResultPage = ({ completedScanId: scanId }) => {
                 {errorMessage && <p className="error-text">{errorMessage}</p>}
                 <Button type="submit">View Results</Button>
               </form>
-              <form
-                id="form-container"
-                className=""
-                onSubmit={(e) => handleSubmitForm(e)}
-              >
-                <input
-                  type="hidden"
-                  id="form-website-url"
-                  name={userDataFormInputFields.websiteUrlField}
-                  value={websiteUrl}
-                ></input>
-                <input
-                  type="hidden"
-                  id="form-scan-type"
-                  name={userDataFormInputFields.scanTypeField}
-                  value={scanType}
-                ></input>
-                <label for="form-name">Name:</label>
-                <input
-                  type="text"
-                  id="form-name"
-                  name={userDataFormInputFields.nameField}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                ></input>
-                <label for="form-email">Email:</label>
-                <input
-                  type="text"
-                  id="form-email"
-                  name={userDataFormInputFields.emailField}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                ></input>
-                {errorMessage && <p className="error-text">{errorMessage}</p>}
-                <Button type="submit">View Results</Button>
-              </form>
             </>
           )}
-          <hr />
-          <Link id="scan-again" to="/">Scan again</Link>
         </div>
       </div>
     </div>

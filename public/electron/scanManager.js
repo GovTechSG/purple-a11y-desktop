@@ -149,10 +149,10 @@ const startScan = async (scanDetails) => {
 };
 
 const getReportPath = (scanId) => {
+  const resultsFolderPath = getResultsFolderPath(scanId);
   if (scanHistory[scanId]) {
     return path.join(
-      resultsPath,
-      scanHistory[scanId],
+      resultsFolderPath,
       "reports",
       "report.html"
     );
