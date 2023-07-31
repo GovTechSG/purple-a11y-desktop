@@ -28,8 +28,7 @@ h3 {
 }
 
 button.primary {
-  border-radius: 50rem;
-  padding: 0.25rem 2rem;
+  padding: 0.25rem 1rem;
   border: none;
   background-color: #785ef0;
   color: white;
@@ -72,6 +71,11 @@ button:disabled {
 button.transparent {
   background-color: transparent;
   border: none;
+}
+
+.scan-btn {
+  padding: 0.25rem 2rem!important;
+  border-radius: 50rem;
 }
 
 a {
@@ -262,12 +266,75 @@ a:hover {
   text-align: left;
 }
 
-@keyframes fade-in-left {
+.download-dropdown {
+  position: relative;
+}
+
+.user-input-group .download-dropdown {
+  width: 77%;
+}
+
+.download-dropdown-btn {
+  box-sizing: border-box;
+  border: 1px solid #B5C5CA;
+  border-radius: 4px;
+  width: 100%;
+  display: flex;
+}
+
+#dir-info {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  direction: rtl;
+  padding: 0 0.25rem;
+  white-space: nowrap;
+}
+
+.dir-info-button {
+  background-color: white;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.change-download-btn {
+  background-color: #fff;
+  border-left: 1px solid #b5c5ca;
+  padding: 4px 0 4px 8px;
+}
+
+.change-download-btn img {
+  padding-bottom: 0.25rem;
+}
+
+.download-path {
+  max-width: 90%;
+}
+
+.choose-dir-button:hover {
+  background-color: #785EF0;
+  color: white;
+}
+
+.img-button {
+  background-color: transparent;
+  border: none;
+  margin-right: 5px;
+  padding-top: 0px;
+}
+
+.dir-info {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+@keyframes slide-in {
   from {
     opacity: 0;
     transform: translateX(20px);
-  }
-  to {
+  } to {
     opacity: 1;
     transform: translateX(0px);
   }

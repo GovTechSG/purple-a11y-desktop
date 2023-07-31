@@ -25,9 +25,19 @@ contextBridge.exposeInMainWorld("services", {
   openReport: (scanId) => {
     ipcRenderer.send("openReport", scanId);
   },
-  downloadResults: async (scanId) => {
-    const reportZip = await ipcRenderer.invoke("downloadResults", scanId);
-    return reportZip;
+  openResultsFolder: (resultsPath) => {
+    ipcRenderer.send("openResultsFolder", resultsPath);
+  },
+  getResultsFolderPath: async (scanId) => {
+    const reportPath = await ipcRenderer.invoke("getResultsFolderPath", scanId);
+    return reportPath;
+  },
+  submitFormViaBrowser: (formDetails) => {
+    ipcRenderer.send("submitFormViaBrowser", formDetails);
+  },
+  setExportDir: async () => {
+    const exportDir = await ipcRenderer.invoke("setExportDir");
+    return exportDir;
   },
   submitFormViaBrowser: (formDetails) => {
     ipcRenderer.send("submitFormViaBrowser", formDetails);

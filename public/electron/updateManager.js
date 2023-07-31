@@ -19,6 +19,7 @@ const {
   macOSExecutablePath,
 } = require("./constants");
 const { silentLogger } = require("./logs");
+const { readUserDataFromFile } = require("./userDataManager");
 
 let currentChildProcess;
 
@@ -89,6 +90,10 @@ const cleanUpBackend = async () => {
 };
 
 const downloadBackend = async () => {
+  if (os.platform() === "win32"){
+    return
+  }
+
   let downloadUrl;
 
   try {

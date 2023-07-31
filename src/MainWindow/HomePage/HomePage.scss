@@ -36,7 +36,7 @@
     background-color: white;
     height: 46px;
     width: 600px;
-    max-width: 95vw;
+    max-width: 600px;
     display: flex;
     padding: 2px 2px 2px 24px;
     align-items: center;
@@ -118,8 +118,8 @@
     background-color: #f6f8f9;
     border: 1px solid #b5c5ca;
     border-radius: 0.5rem;
-    width: 332px;
-    max-width: 90vw;
+    // width: 600px;
+    max-width: 480px;
     position: absolute;
     left: 0;
     right: 0;
@@ -134,7 +134,7 @@
   #specific-device-dropdown,
   #viewport-width-input {
     margin-left: 1rem;
-    width: 60%;
+    width: 77%;
   }
 
   #scan-in-background-toggle-group,

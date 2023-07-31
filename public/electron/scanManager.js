@@ -43,6 +43,7 @@ const getScanOptions = (details) => {
     browser,
     email,
     name,
+    exportDir,
     maxConcurrency,
   } = details;
   const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`];
@@ -67,6 +68,10 @@ const getScanOptions = (details) => {
     options.push("-b", browser);
   }
 
+  if (exportDir) {
+    options.push("-e", exportDir);
+  }
+
   if (maxConcurrency) {
     options.push("-t", 1);
   }
@@ -84,6 +89,7 @@ const startScan = async (scanDetails, scanEvent) => {
   if (userData) {
     scanDetails.email = userData.email;
     scanDetails.name = userData.name;
+    scanDetails.exportDir = userData.exportDir;
   }
 
   let useChromium = false;
@@ -335,10 +341,10 @@ const generateReport = (customFlowLabel, scanId) => {
 };
 
 const getReportPath = (scanId) => {
+  const resultsFolderPath = getResultsFolderPath(scanId);
   if (scanHistory[scanId]) {
     return path.join(
-      scanResultsPath,
-      scanHistory[scanId],
+      resultsFolderPath,
       "reports",
       "report.html"
     );
@@ -346,16 +352,24 @@ const getReportPath = (scanId) => {
   return null;
 };
 
-const getResultsZipPath = (scanId) => {
-  if (scanHistory[scanId]) {
-    return path.join(resultsPath, "a11y-scan-results.zip");
-  }
-  return null;
-};
+const getResultsFolderPath = (scanId) => {
+  const exportDir = readUserDataFromFile().exportDir; 
+  return path.join(
+    exportDir,
+    scanHistory[scanId]
+  )
+}
+// const getResultsZipPath = (scanId) => {
+//   if (scanHistory[scanId]) {
+//     return path.join(resultsPath, "a11y-scan-results.zip");
+//   }
+//   return null;
+// };
 
-const getResultsZip = (scanId) => {
-  const resultsZipPath = getResultsZipPath(scanId);
-  if (!resultsZipPath) return "";
+async function createReportWindow(reportPath) {
+  const url = "file://" + reportPath;
+  let browser = readUserDataFromFile().browser; 
+  const { context, browserChannel, proxy } = await createPlaywrightContext(browser, null, true);
 
   const reportZip = fs.readFileSync(resultsZipPath);
   return reportZip;
@@ -419,9 +433,14 @@ const init = (scanEvent) => {
     await createReportWindow(reportPath);
   });
 
-  ipcMain.handle("downloadResults", (_event, scanId) => {
-    return getResultsZip(scanId);
-  });
+  ipcMain.handle("getResultsFolderPath", async (_event, scanId) => {
+    const resultsPath = getResultsFolderPath(scanId);
+    return resultsPath;
+  })
+
+  // ipcMain.handle("downloadResults", (_event, scanId) => {
+  //   return getResultsZip(scanId);
+  // });
 };
 
 module.exports = {

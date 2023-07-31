@@ -10,6 +10,7 @@ import { ReactComponent as BoxArrowUpRightIcon } from "../../assets/box-arrow-up
 import { ReactComponent as DownloadIcon } from "../../assets/download.svg";
 import { ReactComponent as ReturnIcon } from "../../assets/return.svg";
 
+
 const ResultPage = ({ completedScanId: scanId }) => {
   const [enableReportDownload, setEnableReportDownload] = useState(false);
   const [websiteUrl, setWebsiteUrl] = useState(null);
@@ -19,6 +20,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const [browser, setBrowser] = useState("");
   const [event, setEvent] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
+  const [resultsPath, setResultsPath] = useState(null);
 
   useEffect(() => {
     const getDataForForm = async () => {
@@ -36,18 +38,25 @@ const ResultPage = ({ completedScanId: scanId }) => {
     };
     getDataForForm();
   }, []);
-  const handleDownloadResults = async () => {
-    const data = await services.downloadResults(scanId);
-    let blob = new Blob([data], { type: "application/zip" });
-    let link = document.createElement("a");
-    link.href = window.URL.createObjectURL(blob);
-    link.download = "results.zip";
-    link.click();
-  };
+
+  useEffect(() => {
+    const getResultsPath = async () => {
+      const resultsPath = await services.getResultsFolderPath(scanId); 
+      setResultsPath(resultsPath);
+    }
+
+    getResultsPath();
+  }, [])
 
   const handleViewReport = () => {
     services.openReport(scanId);
   };
+
+  const handleOpenResultsFolder = async (e) => {
+    e.preventDefault(); 
+
+    window.services.openResultsFolder(resultsPath);
+  }
 
   const handleSubmitForm = async (event) => {
     event.preventDefault();
@@ -62,6 +71,9 @@ const ResultPage = ({ completedScanId: scanId }) => {
       setEvent(false);
       const formUrl = userDataFormInputFields.formUrl;
       await submitFormViaBrowser(formUrl);
+
+      // const formData = new FormData(event.target);
+      // await axios.post(formUrl, formData);
 
       // Form submission successful
       console.log("Form submitted successfully!");
@@ -81,7 +93,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
       email: email,
       browser: browser,
     };
-    await window.services.v(formDetails);
+    await window.services.submitFormViaBrowser(formDetails);
   };
 
   return (
@@ -96,32 +108,28 @@ const ResultPage = ({ completedScanId: scanId }) => {
           <h1>Scan completed</h1>
           {enableReportDownload && !event ? (
             <>
-              <Button
-                id="view-button"
-                type="primary"
-                className="bold-text"
-                onClick={handleViewReport}
-              >
-                <ButtonSvgIcon
-                  className={`box-arrow-up-right-icon`}
-                  svgIcon={<BoxArrowUpRightIcon />}
-                />
-                {/* <i className="bi bi-box-arrow-up-right" /> */}
-                View report
-              </Button>
-              <Button
-                id="download-button"
-                type="secondary"
-                onClick={handleDownloadResults}
-              >
-                <ButtonSvgIcon
-                  svgIcon={<DownloadIcon />}
-                  className={`download-icon`}
-                />
-                {/* <i className="bi bi-download" /> */}
-                Download results (.zip)
-              </Button>
-            </>
+              <p id="download-content">
+                You can find the downloaded report at <a href="#" onClick={handleOpenResultsFolder}>{resultsPath}</a>
+              </p>
+              <div id="btn-container">
+                <Link id="scan-again" to="/">
+                    <ButtonSvgIcon svgIcon={<ReturnIcon/>} className={`return-icon`}/>
+                    Back to Home
+                  </Link>
+                  <Button
+                    id="view-button"
+                    type="primary"
+                    onClick={handleViewReport}
+                  >
+                    <ButtonSvgIcon
+                      className={`box-arrow-up-right-icon `}
+                      svgIcon={<BoxArrowUpRightIcon />}
+                    />
+                    {/* <i className="bi bi-box-arrow-up-right" /> */}
+                    View report
+                  </Button>
+              </div>
+              </>
           ) : (
             <>
               <form
@@ -162,11 +170,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
               </form>
             </>
           )}
-          <hr />
-          <Link id="scan-again" to="/">
-            <ButtonSvgIcon svgIcon={<ReturnIcon />} className={`return-icon`} />
-            Scan again
-          </Link>
         </div>
       </div>
     </div>

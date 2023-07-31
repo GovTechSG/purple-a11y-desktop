@@ -1,8 +1,5 @@
 #result-page {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  height: 100vh;
+  margin-top: 10vw;
 
   #main-container {
     display: flex;
@@ -35,6 +32,10 @@
     margin-right: 0.5rem;
   }
 
+  .box-arrow-up-right-icon svg {
+    margin-top: -5px;
+  }
+
   .download-icon {
     margin-right: 0.5rem;
   }
@@ -46,14 +47,30 @@
   // }
 
   h1 {
-    font-family: "Viga", "Helvetica", sans-serif;
+    font-family: "Viga";
     font-size: 2rem;
     font-weight: 400;
     margin-bottom: 2.5rem;
   }
 
+  #btn-container {
+    display: flex;
+    flex-direction: row;
+  }
+
+  #download-content {
+    margin-bottom: 2rem;
+    max-width: 600px;
+  }
+
   #view-button {
     width: 100%;
+    margin-left: 2rem;
+    border-radius: 4px;
+  }
+
+  #scan-again {
+    white-space: nowrap;
   }
 
   #download-button {

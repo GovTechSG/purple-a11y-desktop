@@ -1,28 +1,28 @@
 import Modal from "../../common/components/Modal";
 import Button from "../../common/components/Button";
+import DownloadFolderDropdown from "../../common/components/DownloadFolderDropdown";
 import UserDetailsForm from "../../common/components/UserDetailsForm";
 import PageIndicator from "./components/PageIndicator";
 import { policyUrlElem } from "../../common/constants";
 import firstTimer1 from "../../assets/first-timer-1.svg";
 import firstTimer2 from "../../assets/first-timer-2.svg";
 import firstTimer3 from "../../assets/first-timer-3.svg";
+import firstTimer4 from "../../assets/first-timer-4.svg"
 import arrowRight from "../../assets/arrow-right.png";
 import { useEffect, useState } from "react";
 
+
 const OnboardingComponent = ({
-  handleSetUserData,
-  setName,
-  setEmail,
-  userInputErrorMessage,
-  setUserInputErrorMessage,
-  name,
-  email,
+  setDataExistStatus
 }) => {
+  const [email, setEmail] = useState(''); 
+  const [name, setName] = useState('');
+  const [userInputErrorMessage, setUserInputErrorMessage] = useState('');
   const [step, setStep] = useState(1);
 
   useEffect(() => {
     setFocus();
-  }, [step]);
+  }, [step])
 
   const handleOnBackClick = () => {
     setStep(step - 1);
@@ -32,6 +32,14 @@ const OnboardingComponent = ({
     setStep(step + 1);
     resetFormInputs();
   };
+
+
+  const handleSetUserData =  (event) =>  {
+    event.preventDefault();
+    console.log('hi');
+    window.services.setUserData({name: name, email: email});
+    setDataExistStatus("exists");
+  }
 
   const resetFormInputs = () => {
     if (userInputErrorMessage) {
@@ -43,14 +51,14 @@ const OnboardingComponent = ({
     }
 
     if (email) {
-      setEmail("");
+      setEmail("")
     }
-  };
+  }
 
   const setFocus = () => {
-    const modalBody = document.querySelector(".modal-body");
-    modalBody.focus();
-  };
+    const modalBody = document.querySelector('.modal-body'); 
+    modalBody.focus();  
+  }
 
   const backButton = (
     <Button
@@ -72,16 +80,16 @@ const OnboardingComponent = ({
   );
 
   const formID = "first-timer-form";
-  const isSubmitDisabled =
-    name.trim() === "" || email.trim() === "" || userInputErrorMessage;
-
+  const isSubmitDisabled = name.trim() === "" || email.trim() === "" || userInputErrorMessage;
+  
   const renderOnboardingBody = () => {
     switch (step) {
       case 1: {
         return (
           <>
-            <div className="visually-hidden" aria-live="polite" role="status">
-              Item 1 of 4
+            <div className="visually-hidden" aria-live="polite" role="status">Item 1 of 5</div>
+            <div className="modal-img-container slide-in" aria-hidden="true">
+              <img className="modal-img" src={firstTimer1}></img>
             </div>
             <div className="modal-img-container fade-in-left" aria-hidden="true">
               <img
@@ -97,7 +105,7 @@ const OnboardingComponent = ({
             </p>
             <PageIndicator page={1}></PageIndicator>
           </>
-        );
+        )
       }
       case 2: {
         return (
@@ -108,11 +116,7 @@ const OnboardingComponent = ({
             <div className="modal-img-container fade-in-left" aria-hidden="true">
               <div id="first-timer-2-container">
                 <div className="typewriter">https://www.</div>
-                <img
-                  className="modal-img"
-                  src={firstTimer2}
-                  alt="search bar"
-                ></img>
+                <img className="modal-img" src={firstTimer2}></img>
               </div>
             </div>
             <h3 className="modal-title fade-in-left">Get started</h3>
@@ -123,7 +127,7 @@ const OnboardingComponent = ({
             </p>
             <PageIndicator page={2}></PageIndicator>
           </>
-        );
+        )
       }
       case 3: {
         return (
@@ -151,10 +155,22 @@ const OnboardingComponent = ({
       case 4: {
         return (
           <>
-            <div className="visually-hidden" aria-live="polite" role="status">
-              Item 4 of 4
+            <div className="visually-hidden" aria-live="polite" role="status">Item 4 of 5</div>
+            <div className="modal-img-container slide-in" aria-hidden="true">
+              <img className="modal-img" src={firstTimer4}></img>
             </div>
-            <h3 className="modal-title fade-in-left">Get to know you</h3>
+            <h3 className="modal-title slide-in">Download report location</h3>
+            <DownloadFolderDropdown isOnboarding={true}></DownloadFolderDropdown>
+            <p className="modal-desc slide-in">All reports generated from Purple HATS will be auto-downloaded into this folder.</p>
+            <PageIndicator page={4}></PageIndicator>
+          </>
+        )
+      }
+      case 5: {
+        return (
+          <>
+            <div className="visually-hidden" aria-live="polite" role="status">Item 5 of 5</div>
+            <h3 className="modal-title slide-in">Get to know you</h3>
             <UserDetailsForm
               formID={formID}
               setName={setName}
@@ -169,47 +185,43 @@ const OnboardingComponent = ({
               email address and app usage data. Your information fully complies
               with {policyUrlElem}
             </p>
-            <PageIndicator page={4}></PageIndicator>
+            <PageIndicator page={5}></PageIndicator>
           </>
-        );
-      }
-      default: {
-        return <></>;
+        )
       }
     }
-  };
+  }
 
   const renderOnboardingFooter = () => {
     switch (step) {
       case 1: {
         return (
           <Button
-            type="primary"
-            className="modal-button modal-full-button"
-            onClick={handleOnNextClick}
+          type="primary"
+          className="modal-button modal-full-button"
+          onClick={handleOnNextClick}
           >
             Let's go &nbsp;
-            <img src={arrowRight} alt="right arrow"></img>
+            <img src={arrowRight}></img>
           </Button>
-        );
+        )
       }
       case 2: {
         return (
-          <>
-            {backButton}
-            {nextButton}
-          </>
-        );
+          <>{backButton}{nextButton}</>
+        )
       }
       case 3: {
         return (
-          <>
-            {backButton}
-            {nextButton}
-          </>
-        );
+          <>{backButton}{nextButton}</>
+        )
       }
       case 4: {
+        return (
+          <>{backButton}{nextButton}</>
+        )
+      }
+      case 5: {
         return (
           <>
             {backButton}
@@ -222,13 +234,10 @@ const OnboardingComponent = ({
               I consent
             </button>
           </>
-        );
-      }
-      default: {
-        return <></>;
+       )
       }
     }
-  };
+  }
 
   return (
     <Modal

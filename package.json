@@ -60,7 +60,8 @@
     "@testing-library/user-event": "^14.3.3",
     "electron": "^24.0.0",
     "playwright": "^1.34.0-alpha-may-10-2023",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "@babel/plugin-proposal-private-property-in-object": "7.21.0-placeholder-for-preset-env.2"
   },
   "overrides": {
     "webpack": "^5.78.0",

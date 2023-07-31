@@ -1,4 +1,6 @@
-const SelectField = ({ id, label, initialValue, options, onChange }) => {
+const SelectField = ({ id, label, initialValue, options, onChange, isDownload }) => {
+
+
   return (
     <div className="user-input-group">
       <label htmlFor={id} className="bold-text">
@@ -10,11 +12,11 @@ const SelectField = ({ id, label, initialValue, options, onChange }) => {
         value={initialValue}
         onChange={onChange}
       >
-        {options.map((option, index) => (
-          <option key={index} value={option}>
-            {option}
-          </option>
-        ))}
+      {options.map((option, index) => (
+        <option key={index} value={option}>
+          {option}
+        </option>
+      ))}
       </select>
     </div>
   );

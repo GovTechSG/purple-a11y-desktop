@@ -6,6 +6,7 @@ const PageIndicator = ({page}) => {
     const page2ClassName = (page === 2) ? currentPageIndicatorClassName : pageIndicatorClassName; 
     const page3ClassName = (page === 3) ? currentPageIndicatorClassName : pageIndicatorClassName;
     const page4ClassName = (page === 4) ? currentPageIndicatorClassName : pageIndicatorClassName; 
+    const page5ClassName = (page === 5) ? currentPageIndicatorClassName : pageIndicatorClassName; 
 
     return (
         <div className="page-indicators">
@@ -13,6 +14,7 @@ const PageIndicator = ({page}) => {
             <div className={page2ClassName}></div>
             <div className={page3ClassName}></div>
             <div className={page4ClassName}></div>
+            <div className={page5ClassName}></div>
         </div>
     )
 }

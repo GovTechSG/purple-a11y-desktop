@@ -1,38 +1,68 @@
 const fs = require("fs");
-const { userDataFilePath, proxy } = require("./constants");
-const { ipcMain } = require("electron");
+const {
+    userDataFilePath,
+    defaultExportDir, 
+    proxy
+} = require("./constants"); 
+const { ipcMain, dialog, shell } = require("electron");
 
 const readUserDataFromFile = () => {
     return JSON.parse(fs.readFileSync(userDataFilePath));
 }
-const writeUserDataToFile = (userData) => {
+
+const writeUserDetailsToFile = (userDetails) => {
     const data = readUserDataFromFile();
-    data.name = userData.name; 
-    data.email = userData.email;
+    data.name = userDetails.name; 
+    data.email = userDetails.email;
     fs.writeFileSync(userDataFilePath, JSON.stringify(data));
 }
 
+const createExportDir = () => {
+    const exportDir = readUserDataFromFile().exportDir;
+    if (!fs.existsSync(exportDir)) {
+        fs.mkdirSync(exportDir, { recursive: true });
+    }
+}
+
 const init = async () => {
-  const userDataExists = fs.existsSync(userDataFilePath);
-  if (!userDataExists) {
-    const defaultSettings = {
-      name: "",
-      email: "",
-      autoSubmit: true,
-      event: false,
-      browser: proxy ? "edge" : "chrome",
-      autoUpdate: true,
-    };
-    fs.writeFileSync(userDataFilePath, JSON.stringify(defaultSettings));
-  }
+    const userDataExists = fs.existsSync(userDataFilePath);
+    if (!userDataExists) {
+        const defaultSettings = {
+            name: "", 
+            email: "",
+            autoSubmit: true, 
+            event: false, 
+            browser: proxy ? "edge" : "chrome",
+            autoUpdate: true,
+            exportDir: defaultExportDir
+        }; 
+        fs.writeFileSync(userDataFilePath, JSON.stringify(defaultSettings));
+    }
 
     ipcMain.handle("getUserData", (_event) => { 
         const data = readUserDataFromFile();
         return data;
     })
 
-    ipcMain.on("editUserData", (_event, data) => {
-        writeUserDataToFile(data);
+    ipcMain.on("editUserDetails", (_event, data) => {
+        writeUserDetailsToFile(data);
+    })
+
+    ipcMain.handle("setExportDir", (_event) => {
+        const data = readUserDataFromFile();
+        const results = dialog.showOpenDialogSync({
+            properties: ['openDirectory'],
+            defaultPath: data.exportDir
+        }); 
+        if (results) {
+            data.exportDir = results[0]; 
+        }    
+        fs.writeFileSync(userDataFilePath, JSON.stringify(data));
+        return data.exportDir;
+    })
+
+    ipcMain.on("openResultsFolder", (_event, resultsPath) => {
+        shell.openPath(resultsPath);
     })
 }
 
@@ -43,8 +73,9 @@ const setData = async (userDataEvent) => {
         const userData = new Promise((resolve) => {
            userDataEvent.emit("userDataDoesNotExist", resolve);
         })
-        const userDataReceived = await userData; 
-        writeUserDataToFile(userDataReceived);
+        const userDetailsReceived = await userData; 
+        writeUserDetailsToFile(userDetailsReceived);
+        createExportDir(); 
     } else {
         userDataEvent.emit("userDataDoesExist");
     }

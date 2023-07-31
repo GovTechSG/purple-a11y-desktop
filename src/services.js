@@ -61,9 +61,9 @@ const openReport = (scanId) => {
   window.services.openReport(scanId);
 };
 
-const downloadResults = async (scanId) => {
-  const reportZip = await window.services.downloadResults(scanId);
-  return reportZip;
+const getResultsFolderPath = async (scanId) => {
+  const reportPath = await window.services.getResultsFolderPath(scanId);
+  return reportPath;
 };
 
 const getUserData = async () => {
@@ -78,6 +78,7 @@ const getDataForForm = async () => {
   const autoSubmit = userData["autoSubmit"];
   const event = userData["event"];
   const browser = userData["browser"];
+  const exportDir = userData["exportDir"];
   return {
     websiteUrl: currentScanUrl,
     scanType: currentScanType,
@@ -86,6 +87,7 @@ const getDataForForm = async () => {
     autoSubmit: autoSubmit,
     event: event,
     browser: browser,
+    exportDir: exportDir
   };
 };
 
@@ -101,7 +103,8 @@ const isValidEmail = (email) => {
 const services = {
   startScan,
   openReport,
-  downloadResults,
+  // downloadResults,
+  getResultsFolderPath,
   getUserData,
   getDataForForm,
   isValidEmail,
