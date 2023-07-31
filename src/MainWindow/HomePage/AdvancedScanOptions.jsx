@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useDebugValue, useEffect } from "react";
 import Button from "../../common/components/Button";
 import SelectField from "./SelectField";
 import DownloadFolderDropdown from "../../common/components/DownloadFolderDropdown";
@@ -18,6 +18,7 @@ const AdvancedScanOptions = ({
   const [openAdvancedOptionsMenu, setOpenAdvancedOptionsMenu] = useState(false);
   const [advancedOptionsDirty, setAdvancedOptionsDirty] = useState(false);
   const [showToolTip, setShowToolTip] = useState(false);
+  const [isMouseEvent, setIsMouseEvent] = useState(false);
   const menu = useRef();
 
   const handleToggleMenu = () => {
@@ -29,6 +30,17 @@ const AdvancedScanOptions = ({
     }
   };
 
+  const handleOnFocus = () => {
+    if (!isMouseEvent) {
+      setShowToolTip(true);
+      setIsMouseEvent(false);
+    }
+  }
+
+  const handleOnMouseEnter = () => {
+    setIsMouseEvent(true); 
+    setShowToolTip(false);
+  }
   /*
   by default, new value of the selected option will be set to event.target.value
   if the new value should be something else, provide a function to overrideVal that returns
@@ -41,7 +53,7 @@ const AdvancedScanOptions = ({
       if (overrideVal) {
         val = overrideVal(event);
       } else {
-          val = event.target.value;
+        val = event.target.value;
       }
 
       const newOptions = { ...advancedOptions };
@@ -132,15 +144,15 @@ const AdvancedScanOptions = ({
               />
             </div>
           )}
-          <hr />
-          <div id="max-concurrency-toggle-group">
+          <div id="max-concurrency-toggle-group"  aria-describedby={'max-concurrency-tooltip'}>
             <input
-              aria-describedby={'max-concurrency-tooltip'}
               type="checkbox"
               id="max-concurrency-toggle"
               checked={advancedOptions.maxConcurrency}
-              onFocus={() => setShowToolTip(true)}
-              onBlur={() => setShowToolTip(false)}
+              onFocus={() => handleOnFocus()}
+              onBlur={() =>setShowToolTip(false)}
+              onMouseEnter={() => handleOnMouseEnter()}
+              onMouseLeave={() => setIsMouseEvent(false)}
               onChange={handleSetAdvancedOption(
                 "maxConcurrency",
                 (e) => e.target.checked
@@ -159,13 +171,13 @@ const AdvancedScanOptions = ({
           {!isProxy && (
             <>
               <hr />
-          <div className="user-input-group">
-            <label id="download-folder-label" className="bold-text">
-              Download:
-            </label>
-            <DownloadFolderDropdown></DownloadFolderDropdown>
-          </div>
-              <div id="scan-in-background-toggle-group">
+              <div className="user-input-group">
+                <label id="download-folder-label" className="bold-text">
+                  Download:
+                </label>
+                <DownloadFolderDropdown></DownloadFolderDropdown>
+              </div>
+              {/* <div id="scan-in-background-toggle-group">
                 <input
                   type="checkbox"
                   id="scan-in-background-toggle"
@@ -178,7 +190,7 @@ const AdvancedScanOptions = ({
                 <label htmlFor="scan-in-background-toggle">
                   Scan in background
                 </label>
-              </div>
+              </div> */}
             </>
           )}
         </div>

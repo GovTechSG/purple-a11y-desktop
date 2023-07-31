@@ -82,15 +82,17 @@ const getScanOptions = (details) => {
 const startScan = async (scanDetails, scanEvent) => {
   const { scanType, url } = scanDetails;
   console.log(`Starting new ${scanType} scan at ${url}.`);
-  console.log(getScanOptions(scanDetails));
 
   const userData = readUserDataFromFile();
+  console.log(userData);
 
   if (userData) {
     scanDetails.email = userData.email;
     scanDetails.name = userData.name;
     scanDetails.exportDir = userData.exportDir;
   }
+
+  console.log(getScanOptions(scanDetails));
 
   let useChromium = false;
   if (
@@ -228,13 +230,17 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
       }
 
       if (data.includes("results/")) {
-        const resultsPath = data.split(" ").slice(-2)[0].split("/").pop();
-        console.log(resultsPath);
+        console.log(data);
+        const resultsFolderName = data.split(" ").slice(-2)[0].split("/").pop();
+        console.log(resultsFolderName);
+
         const scanId = randomUUID();
-        scanHistory[scanId] = resultsPath;
+        scanHistory[scanId] = resultsFolderName;
+
+        moveCustomFlowResultsToExportDir(scanId);
         replay.kill("SIGKILL");
         currentChildProcess = null;
-        await cleanUp(scanHistory[scanId].split('_').slice(0, -1).toString().replaceAll(',', '_'));
+        // await cleanUp(scanHistory[scanId].split('_').slice(0, -1).toString().replaceAll(',', '_'));
         resolve({ success: true, scanId });
       }
     });
@@ -413,6 +419,16 @@ const cleanUp = async (folderName, setDefaultFolders = false) => {
     });
   }
 };
+
+const moveCustomFlowResultsToExportDir = (scanId) => {
+  const currentResultsPath = path.join(scanResultsPath, resultsFolderName);
+  const newResultsPath = getResultsFolderPath(scanId);
+
+  fs.move(currentResultsPath, newResultsPath, (err) => {
+    if (err) return console.log(err);
+    console.log(success);
+  })
+}
 
 const init = (scanEvent) => {
   ipcMain.handle("startScan", async (_event, scanDetails) => {

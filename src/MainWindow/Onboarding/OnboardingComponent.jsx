@@ -88,9 +88,6 @@ const OnboardingComponent = ({
         return (
           <>
             <div className="visually-hidden" aria-live="polite" role="status">Item 1 of 5</div>
-            <div className="modal-img-container slide-in" aria-hidden="true">
-              <img className="modal-img" src={firstTimer1}></img>
-            </div>
             <div className="modal-img-container fade-in-left" aria-hidden="true">
               <img
                 className="modal-img"

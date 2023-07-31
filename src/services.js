@@ -21,21 +21,23 @@ const startScan = async (scanDetails) => {
     viewport,
     device,
     viewportWidth,
-    scanInBackground,
+    // scanInBackground,
     browser,
     maxConcurrency
   } = scanDetails;
 
   currentScanUrl = scanUrl;
   currentScanType = selectedScanType;
-
+  console.log(scanTypes);
+  console.log(selectedScanType)
   const scanArgs = {
     scanType: scanTypes[selectedScanType],
     url: scanUrl,
-    headlessMode: scanInBackground,
+    headlessMode: scanTypes[selectedScanType] !== 'custom',
     browser: browser,
     maxConcurrency: maxConcurrency
   };
+  console.log(scanArgs);
 
   if (selectedScanType !== Object.keys(scanTypes)[2]) {
     scanArgs.maxPages = pageLimit;
