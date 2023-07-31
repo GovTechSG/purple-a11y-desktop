@@ -333,6 +333,7 @@ a {
 .scanning-check-icon {
   display: inline-block;
   vertical-align: unset;
+  height: 2em;
 }
 
 .scanning-status-container .loading-spinner, 

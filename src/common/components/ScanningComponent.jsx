@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
-import purpleCheckIcon from "../../assets/purple-check-circle.svg";
+import checkIcon from "../../assets/check-circle.svg";
 
 const ScanningComponent = ({scanningMessage}) => {
   const [urls, setUrls] = useState(new Array());
@@ -54,7 +54,7 @@ const ScanningComponent = ({scanningMessage}) => {
   const CompletedUrlComponent = ({key, url}) => {
    return (
     <li className="scanning-url-list-item fade-in-top" key={key}>
-      <img className="scanning-check-icon" src={purpleCheckIcon}></img>
+      <img className="scanning-check-icon" src={checkIcon}></img>
       <p className="scanning-url">{url}</p>
     </li>
    )
