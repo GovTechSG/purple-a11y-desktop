@@ -1,4 +1,4 @@
-const { BrowserWindow, ipcMain } = require("electron");
+const { BrowserWindow, ipcMain, shell } = require("electron");
 const path = require("path");
 const { fork, spawn } = require("child_process");
 const fs = require("fs-extra");
@@ -447,7 +447,7 @@ const init = (scanEvent) => {
   ipcMain.on("openReport", async (_event, scanId) => {
     const reportPath = getReportPath(scanId);
     if (!reportPath) return;
-    await createReportWindow(reportPath);
+    shell.openExternal(`file://${reportPath}`);
   });
 
   ipcMain.handle("getResultsFolderPath", async (_event, scanId) => {
