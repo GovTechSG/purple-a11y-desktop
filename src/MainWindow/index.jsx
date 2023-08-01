@@ -14,9 +14,7 @@ const MainWindow = ({ isProxy, appVersion }) => {
   const [dataExistStatus, setDataExistStatus] = useState(null);
 
   useEffect(() => {
-    console.log("user data exists?");
     window.services.userDataExists((status) => {
-      console.log(status);
       setDataExistStatus(status);
     });
   }, []);
@@ -30,7 +28,6 @@ const MainWindow = ({ isProxy, appVersion }) => {
   }
 
   if (dataExistStatus === "exists") {
-    console.log("hello");
     return (
       <>
         <ConnectionNotification />
