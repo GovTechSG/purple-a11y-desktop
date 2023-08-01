@@ -12,7 +12,6 @@ import { ReactComponent as ReturnIcon } from "../../assets/return.svg";
 
 
 const ResultPage = ({ completedScanId: scanId }) => {
-  const [enableReportDownload, setEnableReportDownload] = useState(false);
   const [websiteUrl, setWebsiteUrl] = useState(null);
   const [scanType, setScanType] = useState(null);
   const [email, setEmail] = useState("");
@@ -28,13 +27,9 @@ const ResultPage = ({ completedScanId: scanId }) => {
       setWebsiteUrl(data["websiteUrl"]);
       setScanType(data["scanType"]);
       setBrowser(data["browser"]);
-      let isEvent = data["event"];
       setEmail(data["email"]);
       setName(data["name"]);
       setEvent(data["event"]);
-      if (!isEvent) {
-        setEnableReportDownload(true);
-      }
     };
     getDataForForm();
   }, []);
@@ -66,8 +61,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
         setErrorMessage("Please enter a valid email");
         return;
       }
-
-      setEnableReportDownload(true);
       setEvent(false);
       const formUrl = userDataFormInputFields.formUrl;
       await submitFormViaBrowser(formUrl);
@@ -106,7 +99,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
           />
           {/* <i className="bi bi-check-circle"></i> */}
           <h1>Scan completed</h1>
-          {enableReportDownload && !event ? (
+          {!event ? (
             <>
               <p id="download-content">
                 You can find the downloaded report at <a href="#" onClick={handleOpenResultsFolder}>{resultsPath}</a>

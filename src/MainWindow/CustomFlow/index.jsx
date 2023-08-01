@@ -237,6 +237,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                   description={"Assign a recognisable label to this custom flow for convenient reference in the report."}
                 />
                 <form className="custom-label-form" onSubmit={() => {generateReport()}}>
+                  <label className="custom-label-form-label">Custom Flow Label</label>
                   <input className="custom-label-input" type="text" value={customFlowLabel} onChange={(e) => setCustomFlowLabel(e.target.value)}></input>
                   <button type="submit" className="primary custom-label-button">Generate Report</button>
                 </form>

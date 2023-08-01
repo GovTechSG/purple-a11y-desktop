@@ -5,6 +5,10 @@
     color: #333333;
     justify-content: center;
     
+    button {
+        border-radius: 4px;
+    }
+    
     .custom-flow-content {
         width: 600px;
     }
@@ -37,9 +41,16 @@
         align-items: flex-start;
     }
 
+    .custom-label-form-label {
+        font-weight: bold;
+    }
+
     .custom-label-input {
-        width: 100%;
+        border: 1px solid #b5c5ca;
+        border-radius: 4px;
         margin-bottom: 8px;
+        width: 100%;
+        padding: 0.25em 0 0.25em 0.5em;
     }
 
     .custom-label-button {
