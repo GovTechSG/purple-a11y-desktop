@@ -102,7 +102,7 @@ const startScan = async (scanDetails, scanEvent) => {
     useChromium = true;
   }
 
-  const response = await new Promise((resolve) => {
+  const response = await new Promise(async (resolve) => {
     const scan = spawn(
       `node`,
       [path.join(enginePath, "cli.js"), ...getScanOptions(scanDetails)],
@@ -127,7 +127,7 @@ const startScan = async (scanDetails, scanEvent) => {
     });
 
     scan.stdout.setEncoding("utf8");
-    scan.stdout.on("data", (data) => {
+    scan.stdout.on("data", async (data) => {
       /** Code 0 handled indirectly here (i.e. successful process run),
       as unable to get stdout on close event after changing to spawn from fork */
 
@@ -159,6 +159,7 @@ const startScan = async (scanDetails, scanEvent) => {
         scanHistory[scanId] = resultsPath;
         scan.kill("SIGKILL");
         currentChildProcess = null;
+        await cleanUp(scanId);
         resolve({ success: true, scanId });
       }
 
@@ -240,7 +241,7 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
         moveCustomFlowResultsToExportDir(scanId, resultsFolderName);
         replay.kill("SIGKILL");
         currentChildProcess = null;
-        await cleanUp(scanHistory[scanId].split('_').slice(0, -1).toString().replaceAll(',', '_'));
+        await cleanUp(scanId);
         resolve({ success: true, scanId });
       }
     });
@@ -372,14 +373,14 @@ const getResultsFolderPath = (scanId) => {
 //   return null;
 // };
 
-async function createReportWindow(reportPath) {
-  const url = "file://" + reportPath;
-  let browser = readUserDataFromFile().browser; 
-  const { context, browserChannel, proxy } = await createPlaywrightContext(browser, null, true);
+// async function createReportWindow(reportPath) {
+//   const url = "file://" + reportPath;
+//   let browser = readUserDataFromFile().browser; 
+//   const { context, browserChannel, proxy } = await createPlaywrightContext(browser, null, true);
 
-  const reportZip = fs.readFileSync(resultsZipPath);
-  return reportZip;
-};
+//   const reportZip = fs.readFileSync(resultsZipPath);
+//   return reportZip;
+// };
 
 async function createReportWindow(reportPath) {
   const url = "file://" + reportPath;
@@ -401,7 +402,8 @@ async function createReportWindow(reportPath) {
   });
 }
 
-const cleanUp = async (folderName, setDefaultFolders = false) => {
+const cleanUp = async (scanId, setDefaultFolders = false) => {
+  const folderName = scanHistory[scanId].split('_').slice(0, -1).toString().replaceAll(',', '_'); 
   const pathToDelete = path.join(resultsPath, folderName);
   await fs.pathExists(pathToDelete).then(exists => {
     if (exists) {
