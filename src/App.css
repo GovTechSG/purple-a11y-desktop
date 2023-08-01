@@ -425,7 +425,7 @@ a {
 .scanning-url-list {
   list-style-type: none;
   max-height: 280px;
-  overflow: hidden;
+  overflow-y: scroll;
   padding: 0;
 }
 
