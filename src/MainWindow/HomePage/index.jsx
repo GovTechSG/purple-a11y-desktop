@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import a11yLogo from "../../assets/a11y-logo.svg";
 import appIllustration from "../../assets/app-illustration.svg";
-import editIcon from "../../assets/edit-icon.png";
+import editIcon from "../../assets/edit-icon.svg";
 import InitScanForm from "./InitScanForm";
 import "./HomePage.scss";
 import services from "../../services";

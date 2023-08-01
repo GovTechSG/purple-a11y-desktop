@@ -44,7 +44,7 @@ const init = async () => {
         return data;
     })
 
-    ipcMain.on("editUserDetails", (_event, data) => {
+    ipcMain.on("editUserData", (_event, data) => {
         writeUserDetailsToFile(data);
     })
 
