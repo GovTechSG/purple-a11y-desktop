@@ -161,7 +161,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                   step={1}
                   title={"Record"}
                   url={scanDetails.scanUrl}
-                  description={"Record your custom flow by manually navigating on a new browser window. In the event of a login page, we will solely capture your credentials for this scan and promptly remove them thereafter. \n After finishing your flow, please close the browser to continue to the next step."}
+                  description={"Record your custom flow by manually navigating on a new browser window. In the event of a login page, we will solely capture your credentials for this scan and promptly remove them thereafter. \n\n After finishing your flow, please close the browser to continue to the next step."}
                 />
                 { !loading 
                   ? done 

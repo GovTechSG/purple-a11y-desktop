@@ -237,10 +237,10 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
         const scanId = randomUUID();
         scanHistory[scanId] = resultsFolderName;
 
-        moveCustomFlowResultsToExportDir(scanId);
+        moveCustomFlowResultsToExportDir(scanId, resultsFolderName);
         replay.kill("SIGKILL");
         currentChildProcess = null;
-        // await cleanUp(scanHistory[scanId].split('_').slice(0, -1).toString().replaceAll(',', '_'));
+        await cleanUp(scanHistory[scanId].split('_').slice(0, -1).toString().replaceAll(',', '_'));
         resolve({ success: true, scanId });
       }
     });
@@ -420,13 +420,12 @@ const cleanUp = async (folderName, setDefaultFolders = false) => {
   }
 };
 
-const moveCustomFlowResultsToExportDir = (scanId) => {
+const moveCustomFlowResultsToExportDir = (scanId, resultsFolderName) => {
   const currentResultsPath = path.join(scanResultsPath, resultsFolderName);
   const newResultsPath = getResultsFolderPath(scanId);
 
   fs.move(currentResultsPath, newResultsPath, (err) => {
     if (err) return console.log(err);
-    console.log(success);
   })
 }
 

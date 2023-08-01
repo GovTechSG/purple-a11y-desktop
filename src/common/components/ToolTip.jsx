@@ -7,6 +7,7 @@ const ToolTip = ({description, id, showToolTip, setShowToolTip}) => {
             <button 
                 className="custom-tooltip-button"
                 aria-hidden="true"
+                tabIndex='-1'
                 onMouseOver={() => setShowToolTip(true)}
                 onMouseLeave={() => setShowToolTip(false)}
             >
