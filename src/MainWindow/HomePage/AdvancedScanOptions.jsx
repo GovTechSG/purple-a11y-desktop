@@ -191,7 +191,7 @@ const AdvancedScanOptions = ({
                 id='max-concurrency-tooltip'
                 showToolTip={showToolTip}
               />
-              <img id='max-concurrency-tooltip-img' src={questionMarkIcon} aria-describedby='max-concurrency-tooltip'></img>
+              <img id='max-concurrency-tooltip-img' src={questionMarkIcon} alt="tooltip" aria-describedby='max-concurrency-tooltip'></img>
             </div>
           </div>
           {!isProxy && (
