@@ -22,7 +22,7 @@ const ScanningPage = () => {
             <img src={pagesSvg}></img>
             <span><b>URL: </b>{url}</span>
           </div>
-          <hr></hr>
+          <div className="scanning-page-divider"></div>
           <ScanningComponent scanningMessage={"Preparing Scan..."}></ScanningComponent>
           </>}
     </div>
