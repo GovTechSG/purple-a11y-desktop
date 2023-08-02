@@ -8,7 +8,7 @@
     button {
         border-radius: 4px;
     }
-    
+
     .custom-flow-content {
         width: 600px;
     }
@@ -35,7 +35,7 @@
         color: #4A6168; 
     }
 
-    .custom-label-form {
+    #custom-label-form {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -45,7 +45,7 @@
         font-weight: bold;
     }
 
-    .custom-label-input {
+    #custom-label-input {
         border: 1px solid #b5c5ca;
         border-radius: 4px;
         margin-bottom: 8px;

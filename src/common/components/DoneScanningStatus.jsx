@@ -4,7 +4,7 @@ const DoneScanningStatus = () => {
     return (
         <div className="scanning-status-container">
             <img className="scanning-check-icon" src={purpleCheckIcon}></img>
-            <p className="scanning-status-label"><b>Done!</b></p>
+            <p className="scanning-status-label" aria-live="polite" role="status"><b>Done!</b></p>
         </div>
     )
 }

@@ -330,7 +330,7 @@ a:hover {
   white-space: nowrap;
 }
 
-@keyframes slide-in {
+@keyframes fade-in-left {
   from {
     opacity: 0;
     transform: translateX(20px);

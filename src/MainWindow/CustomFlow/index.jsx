@@ -126,6 +126,18 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
       return;
     }
 
+    useEffect(() => {
+      if (scanDetails && step) {
+        const customFlowBodyElement = document.querySelector(".custom-flow-body"); 
+        customFlowBodyElement.setAttribute("tabindex", "-1"); 
+        customFlowBodyElement.focus(); 
+
+        return () => {
+          customFlowBodyElement.removeAttribute("tabindex"); 
+        }
+      }
+    }, [scanDetails, step])
+
     const currentDisplay = () => {
         switch (step) {
           case 1: {
@@ -169,16 +181,16 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
           case 3: {
             return (
               <>
-                <CustomFlowDisplay 
+                <CustomFlowDisplay
                   icon={labelIcon}
                   step={3}
                   title={"Label"}
                   url={scanDetails.scanUrl}
                   description={"Assign a recognisable label to this custom flow for convenient reference in the report."}
                 />
-                <form className="custom-label-form" onSubmit={() => {generateReport()}}>
-                  <label className="custom-label-form-label">Custom Flow Label</label>
-                  <input className="custom-label-input" type="text" value={customFlowLabel} onChange={(e) => setCustomFlowLabel(e.target.value)}></input>
+                <label className="custom-label-form-label" for="custom-label-input">Custom Flow Label</label>
+                <form id="custom-label-form" onSubmit={() => {generateReport()}}>
+                  <input id="custom-label-input" type="text" value={customFlowLabel} onChange={(e) => setCustomFlowLabel(e.target.value)}></input>
                   <button type="submit" className="primary custom-label-button">Generate Report</button>
                 </form>
               </>
