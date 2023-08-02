@@ -1,4 +1,4 @@
-import fullPurpleCheckIcon from "../../assets/full-purple-check-circle.svg"; 
+import fullPurpleCheckIcon from "../../../assets/full-purple-check-circle.svg"; 
 
 const ProgressStepComponent = ({step}) => {
 

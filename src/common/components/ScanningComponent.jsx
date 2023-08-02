@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 import checkIcon from "../../assets/check-circle.svg";
+import LoadingScanningStatus from "./LoadingScanningStatus";
 
 const ScanningComponent = ({scanningMessage}) => {
   const [urls, setUrls] = useState(new Array());
@@ -68,13 +69,7 @@ const ScanningComponent = ({scanningMessage}) => {
           <h1 className="scanning-url-title">Scanned: {pagesScanned} pages</h1>
           <ul className="scanning-url-list">{urlItems}</ul> 
         </>
-        :
-        <>
-            <div className="scanning-status-container text-left">
-                <LoadingSpinner></LoadingSpinner>
-                <p className="scanning-status-label">{scanningMessage}</p>
-            </div>
-        </>
+        : <LoadingScanningStatus scanningMessage={scanningMessage} />
       }
     </div>
   );

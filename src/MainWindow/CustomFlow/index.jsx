@@ -6,12 +6,12 @@ import './CustomFlow.scss';
 import recordIcon from "../../assets/record-icon.svg";
 import replayIcon from "../../assets/replay-icon.svg"; 
 import labelIcon from "../../assets/label-icon.svg";
-import purpleCheckIcon from "../../assets/purple-check-circle.svg";
-import boxRightArrowIcon from "../../assets/box-arrow-up-right.svg";
-import Button from "../../common/components/Button";
-import LoadingSpinner from "../../common/components/LoadingSpinner";
 import ScanningComponent from "../../common/components/ScanningComponent";
-import ProgressStepComponent from "./ProgressStepComponent";
+import ProgressStepComponent from "./components/ProgressStepComponent";
+import CustomFlowDisplay from "./components/CustomFlowDisplay";
+import ButtonWithBoxRightArrowIcon from "./components/ButtonWithBoxRightArrowIcon";
+import DoneScanningStatus from "../../common/components/DoneScanningStatus";
+import LoadingScanningStatus from "../../common/components/LoadingScanningStatus";
 
 const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
     const { state }= useLocation(); 
@@ -126,31 +126,6 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
       return;
     }
 
-    const CustomFlowDisplay = ({
-      icon, 
-      step, 
-      title, 
-      url, 
-      description, 
-    }) => {
-      return (
-        <>
-          <div className="custom-flow-header">
-            <div className="custom-flow-header-content">
-              <img className="custom-flow-header-img" src={icon} alt="record"></img>
-              <div className="custom-flow-header-title-container">
-                <span className="custom-flow-header-step">STEP {step} of 3</span>
-                <h3 className="custom-flow-header-title">{title}</h3>
-              </div>
-            </div>
-            <span className="custom-flow-header-url"><b>URL: </b>{url}</span>
-          </div>
-          <hr/>
-          <p className="custom-flow-description">{description}</p>
-        </>
-      )
-    }
-
     const currentDisplay = () => {
         switch (step) {
           case 1: {
@@ -165,30 +140,9 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                 />
                 { !loading 
                   ? done 
-                    ?
-                  (
-                    <>
-                      <div className="scanning-status-container">
-                         <img className="scanning-check-icon" src={purpleCheckIcon}></img>
-                         <p className="scanning-status-label"><b>Done!</b></p>
-                      </div>
-                    </>
-                  )
-                    : <>
-                        <Button type="primary" onClick={onClickRecord}>
-                            Start Recording &nbsp;
-                            <img src={boxRightArrowIcon}></img>
-                        </Button>
-                      </>
-                  : 
-                  (
-                    <>
-                      <div className="scanning-status-container">
-                        <LoadingSpinner></LoadingSpinner>
-                        <p className="scanning-status-label">Recording...</p>
-                      </div>
-                    </>
-                  )
+                    ? <DoneScanningStatus/>
+                    : <ButtonWithBoxRightArrowIcon onClick={onClickRecord}  buttonLabel='Start Recording'/> 
+                  : <LoadingScanningStatus scanningMessage='Recording...' /> 
                 }
               </>
             )
@@ -205,22 +159,8 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                 />
                 { !loading 
                     ? done 
-                      ? 
-                      (
-                        <>
-                          <div className="scanning-status-container">
-                            <img className="scanning-check-icon" src={purpleCheckIcon}></img>
-                            <p className="scanning-status-label"><b>Done!</b></p>
-                          </div>
-                        </>
-                      )
-                      : 
-                      <>
-                        <Button type="primary" onClick={onClickReplay}>
-                          Start Replaying &nbsp;
-                          <img src={boxRightArrowIcon}></img>
-                        </Button>
-                      </>
+                      ? <DoneScanningStatus />
+                      : <ButtonWithBoxRightArrowIcon onClick={onClickReplay} buttonLabel='Start Replaying' /> 
                     : <ScanningComponent scanningMessage={"Replaying & Scanning..."}></ScanningComponent>
                 }
               </>
