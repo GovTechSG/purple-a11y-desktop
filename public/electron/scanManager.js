@@ -170,6 +170,11 @@ const startScan = async (scanDetails, scanEvent) => {
         console.log(url);
         scanEvent.emit("scanningUrl", url);
       }
+
+      if (data.includes("Electron scan completed")) {
+        console.log(data);
+        scanEvent.emit("scanningCompleted");
+      }
     });
 
     // Only handles error code closes (i.e. code > 0)
@@ -228,6 +233,10 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
         const url = data.split("Electron crawling: ")[1].trim();
         console.log(url);
         scanEvent.emit("scanningUrl", url);
+      }
+
+      if (data.includes("Electron scan completed")) {
+        scanEvent.emit("scanningCompleted");
       }
 
       if (data.includes("results/")) {

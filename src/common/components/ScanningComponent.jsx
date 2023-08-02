@@ -37,9 +37,17 @@ const ScanningComponent = ({scanningMessage}) => {
       console.log(urls);
       const newUrlItems = [
         <InProgressUrlComponent key={urlItems.length} url={url}/>,
-         ...urls.map((url, index) => <CompletedUrlComponent key={index} url={url}/>), 
+         ...urls.map((url, index) => <CompletedUrlComponent key={index} url={url} hasAnimation={true}/>), 
       ] 
       setUrlItems(newUrlItems);
+    })
+
+    window.services.scanningCompleted(() => {
+      setPagesScanned(urls.length);
+      const completedUrlItems = [
+        ...urls.map((url, index) => <CompletedUrlComponent key={index} url={url} hasAnimation={false}/>)
+      ]
+      setUrlItems(completedUrlItems);
     })
   })
 
@@ -52,13 +60,14 @@ const ScanningComponent = ({scanningMessage}) => {
     )
   }
 
-  const CompletedUrlComponent = ({key, url}) => {
-   return (
-    <li className="scanning-url-list-item fade-in-top" key={key}>
-      <img className="scanning-check-icon" src={checkIcon}></img>
-      <p className="scanning-url">{url}</p>
-    </li>
-   )
+  const CompletedUrlComponent = ({key, url, hasAnimation}) => {
+    const urlItemClassName = hasAnimation ? "scanning-url-list-item fade-in-top" : "scanning-url-list-item";
+    return (
+      <li className={urlItemClassName} key={key}>
+        <img className="scanning-check-icon" src={checkIcon}></img>
+        <p className="scanning-url">{url}</p>
+      </li>
+    )
   }
 
   return (
