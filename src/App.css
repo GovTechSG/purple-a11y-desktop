@@ -324,7 +324,10 @@ a {
 
 .custom-tooltip-container {
   position: relative;
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 0.25em;
 }
 
 .custom-tooltip {
@@ -354,11 +357,6 @@ a {
   border-right: 5px solid transparent;
   border-top: 10px solid #333333; 
   opacity: 95%;
-}
-
-.custom-tooltip-button {
-  all: unset; 
-  padding: 0 0 0.25em 0.25em;
 }
 
 /* @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Roboto:ital,wght@0,100;1,100&display=swap");

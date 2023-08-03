@@ -1,8 +1,9 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "../../common/components/Button";
 import SelectField from "./SelectField";
 import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
 import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
+import questionMarkIcon from "../../assets/question-mark.svg";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import ToolTip from "../../common/components/ToolTip";
 
@@ -16,6 +17,7 @@ const AdvancedScanOptions = ({
 }) => {
   const [openAdvancedOptionsMenu, setOpenAdvancedOptionsMenu] = useState(false);
   const [advancedOptionsDirty, setAdvancedOptionsDirty] = useState(false);
+  const [isMouseEvent, setIsMouseEvent] = useState(false);
   const [showToolTip, setShowToolTip] = useState(false);
   const menu = useRef();
 
@@ -27,6 +29,39 @@ const AdvancedScanOptions = ({
       setTimeout(() => setOpenAdvancedOptionsMenu(false), 200);
     }
   };
+
+  useEffect(() => {
+    if (openAdvancedOptionsMenu) {
+      const maxConcurrencyTooltipImg = document.querySelector('#max-concurrency-tooltip-img');
+
+      const handleMouseEnter = () => {
+        setShowToolTip(true); 
+      }
+
+      const handleMouseLeave = () => {
+        setShowToolTip(false); 
+      }
+
+      maxConcurrencyTooltipImg.addEventListener("mouseover", handleMouseEnter);
+      maxConcurrencyTooltipImg.addEventListener("mouseout", handleMouseLeave);
+
+      return () => {
+        maxConcurrencyTooltipImg.removeEventListener("mouseover", handleMouseEnter); 
+        maxConcurrencyTooltipImg.removeEventListener("mouseout", handleMouseLeave);
+      }
+    }
+  }, [openAdvancedOptionsMenu])
+
+  const handleOnFocus = () => {
+    if (!isMouseEvent) {
+      setShowToolTip(true); 
+    }
+  }
+
+  const handleOnMouseEnter = () => {
+    setShowToolTip(false);
+    setIsMouseEvent(true); 
+  }
 
   /*
   by default, new value of the selected option will be set to event.target.value
@@ -134,12 +169,14 @@ const AdvancedScanOptions = ({
           <hr />
           <div id="max-concurrency-toggle-group">
             <input
-              aria-describedby={'max-concurrency-tooltip'}
               type="checkbox"
               id="max-concurrency-toggle"
+              aria-describedby='max-concurrency-tooltip'
               checked={advancedOptions.maxConcurrency}
-              onFocus={() => setShowToolTip(true)}
+              onFocus={() => handleOnFocus()}
               onBlur={() => setShowToolTip(false)}
+              onMouseEnter={() => handleOnMouseEnter()}
+              onMouseLeave={() => setIsMouseEvent(false)}
               onChange={handleSetAdvancedOption(
                 "maxConcurrency",
                 (e) => e.target.checked
@@ -148,12 +185,14 @@ const AdvancedScanOptions = ({
             <label htmlFor="max-concurrency-toggle">
               Slow Scan Mode
             </label>
-            <ToolTip 
-              description={'Scan 1 page at a time instead of multiple pages concurrently.'} 
-              id={'max-concurrency-tooltip'}
-              showToolTip={showToolTip}
-              setShowToolTip={setShowToolTip}
-            />
+            <div className="custom-tooltip-container">
+              <ToolTip 
+                description={'Scan 1 page at a time instead of multiple pages concurrently.'} 
+                id='max-concurrency-tooltip'
+                showToolTip={showToolTip}
+              />
+              <img id='max-concurrency-tooltip-img' src={questionMarkIcon} aria-describedby='max-concurrency-tooltip'></img>
+            </div>
           </div>
           {!isProxy && (
             <>
