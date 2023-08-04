@@ -191,7 +191,7 @@ const AdvancedScanOptions = ({
                 id='max-concurrency-tooltip'
                 showToolTip={showToolTip}
               />
-              <img id='max-concurrency-tooltip-img' src={questionMarkIcon} aria-describedby='max-concurrency-tooltip'></img>
+              <img id='max-concurrency-tooltip-img' src={questionMarkIcon} aria-describedby='max-concurrency-tooltip' onMouseEnter={() => setShowToolTip(true)} onMouseLeave={() => setShowToolTip(false)} alt="tooltip icon for slow scan mode"/>
             </div>
           </div>
           {!isProxy && (
