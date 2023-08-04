@@ -30,35 +30,13 @@ const AdvancedScanOptions = ({
     }
   };
 
-  useEffect(() => {
-    if (openAdvancedOptionsMenu) {
-      const maxConcurrencyTooltipImg = document.querySelector('#max-concurrency-tooltip-img');
-
-      const handleMouseEnter = () => {
-        setShowToolTip(true); 
-      }
-
-      const handleMouseLeave = () => {
-        setShowToolTip(false); 
-      }
-
-      maxConcurrencyTooltipImg.addEventListener("mouseover", handleMouseEnter);
-      maxConcurrencyTooltipImg.addEventListener("mouseout", handleMouseLeave);
-
-      return () => {
-        maxConcurrencyTooltipImg.removeEventListener("mouseover", handleMouseEnter); 
-        maxConcurrencyTooltipImg.removeEventListener("mouseout", handleMouseLeave);
-      }
-    }
-  }, [openAdvancedOptionsMenu])
-
-  const handleOnFocus = () => {
+  const handleMaxConcurrencyCheckboxOnFocus = () => {
     if (!isMouseEvent) {
       setShowToolTip(true); 
     }
   }
 
-  const handleOnMouseEnter = () => {
+  const handleMaxConcurrencyOnMouseEnter = () => {
     setShowToolTip(false);
     setIsMouseEvent(true); 
   }
@@ -173,9 +151,9 @@ const AdvancedScanOptions = ({
               id="max-concurrency-toggle"
               aria-describedby='max-concurrency-tooltip'
               checked={advancedOptions.maxConcurrency}
-              onFocus={() => handleOnFocus()}
+              onFocus={() => handleMaxConcurrencyCheckboxOnFocus()}
               onBlur={() => setShowToolTip(false)}
-              onMouseEnter={() => handleOnMouseEnter()}
+              onMouseEnter={() => handleMaxConcurrencyOnMouseEnter()}
               onMouseLeave={() => setIsMouseEvent(false)}
               onChange={handleSetAdvancedOption(
                 "maxConcurrency",
