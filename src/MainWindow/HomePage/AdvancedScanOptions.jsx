@@ -1,9 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "../../common/components/Button";
 import SelectField from "./SelectField";
 import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
 import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
+import questionMarkIcon from "../../assets/question-mark.svg";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
+import ToolTip from "../../common/components/ToolTip";
 
 const AdvancedScanOptions = ({
   isProxy,
@@ -15,6 +17,8 @@ const AdvancedScanOptions = ({
 }) => {
   const [openAdvancedOptionsMenu, setOpenAdvancedOptionsMenu] = useState(false);
   const [advancedOptionsDirty, setAdvancedOptionsDirty] = useState(false);
+  const [isMouseEvent, setIsMouseEvent] = useState(false);
+  const [showToolTip, setShowToolTip] = useState(false);
   const menu = useRef();
 
   const handleToggleMenu = () => {
@@ -25,6 +29,17 @@ const AdvancedScanOptions = ({
       setTimeout(() => setOpenAdvancedOptionsMenu(false), 200);
     }
   };
+
+  const handleMaxConcurrencyCheckboxOnFocus = () => {
+    if (!isMouseEvent) {
+      setShowToolTip(true); 
+    }
+  }
+
+  const handleMaxConcurrencyOnMouseEnter = () => {
+    setShowToolTip(false);
+    setIsMouseEvent(true); 
+  }
 
   /*
   by default, new value of the selected option will be set to event.target.value
@@ -129,9 +144,36 @@ const AdvancedScanOptions = ({
               />
             </div>
           )}
+          <hr />
+          <div id="max-concurrency-toggle-group">
+            <input
+              type="checkbox"
+              id="max-concurrency-toggle"
+              aria-describedby='max-concurrency-tooltip'
+              checked={advancedOptions.maxConcurrency}
+              onFocus={() => handleMaxConcurrencyCheckboxOnFocus()}
+              onBlur={() => setShowToolTip(false)}
+              onMouseEnter={() => handleMaxConcurrencyOnMouseEnter()}
+              onMouseLeave={() => setIsMouseEvent(false)}
+              onChange={handleSetAdvancedOption(
+                "maxConcurrency",
+                (e) => e.target.checked
+              )}
+            />
+            <label htmlFor="max-concurrency-toggle">
+              Slow Scan Mode
+            </label>
+            <div className="custom-tooltip-container">
+              <ToolTip 
+                description={'Scan 1 page at a time instead of multiple pages concurrently.'} 
+                id='max-concurrency-tooltip'
+                showToolTip={showToolTip}
+              />
+              <img id='max-concurrency-tooltip-img' src={questionMarkIcon} aria-describedby='max-concurrency-tooltip' onMouseEnter={() => setShowToolTip(true)} onMouseLeave={() => setShowToolTip(false)} alt="tooltip icon for slow scan mode"/>
+            </div>
+          </div>
           {!isProxy && (
             <>
-              <hr />
               <div id="scan-in-background-toggle-group">
                 <input
                   type="checkbox"
