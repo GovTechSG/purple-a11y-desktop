@@ -117,7 +117,7 @@ const unzipBackendAndCleanUp = async () => {
     `;
   await execCommand(command);
 
-  command = `'./hats_shell.sh' npx playwright install`;
+  command = `'./hats_shell.sh' npx playwright install webkit`;
   await execCommand(command);
 };
 
