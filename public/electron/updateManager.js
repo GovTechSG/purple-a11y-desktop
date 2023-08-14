@@ -110,11 +110,14 @@ const downloadBackend = async () => {
 };
 
 const unzipBackendAndCleanUp = async () => {
-  const command = `tar -xf '${phZipPath}' -C '${backendPath}' &&
+  let command = `tar -xf '${phZipPath}' -C '${backendPath}' &&
     rm '${phZipPath}' &&
     cd '${backendPath}' &&
     './hats_shell.sh' echo "Initialise"
     `;
+  await execCommand(command);
+
+  command = `'./hats_shell.sh' npx playwright install`;
   await execCommand(command);
 };
 
