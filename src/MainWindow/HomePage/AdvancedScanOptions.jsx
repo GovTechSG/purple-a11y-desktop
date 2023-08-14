@@ -208,7 +208,7 @@ const AdvancedScanOptions = ({
                 )} 
               /> 
               <label htmlFor="false-positive-toggle">
-                False Positive
+                False Positive Items
               </label>
               <div className="custom-tooltip-container">
                 <ToolTip 

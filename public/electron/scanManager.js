@@ -80,7 +80,6 @@ const getScanOptions = (details) => {
 const startScan = async (scanDetails) => {
   const { scanType, url } = scanDetails;
   console.log(`Starting new ${scanType} scan at ${url}.`);
-  console.log(getScanOptions(scanDetails));
 
   const userData = readUserDataFromFile();
 
