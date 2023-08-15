@@ -6,8 +6,6 @@ import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
 import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
 import questionMarkIcon from "../../assets/question-mark.svg";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
-import questionMarkIcon from "../../assets/question-mark.svg";
-import ToolTip from "../../common/components/ToolTip";
 import ToolTip from "../../common/components/ToolTip";
 
 const AdvancedScanOptions = ({
@@ -227,28 +225,27 @@ const AdvancedScanOptions = ({
                   alt="tooltip icon for false positive"/>
             </div>
           </div>
-        
-              <hr />
-              <div className="user-input-group">
-                <label id="download-folder-label" className="bold-text">
-                  Download:
-                </label>
-                <DownloadFolderDropdown></DownloadFolderDropdown>
-              </div>
-              {/* <div id="scan-in-background-toggle-group">
-                <input
-                  type="checkbox"
-                  id="scan-in-background-toggle"
-                  checked={advancedOptions.scanInBackground}
-                  onChange={handleSetAdvancedOption(
-                    "scanInBackground",
-                    (e) => e.target.checked
-                  )}
-                />
-                <label htmlFor="scan-in-background-toggle">
-                  Scan in background
-                </label>
-              </div> */}
+          <hr />
+          <div className="user-input-group">
+            <label id="download-folder-label" className="bold-text">
+              Download:
+            </label>
+            <DownloadFolderDropdown></DownloadFolderDropdown>
+          </div>
+          {/* <div id="scan-in-background-toggle-group">
+            <input
+              type="checkbox"
+              id="scan-in-background-toggle"
+              checked={advancedOptions.scanInBackground}
+              onChange={handleSetAdvancedOption(
+                "scanInBackground",
+                (e) => e.target.checked
+              )}
+            />
+            <label htmlFor="scan-in-background-toggle">
+              Scan in background
+            </label>
+          </div> */}
         </div>
       )}
     </div>
