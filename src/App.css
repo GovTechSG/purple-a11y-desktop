@@ -425,10 +425,26 @@ a {
 
 .scanning-url-list {
   list-style-type: none;
-  height: 280px;
-  overflow-y: scroll;
   padding: 0;
   position: relative;
+  z-index: 1;
+}
+
+.scanning-url-list-container {
+  height: 280px;
+  overflow-y: scroll;
+  position: relative;
+}
+
+.blurred-overlay {
+  background: linear-gradient(to bottom, rgb(246, 248, 249, 0.1), rgba(246, 248, 249, 1));
+  position: sticky;
+  pointer-events: none;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  content: "";
+  z-index: 2;
 }
 
 .scanning-url-list-item {

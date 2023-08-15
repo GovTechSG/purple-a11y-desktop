@@ -9,6 +9,7 @@ const ScanningComponent = ({scanningMessage}) => {
   const [urlItems, setUrlItems] = useState(new Array());
   const [urlItemComponents, setUrlItemComponents] = useState(new Array());
   const [pagesScanned, setPagesScanned] = useState(0);
+  const [scanCompleted, setScanCompleted] = useState(false);
 
 //   const testLoadingUrls = [
 //     "https://tech.gov.sghttps://tech.gov.sghttps://tech.gov.sg", 
@@ -44,11 +45,14 @@ const ScanningComponent = ({scanningMessage}) => {
     });
 
     window.services.scanningCompleted(() => {
-      setPagesScanned(urlItems.length);
-      const completedUrlItems = [
-        ...urlItems.map((urlItem, index) => <UrlItemComponent index={index} urlItem={urlItem} scanCompleted={true}/>)
-      ]
-      setUrlItemComponents(completedUrlItems);
+      if (!scanCompleted) {
+        setPagesScanned(urlItems.length);
+        const completedUrlItems = [
+          ...urlItems.map((urlItem, index) => <UrlItemComponent index={index} urlItem={urlItem} scanCompleted={true}/>)
+        ]
+        setUrlItemComponents(completedUrlItems);
+        setScanCompleted(true);
+      }
     })
   })
 
@@ -85,7 +89,10 @@ const ScanningComponent = ({scanningMessage}) => {
         ?
         <>
           <h1 className="scanning-url-title">Scanned: {pagesScanned} pages</h1>
-          <ul className="scanning-url-list">{urlItemComponents}</ul> 
+          <div className="scanning-url-list-container">
+            <ul className="scanning-url-list">{urlItemComponents}</ul> 
+            <div className="blurred-overlay"></div>
+          </div>
         </>
         : <LoadingScanningStatus scanningMessage={scanningMessage} />
       }
