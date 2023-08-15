@@ -93,7 +93,6 @@ const getPathVariable = () => {
     const directories = [
       "nodejs-win",
       "purple-hats\\node_modules\\.bin",
-      "ImageMagick\\bin",
     ];
     return `${directories.map((d) => path.join(backendPath, d)).join(";")};${
       process.env.PATH
@@ -103,9 +102,11 @@ const getPathVariable = () => {
       `${os.arch() === "arm64" ? "nodejs-mac-arm64" : "nodejs-mac-x64"}/bin`,
       "purple-hats/node_modules/.bin",
     ];
-    return `${process.env.PATH}:${directories
+    return `${directories
       .map((d) => path.join(backendPath, d))
-      .join(":")}`;
+      .join(":")}:${
+        process.env.PATH
+      }`;
   }
 };
 

@@ -45,6 +45,7 @@ const getScanOptions = (details) => {
     name,
     exportDir,
     maxConcurrency,
+    falsePositive
   } = details;
   const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`];
 
@@ -74,6 +75,14 @@ const getScanOptions = (details) => {
 
   if (maxConcurrency) {
     options.push("-t", 1);
+  }
+
+  if (maxConcurrency) {
+    options.push("-t", 1);
+  }
+
+  if (falsePositive) {
+    options.push("-f", "true");
   }
 
   return options;
