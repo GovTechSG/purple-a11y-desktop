@@ -152,12 +152,12 @@ const OnboardingComponent = ({
         return (
           <>
             <div className="visually-hidden" aria-live="polite" role="status">Item 4 of 5</div>
-            <div className="modal-img-container slide-in" aria-hidden="true">
+            <div className="modal-img-container fade-in-left" aria-hidden="true">
               <img className="modal-img" src={firstTimer4}></img>
             </div>
-            <h3 className="modal-title slide-in">Download report location</h3>
+            <h3 className="modal-title fade-in-left">Download report location</h3>
             <DownloadFolderDropdown isOnboarding={true}></DownloadFolderDropdown>
-            <p className="modal-desc slide-in">All reports generated from Purple HATS will be auto-downloaded into this folder.</p>
+            <p className="modal-desc fade-in-left">All reports generated from Purple HATS will be auto-downloaded into this folder.</p>
             <PageIndicator page={4}></PageIndicator>
           </>
         )
@@ -166,7 +166,7 @@ const OnboardingComponent = ({
         return (
           <>
             <div className="visually-hidden" aria-live="polite" role="status">Item 5 of 5</div>
-            <h3 className="modal-title slide-in">Get to know you</h3>
+            <h3 className="modal-title fade-in-left">Get to know you</h3>
             <UserDetailsForm
               formID={formID}
               setName={setName}

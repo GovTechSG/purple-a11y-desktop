@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 import checkIcon from "../../assets/check-circle.svg";
-import chevronUpIcon from "../../assets/chevron-up.svg";
-import chevronDownIcon from "../../assets/chevron-down.svg";
+import slashCircleIcon from "../../assets/slash-circle.svg";
+import crossCircleIcon from "../../assets/cross-circle.svg";
 import LoadingScanningStatus from "./LoadingScanningStatus";
 
 const ScanningComponent = ({scanningMessage}) => {
@@ -68,10 +68,10 @@ const ScanningComponent = ({scanningMessage}) => {
             return <img className="scanning-check-icon" src={checkIcon}></img>; 
           }
           case 'skipped': {
-            return <img className="scanning-check-icon" src={chevronUpIcon}></img>
+            return <img className="scanning-check-icon" src={slashCircleIcon}></img>
           }
           case 'error': {
-            return <img className="scanning-check-icon" src={chevronDownIcon}></img>
+            return <img className="scanning-check-icon" src={crossCircleIcon}></img>
           }
         }
       }

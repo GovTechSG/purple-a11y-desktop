@@ -10,7 +10,7 @@ import editIcon from "../../assets/edit-icon.svg";
 const DownloadFolderDropdown = ({
   isOnboarding
 }) => {
-    const dropdownClassName = isOnboarding ? "download-dropdown slide-in" : "download-dropdown";
+    const dropdownClassName = isOnboarding ? "download-dropdown fade-in-left" : "download-dropdown";
     const [exportDir, setExportDir] = useState();
     
     useEffect(() => {
