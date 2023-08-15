@@ -164,11 +164,16 @@ const startScan = async (scanDetails, scanEvent) => {
       }
 
       // Handle live crawling output
-      if (data.includes("Electron crawling:")) {
+      if (data.includes("Electron crawling")) {
         console.log(data);
-        const url = data.split("Electron crawling: ")[1].split(" ")[0];
-        console.log(url);
-        scanEvent.emit("scanningUrl", url);
+        const status = data.split("::")[1].trim();
+        const url = data.split("::")[2].trim();
+        console.log(status, ": ", url);
+        scanEvent.emit("scanningUrl", {status, url});
+      }
+
+      if (data.includes("Starting scan")) {
+        console.log(data);
       }
 
       if (data.includes("Electron scan completed")) {
@@ -228,10 +233,11 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
       }
 
       // Handle live crawling output
-        if (data.includes("Electron crawling:")) {
+      if (data.includes("Electron crawling:")) {
         console.log(data);
-        const url = data.split("Electron crawling: ")[1].trim();
-        console.log(url);
+        const status = data.split(":")[1].trim();
+        const url = data.split(":")[2].trim();
+        console.log(status, ":", url);
         scanEvent.emit("scanningUrl", url);
       }
 

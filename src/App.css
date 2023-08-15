@@ -425,9 +425,10 @@ a {
 
 .scanning-url-list {
   list-style-type: none;
-  max-height: 280px;
+  height: 280px;
   overflow-y: scroll;
   padding: 0;
+  position: relative;
 }
 
 .scanning-url-list-item {

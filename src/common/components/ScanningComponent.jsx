@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 import checkIcon from "../../assets/check-circle.svg";
+import chevronUpIcon from "../../assets/chevron-up.svg";
+import chevronDownIcon from "../../assets/chevron-down.svg";
 import LoadingScanningStatus from "./LoadingScanningStatus";
 
 const ScanningComponent = ({scanningMessage}) => {
-  const [urls, setUrls] = useState(new Array());
   const [urlItems, setUrlItems] = useState(new Array());
+  const [urlItemComponents, setUrlItemComponents] = useState(new Array());
   const [pagesScanned, setPagesScanned] = useState(0);
 
 //   const testLoadingUrls = [
@@ -28,55 +30,62 @@ const ScanningComponent = ({scanningMessage}) => {
     //     ...testCompletedUrls.map((url, index) => <CompletedUrlComponent key={index} url={url}></CompletedUrlComponent>)
     // ]
     // setUrlItems(urlTestItems);
-    window.services.scanningUrl((url) => {
-      setPagesScanned(urls.length);
+    window.services.scanningUrl((urlItem) => {
+      setPagesScanned(urlItems.length);
 
-      const newUrls = [url, ...urls];
-      setUrls(newUrls);
-      
-      console.log(urls);
-      const newUrlItems = [
-        <InProgressUrlComponent key={urlItems.length} url={url}/>,
-         ...urls.map((url, index) => <CompletedUrlComponent key={index} url={url} hasAnimation={true}/>), 
-      ] 
+      const newUrlItems = [urlItem, ...urlItems];
       setUrlItems(newUrlItems);
-    })
+
+      console.log(newUrlItems);
+      const newUrlItemComponents = [
+         ...newUrlItems.map((urlItem, index) => <UrlItemComponent index={index} urlItem={urlItem}/> )
+      ] 
+      setUrlItemComponents(newUrlItemComponents);
+    });
 
     window.services.scanningCompleted(() => {
-      setPagesScanned(urls.length);
+      setPagesScanned(urlItems.length);
       const completedUrlItems = [
-        ...urls.map((url, index) => <CompletedUrlComponent key={index} url={url} hasAnimation={false}/>)
+        ...urlItems.map((urlItem, index) => <UrlItemComponent index={index} urlItem={urlItem} scanCompleted={true}/>)
       ]
-      setUrlItems(completedUrlItems);
+      setUrlItemComponents(completedUrlItems);
     })
   })
 
-  const InProgressUrlComponent = ({key, url}) => {
+  const UrlItemComponent = ({index, urlItem, scanCompleted}) => {
+    const isMostRecent = index === 0; 
+    const urlItemClassName = !isMostRecent ? "scanning-url-list-item fade-in-top" : "scanning-url-list-item"; 
+    const statusIcon = () => {
+      if (isMostRecent && !scanCompleted) {
+        return <LoadingSpinner></LoadingSpinner>
+      } else {
+        switch (urlItem.status) {
+          case 'scanned': {
+            return <img className="scanning-check-icon" src={checkIcon}></img>; 
+          }
+          case 'skipped': {
+            return <img className="scanning-check-icon" src={chevronUpIcon}></img>
+          }
+          case 'error': {
+            return <img className="scanning-check-icon" src={chevronDownIcon}></img>
+          }
+        }
+      }
+    }
     return (
-      <li className="scanning-url-list-item fade-in" key={key}>
-        <LoadingSpinner></LoadingSpinner>
-        <p className="scanning-url">{url}</p>
+      <li className={urlItemClassName} key={index}> 
+        {statusIcon()}
+        <p className="scanning-url">{urlItem.url}</p>
       </li>
     )
   }
-
-  const CompletedUrlComponent = ({key, url, hasAnimation}) => {
-    const urlItemClassName = hasAnimation ? "scanning-url-list-item fade-in-top" : "scanning-url-list-item";
-    return (
-      <li className={urlItemClassName} key={key}>
-        <img className="scanning-check-icon" src={checkIcon}></img>
-        <p className="scanning-url">{url}</p>
-      </li>
-    )
-  }
-
   return (
     <div className="scanning-component">
-      { urls.length > 0 
+      { urlItems.length > 0 
         ?
         <>
           <h1 className="scanning-url-title">Scanned: {pagesScanned} pages</h1>
-          <ul className="scanning-url-list">{urlItems}</ul> 
+          <ul className="scanning-url-list">{urlItemComponents}</ul> 
         </>
         : <LoadingScanningStatus scanningMessage={scanningMessage} />
       }
