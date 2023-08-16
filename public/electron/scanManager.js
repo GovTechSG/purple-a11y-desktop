@@ -42,7 +42,7 @@ const getScanOptions = (details) => {
     email,
     name,
     maxConcurrency,
-    falsePositive
+    falsePositive,
   } = details;
   const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`];
 
@@ -194,7 +194,14 @@ const mailResults = async (formDetails, scanId) => {
     $attachmentCount = 0
 
     #Get an Outlook application object
-    $o = New-Object -com Outlook.Application
+    $wasOutlookOpened = $true
+    try {
+      $o = [System.Runtime.InteropServices.Marshal]::GetActiveObject('Outlook.Application')
+    } catch {
+      # Outlook is not open, create a new instance
+      $o = New-Object -ComObject Outlook.Application
+      $wasOutlookOpened = $false
+    }
 
     if ($null -eq $o) {
       throw "Unable to open outlook"
@@ -209,11 +216,11 @@ const mailResults = async (formDetails, scanId) => {
 
     $mail.body = "Hi ${name},
 
-    Please see the attached accessibility scan results with Purple HATS (report.html).
-    Feel free to reach us at accessibility@tech.gov.sg if you have any questions.
+Please see the attached accessibility scan results with Purple HATS (report.html).
+Feel free to reach us at accessibility@tech.gov.sg if you have any questions.
 
-    Thank you.
-    Accessibility Enabling Team"
+Thank you.
+Accessibility Enabling Team"
 
 
     $mail.To = "<${emailAddress}>"
@@ -244,8 +251,10 @@ const mailResults = async (formDetails, scanId) => {
     # give time to send the email
     Start-Sleep -Seconds 5
 
-    # quit Outlook
-    $o.Quit()
+    # quit Outlook only if previously not opened
+    if ($wasOutlookOpened -eq $false) {
+      $o.Quit()
+    }
 
     #end the script
     exit
@@ -258,6 +267,14 @@ const mailResults = async (formDetails, scanId) => {
       "-Command",
       shellCommand,
     ]);
+
+    mailProcess.stderr.on("data", (data) => {
+      console.error(`stderr: ${data}`);
+      resolve({
+        success: false,
+        message: `An error has occurred when sending the email: ${data}`,
+      });
+    });
 
     mailProcess.on("close", (code) => {
       if (code === 0) {
