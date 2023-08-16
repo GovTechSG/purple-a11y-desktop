@@ -131,7 +131,7 @@ const isLatestBackendVersion = async () => {
     console.log("Engine version installed: ", engineVersion);
     console.log("Latest version found: ", latestVersion);
 
-    return engineVersion === latestVersion;
+    return engineVersion >= latestVersion;
   } catch (e) {
     console.log(`Unable to check latest version, skipping\n${e.toString()}`);
     return true;
@@ -149,7 +149,7 @@ const isLatestFrontendVersion = async () => {
     console.log("Frontend version installed: ", frontendVersion);
     console.log("Latest frontend version found: ", latestVersion);
 
-    return frontendVersion === latestVersion;
+    return frontendVersion >= latestVersion;
   } catch (e) {
     console.log(
       `Unable to check latest frontend version, skipping\n${e.toString()}`
