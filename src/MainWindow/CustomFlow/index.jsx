@@ -122,7 +122,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
         console.log(customFlowLabel);
         window.services.generateReport(customFlowLabel, completedScanId); 
       }
-      navigate("/result");
+      // navigate("/result");
       return;
     }
 

@@ -6,9 +6,11 @@ import crossCircleIcon from "../../assets/cross-circle.svg";
 import LoadingScanningStatus from "./LoadingScanningStatus";
 
 const ScanningComponent = ({scanningMessage}) => {
-  const [urlItems, setUrlItems] = useState(new Array());
-  const [urlItemComponents, setUrlItemComponents] = useState(new Array());
+  const [scannedItems, setScannedItems] = useState([]);
+  const [urlItems, setUrlItems] = useState([]);
+  const [urlItemComponents, setUrlItemComponents] = useState([]);
   const [pagesScanned, setPagesScanned] = useState(0);
+  const [displayPageNum, setDisplayPageNum] = useState(0);
   const [scanCompleted, setScanCompleted] = useState(false);
 
 //   const testLoadingUrls = [
@@ -31,29 +33,32 @@ const ScanningComponent = ({scanningMessage}) => {
     //     ...testCompletedUrls.map((url, index) => <CompletedUrlComponent key={index} url={url}></CompletedUrlComponent>)
     // ]
     // setUrlItems(urlTestItems);
-    window.services.scanningUrl((urlItem) => {
-      setPagesScanned(urlItems.length);
-
-      const newUrlItems = [urlItem, ...urlItems];
-      setUrlItems(newUrlItems);
-
-      console.log(newUrlItems);
-      const newUrlItemComponents = [
-         ...newUrlItems.map((urlItem, index) => <UrlItemComponent index={index} urlItem={urlItem}/> )
-      ] 
-      setUrlItemComponents(newUrlItemComponents);
-    });
-
-    window.services.scanningCompleted(() => {
       if (!scanCompleted) {
-        setPagesScanned(urlItems.length);
-        const completedUrlItems = [
-          ...urlItems.map((urlItem, index) => <UrlItemComponent index={index} urlItem={urlItem} scanCompleted={true}/>)
-        ]
-        setUrlItemComponents(completedUrlItems);
-        setScanCompleted(true);
+        window.services.scanningUrl((urlItem) => {
+          setDisplayPageNum(pagesScanned);
+          if (urlItem.status === 'scanned') {
+            setPagesScanned(pagesScanned + 1);  
+          }
+          
+          const newUrlItems = [urlItem, ...urlItems];
+          setUrlItems(newUrlItems);
+    
+          console.log(newUrlItems);
+          const newUrlItemComponents = [
+             ...newUrlItems.map((urlItem, index) => <UrlItemComponent index={index} urlItem={urlItem}/> )
+          ] 
+          setUrlItemComponents(newUrlItemComponents);
+        });
+    
+        window.services.scanningCompleted(() => {
+            setDisplayPageNum(pagesScanned);
+            const completedUrlItems = [
+              ...urlItems.map((urlItem, index) => <UrlItemComponent index={index} urlItem={urlItem} scanCompleted={true}/>)
+            ]
+            setUrlItemComponents(completedUrlItems);
+            setScanCompleted(true);
+        })
       }
-    })
   })
 
   const UrlItemComponent = ({index, urlItem, scanCompleted}) => {
@@ -88,7 +93,7 @@ const ScanningComponent = ({scanningMessage}) => {
       { urlItems.length > 0 
         ?
         <>
-          <h1 className="scanning-url-title">Scanned: {pagesScanned} pages</h1>
+          <h1 className="scanning-url-title">Scanned: {displayPageNum} pages</h1>
           <div className="scanning-url-list-container">
             <ul className="scanning-url-list">{urlItemComponents}</ul> 
             <div className="blurred-overlay"></div>

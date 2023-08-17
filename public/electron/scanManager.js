@@ -247,7 +247,7 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
         const status = data.split(":")[1].trim();
         const url = data.split(":")[2].trim();
         console.log(status, ":", url);
-        scanEvent.emit("scanningUrl", url);
+        scanEvent.emit("scanningUrl", {status, url});
       }
 
       if (data.includes("Electron scan completed")) {
