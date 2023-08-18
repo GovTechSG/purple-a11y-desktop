@@ -113,7 +113,9 @@ export const policyUrlElem = (
   </a>
 );
 
-const handleClickLink = (e, url) => {
+export const installChromeUrl = `https://www.google.com/chrome/?brand=CHBD&brand=CHBD&gclid=CjwKCAjwivemBhBhEiwAJxNWNw4XXX3fa_mPCTmN68msYCUU6zovJt0g4ZCSB5sdYm1icRv-qs2v9RoCmPsQAvD_BwE&gclsrc=aw.ds`;
+
+export const handleClickLink = (e, url) => {
   e.preventDefault();
   window.services.openLink(url);
 }

@@ -10,6 +10,7 @@ import { cliErrorCodes, cliErrorTypes } from "../../common/constants";
 import Modal from "../../common/components/Modal";
 import { BasicAuthForm, BasicAuthFormFooter } from "./BasicAuthForm";
 import EditUserDetailsModal from "./EditUserDetailsModal";
+import NoChromeErrorModal from "./NoChromeErrorModal";
 
 const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
   const [browser, setBrowser] = useState(null);
   const [showBasicAuthModal, setShowBasicAuthModal] = useState(false);
   const [showEditDataModal, setShowEditDataModal] = useState(false);
+  const [showNoChromeErrorModal, setShowNoChromeErrorModal] = useState(false);
 
   useEffect(() => {
     if (
@@ -73,6 +75,10 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
 
     navigate("/scanning");
     const response = await services.startScan(scanDetails);
+
+    if (response.noChrome) {
+      setShowNoChromeErrorModal(true);
+    }
 
     if (response.success) {
       setCompletedScanId(response.scanId);
@@ -191,6 +197,9 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
           />
         </>
       )}
+      {showNoChromeErrorModal &&
+        <NoChromeErrorModal showModal={showNoChromeErrorModal} setShowModal={setShowNoChromeErrorModal}/>            
+      }
       <div id="home-page-footer">
         <img
           id="app-illustration"

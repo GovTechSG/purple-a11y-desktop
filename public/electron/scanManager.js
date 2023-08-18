@@ -88,6 +88,10 @@ const startScan = async (scanDetails) => {
     scanDetails.name = userData.name;
   }
 
+  if (scanType === "custom" && !getDefaultChromeDataDir() && os.platform() ===' darwin') {
+    return { noChrome: true };
+  }
+
   let useChromium = false;
   if (
     scanDetails.browser === browserTypes.chromium ||
