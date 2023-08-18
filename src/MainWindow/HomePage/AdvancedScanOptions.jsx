@@ -20,8 +20,6 @@ const AdvancedScanOptions = ({
   const [advancedOptionsDirty, setAdvancedOptionsDirty] = useState(false);
   const [isMaxConcurrencyMouseEvent, setIsMaxConcurrencyMouseEvent] = useState(false);
   const [showMaxConcurrencyTooltip, setShowMaxConcurrencyTooltip] = useState(false);
-  const [isFalsePositiveMouseEvent, setIsFalsePositiveMouseEvent] = useState(false);
-  const [showFalsePositiveTooltip, setShowFalsePositiveTooltip] = useState(false);
   const menu = useRef();
 
   const handleToggleMenu = () => {
@@ -42,17 +40,6 @@ const AdvancedScanOptions = ({
   const handleMaxConcurrencyOnMouseEnter = () => {
     setShowMaxConcurrencyTooltip(false);
     setIsMaxConcurrencyMouseEvent(true); 
-  }
-
-  const handleFalsePositiveOnFocus = () => {
-    if (!isFalsePositiveMouseEvent) {
-      setShowFalsePositiveTooltip(true);
-    }
-  }
-
-  const handleFalsePositiveOnMouseEnter = () => {
-    setShowFalsePositiveTooltip(false); 
-    setIsFalsePositiveMouseEvent(true);
   }
 
   /*
@@ -158,6 +145,21 @@ const AdvancedScanOptions = ({
               />
             </div>
           )}
+          <div id='false-positive-toggle-group'>
+              <input 
+                type="checkbox"
+                id="false-positive-toggle" 
+                aria-describedby="false-positive-tooltip"
+                checked={advancedOptions.falsePositive}
+                onChange={handleSetAdvancedOption(
+                  "falsePositive", 
+                  (e) => e.target.checked
+                )} 
+              /> 
+              <label htmlFor="false-positive-toggle">
+                Show potential false positive issues
+              </label>
+          </div>
           <div id="max-concurrency-toggle-group">
             <input
               type="checkbox"
@@ -190,39 +192,6 @@ const AdvancedScanOptions = ({
                 onMouseLeave={() => setShowMaxConcurrencyTooltip(false)} 
                 alt="tooltip icon for slow scan mode"
               />
-            </div>
-          </div>
-          <div id='false-positive-toggle-group'>
-              <input 
-                type="checkbox"
-                id="false-positive-toggle" 
-                aria-describedby="false-positive-tooltip"
-                checked={advancedOptions.falsePositive}
-                onFocus={() => handleFalsePositiveOnFocus()}
-                onBlur={() => setShowFalsePositiveTooltip(false)}
-                onMouseEnter={() => handleFalsePositiveOnMouseEnter()}
-                onMouseLeave={() => setIsFalsePositiveMouseEvent(false)}
-                onChange={handleSetAdvancedOption(
-                  "falsePositive", 
-                  (e) => e.target.checked
-                )} 
-              /> 
-              <label htmlFor="false-positive-toggle">
-                False Positive Items
-              </label>
-              <div className="custom-tooltip-container">
-                <ToolTip 
-                  description={'Display false positive items that will require manual review.'} 
-                  id='false-positive-tooltip'
-                  showToolTip={showFalsePositiveTooltip}
-                />
-                <img 
-                  className='tooltip-img' 
-                  src={questionMarkIcon} 
-                  aria-describedby='false-positive-tooltip' 
-                  onMouseEnter={() => setShowFalsePositiveTooltip(true)} 
-                  onMouseLeave={() => setShowFalsePositiveTooltip(false)} 
-                  alt="tooltip icon for false positive"/>
             </div>
           </div>
           <hr />
