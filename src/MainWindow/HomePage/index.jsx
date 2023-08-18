@@ -33,6 +33,12 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
     ) {
       setShowBasicAuthModal(true);
     }
+
+    if (prevUrlErrorMessage !== null && 
+        prevUrlErrorMessage.includes("No chrome browser")
+    ) {
+      setShowNoChromeErrorModal(true);
+    } 
   }, [prevUrlErrorMessage]);
 
   useEffect(() => {
@@ -77,7 +83,8 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
     const response = await services.startScan(scanDetails);
 
     if (response.noChrome) {
-      setShowNoChromeErrorModal(true);
+      navigate("/", { state: 'No chrome browser' });
+      return;
     }
 
     if (response.success) {

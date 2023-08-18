@@ -1,12 +1,10 @@
 import { handleClickLink,installChromeUrl } from "../../common/constants";
 import Modal from "../../common/components/Modal";
-import Button from "../../common/components/Button";
 
 const NoChromeErrorModal = ({showModal, setShowModal}) => {
     const onClickInstallChrome = (e) => {
         handleClickLink(e, installChromeUrl);
         setShowModal(false);
-        return;
     }
 
     return (
@@ -15,8 +13,8 @@ const NoChromeErrorModal = ({showModal, setShowModal}) => {
             showModal={showModal}
             showHeader={true}
             keyboardTrap={true}
-            modalTitle={'Please install chrome'}
-            modalBody={'To run Purple HATS Custom Flow Scan, please install Google Chrome.'}
+            modalTitle={'Please install Google Chrome'}
+            modalBody={'To run a scan using Purple HATS, please install Google Chrome.'}
             modalFooter={
                 <button className='primary modal-button modal-full-button' onClick={(e) => onClickInstallChrome(e)}>Install Chrome Here</button>
             }
