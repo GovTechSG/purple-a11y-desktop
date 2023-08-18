@@ -16,6 +16,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [isEvent, setIsEvent] = useState(false);
+  const [isWindows, setIsWindows] = useState(false);
   const [mailStatus, setMailStatus] = useState({
     mailSentSucessful: false,
     sendingMail: false,
@@ -31,8 +32,12 @@ const ResultPage = ({ completedScanId: scanId }) => {
       setIsEvent(data["event"]);
     };
     getDataForForm();
-  }, []);
 
+    (async () => {
+      setIsWindows(await services.getIsWindows());
+    })();
+  }, []);
+  
   const handleDownloadResults = async () => {
     const data = await services.downloadResults(scanId);
     let blob = new Blob([data], { type: "application/zip" });
@@ -103,7 +108,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
             />
             Download results (.zip)
           </Button>
-          {isEvent && mailStatus.mailSentSucessful === false && (
+          {isWindows && isEvent && mailStatus.mailSentSucessful === false && (
             <>
               <Button
                 id="mail-report-button"
@@ -132,7 +137,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
               </Button>
             </>
           )}
-          {isEvent && mailStatus.mailSentSucessful && (
+          {isWindows && isEvent && mailStatus.mailSentSucessful && (
             <Button
               id="mail-report-button"
               type="primary"

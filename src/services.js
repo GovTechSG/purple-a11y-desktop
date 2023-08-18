@@ -103,6 +103,8 @@ const isValidEmail = (email) => {
   return emailRegex.test(email);
 };
 
+const getIsWindows = async () => window.services.getIsWindows();
+
 const services = {
   startScan,
   openReport,
@@ -111,6 +113,7 @@ const services = {
   getDataForForm,
   isValidEmail,
   mailReport,
+  getIsWindows,
 };
 
 export default services;

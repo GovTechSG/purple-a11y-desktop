@@ -68,11 +68,6 @@ contextBridge.exposeInMainWorld("services", {
   openLink: (url) => {
     ipcRenderer.send("openLink", url);
   },
-  enableMailReport: (callback) => {
-    ipcRenderer.on("enableMailReport", (event, formDetails) => {
-      callback(formDetails);
-    });
-  },
   mailReport: async (formDetails, scanId) => {
     const response = await ipcRenderer.invoke(
       "mailReport",
@@ -81,4 +76,5 @@ contextBridge.exposeInMainWorld("services", {
     );
     return response;
   },
+  getIsWindows: async () => ipcRenderer.invoke("isWindows"),
 });

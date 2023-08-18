@@ -599,7 +599,7 @@ const userDataFormFields = {
   resultsField: "entry.904051439",
 };
 
-
+const isWindows = os.platform() === "win32";
 
 module.exports = {
   appPath,
@@ -632,4 +632,5 @@ module.exports = {
   frontendReleaseUrl,
   installerExePath,
   macOSExecutablePath,
+  isWindows,
 };

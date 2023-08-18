@@ -141,6 +141,8 @@ app.on("ready", async () => {
     shell.openExternal(url);
   });
 
+  ipcMain.handle("isWindows", (_event) => constants.isWindows);
+
   await mainReady;
 
   mainWindow.webContents.send("appStatus", "ready");
