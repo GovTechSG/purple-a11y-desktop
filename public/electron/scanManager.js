@@ -150,7 +150,8 @@ const startScan = async (scanDetails, scanEvent) => {
       }
 
       if (scanDetails.scanType === 'custom' && data.includes('generatedScript')) {
-        const generatedScriptName = data.split('\n')[0];
+        const generatedScriptName = data.trim();
+        console.log('generated script: ', generatedScriptName);
         const generatedScript = path.join(customFlowGeneratedScriptsPath, generatedScriptName);
         resolve({ success: true, generatedScript: generatedScript});
       }
@@ -244,8 +245,8 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
       // Handle live crawling output
       if (data.includes("Electron crawling:")) {
         console.log(data);
-        const status = data.split(":")[1].trim();
-        const url = data.split(":")[2].trim();
+        const status = data.split("::")[1].trim();
+        const url = data.split("::")[2].trim();
         console.log(status, ":", url);
         scanEvent.emit("scanningUrl", {status, url});
       }
@@ -265,7 +266,8 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
         moveCustomFlowResultsToExportDir(scanId, resultsFolderName);
         replay.kill("SIGKILL");
         currentChildProcess = null;
-        await cleanUp(scanId);
+        console.log(scanId);
+        // await cleanUp(scanId);
         resolve({ success: true, scanId });
       }
     });
