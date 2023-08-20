@@ -1,6 +1,17 @@
+import { useEffect } from "react";
 import fullPurpleCheckIcon from "../../../assets/full-purple-check-circle.svg"; 
 
 const ProgressStepComponent = ({step}) => {
+    useEffect(() => {
+        const currentProgressStepItemID = `#progress-step-item-${step}`; 
+        const currentProgressStepItemElement = document.querySelector(currentProgressStepItemID);
+        currentProgressStepItemElement.setAttribute("aria-current", "step");
+
+        return () => {
+            currentProgressStepItemElement.removeAttribute("aria-current");
+        }
+     })
+
     const ProgressStepItemComponent = ({num, label}) => {
         const progressStepClassName = num === step ? 'progress-step active' : 'progress-step';
         const progressStepID = `progress-step-item-${num}`; 
