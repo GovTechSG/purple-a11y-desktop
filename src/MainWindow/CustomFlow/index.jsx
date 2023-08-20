@@ -127,17 +127,17 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
       return;
     }
 
-    useEffect(() => {
-      if (scanDetails && step) {
-        const customFlowBodyElement = document.querySelector(".custom-flow-body"); 
-        customFlowBodyElement.setAttribute("tabindex", "-1"); 
-        customFlowBodyElement.focus(); 
+    // useEffect(() => {
+    // //   if (scanDetails && step) {
+    // //     const customFlowBodyElement = document.querySelector(".custom-flow-body"); 
+    // //     customFlowBodyElement.setAttribute("tabindex", "-1"); 
+    // //     customFlowBodyElement.focus(); 
 
-        return () => {
-          customFlowBodyElement.removeAttribute("tabindex"); 
-        }
-      }
-    }, [scanDetails, step])
+    //     // return () => {
+    //     //   customFlowBodyElement.removeAttribute("tabindex"); 
+    //     //   currentProgressStepItemElement.removeAttribute("aria-current");
+    //     // }
+    // }, [scanDetails, step])
 
     const currentDisplay = () => {
         switch (step) {
@@ -149,7 +149,12 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                   step={1}
                   title={"Record"}
                   url={scanDetails.scanUrl}
-                  description={"Record your custom flow by manually navigating on a new browser window. In the event of a login page, we will solely capture your credentials for this scan and promptly remove them thereafter. \n\n After finishing your flow, please close the browser to continue to the next step."}
+                  description={
+                    <>
+                      Record your custom flow by manually navigating on a new browser window. In the event of a login page, we will solely capture your credentials for this scan and promptly remove them thereafter.
+                      <br></br><br></br>
+                      After finishing your flow, please close the browser to continue to the next step.
+                    </>}
                 />
                 { !loading 
                   ? done 
@@ -191,7 +196,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                 />
                 <label className="custom-label-form-label" for="custom-label-input">Custom Flow Label</label>
                 <form id="custom-label-form" onSubmit={() => {generateReport()}}>
-                  <input id="custom-label-input" type="text" value={customFlowLabel} onChange={(e) => setCustomFlowLabel(e.target.value)}></input>
+                  <input id="custom-label-input" type="text" onChange={(e) => setCustomFlowLabel(e.target.value)}></input>
                   <button type="submit" className="primary custom-label-button">Generate Report</button>
                 </form>
               </>

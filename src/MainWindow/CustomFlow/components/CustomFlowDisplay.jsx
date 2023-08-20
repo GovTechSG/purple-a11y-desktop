@@ -9,18 +9,16 @@ const CustomFlowDisplay = ({
     <>
       <div className="custom-flow-header">
         <div className="custom-flow-header-content">
-          <img className="custom-flow-header-img" src={icon} alt="record"></img>
+          <img className="custom-flow-header-img" src={icon}></img>
           <div className="custom-flow-header-title-container">
-            <span className="custom-flow-header-step" role="status" aria-live="polite">STEP {step} of 3</span>
+            <p className="custom-flow-header-step" role="status" aria-live="polite">STEP {step} of 3</p>
             <h3 className="custom-flow-header-title">{title}</h3>
           </div>
         </div>
-        <span className="custom-flow-header-url"><b>URL: </b>{url}</span>
+        <p className="custom-flow-header-url"><span>URL:</span> {url}</p>
       </div>
-      <hr/>
-      <div className="custom-flow-body">
-        <p className="custom-flow-description">{description}</p>
-      </div>
+      <hr class="my-5"/>
+      <p>{description}</p>
     </>
   )
 }
