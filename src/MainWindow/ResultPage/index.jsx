@@ -14,7 +14,6 @@ import EditMailDetailsModal from "./EditMailDetailsModal";
 
 const ResultPage = ({ completedScanId: scanId }) => {
   const [scanType, setScanType] = useState(null);
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isEvent, setIsEvent] = useState(false);
   const [isWindows, setIsWindows] = useState(false);
@@ -26,7 +25,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
     const getDataForForm = async () => {
       const data = await services.getDataForForm();
       setScanType(data["scanType"]);
-      setName(data["name"]);
       setEmail(data["email"]);
       setIsEvent(data["event"]);
     };
@@ -67,7 +65,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
 
     const emails = finalEmails.split(",").join(";");
     const response = await services.mailReport(
-      { subject: finalSubject, name, emailAddresses: emails },
+      { subject: finalSubject, emailAddresses: emails },
       scanId
     );
     if (response.success) {

@@ -184,7 +184,7 @@ const getResultsZip = (scanId) => {
 
 const mailResults = async (formDetails, scanId) => {
   const reportPath = getReportPath(scanId);
-  const { subject, name, emailAddresses } = formDetails;
+  const { subject, emailAddresses } = formDetails;
 
   const shellCommand = `
     if ((Split-Path -Path $pwd -Leaf) -eq "scripts") {
@@ -212,7 +212,7 @@ const mailResults = async (formDetails, scanId) => {
 
     $mail.subject = "${subject}"
 
-    $mail.body = "Hi ${name},
+    $mail.body = "Hi there,
 
 Please see the attached accessibility scan results with Purple HATS (report.html).
 Feel free to reach us at accessibility@tech.gov.sg if you have any questions.
