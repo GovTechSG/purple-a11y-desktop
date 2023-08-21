@@ -184,7 +184,7 @@ const getResultsZip = (scanId) => {
 
 const mailResults = async (formDetails, scanId) => {
   const reportPath = getReportPath(scanId);
-  const { websiteUrl, scanType, emailAddress, name } = formDetails;
+  const { subject, name, emailAddresses } = formDetails;
 
   const shellCommand = `
     if ((Split-Path -Path $pwd -Leaf) -eq "scripts") {
@@ -210,9 +210,7 @@ const mailResults = async (formDetails, scanId) => {
 
     $mail = $o.CreateItem(0)
 
-    $mail.subject = "[A11y] ${scanType
-      .split(" ")
-      .shift()} Scan Results for: ${websiteUrl} (${scanType})"
+    $mail.subject = "${subject}"
 
     $mail.body = "Hi ${name},
 
@@ -223,7 +221,7 @@ Thank you.
 Accessibility Enabling Team"
 
 
-    $mail.To = "<${emailAddress}>"
+    $mail.To = "${emailAddresses}"
 
     $mail.cc = "<accessibility@tech.gov.sg>"
 

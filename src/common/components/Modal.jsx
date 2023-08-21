@@ -11,6 +11,7 @@ const Modal = ({
   modalBody,
   modalFooter,
   setShowModal,
+  modalSizeClass = "",
 }) => {
   const modalClassName = getModalClassName(showModal, isOnboarding);
   const modalHeaderClassName = showHeader
@@ -67,7 +68,7 @@ const Modal = ({
 
   return (
     <div className={modalClassName} id={id}>
-      <div className="modal-dialog">
+      <div className={`modal-dialog ${modalSizeClass}`}>
         <div className="modal-content">
           <div className={modalHeaderClassName}>
             <h3 className="modal-title" defaultValue={"modalTitle"}>
