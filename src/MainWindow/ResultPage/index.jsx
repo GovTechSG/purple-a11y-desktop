@@ -20,12 +20,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const [event, setEvent] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
   const [resultsPath, setResultsPath] = useState(null);
-  // const [showCustomFlowReplayButton, setShowCustomFlowReplayButton] = useState(false);
-
-  // useEffect(() => {
-  //   console.log('is custom flow: ', state);
-  //   setShowCustomFlowReplayButton(state.isCustomScan);
-  // }, [])
 
   useEffect(() => {
     const getDataForForm = async () => {
@@ -127,16 +121,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
                     {/* <i className="bi bi-box-arrow-up-right" /> */}
                     View report
                   </Button>
-                  {/* { showCustomFlowReplayButton &&
-                      <Button
-                        id="replay-btn"
-                        type="primary"
-                        // onClick={replayCustomFlow()}
-                      >
-                        <ButtonSvgIcon svgIcon={<ReturnIcon/>} className={`return-icon`}/>
-                        Replay
-                      </Button>
-                  } */}
               </div>
               </>
           ) : (

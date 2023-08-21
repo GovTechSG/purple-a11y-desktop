@@ -244,7 +244,6 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
 
       // Handle live crawling output
       if (data.includes("Electron crawling:")) {
-        console.log(data);
         const status = data.split("::")[1].trim();
         const url = data.split("::")[2].trim();
         console.log(status, ":", url);
@@ -267,7 +266,7 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
         replay.kill("SIGKILL");
         currentChildProcess = null;
         console.log(scanId);
-        // await cleanUp(scanId);
+        await cleanUp(scanId);
         resolve({ success: true, scanId });
       }
     });
@@ -277,89 +276,9 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
         resolve({ success: false, statusCode: code });
       }
     });
-    // const replay = (
-    //   generatedScript,
-    //   [],
-    //   {
-    //     silent: true,
-    //     cwd: resultsPath,
-    //     env: {
-    //       ...process.env,
-    //       RUNNING_FROM_PH_GUI: true,
-    //       ...(useChromium && {
-    //         PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
-    //       }),
-    //       PATH: getPathVariable(),
-    //     },
-    //   }
-    // )
-
-    // replay.on("exit", (code) => {
-    //   if (code === 0) {
-    //     const stdout = replay.stdout.read().toString().trim();
-    //     const scanId = randomUUID();
-    //     console.log(stdout.split(" ").slice(-2)[0]);
-    //     scanHistory[scanId] = stdout.split(" ").slice(-2)[0].split("/").pop();
-
-    //     // console.log(stdout);
-    //     // const currentResultsPath = path.join(
-    //     //   enginePath,
-    //     //   stdout.split(" ").slice(-2)[0]
-    //     // );
-    //     // console.log(currentResultsPath);
-
-    //     // // const resultsName = currentResultsPath.split("/").pop();
-    //     // // console.log(resultsName);
-    //     // const scanId = randomUUID();
-    //     // scanHistory[scanId] =  stdout.split(" ").slice(-2)[0];
-    //     // const newResultsPath = path.join(
-    //     //   resultsPath,
-    //     //   scanHistory[scanId]
-    //     // );;
-    //     // console.log(newResultsPath);
-
-    //     // fs.move(currentResultsPath, newResultsPath, (err) => {
-    //     //   if (err) return console.log(err);
-    //     //   console.log(success);
-    //     // })
-    //     // console.log(newResultsPath);
-
-    //     resolve({ success: true, scanId });
-    //   } else {
-    //     resolve({
-    //       success: false,
-    //       message: "An error has occurred when running the custom flow scan.",
-    //     });
-    //   }
-    // });
   });
 
   return response;
-  // how to get the scan id :")
-
-  // const replay = fork(
-  //   generatedScript,
-  //   {
-  //     silent: true,
-  //     cwd: resultsPath,
-  //     env: {
-  //       ...process.env,
-  //       RUNNING_FROM_PH_GUI: true,
-  //       ...(useChromium && {
-  //         PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
-  //       }),
-  //       PATH: getPathVariable(),
-  //     },
-  //   }
-  // );
-
-  // currentChildProcess = replay;
-
-  // replay.on("exit", (code) => {
-  //   const stdout = scan.stdout.read().toString().trim();
-  //   console.log(stdout);
-  // })
-  // currentChildProcess = null;
 };
 
 const generateReport = (customFlowLabel, scanId) => {
@@ -392,21 +311,6 @@ const getResultsFolderPath = (scanId) => {
     scanHistory[scanId]
   )
 }
-// const getResultsZipPath = (scanId) => {
-//   if (scanHistory[scanId]) {
-//     return path.join(resultsPath, "a11y-scan-results.zip");
-//   }
-//   return null;
-// };
-
-// async function createReportWindow(reportPath) {
-//   const url = "file://" + reportPath;
-//   let browser = readUserDataFromFile().browser; 
-//   const { context, browserChannel, proxy } = await createPlaywrightContext(browser, null, true);
-
-//   const reportZip = fs.readFileSync(resultsZipPath);
-//   return reportZip;
-// };
 
 async function createReportWindow(reportPath) {
   const url = "file://" + reportPath;
