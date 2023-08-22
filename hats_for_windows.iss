@@ -5,7 +5,7 @@
 [SETUP]
 AppId={{10A741B8-E330-4DC5-A86C-7F7B8DE775A9}
 AppName=Purple HATS Desktop
-AppVersion=0.9.0
+AppVersion=0.9.7
 AppVerName=Purple HATS Desktop
 AppPublisher=GovTech
 AppPublisherURL=https://github.com/GovTechSG/purple-hats-desktop
@@ -15,7 +15,6 @@ DefaultDirName=C:\Program Files\Purple HATS Desktop
 DisableDirPage=yes
 ChangesAssociations=yes
 DisableProgramGroupPage=yes
-LicenseFile=Purple HATS-win32-x64\LICENSE
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 Compression=lzma
@@ -36,9 +35,6 @@ Source: "Purple HATS Backend\*"; DestDir: "{app}\Purple HATS Backend"; Flags: ig
 [Icons]
 Name: "{autoprograms}\Purple HATS Desktop"; Filename: "{app}\Purple HATS Frontend\Purple HATS.exe"
 Name: "{autodesktop}\Purple HATS Desktop"; Filename: "{app}\Purple HATS Frontend\Purple HATS.exe"; Tasks: desktopicon
-
-[Run]
-Filename: "{app}\Purple HATS Frontend\Purple Hats.exe"; Description: "{cm:LaunchProgram,Purple HATS Desktop}"; Flags: nowait postinstall skipifsilent
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\Purple HATS Frontend"
