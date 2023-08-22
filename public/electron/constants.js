@@ -112,10 +112,9 @@ const getPathVariable = () => {
 
 const scanResultsPath = path.join(resultsPath, "results");
 
-const customFlowGeneratedScriptsPath = path.join(
-  enginePath,
-  "custom_flow_scripts"
-);
+const customFlowGeneratedScriptsPath = os.platform() === 'win32'
+  ? path.join(resultsPath, "custom_flow_scripts")
+  : path.join(enginePath, "custom_flow_scripts");
 
 const updateBackupsFolder = path.join(
   appPath,

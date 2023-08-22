@@ -215,7 +215,7 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
   }
 
   const response = await new Promise((resolve, reject) => {
-    const replay = spawn(`node`, [generatedScript], {
+    const replay = spawn(`node`, [path.join(enginePath, "runCustomFlowFromGUI.js"), generatedScript], {
       cwd: resultsPath,
       env: {
         ...process.env,
