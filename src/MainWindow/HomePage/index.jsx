@@ -56,6 +56,16 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
     getUserData();
   });
 
+  useEffect(() => {
+    const checkChromeExists = async () => {
+      const chromeExists = await window.services.checkChromeExistsOnMac();
+      console.log("chrome exists: ", chromeExists);
+      if (!chromeExists) {
+        setShowNoChromeErrorModal(true);
+      }
+    }
+    checkChromeExists();
+  }, [])
   const isValidHttpUrl = (input) => {
     const regexForUrl = new RegExp("^(http|https):/{2}.+$", "gmi");
     return regexForUrl.test(input);

@@ -5,7 +5,8 @@ const {
   shell,
   session,
 } = require("electron");
-const fs = require("fs");
+const {getDefaultChromeDataDir} = require("./constants")
+const os = require("os");
 const EventEmitter = require("events");
 const constants = require("./constants");
 const scanManager = require("./scanManager");
@@ -140,6 +141,14 @@ app.on("ready", async () => {
   ipcMain.on("openLink", (_event, url) => {
     shell.openExternal(url);
   });
+
+  ipcMain.handle("checkChromeExistsOnMac", () => {
+    if (os.platform() === 'darwin') {
+      return getDefaultChromeDataDir();
+    } else {
+      return true;
+    }
+  })
 
   await mainReady;
 
