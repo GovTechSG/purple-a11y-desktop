@@ -176,10 +176,11 @@ const startScan = async (scanDetails, scanEvent) => {
       // Handle live crawling output
       if (data.includes("Electron crawling")) {
         console.log(data);
-        const status = data.split("::")[1].trim();
-        const url = data.split("::")[2].trim();
-        console.log(status, ": ", url);
-        scanEvent.emit("scanningUrl", {status, url});
+        const urlScannedNum = parseInt(data.split("::")[1].trim());
+        const status = data.split("::")[2].trim();
+        const url = data.split("::")[3].trim();
+        console.log(urlScannedNum, ": ", status, ": ", url);
+        scanEvent.emit("scanningUrl", {status, url, urlScannedNum});
       }
 
       if (data.includes("Starting scan")) {
@@ -244,10 +245,11 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
 
       // Handle live crawling output
       if (data.includes("Electron crawling:")) {
-        const status = data.split("::")[1].trim();
-        const url = data.split("::")[2].trim();
-        console.log(status, ":", url);
-        scanEvent.emit("scanningUrl", {status, url});
+        const urlScannedNum = parseInt(data.split("::")[1].trim());
+        const status = data.split("::")[2].trim();
+        const url = data.split("::")[3].trim();
+        console.log(urlScannedNum, ":", status, ":", url);
+        scanEvent.emit("scanningUrl", {status, url, urlScannedNum});
       }
 
       if (data.includes("Electron scan completed")) {

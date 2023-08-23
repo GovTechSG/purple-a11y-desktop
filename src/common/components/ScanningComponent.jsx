@@ -35,15 +35,14 @@ const ScanningComponent = ({scanningMessage}) => {
     // setUrlItems(urlTestItems);
       if (!scanCompleted) {
         window.services.scanningUrl((urlItem) => {
-          setDisplayPageNum(pagesScanned);
           if (urlItem.status === 'scanned') {
-            setPagesScanned(pagesScanned + 1);  
+            const currDisplayPageNum = urlItem.urlScannedNum;
+            setDisplayPageNum(currDisplayPageNum);
+            setPagesScanned(currDisplayPageNum + 1);  
           }
           
           const newUrlItems = [urlItem, ...urlItems];
           setUrlItems(newUrlItems);
-    
-          console.log(newUrlItems);
           const newUrlItemComponents = [
              ...newUrlItems.map((urlItem, index) => <UrlItemComponent index={index} urlItem={urlItem}/> )
           ] 
