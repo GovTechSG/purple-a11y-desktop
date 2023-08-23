@@ -55,6 +55,7 @@ const startScan = async (scanDetails) => {
   }
 
   const response = await window.services.startScan(scanArgs);
+  console.log("services: ", response);
   return response;
 };
 

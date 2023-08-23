@@ -100,6 +100,10 @@ const startScan = async (scanDetails, scanEvent) => {
     scanDetails.exportDir = userData.exportDir;
   }
 
+  if (!getDefaultChromeDataDir() && os.platform() ==='darwin') {
+    return { noChrome: true };
+  }
+
   let useChromium = false;
   if (
     scanDetails.browser === browserTypes.chromium ||
