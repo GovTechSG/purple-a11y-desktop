@@ -11,7 +11,6 @@
   #app-title {
     font-family: "Viga", "Helvetica", sans-serif;
     margin-top: 2rem;
-    color: #785ef0;
   }
 
   #home-page-main {
@@ -37,7 +36,7 @@
     background-color: white;
     height: 46px;
     width: 600px;
-    max-width: 95vw;
+    max-width: 600px;
     display: flex;
     padding: 2px 2px 2px 24px;
     align-items: center;
@@ -119,8 +118,8 @@
     background-color: #f6f8f9;
     border: 1px solid #b5c5ca;
     border-radius: 0.5rem;
-    width: 332px;
-    max-width: 90vw;
+    // width: 600px;
+    max-width: 480px;
     position: absolute;
     left: 0;
     right: 0;
@@ -135,10 +134,9 @@
   #specific-device-dropdown,
   #viewport-width-input {
     margin-left: 1rem;
-    width: 60%;
+    width: 77%;
   }
 
-  #scan-in-background-toggle-group,
   #max-concurrency-toggle-group,
   #false-positive-toggle-group {
     display: flex;
@@ -146,7 +144,10 @@
     height: 1.75rem;
   }
 
-  #scan-in-background-toggle, 
+  #false-positive-toggle-group {
+    margin-bottom: 1rem;
+  }
+
   #max-concurrency-toggle,
   #false-positive-toggle {
     appearance: none;
@@ -161,13 +162,11 @@
     width: 1.5rem;
   }
 
-  #scan-in-background-toggle:checked,
   #max-concurrency-toggle:checked,
   #false-positive-toggle:checked {
     background-color: #785ef0;
   }
 
-  #scan-in-background-toggle:checked[type="checkbox"],
   #max-concurrency-toggle:checked[type="checkbox"],
   #false-positive-toggle:checked[type="checkbox"] {
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='%23fff' viewBox='0 0 16 16'%3E%3Cpath d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/%3E%3C/svg%3E");
@@ -208,6 +207,10 @@
     background-color: #E7ECEE;
     border: none;
     padding: 0.5rem 1rem 0.5rem 1rem;
+  }
+
+  #edit-user-details img {
+    padding-bottom: 0.25rem;
   }
   
   #auto-submit {

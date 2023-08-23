@@ -1,8 +1,5 @@
 #result-page {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  height: 100vh;
+  margin-top: 10vw;
 
   #main-container {
     display: flex;
@@ -35,6 +32,10 @@
     margin-right: 0.5rem;
   }
 
+  .box-arrow-up-right-icon svg {
+    margin-top: -5px;
+  }
+
   .download-icon {
     margin-right: 0.5rem;
   }
@@ -46,20 +47,38 @@
   // }
 
   h1 {
-    font-family: "Viga", "Helvetica", sans-serif;
+    font-family: "Viga";
     font-size: 2rem;
     font-weight: 400;
     margin-bottom: 2.5rem;
   }
 
-  #mail-button {
-    width: 100%;
-    display: block;
-    margin-bottom: 1rem;
+  #btn-container {
+    display: flex;
+    flex-direction: row;
   }
 
+  #download-content {
+    margin-bottom: 2rem;
+    max-width: 600px;
+  }
+
+  #replay-btn, 
   #view-button {
     width: 100%;
+    margin-left: 2rem;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  #scan-again {
+    white-space: nowrap;
+    margin-top: 1rem;
+    border: 0;
+    border-bottom: 1px solid #785ef0;
+    color: #785ef0;
+    line-height: 1.5rem;
+    background-color: transparent;
   }
 
   #download-button {
@@ -119,5 +138,11 @@
     grid-template-columns: 20% 80%;
     margin-bottom: 1rem;
     align-items: center;
+  }
+
+  #mail-button {
+    width: 100%;
+    display: block;
+    margin-bottom: 1rem;
   }
 }

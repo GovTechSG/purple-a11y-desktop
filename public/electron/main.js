@@ -5,7 +5,8 @@ const {
   shell,
   session,
 } = require("electron");
-const fs = require("fs");
+const { getDefaultChromeDataDir } = require("./constants");
+const os = require("os");
 const EventEmitter = require("events");
 const constants = require("./constants");
 const scanManager = require("./scanManager");
@@ -135,10 +136,26 @@ app.on("ready", async () => {
   });
 
   createMainWindow();
-  scanManager.init();
+
+  const scanEvent = new EventEmitter();
+  scanManager.init(scanEvent);
+  scanEvent.on("scanningUrl", (url) => {
+    mainWindow.webContents.send("scanningUrl", url);
+  });
+  scanEvent.on("scanningCompleted", () => {
+    mainWindow.webContents.send("scanningCompleted");
+  });
 
   ipcMain.on("openLink", (_event, url) => {
     shell.openExternal(url);
+  });
+
+  ipcMain.handle("checkChromeExistsOnMac", () => {
+    if (os.platform() === "darwin") {
+      return getDefaultChromeDataDir();
+    } else {
+      return true;
+    }
   });
 
   ipcMain.handle("isWindows", (_event) => constants.isWindows);
@@ -171,6 +188,15 @@ app.on("ready", async () => {
 });
 
 app.on("quit", () => {
+  // /* Synchrnously removes file upon quitting the app. Restarts/Shutdowns in
+  // Windows will not trigger this event */
+  // if (fs.existsSync(constants.scanResultsPath)){
+  //   fs.rmSync(constants.scanResultsPath, { recursive: true }, err => {
+  //     if (err) {
+  //       console.error(`Error while deleting ${constants.scanResultsPath}.`);
+  //     }
+  //   })
+  // }
   updateManager.killChildProcess();
   scanManager.killChildProcess();
 });

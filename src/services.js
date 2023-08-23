@@ -21,7 +21,7 @@ const startScan = async (scanDetails) => {
     viewport,
     device,
     viewportWidth,
-    scanInBackground,
+    // scanInBackground,
     browser,
     maxConcurrency,
     falsePositive
@@ -29,11 +29,10 @@ const startScan = async (scanDetails) => {
 
   currentScanUrl = scanUrl;
   currentScanType = selectedScanType;
-
   const scanArgs = {
     scanType: scanTypes[selectedScanType],
     url: scanUrl,
-    headlessMode: scanInBackground,
+    headlessMode: scanTypes[selectedScanType] !== 'custom',
     browser: browser,
     maxConcurrency: maxConcurrency,
     falsePositive: falsePositive
@@ -56,6 +55,7 @@ const startScan = async (scanDetails) => {
   }
 
   const response = await window.services.startScan(scanArgs);
+  console.log("services: ", response);
   return response;
 };
 
@@ -63,9 +63,9 @@ const openReport = (scanId) => {
   window.services.openReport(scanId);
 };
 
-const downloadResults = async (scanId) => {
-  const reportZip = await window.services.downloadResults(scanId);
-  return reportZip;
+const getResultsFolderPath = async (scanId) => {
+  const reportPath = await window.services.getResultsFolderPath(scanId);
+  return reportPath;
 };
 
 const mailReport = async (formDetails, scanId) => {
@@ -84,6 +84,7 @@ const getDataForForm = async () => {
   const name = userData["name"];
   const event = userData["event"];
   const browser = userData["browser"];
+  const exportDir = userData["exportDir"];
   return {
     websiteUrl: currentScanUrl,
     scanType: currentScanType,
@@ -91,6 +92,7 @@ const getDataForForm = async () => {
     name: name,
     event: event,
     browser: browser,
+    exportDir: exportDir
   };
 };
 
@@ -108,7 +110,8 @@ const getIsWindows = async () => window.services.getIsWindows();
 const services = {
   startScan,
   openReport,
-  downloadResults,
+  // downloadResults,
+  getResultsFolderPath,
   getUserData,
   getDataForForm,
   isValidEmail,

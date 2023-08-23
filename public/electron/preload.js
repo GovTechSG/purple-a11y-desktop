@@ -11,16 +11,40 @@ contextBridge.exposeInMainWorld("services", {
       callback(data);
     });
   },
+  checkChromeExistsOnMac: async () => {
+    const chromeExists = await ipcRenderer.invoke("checkChromeExistsOnMac"); 
+    return chromeExists;
+  },
   startScan: async (scanDetails) => {
     const results = await ipcRenderer.invoke("startScan", scanDetails);
     return results;
   },
+  startReplay: async (generatedScript, scanDetails, isReplay) => {
+    const results = await ipcRenderer.invoke("startReplay", generatedScript, scanDetails, isReplay); 
+    return results;
+  },
+  generateReport: (customFormLabel, scanId) => {
+    ipcRenderer.send("generateReport", customFormLabel, scanId);
+  },
   openReport: (scanId) => {
     ipcRenderer.send("openReport", scanId);
   },
-  downloadResults: async (scanId) => {
-    const reportZip = await ipcRenderer.invoke("downloadResults", scanId);
-    return reportZip;
+  openResultsFolder: (resultsPath) => {
+    ipcRenderer.send("openResultsFolder", resultsPath);
+  },
+  cleanUpCustomFlowScripts: (() => {
+    ipcRenderer.send("cleanUpCustomFlowScripts");
+  }),
+  getResultsFolderPath: async (scanId) => {
+    const reportPath = await ipcRenderer.invoke("getResultsFolderPath", scanId);
+    return reportPath;
+  },
+  submitFormViaBrowser: (formDetails) => {
+    ipcRenderer.send("submitFormViaBrowser", formDetails);
+  },
+  setExportDir: async () => {
+    const exportDir = await ipcRenderer.invoke("setExportDir");
+    return exportDir;
   },
   submitFormViaBrowser: (formDetails) => {
     ipcRenderer.send("submitFormViaBrowser", formDetails);
@@ -45,6 +69,16 @@ contextBridge.exposeInMainWorld("services", {
       callback(data);
     });
   },
+  scanningUrl: (callback) => {
+    ipcRenderer.on("scanningUrl", (event, data) => {
+      callback(data);
+    })
+  },
+  scanningCompleted: (callback) => {
+    ipcRenderer.on("scanningCompleted", () => {
+      callback();
+    });
+  },  
   userDataExists: (callback) => {
     ipcRenderer.on("userDataExists", (event, data) => {
       callback(data);
