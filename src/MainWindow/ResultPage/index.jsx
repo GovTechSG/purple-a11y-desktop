@@ -164,7 +164,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
                         type="primary"
                         onClick={replayCustomFlow}
                       >
-                        <ButtonSvgIcon svgIcon={<ReturnIcon/>} className={`return-icon`}/>
                         Replay
                       </Button>
                   }
