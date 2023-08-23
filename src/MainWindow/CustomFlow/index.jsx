@@ -18,13 +18,31 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
     const navigate = useNavigate();
     const [scanDetails, setScanDetails] = useState(null);
     const [generatedScript, setGeneratedScript] = useState(null);
-    const [customFlowLabel, setCustomFlowLabel] = useState('Custom Flow');
+    const [customFlowLabel, setCustomFlowLabel] = useState('');
     const [loading, setLoading] = useState(false);
     const [done, setDone] = useState(false);
     const [step, setStep] = useState(1); 
+    const [isReplay, setIsReplay] = useState(false);
 
     useEffect(() => {
-        setScanDetails(state.scanDetails);
+        console.log("state.scanDetails: ", state.scanDetails);
+        if (state.scanDetails) {
+          console.log("entered scan details");
+          setScanDetails(state.scanDetails);
+        }
+
+        console.log("is replay: ", state.isReplay);
+        if (state.isReplay) {
+          console.log("entered is replay");
+          setIsReplay(true);
+          const generatedScript = window.localStorage.getItem("latestCustomFlowGeneratedScript");
+          const scanDetails = JSON.parse(window.localStorage.getItem("latestCustomFlowScanDetails"));
+          console.log("local storage gen script: ", generatedScript);
+          console.log("local storage scan details: ", scanDetails);
+          setGeneratedScript(generatedScript);
+          setScanDetails(scanDetails);
+          setStep(2);
+        }
     }, [])
 
     useEffect(() => {
@@ -96,7 +114,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
     }
 
     const startReplaying = async () => {
-        const response = await window.services.startReplay(generatedScript, scanDetails);
+        const response = await window.services.startReplay(generatedScript, scanDetails, isReplay);
 
         if (response.success) {
             setCompletedScanId(response.scanId);   
@@ -113,11 +131,14 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
       if (customFlowLabel.length > 0) {
         window.services.generateReport(customFlowLabel, completedScanId); 
       }
-      navigate("/result");
+      window.localStorage.setItem("latestCustomFlowGeneratedScript", generatedScript); 
+      window.localStorage.setItem("latestCustomFlowScanDetails", JSON.stringify(scanDetails));
+      navigate("/result", {state: { isCustomScan: true }});
       return;
     }
 
     const currentDisplay = () => {
+        console.log("current display: ", scanDetails);
         switch (step) {
           case 1: {
             return (
@@ -185,11 +206,19 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
 
     return (
       <div id="custom-flow">
-        {scanDetails &&
-          <>
-            <ProgressStepComponent step={step}></ProgressStepComponent>
-            <div className="custom-flow-content">{currentDisplay()}</div>
-          </>
+        { scanDetails && 
+          (
+            isReplay 
+            ? 
+              <>
+                <div className="custom-flow-content">{currentDisplay()}</div>
+              </>
+            : 
+              <>
+                <ProgressStepComponent step={step}></ProgressStepComponent>
+                <div className="custom-flow-content">{currentDisplay()}</div>
+              </>
+          )
         }
       </div>
     )

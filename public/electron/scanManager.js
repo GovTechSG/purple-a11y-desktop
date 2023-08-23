@@ -206,7 +206,7 @@ const startScan = async (scanDetails, scanEvent) => {
   return response;
 };
 
-const startReplay = async (generatedScript, scanDetails, scanEvent) => {
+const startReplay = async (generatedScript, scanDetails, scanEvent, isReplay) => {
   let useChromium = false;
   if (
     scanDetails.browser === browserTypes.chromium ||
@@ -264,7 +264,7 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
         const scanId = randomUUID();
         scanHistory[scanId] = resultsFolderName;
 
-        moveCustomFlowResultsToExportDir(scanId, resultsFolderName);
+        moveCustomFlowResultsToExportDir(scanId, resultsFolderName, isReplay);
         replay.kill("SIGKILL");
         currentChildProcess = null;
         await cleanUp(scanId);
@@ -351,21 +351,29 @@ const cleanUp = async (scanId, setDefaultFolders = false) => {
     }
   });
 
-  if (fs.existsSync(customFlowGeneratedScriptsPath)) {
-    fs.rm(customFlowGeneratedScriptsPath, { recursive: true }, (err) => {
-      if (err) {
-        console.error(
-          `Error while deleting ${customFlowGeneratedScriptsPath}.`
-        );
-      }
-    });
-  }
+  // if (fs.existsSync(customFlowGeneratedScriptsPath)) {
+  //   fs.rm(customFlowGeneratedScriptsPath, { recursive: true }, (err) => {
+  //     if (err) {
+  //       console.error(
+  //         `Error while deleting ${customFlowGeneratedScriptsPath}.`
+  //       );
+  //     }
+  //   });
+  // }
 };
 
-const moveCustomFlowResultsToExportDir = (scanId, resultsFolderName) => {
+const moveCustomFlowResultsToExportDir = (scanId, resultsFolderName, isReplay) => {
   const currentResultsPath = path.join(scanResultsPath, resultsFolderName);
-  const newResultsPath = getResultsFolderPath(scanId);
-
+  let newResultsPath;
+  if (isReplay) {
+    const [date, time] = new Date().toLocaleString('sv').replaceAll(/-|:/g, '').split(' ');
+    const domain = currentResultsPath.split("_").pop();
+    const newResultsFolderName = `${date}_${time}_${domain}`;
+    scanHistory[scanId] = newResultsFolderName;;
+    newResultsPath = getResultsFolderPath(scanId);
+  } else {
+    newResultsPath = getResultsFolderPath(scanId);
+  }
   fs.move(currentResultsPath, newResultsPath, (err) => {
     if (err) return console.log(err);
   })
@@ -376,8 +384,8 @@ const init = (scanEvent) => {
     return await startScan(scanDetails, scanEvent);
   });
 
-  ipcMain.handle("startReplay", async (_event, generatedScript, scanDetails) => {
-    return await startReplay(generatedScript, scanDetails, scanEvent);
+  ipcMain.handle("startReplay", async (_event, generatedScript, scanDetails, isReplay) => {
+    return await startReplay(generatedScript, scanDetails, scanEvent, isReplay);
   })
 
   ipcMain.on("generateReport", (_event, customFlowLabel, scanId) => {
@@ -385,6 +393,7 @@ const init = (scanEvent) => {
   });
 
   ipcMain.on("openReport", async (_event, scanId) => {
+    console.log('hello');
     const reportPath = getReportPath(scanId);
     if (!reportPath) return;
     shell.openExternal(`file://${reportPath}`);
