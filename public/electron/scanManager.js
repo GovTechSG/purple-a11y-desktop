@@ -283,6 +283,19 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
 };
 
 const generateReport = (customFlowLabel, scanId) => {
+  const currentFolderNameList = scanHistory[scanId].split('_');
+  const currentResultsFolderPath = getResultsFolderPath(scanId);
+  const newFolderNameList = [
+    ...currentFolderNameList.slice(0, 2),
+    customFlowLabel,
+    ...currentFolderNameList.slice(2)
+  ]
+  const newFolderName = newFolderNameList.toString().replaceAll(',', '_');
+  console.log(newFolderName);
+  scanHistory[scanId] = newFolderName;
+  const newResultsFolderPath = getResultsFolderPath(scanId);
+  fs.renameSync(currentResultsFolderPath, newResultsFolderPath)
+
   const reportPath = getReportPath(scanId);
   const data = fs.readFileSync(reportPath, { encoding: "utf-8" });
   const result = data.replaceAll(/Custom Flow/g, customFlowLabel);
