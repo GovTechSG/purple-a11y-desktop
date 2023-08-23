@@ -3,7 +3,7 @@ import Button from "../../common/components/Button";
 import { userDataFormInputFields } from "../../common/constants";
 import "./ResultPage.scss";
 import services from "../../services";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import { ReactComponent as CheckCircleIcon } from "../../assets/check-circle.svg";
 import { ReactComponent as BoxArrowUpRightIcon } from "../../assets/box-arrow-up-right.svg";
@@ -12,6 +12,7 @@ import { ReactComponent as ReturnIcon } from "../../assets/return.svg";
 
 const ResultPage = ({ completedScanId: scanId }) => {
   const { state } = useLocation();
+  const navigate = useNavigate();
   const [websiteUrl, setWebsiteUrl] = useState(null);
   const [scanType, setScanType] = useState(null);
   const [email, setEmail] = useState("");
@@ -20,6 +21,12 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const [event, setEvent] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
   const [resultsPath, setResultsPath] = useState(null);
+  const [showCustomFlowReplayButton, setShowCustomFlowReplayButton] = useState(false);
+
+  useEffect(() => {
+    console.log('is custom flow: ', state);
+    setShowCustomFlowReplayButton(state.isCustomScan);
+  }, [])
 
   useEffect(() => {
     const getDataForForm = async () => {
@@ -47,10 +54,40 @@ const ResultPage = ({ completedScanId: scanId }) => {
     services.openReport(scanId);
   };
 
+  const handleScanAgain = () => {
+    window.services.cleanUpCustomFlowScripts();
+    window.localStorage.removeItem("latestCustomFlowGeneratedScript"); 
+    window.localStorage.removeItem("latestCustomFlowScanDetails");
+    navigate("/");
+    return;
+  }
+
   const handleOpenResultsFolder = async (e) => {
     e.preventDefault(); 
 
     window.services.openResultsFolder(resultsPath);
+  }
+
+  const replayCustomFlow = async () => {
+    // need scan details and generated 
+    // store latest generated script in local storage or pass as variable 
+    // what to display if user replays :>
+
+    // const generatedScript = window.localStorage.getItem("latestCustomFlowGeneratedScript"); 
+    // const scanDetails = window.localStorage.getItem("latestCustomFlowScanDetails"); 
+    // const response = await window.services.startReplay(generatedScript, scanDetails);
+    // if (response.success) {
+    //   console.log(response);
+    //   setCompletedScanId(response.scanId);   
+    //   setLoading(false);
+    //   setDone(true);
+    //   return;         
+    // }
+
+    // navigate("/error");
+    // return;
+    navigate("/custom_flow", { state: { isReplay: true}});
+    return;
   }
 
   const handleSubmitForm = async (event) => {
@@ -105,10 +142,10 @@ const ResultPage = ({ completedScanId: scanId }) => {
                 You can find the downloaded report at <a href="#" onClick={handleOpenResultsFolder}>{resultsPath}</a>
               </p>
               <div id="btn-container">
-                <Link id="scan-again" to="/">
+                  <button id="scan-again" onClick={handleScanAgain}>
                     <ButtonSvgIcon svgIcon={<ReturnIcon/>} className={`return-icon`}/>
                     Back to Home
-                  </Link>
+                  </button>
                   <Button
                     id="view-button"
                     type="primary"
@@ -121,6 +158,16 @@ const ResultPage = ({ completedScanId: scanId }) => {
                     {/* <i className="bi bi-box-arrow-up-right" /> */}
                     View report
                   </Button>
+                  { showCustomFlowReplayButton &&
+                      <Button
+                        id="replay-btn"
+                        type="primary"
+                        onClick={replayCustomFlow}
+                      >
+                        <ButtonSvgIcon svgIcon={<ReturnIcon/>} className={`return-icon`}/>
+                        Replay
+                      </Button>
+                  }
               </div>
               </>
           ) : (
