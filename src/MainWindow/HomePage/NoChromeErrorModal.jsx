@@ -16,7 +16,7 @@ const NoChromeErrorModal = ({showModal, setShowModal}) => {
             modalTitle={'Please install Google Chrome'}
             modalBody={'To run a scan using Purple HATS, please install Google Chrome.'}
             modalFooter={
-                <button className='primary modal-button modal-full-button' onClick={(e) => onClickInstallChrome(e)}>Install Chrome Here</button>
+                <button className='primary modal-button modal-full-button' onClick={(e) => onClickInstallChrome(e)}>Download Google Chrome</button>
             }
             setShowModal={setShowModal}
         />
