@@ -27,7 +27,7 @@ const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage }) => {
     viewport: viewportOptions.desktop,
     device: deviceOptions[0],
     viewportWidth: "320",
-    scanInBackground: false,
+    // scanInBackground: false,
     maxConcurrency: false, 
     falsePositive: false,
   });
@@ -112,7 +112,7 @@ const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage }) => {
               )}
             </div>
           )}
-          <Button type="primary" onClick={handleScanButtonClicked}>
+          <Button type="primary" className="scan-btn" onClick={handleScanButtonClicked}>
             Scan
           </Button>
         </div>
