@@ -13,32 +13,15 @@ const ScanningComponent = ({scanningMessage}) => {
   const [displayPageNum, setDisplayPageNum] = useState(0);
   const [scanCompleted, setScanCompleted] = useState(false);
 
-//   const testLoadingUrls = [
-//     "https://tech.gov.sghttps://tech.gov.sghttps://tech.gov.sg", 
-//     "https://www.cpf.gov.sg/memberhttps://www.cpf.gov.sg/member", 
-//     "https://ticketmaster.sg/https://ticketmaster.sg/https://ticketmaster.sg/", 
-//     "https://www.crowdtask.gov.sg/https://www.crowdtask.gov.sg/", 
-//   ]
-
-//   const testCompletedUrls = [
-//     "https://www.ntu.edu.sg/https://www.ntu.edu.sg/", 
-//     "https://www.starbucks.com.sg/https://www.starbucks.com.sg/", 
-//     "https://www.mcdonalds.com.sg/https://www.mcdonalds.com.sg/", 
-//     "https://www.teamsingapore.sg/https://www.teamsingapore.sg/", 
-//     "https://www.mom.gov.sg/https://www.mom.gov.sg/",
-//   ]
   useEffect(() => {
-    // const urlTestItems = [
-    //     ...testLoadingUrls.map((url, index) => <InProgressUrlComponent key={index} url={url}></InProgressUrlComponent>), 
-    //     ...testCompletedUrls.map((url, index) => <CompletedUrlComponent key={index} url={url}></CompletedUrlComponent>)
-    // ]
-    // setUrlItems(urlTestItems);
       if (!scanCompleted) {
         window.services.scanningUrl((urlItem) => {
           if (urlItem.status === 'scanned') {
             const currDisplayPageNum = urlItem.urlScannedNum;
             setDisplayPageNum(currDisplayPageNum);
             setPagesScanned(currDisplayPageNum + 1);  
+          } else {
+            setDisplayPageNum(pagesScanned);
           }
           
           const newUrlItems = [urlItem, ...urlItems];

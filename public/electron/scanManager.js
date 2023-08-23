@@ -93,15 +93,12 @@ const startScan = async (scanDetails, scanEvent) => {
   console.log(`Starting new ${scanType} scan at ${url}.`);
 
   const userData = readUserDataFromFile();
-  console.log(userData);
 
   if (userData) {
     scanDetails.email = userData.email;
     scanDetails.name = userData.name;
     scanDetails.exportDir = userData.exportDir;
   }
-
-  console.log(getScanOptions(scanDetails));
 
   let useChromium = false;
   if (
@@ -175,7 +172,6 @@ const startScan = async (scanDetails, scanEvent) => {
 
       // Handle live crawling output
       if (data.includes("Electron crawling")) {
-        console.log(data);
         const urlScannedNum = parseInt(data.split("::")[1].trim());
         const status = data.split("::")[2].trim();
         const url = data.split("::")[3].trim();
@@ -267,7 +263,6 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
         moveCustomFlowResultsToExportDir(scanId, resultsFolderName);
         replay.kill("SIGKILL");
         currentChildProcess = null;
-        console.log(scanId);
         await cleanUp(scanId);
         resolve({ success: true, scanId });
       }
@@ -284,11 +279,7 @@ const startReplay = async (generatedScript, scanDetails, scanEvent) => {
 };
 
 const generateReport = (customFlowLabel, scanId) => {
-  const currentResultsPath = scanHistory[scanId];
-  console.log(currentResultsPath);
-
   const reportPath = getReportPath(scanId);
-  console.log(reportPath);
   const data = fs.readFileSync(reportPath, { encoding: "utf-8" });
   const result = data.replaceAll(/Custom Flow/g, customFlowLabel);
   fs.writeFileSync(reportPath, result);

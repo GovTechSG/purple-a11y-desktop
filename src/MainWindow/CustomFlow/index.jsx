@@ -24,7 +24,6 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
     const [step, setStep] = useState(1); 
 
     useEffect(() => {
-        console.log(state.scanDetails);
         setScanDetails(state.scanDetails);
     }, [])
 
@@ -48,10 +47,8 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
         
     const startRecording = async () => {
         const response = await services.startScan(scanDetails);
-        console.log(response);
 
         if (response.success) {
-          console.log(response.generatedScript);
           setGeneratedScript(response.generatedScript);
           setLoading(false);
           setDone(true);
@@ -99,12 +96,9 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
     }
 
     const startReplaying = async () => {
-        console.log(scanDetails);
-        console.log(generatedScript);
         const response = await window.services.startReplay(generatedScript, scanDetails);
 
         if (response.success) {
-            console.log(response);
             setCompletedScanId(response.scanId);   
             setLoading(false);
             setDone(true);
@@ -116,28 +110,12 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
     } 
 
     const generateReport =  () => {
-      console.log(customFlowLabel);
       if (customFlowLabel.length > 0) {
-        console.log(completedScanId);
-        console.log(customFlowLabel);
         window.services.generateReport(customFlowLabel, completedScanId); 
       }
-      // navigate("/result", {state: { isCustomScan: true }});
       navigate("/result");
       return;
     }
-
-    // useEffect(() => {
-    // //   if (scanDetails && step) {
-    // //     const customFlowBodyElement = document.querySelector(".custom-flow-body"); 
-    // //     customFlowBodyElement.setAttribute("tabindex", "-1"); 
-    // //     customFlowBodyElement.focus(); 
-
-    //     // return () => {
-    //     //   customFlowBodyElement.removeAttribute("tabindex"); 
-    //     //   currentProgressStepItemElement.removeAttribute("aria-current");
-    //     // }
-    // }, [scanDetails, step])
 
     const currentDisplay = () => {
         switch (step) {

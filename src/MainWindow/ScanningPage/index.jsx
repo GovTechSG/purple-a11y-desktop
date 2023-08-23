@@ -9,11 +9,9 @@ const ScanningPage = () => {
   const [ url, setUrl ] = useState(null); 
 
   useEffect(() => {
-    console.log(state.url); 
     setUrl(state.url); 
   }, []); 
 
-  console.log("url: ", url);
   return (
     <div id="scanning-page">
         {url && 

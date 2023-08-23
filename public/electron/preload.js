@@ -68,7 +68,7 @@ contextBridge.exposeInMainWorld("services", {
     })
   },
   scanningCompleted: (callback) => {
-    ipcRenderer.once("scanningCompleted", () => {
+    ipcRenderer.on("scanningCompleted", () => {
       callback();
     });
   },  

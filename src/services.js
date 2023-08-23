@@ -29,8 +29,6 @@ const startScan = async (scanDetails) => {
 
   currentScanUrl = scanUrl;
   currentScanType = selectedScanType;
-  console.log(scanTypes);
-  console.log(selectedScanType)
   const scanArgs = {
     scanType: scanTypes[selectedScanType],
     url: scanUrl,
@@ -39,7 +37,6 @@ const startScan = async (scanDetails) => {
     maxConcurrency: maxConcurrency,
     falsePositive: falsePositive
   };
-  console.log(scanArgs);
 
   if (selectedScanType !== Object.keys(scanTypes)[2]) {
     scanArgs.maxPages = pageLimit;
