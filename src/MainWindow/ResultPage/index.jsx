@@ -54,6 +54,14 @@ const ResultPage = ({ completedScanId: scanId }) => {
     services.openReport(scanId);
   };
 
+  const handleScanAgain = () => {
+    window.services.cleanUpCustomFlowScripts();
+    window.localStorage.removeItem("latestCustomFlowGeneratedScript"); 
+    window.localStorage.removeItem("latestCustomFlowScanDetails");
+    navigate("/");
+    return;
+  }
+
   const handleOpenResultsFolder = async (e) => {
     e.preventDefault(); 
 
@@ -134,10 +142,10 @@ const ResultPage = ({ completedScanId: scanId }) => {
                 You can find the downloaded report at <a href="#" onClick={handleOpenResultsFolder}>{resultsPath}</a>
               </p>
               <div id="btn-container">
-                <Link id="scan-again" to="/">
+                  <button id="scan-again" onClick={handleScanAgain}>
                     <ButtonSvgIcon svgIcon={<ReturnIcon/>} className={`return-icon`}/>
                     Back to Home
-                  </Link>
+                  </button>
                   <Button
                     id="view-button"
                     type="primary"

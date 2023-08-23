@@ -170,7 +170,7 @@ const startScan = async (scanDetails, scanEvent) => {
         scanHistory[scanId] = resultsPath;
         scan.kill("SIGKILL");
         currentChildProcess = null;
-        await cleanUp(scanId);
+        await cleanUpIntermediateFolders(resultsPath);
         resolve({ success: true, scanId });
       }
 
@@ -267,7 +267,7 @@ const startReplay = async (generatedScript, scanDetails, scanEvent, isReplay) =>
         moveCustomFlowResultsToExportDir(scanId, resultsFolderName, isReplay);
         replay.kill("SIGKILL");
         currentChildProcess = null;
-        await cleanUp(scanId);
+        await cleanUpIntermediateFolders(resultsFolderName);
         resolve({ success: true, scanId });
       }
     });
@@ -342,25 +342,26 @@ async function createReportWindow(reportPath) {
   });
 }
 
-const cleanUp = async (scanId, setDefaultFolders = false) => {
-  const folderName = scanHistory[scanId].split('_').slice(0, -1).toString().replaceAll(',', '_'); 
+const cleanUpIntermediateFolders = async (folderName, setDefaultFolders = false) => {
   const pathToDelete = path.join(resultsPath, folderName);
   await fs.pathExists(pathToDelete).then(exists => {
     if (exists) {
       fs.removeSync(pathToDelete);
     }
   });
-
-  // if (fs.existsSync(customFlowGeneratedScriptsPath)) {
-  //   fs.rm(customFlowGeneratedScriptsPath, { recursive: true }, (err) => {
-  //     if (err) {
-  //       console.error(
-  //         `Error while deleting ${customFlowGeneratedScriptsPath}.`
-  //       );
-  //     }
-  //   });
-  // }
 };
+
+const cleanUpCustomFlowGeneratedScripts = () => {
+  if (fs.existsSync(customFlowGeneratedScriptsPath)) {
+    fs.rm(customFlowGeneratedScriptsPath, { recursive: true }, (err) => {
+      if (err) {
+        console.error(
+          `Error while deleting ${customFlowGeneratedScriptsPath}.`
+        );
+      }
+    });
+  }
+}
 
 const moveCustomFlowResultsToExportDir = (scanId, resultsFolderName, isReplay) => {
   const currentResultsPath = path.join(scanResultsPath, resultsFolderName);
@@ -393,7 +394,6 @@ const init = (scanEvent) => {
   });
 
   ipcMain.on("openReport", async (_event, scanId) => {
-    console.log('hello');
     const reportPath = getReportPath(scanId);
     if (!reportPath) return;
     shell.openExternal(`file://${reportPath}`);
@@ -403,6 +403,11 @@ const init = (scanEvent) => {
     const resultsPath = getResultsFolderPath(scanId);
     return resultsPath;
   })
+
+  ipcMain.on("cleanUpCustomFlowScripts", async () => {
+    cleanUpCustomFlowGeneratedScripts();
+  })
+
 
   // ipcMain.handle("downloadResults", (_event, scanId) => {
   //   return getResultsZip(scanId);

@@ -32,6 +32,9 @@ contextBridge.exposeInMainWorld("services", {
   openResultsFolder: (resultsPath) => {
     ipcRenderer.send("openResultsFolder", resultsPath);
   },
+  cleanUpCustomFlowScripts: (() => {
+    ipcRenderer.send("cleanUpCustomFlowScripts");
+  }),
   getResultsFolderPath: async (scanId) => {
     const reportPath = await ipcRenderer.invoke("getResultsFolderPath", scanId);
     return reportPath;
