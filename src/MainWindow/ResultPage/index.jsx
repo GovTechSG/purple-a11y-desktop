@@ -109,7 +109,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
             />
             Download results (.zip)
           </Button>
-          {isEvent && mailStatus === "send" && (
+          {isWindows && isEvent && mailStatus === "send" && (
             <Button
               id="mail-report-button"
               type="primary"
