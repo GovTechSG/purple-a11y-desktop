@@ -37,7 +37,24 @@ const init = async () => {
             exportDir: defaultExportDir
         }; 
         fs.writeFileSync(userDataFilePath, JSON.stringify(defaultSettings));
+    } else {
+        // check if mandatory fields are set 
+        const userData = JSON.parse(fs.readFileSync(userDataFilePath));
+        if (!userData.exportDir) {
+            userData.exportDir = defaultExportDir;
+        }
+        if (!userData.name) {
+            userData.name = "";
+        }
+        if (!userData.email) {
+            userData.email = "";
+        }
+        if (!userData.browser) {
+            userData.browser = proxy ? "edge" : "chrome";
+        }
+        fs.writeFileSync(userDataFilePath, JSON.stringify(userData));
     }
+
 
     ipcMain.handle("getUserData", (_event) => { 
         const data = readUserDataFromFile();
