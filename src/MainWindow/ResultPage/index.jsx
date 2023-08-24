@@ -24,9 +24,8 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const [showCustomFlowReplayButton, setShowCustomFlowReplayButton] = useState(false);
 
   useEffect(() => {
-    if (state && state.isCustomScan) {
-      setShowCustomFlowReplayButton(state.isCustomScan);
-    }
+    console.log('is custom flow: ', state);
+    setShowCustomFlowReplayButton(state.isCustomScan);
   }, [])
 
   useEffect(() => {
