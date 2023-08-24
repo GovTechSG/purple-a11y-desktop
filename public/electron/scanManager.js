@@ -21,7 +21,7 @@ const {
   getDefaultEdgeDataDir,
 } = require("./constants");
 const { env, report } = require("process");
-const { readUserDataFromFile } = require("./userDataManager");
+const { readUserDataFromFile, createExportDir } = require("./userDataManager");
 const scanHistory = {};
 
 let currentChildProcess;
@@ -98,6 +98,8 @@ const startScan = async (scanDetails, scanEvent) => {
     scanDetails.email = userData.email;
     scanDetails.name = userData.name;
     scanDetails.exportDir = userData.exportDir;
+    const success = createExportDir(userData.exportDir);
+    if (!success) return  { failedToCreateExportDir: true }
   }
 
   if (!getDefaultChromeDataDir() && os.platform() ==='darwin') {
