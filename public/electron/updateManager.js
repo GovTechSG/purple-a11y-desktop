@@ -126,27 +126,6 @@ const unzipBackendAndCleanUp = async () => {
   await execCommand(command);
 };
 
-const versionComparator = (ver1, ver2) => {
-  // return 1 if ver1 >= ver2, else return -1 
-  const splitVer1 = ver1.split('.'); 
-  const splitVer2 = ver2.split('.'); 
-  let idx = 0; 
-  while (splitVer1[idx] && splitVer2[idx]) {
-    const int1 = parseInt(splitVer1[idx]);
-    const int2 = parseInt(splitVer2[idx]);
-    if (int1 > int2) {
-      return 1; 
-    } else if (int1 < int2) {
-      return -1;
-    }
-    idx++;
-  }
-
-  if (!splitVer1[idx] && splitVer2[idx]) return -1; 
-
-  return 1;
-};
-
 const isLatestBackendVersion = async () => {
   try {
     const { data } = await axiosInstance.get(releaseUrl);
@@ -157,7 +136,7 @@ const isLatestBackendVersion = async () => {
     console.log("Engine version installed: ", engineVersion);
     console.log("Latest version found: ", latestVersion);
 
-    return versionComparator(engineVersion, latestVersion) === 1;
+    return engineVersion === latestVersion;
   } catch (e) {
     console.log(`Unable to check latest version, skipping\n${e.toString()}`);
     return true;
@@ -175,7 +154,7 @@ const isLatestFrontendVersion = async () => {
     console.log("Frontend version installed: ", frontendVersion);
     console.log("Latest frontend version found: ", latestVersion);
 
-    return versionComparator(frontendVersion, latestVersion) === 1;
+    return frontendVersion === latestVersion;
   } catch (e) {
     console.log(
       `Unable to check latest frontend version, skipping\n${e.toString()}`
