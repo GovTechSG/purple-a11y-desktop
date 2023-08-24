@@ -17,6 +17,7 @@ const {
   frontendReleaseUrl,
   installerExePath,
   macOSExecutablePath,
+  getMacOSExecutablePath,
 } = require("./constants");
 const { silentLogger } = require("./logs");
 const { readUserDataFromFile } = require("./userDataManager");
@@ -251,9 +252,10 @@ const downloadAndUnzipFrontendMac = async () => {
   )}' &&
   rm '${resultsPath}/purple-hats-desktop-mac.zip' &&
   rm -rf '${path.join(macOSExecutablePath, "..")}/Purple Hats Old.app' &&
-  find '${macOSExecutablePath}' -exec xattr -d com.apple.quarantine {} \\`;
+  xattr -rd com.apple.quarantine '${path.join(macOSExecutablePath, "..")}/Purple HATS.app' `;
 
   await execCommand(command);
+
 };
 
 /**
