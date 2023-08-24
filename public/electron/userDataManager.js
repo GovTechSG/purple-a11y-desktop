@@ -17,10 +17,16 @@ const writeUserDetailsToFile = (userDetails) => {
     fs.writeFileSync(userDataFilePath, JSON.stringify(data));
 }
 
-const createExportDir = () => {
-    const exportDir = readUserDataFromFile().exportDir;
-    if (!fs.existsSync(exportDir)) {
-        fs.mkdirSync(exportDir, { recursive: true });
+const createExportDir = (path) => {
+    try {
+        if (!fs.existsSync(path)) {
+            fs.mkdirSync(path, { recursive: true });
+        }
+
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
     }
 }
 
@@ -92,7 +98,7 @@ const setData = async (userDataEvent) => {
         })
         const userDetailsReceived = await userData; 
         writeUserDetailsToFile(userDetailsReceived);
-        createExportDir(); 
+        createExportDir(data.exportDir); 
     } else {
         userDataEvent.emit("userDataDoesExist");
     }
@@ -101,5 +107,6 @@ const setData = async (userDataEvent) => {
 module.exports = {
     init,
     setData, 
-    readUserDataFromFile
+    readUserDataFromFile,
+    createExportDir,
 }
