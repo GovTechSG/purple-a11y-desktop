@@ -7,12 +7,10 @@ import ResultPage from "./ResultPage";
 import OnboardingComponent from "./Onboarding/OnboardingComponent";
 import ConnectionNotification from "./ConnectionNotification";
 import "./MainWindow.css";
+import CustomFlowPage from "./CustomFlow";
 
 const MainWindow = ({ isProxy, appVersion }) => {
   const [completedScanId, setCompletedScanId] = useState(null);
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [userInputErrorMessage, setUserInputErrorMessage] = useState("");
   const [dataExistStatus, setDataExistStatus] = useState(null);
 
   useEffect(() => {
@@ -21,25 +19,10 @@ const MainWindow = ({ isProxy, appVersion }) => {
     });
   }, []);
 
-  const handleSetUserData = (event) => {
-    event.preventDefault();
-
-    console.log(event.target);
-
-    window.services.setUserData({ name: name, email: email });
-    setDataExistStatus("exists");
-  };
-
   if (dataExistStatus === "doesNotExist") {
     return (
       <OnboardingComponent
-        handleSetUserData={handleSetUserData}
-        name={name}
-        email={email}
-        setName={setName}
-        setEmail={setEmail}
-        userInputErrorMessage={userInputErrorMessage}
-        setUserInputErrorMessage={setUserInputErrorMessage}
+        setDataExistStatus={setDataExistStatus}
       />
     );
   }
@@ -60,6 +43,7 @@ const MainWindow = ({ isProxy, appVersion }) => {
                 />
               }
             />
+            <Route path="/custom_flow" element={<CustomFlowPage completedScanId={completedScanId} setCompletedScanId={setCompletedScanId}/>}></Route>
             <Route path="/scanning" element={<ScanningPage />} />
             <Route
               path="/result"

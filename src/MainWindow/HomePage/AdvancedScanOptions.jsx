@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Button from "../../common/components/Button";
 import SelectField from "./SelectField";
+import DownloadFolderDropdown from "../../common/components/DownloadFolderDropdown";
 import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
 import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
 import questionMarkIcon from "../../assets/question-mark.svg";
@@ -19,8 +20,6 @@ const AdvancedScanOptions = ({
   const [advancedOptionsDirty, setAdvancedOptionsDirty] = useState(false);
   const [isMaxConcurrencyMouseEvent, setIsMaxConcurrencyMouseEvent] = useState(false);
   const [showMaxConcurrencyTooltip, setShowMaxConcurrencyTooltip] = useState(false);
-  const [isFalsePositiveMouseEvent, setIsFalsePositiveMouseEvent] = useState(false);
-  const [showFalsePositiveTooltip, setShowFalsePositiveTooltip] = useState(false);
   const menu = useRef();
 
   const handleToggleMenu = () => {
@@ -41,17 +40,6 @@ const AdvancedScanOptions = ({
   const handleMaxConcurrencyOnMouseEnter = () => {
     setShowMaxConcurrencyTooltip(false);
     setIsMaxConcurrencyMouseEvent(true); 
-  }
-
-  const handleFalsePositiveOnFocus = () => {
-    if (!isFalsePositiveMouseEvent) {
-      setShowFalsePositiveTooltip(true);
-    }
-  }
-
-  const handleFalsePositiveOnMouseEnter = () => {
-    setShowFalsePositiveTooltip(false); 
-    setIsFalsePositiveMouseEvent(true);
   }
 
   /*
@@ -157,7 +145,21 @@ const AdvancedScanOptions = ({
               />
             </div>
           )}
-          <hr />
+          <div id='false-positive-toggle-group'>
+              <input 
+                type="checkbox"
+                id="false-positive-toggle" 
+                aria-describedby="false-positive-tooltip"
+                checked={advancedOptions.falsePositive}
+                onChange={handleSetAdvancedOption(
+                  "falsePositive", 
+                  (e) => e.target.checked
+                )} 
+              /> 
+              <label htmlFor="false-positive-toggle">
+                Show potential false positive issues
+              </label>
+          </div>
           <div id="max-concurrency-toggle-group">
             <input
               type="checkbox"
@@ -192,57 +194,27 @@ const AdvancedScanOptions = ({
               />
             </div>
           </div>
-          <div id='false-positive-toggle-group'>
-              <input 
-                type="checkbox"
-                id="false-positive-toggle" 
-                aria-describedby="false-positive-tooltip"
-                checked={advancedOptions.falsePositive}
-                onFocus={() => handleFalsePositiveOnFocus()}
-                onBlur={() => setShowFalsePositiveTooltip(false)}
-                onMouseEnter={() => handleFalsePositiveOnMouseEnter()}
-                onMouseLeave={() => setIsFalsePositiveMouseEvent(false)}
-                onChange={handleSetAdvancedOption(
-                  "falsePositive", 
-                  (e) => e.target.checked
-                )} 
-              /> 
-              <label htmlFor="false-positive-toggle">
-                False Positive Items
-              </label>
-              <div className="custom-tooltip-container">
-                <ToolTip 
-                  description={'Display false positive items that will require manual review.'} 
-                  id='false-positive-tooltip'
-                  showToolTip={showFalsePositiveTooltip}
-                />
-                <img 
-                  className='tooltip-img' 
-                  src={questionMarkIcon} 
-                  aria-describedby='false-positive-tooltip' 
-                  onMouseEnter={() => setShowFalsePositiveTooltip(true)} 
-                  onMouseLeave={() => setShowFalsePositiveTooltip(false)} 
-                  alt="tooltip icon for false positive"/>
-            </div>
+          <hr />
+          <div className="user-input-group">
+            <label id="download-folder-label" className="bold-text">
+              Download:
+            </label>
+            <DownloadFolderDropdown></DownloadFolderDropdown>
           </div>
-          {!isProxy && (
-            <>
-              <div id="scan-in-background-toggle-group">
-                <input
-                  type="checkbox"
-                  id="scan-in-background-toggle"
-                  checked={advancedOptions.scanInBackground}
-                  onChange={handleSetAdvancedOption(
-                    "scanInBackground",
-                    (e) => e.target.checked
-                  )}
-                />
-                <label htmlFor="scan-in-background-toggle">
-                  Scan in background
-                </label>
-              </div>
-            </>
-          )}
+          {/* <div id="scan-in-background-toggle-group">
+            <input
+              type="checkbox"
+              id="scan-in-background-toggle"
+              checked={advancedOptions.scanInBackground}
+              onChange={handleSetAdvancedOption(
+                "scanInBackground",
+                (e) => e.target.checked
+              )}
+            />
+            <label htmlFor="scan-in-background-toggle">
+              Scan in background
+            </label>
+          </div> */}
         </div>
       )}
     </div>

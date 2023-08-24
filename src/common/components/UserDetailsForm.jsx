@@ -11,7 +11,7 @@ const UserDetailsForm = ({
   setUserInputErrorMessage,
   isOnboarding,
 }) => {
-  const userFormClassName = isOnboarding ? "user-form fade-in" : "user-form";
+  const userFormClassName = isOnboarding ? "user-form fade-in-left" : "user-form";
   const emailInput = document.querySelector("#email");
 
   const onHandleEmailChange = (e) => {

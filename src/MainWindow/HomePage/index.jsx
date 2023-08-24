@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import a11yLogo from "../../assets/a11y-logo.svg";
 import appIllustration from "../../assets/app-illustration.svg";
-import editIcon from "../../assets/edit-icon.png";
+import editIcon from "../../assets/edit-icon.svg";
 import InitScanForm from "./InitScanForm";
 import "./HomePage.scss";
 import services from "../../services";
@@ -10,6 +10,7 @@ import { cliErrorCodes, cliErrorTypes } from "../../common/constants";
 import Modal from "../../common/components/Modal";
 import { BasicAuthForm, BasicAuthFormFooter } from "./BasicAuthForm";
 import EditUserDetailsModal from "./EditUserDetailsModal";
+import NoChromeErrorModal from "./NoChromeErrorModal";
 
 const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
   const [browser, setBrowser] = useState(null);
   const [showBasicAuthModal, setShowBasicAuthModal] = useState(false);
   const [showEditDataModal, setShowEditDataModal] = useState(false);
+  const [showNoChromeErrorModal, setShowNoChromeErrorModal] = useState(false);
 
   useEffect(() => {
     if (
@@ -31,6 +33,12 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
     ) {
       setShowBasicAuthModal(true);
     }
+
+    if (prevUrlErrorMessage !== null && 
+        prevUrlErrorMessage.includes("No chrome browser")
+    ) {
+      setShowNoChromeErrorModal(true);
+    } 
   }, [prevUrlErrorMessage]);
 
   useEffect(() => {
@@ -48,6 +56,16 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
     getUserData();
   });
 
+  useEffect(() => {
+    const checkChromeExists = async () => {
+      const chromeExists = await window.services.checkChromeExistsOnMac();
+      console.log("chrome exists: ", chromeExists);
+      if (!chromeExists) {
+        setShowNoChromeErrorModal(true);
+      }
+    }
+    checkChromeExists();
+  }, [])
   const isValidHttpUrl = (input) => {
     const regexForUrl = new RegExp("^(http|https):/{2}.+$", "gmi");
     return regexForUrl.test(input);
@@ -71,11 +89,25 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
 
     window.localStorage.setItem("scanDetails", JSON.stringify(scanDetails));
 
-    navigate("/scanning");
+    if (scanDetails.scanType === 'Custom flow') {
+      navigate('/custom_flow', {state: {scanDetails: scanDetails}});
+      return;
+    } 
+
+    navigate("/scanning", {state: {url: scanDetails.scanUrl}});
     const response = await services.startScan(scanDetails);
+
+    if (response.noChrome) {
+      navigate("/", { state: 'No chrome browser' });
+      return;
+    }
 
     if (response.success) {
       setCompletedScanId(response.scanId);
+      if (scanDetails.scanType === 'Custom flow') {
+        navigate("/custom_flow");
+        return;
+      }
       navigate("/result");
       return;
     }
@@ -191,6 +223,9 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
           />
         </>
       )}
+      {showNoChromeErrorModal &&
+        <NoChromeErrorModal showModal={showNoChromeErrorModal} setShowModal={setShowNoChromeErrorModal}/>            
+      }
       <div id="home-page-footer">
         <img
           id="app-illustration"

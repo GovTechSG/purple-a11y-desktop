@@ -80,6 +80,8 @@ const appVersion = require(path.join(
 
 const preloadPath = path.join(__dirname, "preload.js");
 
+const defaultExportDir = path.join(process.env.HOME, "Documents", "Purple HATS");
+
 const userDataFormPreloadPath = path.join(__dirname, "userDataFormPreload.js");
 
 const indexPath = path.join(__dirname, "..", "..", "build", "index.html");
@@ -110,10 +112,7 @@ const getPathVariable = () => {
 
 const scanResultsPath = path.join(resultsPath, "results");
 
-const customFlowGeneratedScriptsPath = path.join(
-  resultsPath,
-  "custom_flow_scripts"
-);
+const customFlowGeneratedScriptsPath = path.join(resultsPath, "custom_flow_scripts");
 
 const updateBackupsFolder = path.join(
   appPath,
@@ -630,4 +629,5 @@ module.exports = {
   frontendReleaseUrl,
   installerExePath,
   macOSExecutablePath,
+  defaultExportDir,
 };
