@@ -102,6 +102,11 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
       return;
     }
 
+    if (response.failedToCreateExportDir) {
+      navigate("/", { state: 'Unable to create download directory' });
+      return;
+    }
+
     if (response.success) {
       setCompletedScanId(response.scanId);
       if (scanDetails.scanType === 'Custom flow') {

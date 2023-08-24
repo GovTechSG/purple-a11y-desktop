@@ -17,10 +17,16 @@ const writeUserDetailsToFile = (userDetails) => {
     fs.writeFileSync(userDataFilePath, JSON.stringify(data));
 }
 
-const createExportDir = () => {
-    const exportDir = readUserDataFromFile().exportDir;
-    if (!fs.existsSync(exportDir)) {
-        fs.mkdirSync(exportDir, { recursive: true });
+const createExportDir = (path) => {
+    try {
+        if (!fs.existsSync(path)) {
+            fs.mkdirSync(path, { recursive: true });
+        }
+
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
     }
 }
 
@@ -37,7 +43,24 @@ const init = async () => {
             exportDir: defaultExportDir
         }; 
         fs.writeFileSync(userDataFilePath, JSON.stringify(defaultSettings));
+    } else {
+        // check if mandatory fields are set 
+        const userData = JSON.parse(fs.readFileSync(userDataFilePath));
+        if (!userData.exportDir) {
+            userData.exportDir = defaultExportDir;
+        }
+        if (!userData.name) {
+            userData.name = "";
+        }
+        if (!userData.email) {
+            userData.email = "";
+        }
+        if (!userData.browser) {
+            userData.browser = proxy ? "edge" : "chrome";
+        }
+        fs.writeFileSync(userDataFilePath, JSON.stringify(userData));
     }
+
 
     ipcMain.handle("getUserData", (_event) => { 
         const data = readUserDataFromFile();
@@ -75,7 +98,7 @@ const setData = async (userDataEvent) => {
         })
         const userDetailsReceived = await userData; 
         writeUserDetailsToFile(userDetailsReceived);
-        createExportDir(); 
+        createExportDir(data.exportDir); 
     } else {
         userDataEvent.emit("userDataDoesExist");
     }
@@ -84,5 +107,6 @@ const setData = async (userDataEvent) => {
 module.exports = {
     init,
     setData, 
-    readUserDataFromFile
+    readUserDataFromFile,
+    createExportDir,
 }
