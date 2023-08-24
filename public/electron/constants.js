@@ -11,7 +11,7 @@ const appPath =
   os.platform() === "win32"
     ? path.join(process.env.PROGRAMFILES, "Purple HATS Desktop")
     : path.join(
-        process.env.HOME,
+        os.homedir(),
         "Library",
         "Application Support",
         "Purple HATS"
@@ -80,7 +80,7 @@ const appVersion = require(path.join(
 
 const preloadPath = path.join(__dirname, "preload.js");
 
-const defaultExportDir = path.join(process.env.HOME, "Documents", "Purple HATS");
+const defaultExportDir = path.join(os.homedir(), "Documents", "Purple HATS");
 
 const userDataFormPreloadPath = path.join(__dirname, "userDataFormPreload.js");
 
