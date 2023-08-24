@@ -349,8 +349,10 @@ const mailResults = async (formDetails, scanId) => {
     $mail = $o.CreateItem(0)
     $mail.subject = "${subject}"
     $mail.body = "Hi there,
+    
 Please see the attached accessibility scan results with Purple HATS (report.html).
 Feel free to reach us at accessibility@tech.gov.sg if you have any questions.
+
 Thank you.
 Accessibility Enabling Team"
     $mail.To = "${emailAddresses}"
