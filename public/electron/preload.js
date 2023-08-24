@@ -39,15 +39,9 @@ contextBridge.exposeInMainWorld("services", {
     const reportPath = await ipcRenderer.invoke("getResultsFolderPath", scanId);
     return reportPath;
   },
-  submitFormViaBrowser: (formDetails) => {
-    ipcRenderer.send("submitFormViaBrowser", formDetails);
-  },
   setExportDir: async () => {
     const exportDir = await ipcRenderer.invoke("setExportDir");
     return exportDir;
-  },
-  submitFormViaBrowser: (formDetails) => {
-    ipcRenderer.send("submitFormViaBrowser", formDetails);
   },
   getUserData: async () => {
     const data = await ipcRenderer.invoke("getUserData");
@@ -102,4 +96,13 @@ contextBridge.exposeInMainWorld("services", {
   openLink: (url) => {
     ipcRenderer.send("openLink", url);
   },
+  mailReport: async (formDetails, scanId) => {
+    const response = await ipcRenderer.invoke(
+      "mailReport",
+      formDetails,
+      scanId
+    );
+    return response;
+  },
+  getIsWindows: async () => ipcRenderer.invoke("isWindows"),
 });
