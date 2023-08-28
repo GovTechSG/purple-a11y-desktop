@@ -191,7 +191,6 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
           showHeader={true}
           showModal={showBasicAuthModal}
           setShowModal={setShowBasicAuthModal}
-          keyboardTrap={showBasicAuthModal}
           modalTitle={"Your website requires basic authentication"}
           modalBody={
             <>
