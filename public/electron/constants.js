@@ -2,16 +2,14 @@ const path = require("path");
 const os = require("os");
 const fs = require("fs");
 const { globSync } = require("glob");
-const { get } = require("http");
 const { silentLogger } = require("./logs.js");
 const { execSync } = require("child_process");
-const { app } = require("electron");
 
 const appPath =
   os.platform() === "win32"
     ? path.join(process.env.PROGRAMFILES, "Purple HATS Desktop")
     : path.join(
-        process.env.HOME,
+        os.homedir(),
         "Library",
         "Application Support",
         "Purple HATS"
@@ -80,9 +78,7 @@ const appVersion = require(path.join(
 
 const preloadPath = path.join(__dirname, "preload.js");
 
-const defaultExportDir = path.join(process.env.HOME, "Documents", "Purple HATS");
-
-const userDataFormPreloadPath = path.join(__dirname, "userDataFormPreload.js");
+const defaultExportDir = path.join(os.homedir(), "Documents", "Purple HATS");
 
 const indexPath = path.join(__dirname, "..", "..", "build", "index.html");
 
@@ -588,15 +584,7 @@ const createPlaywrightContext = async (browser, screenSize, nonHeadless) => {
   return { context, browserChannel, proxy };
 };
 
-const userDataFormFields = {
-  formUrl:
-    "https://docs.google.com/forms/d/1tg8WYKWOgAo-DRsKNczZQF7OFeT00kjpmL1DPlL_VoI/formResponse",
-  websiteUrlField: "entry.1562345227",
-  scanTypeField: "entry.1148680657",
-  emailField: "entry.52161304",
-  nameField: "entry.1787318910",
-  resultsField: "entry.904051439",
-};
+const isWindows = os.platform() === "win32";
 
 module.exports = {
   appPath,
@@ -608,7 +596,6 @@ module.exports = {
   getFrontendVersion,
   appVersion,
   preloadPath,
-  userDataFormPreloadPath,
   indexPath,
   playwrightBrowsersPath,
   getPathVariable,
@@ -618,7 +605,6 @@ module.exports = {
   phZipPath,
   resultsPath,
   userDataFilePath,
-  userDataFormFields,
   browserTypes,
   getDefaultChromeDataDir,
   getDefaultEdgeDataDir,
@@ -630,4 +616,5 @@ module.exports = {
   installerExePath,
   macOSExecutablePath,
   defaultExportDir,
+  isWindows,
 };

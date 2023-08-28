@@ -12,7 +12,6 @@ const constants = require("./constants");
 const scanManager = require("./scanManager");
 const updateManager = require("./updateManager");
 const userDataManager = require("./userDataManager.js");
-const userDataFormManager = require("./userDataFormManager");
 
 const app = electronApp;
 
@@ -158,6 +157,8 @@ app.on("ready", async () => {
     }
   })
 
+  ipcMain.handle("isWindows", (_event) => constants.isWindows);
+
   await mainReady;
 
   mainWindow.webContents.send("appStatus", "ready");
@@ -176,7 +177,6 @@ app.on("ready", async () => {
   });
 
   await userDataManager.setData(userDataEvent);
-  await userDataFormManager.init();
 
   if (constants.proxy) {
     session.defaultSession.enableNetworkEmulation({

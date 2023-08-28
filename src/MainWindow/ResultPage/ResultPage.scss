@@ -1,5 +1,7 @@
 #result-page {
-  margin-top: 10vw;
+  padding: 1.5rem;
+  display: flex;
+  min-height: 100vh;
 
   #main-container {
     display: flex;
@@ -64,7 +66,8 @@
   }
 
   #replay-btn, 
-  #view-button {
+  #view-button,
+  #mail-report-button {
     width: 100%;
     margin-left: 2rem;
     border-radius: 4px;
@@ -114,5 +117,30 @@
 
   .return-icon {
     margin-right: 0.5rem;
+  }
+
+
+  .bi-envelope {
+    margin-right: 0.5rem;
+  }
+
+  .bi-envelope-check {
+    margin-right: 0.5rem;
+  }
+
+  .modal-content {
+    width: 700px;
+  }
+
+  .user-form-field {
+    grid-template-columns: 20% 80%;
+    margin-bottom: 1rem;
+    align-items: center;
+  }
+
+  #mail-button {
+    width: 100%;
+    display: block;
+    margin-bottom: 1rem;
   }
 }

@@ -324,25 +324,98 @@ const getResultsFolderPath = (scanId) => {
   )
 }
 
-async function createReportWindow(reportPath) {
-  const url = "file://" + reportPath;
-  let browser = readUserDataFromFile().browser;
-  const { context, browserChannel, proxy } = await createPlaywrightContext(
-    browser,
-    null,
-    true
-  );
+const mailResults = async (formDetails, scanId) => {
+  const reportPath = getReportPath(scanId);
+  const { subject, emailAddresses } = formDetails;
 
-  const page = await context.newPage();
-  await page.goto(url, {
-    ...(proxy && { waitUntil: "networkidle" }),
+  const shellCommand = `
+    if ((Split-Path -Path $pwd -Leaf) -eq "scripts") {
+      cd ..
+    }
+    $attachmentCount = 0
+    #Get an Outlook application object
+    $wasOutlookOpened = $true
+    try {
+      $o = [System.Runtime.InteropServices.Marshal]::GetActiveObject('Outlook.Application')
+    } catch {
+      # Outlook is not open, create a new instance
+      $o = New-Object -ComObject Outlook.Application
+      $wasOutlookOpened = $false
+    }
+    if ($null -eq $o) {
+      throw "Unable to open outlook"
+      exit
+    }
+    $mail = $o.CreateItem(0)
+    $mail.subject = "${subject}"
+    $mail.body = "Hi there,
+    
+Please see the attached accessibility scan results with Purple HATS (report.html).
+Feel free to reach us at accessibility@tech.gov.sg if you have any questions.
+
+Thank you.
+Accessibility Enabling Team"
+    $mail.To = "${emailAddresses}"
+    $mail.cc = "<accessibility@tech.gov.sg>"
+    # # Iterate over all files and only add the ones that have an .html extension
+    $files = Get-ChildItem '${reportPath}'
+    for ($i = 0; $i -lt $files.Count; $i++) {
+      $outfileName = $files[$i].FullName
+      $outfileNameExtension = $files[$i].Extension
+      if ($outfileNameExtension -eq ".html") {
+          $mail.Attachments.Add($outfileName);
+          $attachmentCount++
+      }
+    }
+    if ($attachmentCount -eq 0) {
+      throw "No files were found in the specified folder. Exiting."
+      $o.Quit()
+      exit
+    }
+    $mail.Send()
+    # give time to send the email
+    Start-Sleep -Seconds 5
+    # quit Outlook only if previously not opened
+    if ($wasOutlookOpened -eq $false) {
+      $o.Quit()
+    }
+    #end the script
+    exit
+  `;
+
+  const response = await new Promise((resolve) => {
+    const mailProcess = spawn("powershell.exe", [
+      "-ExecutionPolicy",
+      "Bypass",
+      "-Command",
+      shellCommand,
+    ]);
+
+    mailProcess.stderr.on("data", (data) => {
+      console.error(`stderr: ${data}`);
+      resolve({
+        success: false,
+        message: `An error has occurred when sending the email: ${data}`,
+      });
+    });
+
+    mailProcess.on("close", (code) => {
+      if (code === 0) {
+        resolve({ success: true });
+      } else {
+        mailProcess.stderr.on("data", (data) => {
+          console.error(`stderr: ${data}`);
+          resolve({
+            success: false,
+            message: `An error has occurred when sending the email: ${data}`,
+          });
+        });
+      }
+    });
   });
 
-  page.on("close", async (data) => {
-    await context.close();
-    deleteClonedProfiles(browserChannel);
-  });
-}
+  return response;
+};
 
 const cleanUpIntermediateFolders = async (folderName, setDefaultFolders = false) => {
   const pathToDelete = path.join(resultsPath, folderName);
@@ -410,10 +483,9 @@ const init = (scanEvent) => {
     cleanUpCustomFlowGeneratedScripts();
   })
 
-
-  // ipcMain.handle("downloadResults", (_event, scanId) => {
-  //   return getResultsZip(scanId);
-  // });
+  ipcMain.handle("mailReport", (_event, formDetails, scanId) => {
+    return mailResults(formDetails, scanId);
+  });
 };
 
 module.exports = {

@@ -4,7 +4,6 @@ and the renderer. The APIs are provided via the window.services object, as defin
 
 import {
   scanTypes,
-  // userDataFormDetails,
   viewportTypes,
   devices,
 } from "./common/constants";
@@ -77,7 +76,6 @@ const getDataForForm = async () => {
   const userData = await getUserData();
   const email = userData["email"];
   const name = userData["name"];
-  const autoSubmit = userData["autoSubmit"];
   const event = userData["event"];
   const browser = userData["browser"];
   const exportDir = userData["exportDir"];
@@ -86,7 +84,6 @@ const getDataForForm = async () => {
     scanType: currentScanType,
     email: email,
     name: name,
-    autoSubmit: autoSubmit,
     event: event,
     browser: browser,
     exportDir: exportDir
@@ -102,14 +99,22 @@ const isValidEmail = (email) => {
   return emailRegex.test(email);
 };
 
+const mailReport = async (formDetails, scanId) => {
+  const response = await window.services.mailReport(formDetails, scanId);
+  return response;
+};
+
+const getIsWindows = async () => window.services.getIsWindows();
+
 const services = {
   startScan,
   openReport,
-  // downloadResults,
   getResultsFolderPath,
   getUserData,
   getDataForForm,
   isValidEmail,
+  mailReport,
+  getIsWindows,
 };
 
 export default services;
