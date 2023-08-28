@@ -258,8 +258,12 @@ a:hover {
 }
 
 .user-form-error {
-  margin-bottom: 5px;
+  margin-bottom: 1rem;
   text-align: left;
+}
+
+.user-form-error:last-child {
+  margin-bottom: 5px;
 }
 
 .download-dropdown {

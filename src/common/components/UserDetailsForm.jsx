@@ -7,32 +7,59 @@ const UserDetailsForm = ({
   setName,
   setEmail,
   handleOnSubmit,
-  userInputErrorMessage,
-  setUserInputErrorMessage,
+  nameInputErrorMessage,
+  emailInputErrorMessage,
+  setNameInputErrorMessage,
+  setEmailInputErrorMessage,
   isOnboarding,
 }) => {
-  const userFormClassName = isOnboarding ? "user-form fade-in-left" : "user-form";
-  const emailInput = document.querySelector("#email");
+  const userFormClassName = isOnboarding
+    ? "user-form fade-in-left"
+    : "user-form";
 
-  const onHandleEmailChange = (e) => {
-    setEmail(e.target.value);
-    if (userInputErrorMessage) {
-      setUserInputErrorMessage(null);
-      emailInput.removeAttribute("aria-invalid");
+  const validateName = () => {
+    if (!services.isValidName(name)) {
+      setNameInputErrorMessage(
+        "Only alphabets, commas, hyphens allowed."
+      );
+      return false;
     }
+
+    return true;
   };
 
-  const onHandleEmailBlur = (e) => {
-    if (!services.isValidEmail(e.target.value)) {
-      setUserInputErrorMessage("Please enter a valid email.");
-      emailInput.setAttribute("aria-invalid", "true");
-      return;
+  const validateEmail = () => {
+    if (!services.isValidEmail(email)) {
+      setEmailInputErrorMessage("Please enter a valid email.");
+      return false;
     }
+
+    return true;
+  };
+
+  const onHandleNameChange = (e) => {
+    setNameInputErrorMessage(null);
+    setName(e.target.value);
+  };
+
+  const onHandleEmailChange = (e) => {
+    setEmailInputErrorMessage(null);
+    setEmail(e.target.value);
+  };
+
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+
+    const validated = validateName() && validateEmail();
+
+    if (!validated) return;
+
+    handleOnSubmit();
   };
 
   return (
     <div className={userFormClassName}>
-      <form id={formID} onSubmit={(e) => handleOnSubmit(e)}>
+      <form id={formID} onSubmit={onSubmitHandler}>
         <div className="user-form-field">
           <label className="user-form-label" for="name">
             Name
@@ -42,8 +69,14 @@ const UserDetailsForm = ({
             type="text"
             id="name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={onHandleNameChange}
+            onBlur={validateName}
+            aria-describedby="invalid-name-error"
+            aria-invalid={!!nameInputErrorMessage}
           ></input>
+        </div>
+        <div className="user-form-error error-text" id="invalid-name-error">
+          {nameInputErrorMessage}
         </div>
         <div className="user-form-field">
           <label className="user-form-label" for="email">
@@ -54,13 +87,14 @@ const UserDetailsForm = ({
             type="text"
             id="email"
             value={email}
-            onChange={(e) => onHandleEmailChange(e)}
-            onBlur={(e) => onHandleEmailBlur(e)}
+            onChange={onHandleEmailChange}
+            onBlur={validateEmail}
             aria-describedby="invalid-email-error"
+            aria-invalid={!!emailInputErrorMessage}
           ></input>
         </div>
         <div className="user-form-error error-text" id="invalid-email-error">
-          {userInputErrorMessage}
+          {emailInputErrorMessage}
         </div>
       </form>
     </div>

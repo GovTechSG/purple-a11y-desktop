@@ -106,6 +106,12 @@ const mailReport = async (formDetails, scanId) => {
 
 const getIsWindows = async () => window.services.getIsWindows();
 
+const isValidName = (name) => {
+  const nameRegex = /^(?=.{1,50}$)[A-Za-z-,\s]+$/;
+
+  return nameRegex.test(name);
+};
+
 const services = {
   startScan,
   openReport,
@@ -115,6 +121,7 @@ const services = {
   isValidEmail,
   mailReport,
   getIsWindows,
+  isValidName,
 };
 
 export default services;

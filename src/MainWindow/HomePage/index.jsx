@@ -139,7 +139,13 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
       console.log(`status error: ${response.statusCode}`);
       navigate("/", { state: errorMessageToShow });
       return;
+    } else if (response.statusCode) {
+      console.error(
+        `unexpected status error: (code ${response.statusCode})`,
+        response.message
+      );
     }
+
     /* When no pages were scanned (e.g. out of domain upon redirects when valid URL was entered),
     redirects user to error page to going to result page with empty result
     */
@@ -191,7 +197,6 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
           showHeader={true}
           showModal={showBasicAuthModal}
           setShowModal={setShowBasicAuthModal}
-          keyboardTrap={showBasicAuthModal}
           modalTitle={"Your website requires basic authentication"}
           modalBody={
             <>

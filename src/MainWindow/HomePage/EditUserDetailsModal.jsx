@@ -13,17 +13,17 @@ const EditUserDetailsModal = ({
 }) => {
   const [editedName, setEditedName] = useState(initialName);
   const [editedEmail, setEditedEmail] = useState(initialEmail);
-  const [userInputErrorMessage, setUserInputErrorMessage] = useState(null);
+  const [nameInputErrorMessage, setNameInputErrorMessage] = useState(null);
+  const [emailInputErrorMessage, setEmailInputErrorMessage] = useState(null);
 
   const isSubmitDisabled =
     editedName.trim() === "" ||
     editedEmail.trim() === "" ||
     (editedName === initialName && editedEmail === initialEmail) ||
-    userInputErrorMessage;
+    nameInputErrorMessage ||
+    emailInputErrorMessage;
 
-  const handleEditUserData = (e) => {
-    e.preventDefault();
-
+  const handleEditUserData = () => {
     window.services.editUserData({ name: editedName, email: editedEmail });
     setShowEditDataModal(false);
   };
@@ -31,7 +31,8 @@ const EditUserDetailsModal = ({
   const setShowModal = (show) => {
     setEditedEmail(initialEmail);
     setEditedName(initialName);
-    setUserInputErrorMessage(null);
+    setEmailInputErrorMessage(null);
+    setNameInputErrorMessage(null);
     setShowEditDataModal(show);
   };
 
@@ -41,7 +42,6 @@ const EditUserDetailsModal = ({
         id={id}
         showModal={showModal}
         showHeader={true}
-        keyboardTrap={showModal}
         modalTitle={"Edit your profile"}
         modalBody={
           <>
@@ -52,9 +52,10 @@ const EditUserDetailsModal = ({
               setName={setEditedName}
               setEmail={setEditedEmail}
               handleOnSubmit={handleEditUserData}
-              userInputErrorMessage={userInputErrorMessage}
-              setUserInputErrorMessage={setUserInputErrorMessage}
-              isSubmitDisabled={isSubmitDisabled}
+              nameInputErrorMessage={nameInputErrorMessage}
+              emailInputErrorMessage={emailInputErrorMessage}
+              setNameInputErrorMessage={setNameInputErrorMessage}
+              setEmailInputErrorMessage={setEmailInputErrorMessage}
             />
             <p>
               We are collecting your name, email address and app usage data.

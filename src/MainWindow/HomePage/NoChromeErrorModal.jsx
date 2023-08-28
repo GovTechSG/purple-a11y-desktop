@@ -12,7 +12,6 @@ const NoChromeErrorModal = ({showModal, setShowModal}) => {
             id='no-chrome-browser-modal'
             showModal={showModal}
             showHeader={true}
-            keyboardTrap={true}
             modalTitle={'Please install Google Chrome'}
             modalBody={'To run a scan using Purple HATS, please install Google Chrome.'}
             modalFooter={
