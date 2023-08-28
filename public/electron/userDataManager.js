@@ -36,7 +36,6 @@ const init = async () => {
         const defaultSettings = {
             name: "", 
             email: "",
-            autoSubmit: true, 
             event: false, 
             browser: proxy ? "edge" : "chrome",
             autoUpdate: true,
