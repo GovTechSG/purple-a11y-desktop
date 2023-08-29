@@ -5,7 +5,6 @@ const Modal = ({
   key,
   showModal,
   showHeader,
-  keyboardTrap,
   isOnboarding,
   modalTitle,
   modalBody,
@@ -33,39 +32,56 @@ const Modal = ({
   }, [isOnboarding]);
 
   useEffect(() => {
-    if (keyboardTrap) {
-      const modalElement = document.querySelector(`#${id}`);
+    const modalElement = document.querySelector(`#${id}`);
 
-      const handleKeyDown = (event) => {
-        const focusableElements = modalElement.querySelectorAll(
-          "button:not([disabled]), a, input"
-        );
-        const firstFocusableElement = focusableElements[0];
-        const lastFocusableElement =
-          focusableElements[focusableElements.length - 1];
+    const handleTabKey = (event) => {
+      if (event.key !== "Tab") {
+        return;
+      }
 
-        if (event.key === "Tab") {
-          console.log(event.target);
-          if (!modalElement.contains(event.target)) {
-            event.preventDefault();
-            firstFocusableElement.focus();
-          } else if (event.shiftKey && event.target === firstFocusableElement) {
-            event.preventDefault();
-            lastFocusableElement.focus();
-          } else if (!event.shiftKey && event.target === lastFocusableElement) {
-            event.preventDefault();
-            firstFocusableElement.focus();
-          }
-        }
-      };
+      const focusableElements = Array.from(
+        modalElement.querySelectorAll("button:not([disabled]), a, input")
+      ).filter((el) => {
+        const computedStyle = getComputedStyle(el);
+        return computedStyle?.visibility !== "hidden";
+      });
+      if (focusableElements.length === 0) return;
+      
+      const firstFocusableElement = focusableElements[0];
+      const lastFocusableElement =
+        focusableElements[focusableElements.length - 1];
 
-      document.addEventListener("keydown", handleKeyDown);
+      if (!modalElement.contains(event.target)) {
+        event.preventDefault();
+        firstFocusableElement.focus();
+      } else if (event.shiftKey && event.target === firstFocusableElement) {
+        event.preventDefault();
+        lastFocusableElement.focus();
+      } else if (!event.shiftKey && event.target === lastFocusableElement) {
+        event.preventDefault();
+        firstFocusableElement.focus();
+      }
+    };
 
-      return () => {
-        document.removeEventListener("keydown", handleKeyDown);
-      };
-    }
-  }, [keyboardTrap]);
+    const handleEscapeKey = (event) => {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      // only apply for modals with close button displayed
+      if (showHeader) {
+        setShowModal(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleTabKey);
+    document.addEventListener("keydown", handleEscapeKey);
+
+    return () => {
+      document.removeEventListener("keydown", handleTabKey);
+      document.removeEventListener("keydown", handleEscapeKey);
+    };
+  }, [setShowModal, showHeader, id]);
 
   return (
     <div className={modalClassName} id={id}>
@@ -98,7 +114,7 @@ const getModalClassName = (showModal, isOnboarding) => {
   if (showModal) {
     modalClassName = "modal fade show";
     if (isOnboarding) {
-      modalClassName = "onboarding-modal " + "modal fade show";
+      modalClassName = "onboarding-modal " + modalClassName;
     }
   } else {
     modalClassName = "modal d-none";
