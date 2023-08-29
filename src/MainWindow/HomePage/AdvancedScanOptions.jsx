@@ -206,7 +206,7 @@ const AdvancedScanOptions = ({
             <label id="exclusions-folder-label" className="bold-text">
               Exclusions file:
             </label>
-            {/* <ExclusionsFolderDropdown></ExclusionsFolderDropdown> */}
+            <ExclusionsFolderDropdown></ExclusionsFolderDropdown>
           </div>
           {/* <div id="scan-in-background-toggle-group">
             <input

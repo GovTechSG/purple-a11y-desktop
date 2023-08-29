@@ -45,7 +45,8 @@ const getScanOptions = (details) => {
     name,
     exportDir,
     maxConcurrency,
-    falsePositive
+    falsePositive,
+    exclusionsDir
   } = details;
   const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`];
 
@@ -73,6 +74,10 @@ const getScanOptions = (details) => {
     options.push("-e", exportDir);
   }
 
+  if (exclusionsDir) {
+    options.push("-x", exclusionsDir);
+  }
+
   if (maxConcurrency) {
     options.push("-t", 1);
   }
@@ -98,6 +103,7 @@ const startScan = async (scanDetails, scanEvent) => {
     scanDetails.email = userData.email;
     scanDetails.name = userData.name;
     scanDetails.exportDir = userData.exportDir;
+    scanDetails.exclusionsDir = userData.exclusionsDir;
     const success = createExportDir(userData.exportDir);
     if (!success) return  { failedToCreateExportDir: true }
   }

@@ -2,6 +2,7 @@ const fs = require("fs");
 const {
     userDataFilePath,
     defaultExportDir, 
+    defaultExclusionsDir,
     proxy
 } = require("./constants"); 
 const { ipcMain, dialog, shell } = require("electron");
@@ -39,7 +40,8 @@ const init = async () => {
             event: false, 
             browser: proxy ? "edge" : "chrome",
             autoUpdate: true,
-            exportDir: defaultExportDir
+            exportDir: defaultExportDir,
+            exclusionsDir: defaultExclusionsDir || ""
         }; 
         fs.writeFileSync(userDataFilePath, JSON.stringify(defaultSettings));
     } else {
@@ -47,6 +49,9 @@ const init = async () => {
         const userData = JSON.parse(fs.readFileSync(userDataFilePath));
         if (!userData.exportDir) {
             userData.exportDir = defaultExportDir;
+        }
+        if (!userData.exclusionsDir){
+            userData.exclusionsDir = defaultExclusionsDir || "";
         }
         if (!userData.name) {
             userData.name = "";
@@ -83,6 +88,20 @@ const init = async () => {
         return data.exportDir;
     })
 
+    ipcMain.handle("setexclusionsDir", (_event) => {
+        const data = readUserDataFromFile();
+        const results = dialog.showOpenDialogSync({
+            properties: ['openFile'],  // Change properties to 'openFile'
+            filters: [{ name: 'Text Files', extensions: ['txt'] }],
+            defaultPath: data.exclusionsDir
+        }); 
+        if (results) {
+            data.exclusionsDir = results[0]; 
+        }    
+        fs.writeFileSync(userDataFilePath, JSON.stringify(data));
+        return data.exclusionsDir;
+    })
+    
     ipcMain.on("openResultsFolder", (_event, resultsPath) => {
         shell.openPath(resultsPath);
     })

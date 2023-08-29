@@ -282,6 +282,15 @@ a:hover {
   display: flex;
 }
 
+.exclusions-dropdown-btn {
+  box-sizing: border-box;
+  border: 1px solid #B5C5CA;
+  border-radius: 4px;
+  width: 100%;
+  display: flex;
+  margin-left: 1px;
+}
+
 #dir-info {
   overflow: hidden;
   text-overflow: ellipsis;

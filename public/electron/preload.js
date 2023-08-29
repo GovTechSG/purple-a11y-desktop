@@ -43,6 +43,10 @@ contextBridge.exposeInMainWorld("services", {
     const exportDir = await ipcRenderer.invoke("setExportDir");
     return exportDir;
   },
+  setexclusionsDir: async () => {
+    const exclusionsDir = await ipcRenderer.invoke("setexclusionsDir");
+    return exclusionsDir;
+  },
   getUserData: async () => {
     const data = await ipcRenderer.invoke("getUserData");
     return data;

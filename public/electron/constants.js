@@ -8,12 +8,7 @@ const { execSync } = require("child_process");
 const appPath =
   os.platform() === "win32"
     ? path.join(process.env.PROGRAMFILES, "Purple HATS Desktop")
-    : path.join(
-        os.homedir(),
-        "Library",
-        "Application Support",
-        "Purple HATS"
-      );
+    : path.join(os.homedir(), "Library", "Application Support", "Purple HATS");
 
 const releaseUrl =
   "https://api.github.com/repos/GovTechSG/purple-hats/releases/latest";
@@ -80,16 +75,19 @@ const preloadPath = path.join(__dirname, "preload.js");
 
 const defaultExportDir = path.join(os.homedir(), "Documents", "Purple HATS");
 
+const defaultExclusionsDir = fs.existsSync(
+  path.join(enginePath, "exclusions.txt")
+)
+  ? path.join(enginePath, "exclusions.txt")
+  : "";
+
 const indexPath = path.join(__dirname, "..", "..", "build", "index.html");
 
 const playwrightBrowsersPath = path.join(backendPath, "ms-playwright");
 
 const getPathVariable = () => {
   if (os.platform() === "win32") {
-    const directories = [
-      "nodejs-win",
-      "purple-hats\\node_modules\\.bin",
-    ];
+    const directories = ["nodejs-win", "purple-hats\\node_modules\\.bin"];
     return `${directories.map((d) => path.join(backendPath, d)).join(";")};${
       process.env.PATH
     }`;
@@ -98,17 +96,18 @@ const getPathVariable = () => {
       `${os.arch() === "arm64" ? "nodejs-mac-arm64" : "nodejs-mac-x64"}/bin`,
       "purple-hats/node_modules/.bin",
     ];
-    return `${directories
-      .map((d) => path.join(backendPath, d))
-      .join(":")}:${
-        process.env.PATH
-      }`;
+    return `${directories.map((d) => path.join(backendPath, d)).join(":")}:${
+      process.env.PATH
+    }`;
   }
 };
 
 const scanResultsPath = path.join(resultsPath, "results");
 
-const customFlowGeneratedScriptsPath = path.join(resultsPath, "custom_flow_scripts");
+const customFlowGeneratedScriptsPath = path.join(
+  resultsPath,
+  "custom_flow_scripts"
+);
 
 const updateBackupsFolder = path.join(
   appPath,
@@ -616,5 +615,6 @@ module.exports = {
   installerExePath,
   macOSExecutablePath,
   defaultExportDir,
+  defaultExclusionsDir,
   isWindows,
 };

@@ -11,31 +11,32 @@ const ExclusionsFolderDropdown = ({
     isOnboarding
   }) => {
       const dropdownClassName = isOnboarding ? "download-dropdown fade-in-left" : "download-dropdown";
-      const [exportDir, setExportDir] = useState();
+      const [exclusionsDir, setexclusionsDir] = useState();
       
       useEffect(() => {
-          const getExportDir = async () => {
+          const getexclusionsDir = async () => {
               const userData = await services.getUserData();
-              setExportDir(userData.exportDir);
+              setexclusionsDir(userData.exclusionsDir);
           };
   
-          getExportDir();
+          getexclusionsDir();
+          console.log("exclusion dir: ", exclusionsDir)
       }, [])
   
-      const handleSetExportDir = async () => {
-          const exportDir = await window.services.setExportDir(); 
-          setExportDir(exportDir);
+      const handleSetexclusionsDir = async () => {
+          const exclusionsDir = await window.services.setexclusionsDir(); 
+          setexclusionsDir(exclusionsDir);
       }
   
       return (
           <div className={dropdownClassName}>
-            <button className="dir-info-button download-dropdown-btn" aria-describedby="download-folder-label" onClick={handleSetExportDir}>
+            <button className="dir-info-button exclusions-dropdown-btn" aria-describedby="exclusions-folder-label" onClick={handleSetexclusionsDir}>
               <div className="d-flex download-path">
                 <img src={folder}></img>
-                <span id="dir-info">{exportDir}</span>
+                <span id="dir-info">{exclusionsDir}</span>
               </div>
               <div className="change-download-btn">
-                <img src={editIcon} aria-label="Change download directory"></img>
+                <img src={editIcon} aria-label="Change exclusions directory"></img>
               </div>
           </button>
         </div>
