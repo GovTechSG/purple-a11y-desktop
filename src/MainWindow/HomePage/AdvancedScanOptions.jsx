@@ -7,6 +7,7 @@ import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg
 import questionMarkIcon from "../../assets/question-mark.svg";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import ToolTip from "../../common/components/ToolTip";
+import ExclusionsFolderDropdown from "../../common/components/ExclusionsFolderDropdown";
 
 const AdvancedScanOptions = ({
   isProxy,
@@ -205,6 +206,8 @@ const AdvancedScanOptions = ({
             <label id="exclusions-folder-label" className="bold-text">
               Exclusions file:
             </label>
+            {/* <ExclusionsFolderDropdown></ExclusionsFolderDropdown> */}
+          </div>
           {/* <div id="scan-in-background-toggle-group">
             <input
               type="checkbox"
