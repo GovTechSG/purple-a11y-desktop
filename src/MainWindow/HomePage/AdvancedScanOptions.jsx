@@ -201,6 +201,10 @@ const AdvancedScanOptions = ({
             </label>
             <DownloadFolderDropdown></DownloadFolderDropdown>
           </div>
+          <div className="user-input-group">
+            <label id="exclusions-folder-label" className="bold-text">
+              Exclusions file:
+            </label>
           {/* <div id="scan-in-background-toggle-group">
             <input
               type="checkbox"
