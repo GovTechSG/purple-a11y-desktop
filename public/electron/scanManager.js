@@ -35,6 +35,7 @@ const killChildProcess = () => {
 const getScanOptions = (details) => {
   const {
     scanType,
+    fileTypes,
     url,
     customDevice,
     viewportWidth,
@@ -47,7 +48,7 @@ const getScanOptions = (details) => {
     maxConcurrency,
     falsePositive
   } = details;
-  const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`];
+  const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`, "-i", fileTypes];
 
   if (customDevice) {
     options.push("-d", customDevice);
