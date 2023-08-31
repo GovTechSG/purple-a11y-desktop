@@ -25,20 +25,14 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
     const [isReplay, setIsReplay] = useState(false);
 
     useEffect(() => {
-        console.log("state.scanDetails: ", state.scanDetails);
-        if (state.scanDetails) {
-          console.log("entered scan details");
+        if (state && state.scanDetails) {
           setScanDetails(state.scanDetails);
         }
 
-        console.log("is replay: ", state.isReplay);
-        if (state.isReplay) {
-          console.log("entered is replay");
+        if (state && state.isReplay) {
           setIsReplay(true);
           const generatedScript = window.localStorage.getItem("latestCustomFlowGeneratedScript");
           const scanDetails = JSON.parse(window.localStorage.getItem("latestCustomFlowScanDetails"));
-          console.log("local storage gen script: ", generatedScript);
-          console.log("local storage scan details: ", scanDetails);
           setGeneratedScript(generatedScript);
           setScanDetails(scanDetails);
           setStep(2);
@@ -67,6 +61,8 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
         const response = await services.startScan(scanDetails);
 
         if (response.success) {
+          window.localStorage.setItem("latestCustomFlowGeneratedScript", response.generatedScript); 
+          window.localStorage.setItem("latestCustomFlowScanDetails", JSON.stringify(scanDetails));
           setGeneratedScript(response.generatedScript);
           setLoading(false);
           setDone(true);
@@ -114,25 +110,23 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
     }
 
     const startReplaying = async () => {
-        const response = await window.services.startReplay(generatedScript, scanDetails, isReplay);
+      const response = await window.services.startReplay(generatedScript, scanDetails, isReplay);
 
-        if (response.success) {
-            setCompletedScanId(response.scanId);   
-            setLoading(false);
-            setDone(true);
-            return;         
-        }
+      if (response.success) {
+          setCompletedScanId(response.scanId);   
+          setLoading(false);
+          setDone(true);
+          return;         
+      }
 
-        navigate("/error");
-        return;
+      navigate("/error", {state: { isCustomScan: true }});
+      return;
     } 
 
     const generateReport =  () => {
       if (customFlowLabel.length > 0) {
         window.services.generateReport(customFlowLabel, completedScanId); 
       }
-      window.localStorage.setItem("latestCustomFlowGeneratedScript", generatedScript); 
-      window.localStorage.setItem("latestCustomFlowScanDetails", JSON.stringify(scanDetails));
       navigate("/result", {state: { isCustomScan: true }});
       return;
     }
