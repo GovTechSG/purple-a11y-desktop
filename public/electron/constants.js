@@ -83,12 +83,15 @@ const defaultExportDir = path.join(os.homedir(), "Documents", "Purple HATS");
 const indexPath = path.join(__dirname, "..", "..", "build", "index.html");
 
 const playwrightBrowsersPath = path.join(backendPath, "ms-playwright");
+const javaPath = path.join(backendPath, 'jdk\\bin');
 
 const getPathVariable = () => {
   if (os.platform() === "win32") {
     const directories = [
       "nodejs-win",
       "purple-hats\\node_modules\\.bin",
+      "jdk\\bin",
+      "verapdf",
     ];
     return `${directories.map((d) => path.join(backendPath, d)).join(";")};${
       process.env.PATH

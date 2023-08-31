@@ -9,6 +9,7 @@ const {
   getPathVariable,
   customFlowGeneratedScriptsPath,
   playwrightBrowsersPath,
+  javaPath,
   resultsPath,
   scanResultsPath,
   createPlaywrightContext,
@@ -126,6 +127,7 @@ const startScan = async (scanDetails, scanEvent) => {
           RUNNING_FROM_PH_GUI: true,
           ...(useChromium && {
             PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
+            JAVA_HOME: `${javaPath}`
           }),
           PATH: getPathVariable(),
         },
