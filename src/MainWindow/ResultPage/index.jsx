@@ -85,23 +85,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
   };
 
   const replayCustomFlow = async () => {
-    // need scan details and generated
-    // store latest generated script in local storage or pass as variable
-    // what to display if user replays :>
-
-    // const generatedScript = window.localStorage.getItem("latestCustomFlowGeneratedScript");
-    // const scanDetails = window.localStorage.getItem("latestCustomFlowScanDetails");
-    // const response = await window.services.startReplay(generatedScript, scanDetails);
-    // if (response.success) {
-    //   console.log(response);
-    //   setCompletedScanId(response.scanId);
-    //   setLoading(false);
-    //   setDone(true);
-    //   return;
-    // }
-
-    // navigate("/error");
-    // return;
     navigate("/custom_flow", { state: { isReplay: true } });
     return;
   };
