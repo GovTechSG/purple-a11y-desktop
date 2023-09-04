@@ -92,12 +92,17 @@ const getDataForForm = async () => {
 
 const isValidEmail = (email) => {
   const emailRegex = new RegExp(
-    /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/,
+    /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
     "gm"
   );
 
   return emailRegex.test(email);
 };
+
+const isValidCustomFlowLabel = (customFlowLabel) => {
+  const customFlowLabelRegex = /^(?=.{1,50}$)[A-Za-z0-9\s]+$/; 
+  return customFlowLabelRegex.test(customFlowLabel);
+}
 
 const mailReport = async (formDetails, scanId) => {
   const response = await window.services.mailReport(formDetails, scanId);
@@ -122,6 +127,7 @@ const services = {
   mailReport,
   getIsWindows,
   isValidName,
+  isValidCustomFlowLabel
 };
 
 export default services;
