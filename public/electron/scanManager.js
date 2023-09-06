@@ -3,7 +3,12 @@ const path = require("path");
 const { fork, spawn } = require("child_process");
 const fs = require("fs-extra");
 const os = require("os");
-const { randomUUID } = require("crypto");
+const { 
+  randomBytes,
+  randomUUID,
+  createCipheriv, 
+  createDecipheriv,  
+} = require("crypto");
 const {
   enginePath,
   getPathVariable,
@@ -217,6 +222,10 @@ const startReplay = async (generatedScript, scanDetails, scanEvent, isReplay) =>
     useChromium = true;
   }
 
+  if (isReplay && scanDetails.encryptionParams) {
+    decryptGeneratedScript(generatedScript, scanDetails.encryptionParams);
+  }
+
   const response = await new Promise((resolve, reject) => {
     const replay = spawn(`node`, [path.join(enginePath, "runCustomFlowFromGUI.js"), generatedScript], {
       cwd: resultsPath,
@@ -266,11 +275,12 @@ const startReplay = async (generatedScript, scanDetails, scanEvent, isReplay) =>
         const scanId = randomUUID();
         scanHistory[scanId] = resultsFolderName;
 
+        const encryptionParams = encryptGeneratedScript(generatedScript);
         moveCustomFlowResultsToExportDir(scanId, resultsFolderName, isReplay);
         replay.kill("SIGKILL");
         currentChildProcess = null;
         await cleanUpIntermediateFolders(resultsFolderName);
-        resolve({ success: true, scanId });
+        resolve({ success: true, scanId, encryptionParams });
       }
     });
 
@@ -283,6 +293,36 @@ const startReplay = async (generatedScript, scanDetails, scanEvent, isReplay) =>
 
   return response;
 };
+
+const encryptGeneratedScript = (generatedScript) => {
+  // Generate random password and IV 
+  const password = randomBytes(32); 
+  const iv = randomBytes(16);
+
+  const data = fs.readFileSync(generatedScript).toString();  
+  const cipher = createCipheriv('aes-256-cfb', password, iv);
+  let encrypted = cipher.update(data, 'utf-8', 'hex');
+  encrypted += cipher.final('hex');
+  fs.writeFileSync(generatedScript, encrypted);
+  
+  const encryptionParams = {
+    password: password.toString('base64'),
+    iv: iv.toString('base64')
+  }; 
+
+  return encryptionParams;  
+}
+
+const decryptGeneratedScript = (generatedScript, encryptionParams) => {
+  const passwordBuffer = Buffer.from(encryptionParams.password, 'base64'); 
+  const ivBuffer = Buffer.from(encryptionParams.iv, 'base64');
+
+  const data = fs.readFileSync(generatedScript).toString();
+  const decipher = createDecipheriv("aes-256-cfb", passwordBuffer, ivBuffer);
+  let decrypted = decipher.update(data, 'hex', 'utf-8');
+  decrypted += decipher.final('utf8');
+  fs.writeFileSync(generatedScript, decrypted);
+}
 
 const generateReport = (customFlowLabel, scanId) => {
   const currentFolderNameList = scanHistory[scanId].split('_');
