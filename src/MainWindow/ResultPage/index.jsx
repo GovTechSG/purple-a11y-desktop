@@ -72,8 +72,9 @@ const ResultPage = ({ completedScanId: scanId }) => {
 
   const handleScanAgain = () => {
     window.services.cleanUpCustomFlowScripts();
-    window.localStorage.removeItem("latestCustomFlowGeneratedScript");
-    window.localStorage.removeItem("latestCustomFlowScanDetails");
+    window.sessionStorage.removeItem("latestCustomFlowGeneratedScript");
+    window.sessionStorage.removeItem("latestCustomFlowScanDetails");
+    window.sessionStorage.removeItem("latestCustomFlowEncryptionParams");
     navigate("/");
     return;
   };
