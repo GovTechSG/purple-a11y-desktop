@@ -37,8 +37,8 @@ Source: "C:\a\Purple HATS Backend\*"; DestDir: "\\?\{app}\Purple HATS Backend"; 
 Name: "{autoprograms}\Purple HATS Desktop"; Filename: "{app}\Purple HATS Frontend\Purple HATS.exe"
 Name: "{autodesktop}\Purple HATS Desktop"; Filename: "{app}\Purple HATS Frontend\Purple HATS.exe"; Tasks: desktopicon
 
-[Run]
-Filename: "{app}\Purple HATS Frontend\Purple Hats.exe"; Description: "{cm:LaunchProgram,Purple HATS Desktop}"; Flags: nowait postinstall skipifsilent
+; [Run]
+; Filename: "{app}\Purple HATS Frontend\Purple Hats.exe"; Description: "{cm:LaunchProgram,Purple HATS Desktop}"; Flags: nowait postinstall skipifsilent
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\Purple HATS Frontend"
