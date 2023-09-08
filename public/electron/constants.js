@@ -90,7 +90,7 @@ const getPathVariable = () => {
     const directories = [
       "nodejs-win",
       "purple-hats\\node_modules\\.bin",
-      "jdk\\bin",
+      "jre\\bin",
       "verapdf",
     ];
     return `${directories.map((d) => path.join(backendPath, d)).join(";")};${
@@ -100,6 +100,8 @@ const getPathVariable = () => {
     const directories = [
       `${os.arch() === "arm64" ? "nodejs-mac-arm64" : "nodejs-mac-x64"}/bin`,
       "purple-hats/node_modules/.bin",
+      "jre/bin",
+      "verapdf"
     ];
     return `${directories
       .map((d) => path.join(backendPath, d))
