@@ -32,7 +32,12 @@ jobs:
         shell: pwsh
         run: |
           Move-Item  "${{github.workspace}}\out\Purple HATS-win32-x64" -Destination "${{github.workspace}}\Purple HATS-win32-x64" -Force
-
+      
+      - name: Enable Long File Path in Registry
+        shell: pwsh
+        run: |
+          Start-Process powershell -Verb runAs -ArgumentList 'New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -PropertyType "DWORD" -Value "1"'
+      
       - name: Download Purple HATS Backend
         shell: pwsh
         run: |
