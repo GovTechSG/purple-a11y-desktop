@@ -30,7 +30,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "Purple HATS-win32-x64\*"; DestDir: "\\?\{app}\Purple HATS Frontend"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\a\Purple HATS Backend\*"; DestDir: "\\?\{app}\Purple HATS Backend"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\a\Purple HATS Backend\*"; DestDir: "\\?\{app}\Purple HATS Backend"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

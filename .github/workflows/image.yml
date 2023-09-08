@@ -43,7 +43,7 @@ jobs:
         run: |
           $PHbackendUrl = "https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-windows.zip"
           $BEdestinationPath = "${{github.workspace}}\PHLatest.zip"
-          $BEextractPath = "C:\a\Purple HATS Backend"
+          $BEextractPath = "D:\a\Purple HATS Backend"
           Invoke-WebRequest -Uri $PHbackendUrl -OutFile $BEdestinationPath
           Expand-Archive -Path $BEdestinationPath -DestinationPath $BEextractPath -Force
           Remove-Item -Path $BEdestinationPath
