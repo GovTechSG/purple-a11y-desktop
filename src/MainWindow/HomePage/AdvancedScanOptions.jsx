@@ -11,6 +11,7 @@ import ToolTip from "../../common/components/ToolTip";
 const AdvancedScanOptions = ({
   isProxy,
   scanTypeOptions,
+  fileTypesOptions,
   viewportOptions,
   deviceOptions,
   advancedOptions,
@@ -144,6 +145,15 @@ const AdvancedScanOptions = ({
                 value={advancedOptions.viewportWidth}
               />
             </div>
+          )}
+          {advancedOptions.scanType !== scanTypeOptions[2] && (
+            <SelectField
+              id="file-type-dropdown"
+              label="File Type:"
+              initialValue={advancedOptions.fileTypes}
+              options={fileTypesOptions}
+              onChange={handleSetAdvancedOption("fileTypes")}
+            />
           )}
           <div id='false-positive-toggle-group'>
               <input 

@@ -14,6 +14,7 @@ const {
   getPathVariable,
   customFlowGeneratedScriptsPath,
   playwrightBrowsersPath,
+  javaPath,
   resultsPath,
   scanResultsPath,
   createPlaywrightContext,
@@ -40,6 +41,7 @@ const killChildProcess = () => {
 const getScanOptions = (details) => {
   const {
     scanType,
+    fileTypes,
     url,
     customDevice,
     viewportWidth,
@@ -52,7 +54,7 @@ const getScanOptions = (details) => {
     maxConcurrency,
     falsePositive
   } = details;
-  const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`];
+  const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`, "-i", fileTypes];
 
   if (customDevice) {
     options.push("-d", customDevice);
@@ -130,6 +132,7 @@ const startScan = async (scanDetails, scanEvent) => {
           RUNNING_FROM_PH_GUI: true,
           ...(useChromium && {
             PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
+            JAVA_HOME: `${javaPath}`
           }),
           PATH: getPathVariable(),
         },

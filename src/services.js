@@ -6,6 +6,7 @@ import {
   scanTypes,
   viewportTypes,
   devices,
+  fileTypes,
 } from "./common/constants";
 
 // for use in openUserDataForm
@@ -20,6 +21,7 @@ const startScan = async (scanDetails) => {
     viewport,
     device,
     viewportWidth,
+    fileTypes: selectedFileTypes,
     // scanInBackground,
     browser,
     maxConcurrency,
@@ -34,7 +36,8 @@ const startScan = async (scanDetails) => {
     headlessMode: scanTypes[selectedScanType] !== 'custom',
     browser: browser,
     maxConcurrency: maxConcurrency,
-    falsePositive: falsePositive
+    falsePositive: falsePositive,
+    fileTypes: fileTypes[selectedFileTypes],
   };
 
   if (selectedScanType !== Object.keys(scanTypes)[2]) {
