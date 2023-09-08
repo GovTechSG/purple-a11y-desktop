@@ -146,13 +146,15 @@ const AdvancedScanOptions = ({
               />
             </div>
           )}
-          <SelectField
-            id="file-type-dropdown"
-            label="File Type:"
-            initialValue={advancedOptions.fileTypes}
-            options={fileTypesOptions}
-            onChange={handleSetAdvancedOption("fileTypes")}
-          />
+          {advancedOptions.scanType !== scanTypeOptions[2] && (
+            <SelectField
+              id="file-type-dropdown"
+              label="File Type:"
+              initialValue={advancedOptions.fileTypes}
+              options={fileTypesOptions}
+              onChange={handleSetAdvancedOption("fileTypes")}
+            />
+          )}
           <div id='false-positive-toggle-group'>
               <input 
                 type="checkbox"
