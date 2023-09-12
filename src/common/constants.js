@@ -13,6 +13,12 @@ export const viewportTypes = {
   custom: "Custom width...",
 };
 
+export const fileTypes = {
+  "HTML Only": 'html-only',
+  "PDF Only": 'pdf-only',
+  "All": 'all',
+};
+
 // key is what will be displayed on the GUI, value is the internal value that Playwright recognises
 export const devices = {
   "Blackberry PlayBook": "Blackberry PlayBook",

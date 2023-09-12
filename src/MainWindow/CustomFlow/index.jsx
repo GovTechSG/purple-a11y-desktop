@@ -26,14 +26,19 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
     const [inputErrorMessage, setInputErrorMessage] = useState(null);
 
     useEffect(() => {
-        if (state && state.scanDetails) {
+        if (state?.scanDetails) {
           setScanDetails(state.scanDetails);
         }
 
-        if (state && state.isReplay) {
+        if (state?.isReplay) {
           setIsReplay(true);
-          const generatedScript = window.localStorage.getItem("latestCustomFlowGeneratedScript");
-          const scanDetails = JSON.parse(window.localStorage.getItem("latestCustomFlowScanDetails"));
+          const generatedScript = window.sessionStorage.getItem("latestCustomFlowGeneratedScript");
+          const scanDetails = JSON.parse(window.sessionStorage.getItem("latestCustomFlowScanDetails"));
+          let encryptionParams = window.sessionStorage.getItem('latestCustomFlowEncryptionParams'); 
+          if (encryptionParams) {
+            scanDetails.encryptionParams = JSON.parse(encryptionParams);
+            window.sessionStorage.removeItem('latestCustomFlowEncryptionParams');
+          }
           setGeneratedScript(generatedScript);
           setScanDetails(scanDetails);
           setStep(2);
@@ -62,8 +67,8 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
         const response = await services.startScan(scanDetails);
 
         if (response.success) {
-          window.localStorage.setItem("latestCustomFlowGeneratedScript", response.generatedScript); 
-          window.localStorage.setItem("latestCustomFlowScanDetails", JSON.stringify(scanDetails));
+          window.sessionStorage.setItem("latestCustomFlowGeneratedScript", response.generatedScript); 
+          window.sessionStorage.setItem("latestCustomFlowScanDetails", JSON.stringify(scanDetails));
           setGeneratedScript(response.generatedScript);
           setLoading(false);
           setDone(true);
@@ -114,6 +119,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
       const response = await window.services.startReplay(generatedScript, scanDetails, isReplay);
 
       if (response.success) {
+          window.sessionStorage.setItem('latestCustomFlowEncryptionParams', JSON.stringify(response.encryptionParams));
           setCompletedScanId(response.scanId);   
           setLoading(false);
           setDone(true);
@@ -145,7 +151,9 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
       const validated = validateLabel();
       if (validated) {
         window.services.generateReport(customFlowLabel.trim(), completedScanId); 
-        navigate("/result", {state: { isCustomScan: true }});
+        window.localStorage.setItem("latestCustomFlowGeneratedScript", generatedScript); 
+        window.localStorage.setItem("latestCustomFlowScanDetails", JSON.stringify(scanDetails));
+        navigate("/result", {state: { isCustomScan: true }});  
       }
       return;
     }

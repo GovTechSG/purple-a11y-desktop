@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import Button from "../../common/components/Button";
 import AdvancedScanOptions from "./AdvancedScanOptions";
-import { scanTypes, viewportTypes, devices } from "../../common/constants";
+import { scanTypes, viewportTypes, devices, fileTypes } from "../../common/constants";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
 import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
@@ -14,6 +14,7 @@ const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage }) => {
   const [pageLimit, setPageLimit] = useState("100");
 
   const scanTypeOptions = Object.keys(scanTypes);
+  const fileTypesOptions = Object.keys(fileTypes);
 
   if (isProxy) {
     delete viewportTypes.specific;
@@ -25,6 +26,7 @@ const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage }) => {
   const [advancedOptions, setAdvancedOptions] = useState({
     scanType: scanTypeOptions[0],
     viewport: viewportOptions.desktop,
+    fileTypes: fileTypesOptions[0],
     device: deviceOptions[0],
     viewportWidth: "320",
     // scanInBackground: false,
@@ -125,6 +127,7 @@ const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage }) => {
       <AdvancedScanOptions
         isProxy={isProxy}
         scanTypeOptions={scanTypeOptions}
+        fileTypesOptions={fileTypesOptions}
         viewportOptions={viewportOptions}
         deviceOptions={deviceOptions}
         advancedOptions={advancedOptions}

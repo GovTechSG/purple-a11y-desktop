@@ -15,7 +15,7 @@ DefaultDirName=C:\Program Files\Purple HATS Desktop
 DisableDirPage=yes
 ChangesAssociations=yes
 DisableProgramGroupPage=yes
-LicenseFile=Purple HATS-win32-x64\LICENSE
+; LicenseFile=Purple HATS-win32-x64\LICENSE
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 Compression=lzma
@@ -29,16 +29,16 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "Purple HATS-win32-x64\*"; DestDir: "{app}\Purple HATS Frontend"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "Purple HATS Backend\*"; DestDir: "{app}\Purple HATS Backend"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "Purple HATS-win32-x64\*"; DestDir: "\\?\{app}\Purple HATS Frontend"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\a\Purple HATS Backend\*"; DestDir: "\\?\{app}\Purple HATS Backend"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
 Name: "{autoprograms}\Purple HATS Desktop"; Filename: "{app}\Purple HATS Frontend\Purple HATS.exe"
 Name: "{autodesktop}\Purple HATS Desktop"; Filename: "{app}\Purple HATS Frontend\Purple HATS.exe"; Tasks: desktopicon
 
-[Run]
-Filename: "{app}\Purple HATS Frontend\Purple Hats.exe"; Description: "{cm:LaunchProgram,Purple HATS Desktop}"; Flags: nowait postinstall skipifsilent
+; [Run]
+; Filename: "{app}\Purple HATS Frontend\Purple Hats.exe"; Description: "{cm:LaunchProgram,Purple HATS Desktop}"; Flags: nowait postinstall skipifsilent
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\Purple HATS Frontend"
