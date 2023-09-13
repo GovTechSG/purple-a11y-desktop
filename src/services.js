@@ -7,6 +7,7 @@ import {
   viewportTypes,
   devices,
   fileTypes,
+  forbiddenCharactersInDirPath
 } from "./common/constants";
 
 // for use in openUserDataForm
@@ -103,9 +104,15 @@ const isValidEmail = (email) => {
 };
 
 const isValidCustomFlowLabel = (customFlowLabel) => {
-  // const customFlowLabelRegex = /^(?=.{1,50}$)[A-Za-z0-9\s]+$/; 
-  // return customFlowLabelRegex.test(customFlowLabel);
-  return customFlowLabel.length > 0; 
+  const containsForbiddenCharacters = forbiddenCharactersInDirPath.some((character) => customFlowLabel.includes(character)); 
+  const isEmpty = customFlowLabel.length <= 0;
+  const exceedsMaxLength = customFlowLabel.length > 80;
+  
+  if (isEmpty) return { isValid: false, errorMessage: 'Cannot be empty.'}; 
+  if (exceedsMaxLength) return { isValid: false, errorMessage: 'Cannot exceed 80 characters.'}; 
+  if (containsForbiddenCharacters) return { isValid: false, errorMessage: `Cannot contain ${forbiddenCharactersInDirPath.toString()}`.replaceAll(',', ' , ')}
+
+  return {isValid: true}; 
 }
 
 const mailReport = async (formDetails, scanId) => {

@@ -125,3 +125,5 @@ export const handleClickLink = (e, url) => {
   e.preventDefault();
   window.services.openLink(url);
 }
+
+export const forbiddenCharactersInDirPath = ['<', '>', ':', '\"', '/', '\\', '|', '?', '*'];

@@ -329,23 +329,12 @@ const decryptGeneratedScript = (generatedScript, encryptionParams) => {
   fs.writeFileSync(generatedScript, decrypted);
 }
 
-const sanitizeLabelForFolderName = (customFlowLabel) => {
-    const maxLengthForLabel = 80; 
-    if (customFlowLabel.length > maxLengthForLabel) customFlowLabel = customFlowLabel.substring(0, maxLengthForLabel);
-    let sanitizedLabel = customFlowLabel;
-    forbiddenCharactersInDirPath.map((character) => {
-      if (sanitizedLabel.includes(character)) sanitizedLabel = sanitizedLabel.replaceAll(character, '_');
-    })
-    sanitizedLabel = sanitizedLabel.replace(/^_+|_+$/g, '');
-    return sanitizedLabel;
-} 
 const injectLabelIntoFolderName = (customFlowLabel, scanId) => {
   const currentFolderNameList = scanHistory[scanId].split('_');
   const currentResultsFolderPath = getResultsFolderPath(scanId);
-  const sanitizedCustomFlowLabel = sanitizeLabelForFolderName(customFlowLabel);
   const newFolderNameList = [
     ...currentFolderNameList.slice(0, 2),
-    sanitizedCustomFlowLabel,
+    customFlowLabel,
     ...currentFolderNameList.slice(2)
   ]
   const newFolderName = newFolderNameList.toString().replaceAll(',', '_');
@@ -354,10 +343,7 @@ const injectLabelIntoFolderName = (customFlowLabel, scanId) => {
   fs.renameSync(currentResultsFolderPath, newResultsFolderPath)
 }
 const escapeHTMLEntitiesInLabel = (customFlowLabel) => {
-  return customFlowLabel
-  .replaceAll(/</g, '&lt;')
-  .replaceAll(/>/g, '&gt;')
-  .replaceAll(/&/g, '&amp;'); 
+  return customFlowLabel.replaceAll(/&/g, '&amp;'); 
 }
 const generateReport = (customFlowLabel, scanId) => {
   injectLabelIntoFolderName(customFlowLabel, scanId);

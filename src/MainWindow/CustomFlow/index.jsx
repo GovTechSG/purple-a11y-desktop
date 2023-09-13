@@ -131,11 +131,9 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
     } 
 
     const validateLabel = () => {
-      const isValidCustomFlowLabel = customFlowLabel.length > 0;
-      if (!isValidCustomFlowLabel) {
-        // const displayMessage = "Only letters (a-z), numbers (0-9), and spaces are allowed."
-        const displayMessage = "Custom Flow Label should not be empty.";
-        setInputErrorMessage(displayMessage);
+      const {isValid, errorMessage} = services.isValidCustomFlowLabel(customFlowLabel);
+      if (!isValid) {
+        setInputErrorMessage(errorMessage);
         return false; 
       } 
       return true;
@@ -146,7 +144,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
       setCustomFlowLabel(e.target.value);
     }
 
-    const generateReport =  (e) => {
+    const generateReport = (e) => {
       e.preventDefault();
 
       const validated = validateLabel();
@@ -225,7 +223,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                     aria-invalid={!!inputErrorMessage}
                   />
                   <div className="error-text" id="invalid-label-error">{inputErrorMessage}</div>
-                  <button type="submit" className="primary custom-label-button">Generate Report</button>
+                  <button type="submit" className="primary custom-label-button" disabled={inputErrorMessage}>Generate Report</button>
                 </form>
               </>
             )

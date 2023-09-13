@@ -590,11 +590,8 @@ const createPlaywrightContext = async (browser, screenSize, nonHeadless) => {
 };
 
 const isWindows = os.platform() === "win32";
-
-const forbiddenCharactersInDirPath = isWindows 
-  ? ['<', '>', ':', '\"', '/', '\\', '|', '?', '*']
-  : ['/'];
-
+const forbiddenCharactersInDirPath = ['<', '>', ':', '\"', '/', '\\', '|', '?', '*'];
+  
 const maxLengthForDirName = 80; 
 
 module.exports = {
