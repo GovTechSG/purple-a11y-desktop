@@ -591,6 +591,12 @@ const createPlaywrightContext = async (browser, screenSize, nonHeadless) => {
 
 const isWindows = os.platform() === "win32";
 
+const forbiddenCharactersInDirPath = isWindows 
+  ? ['<', '>', ':', '\"', '/', '\\', '|', '?', '*']
+  : ['/'];
+
+const maxLengthForDirName = 80; 
+
 module.exports = {
   appPath,
   releaseUrl,
@@ -622,4 +628,6 @@ module.exports = {
   macOSExecutablePath,
   defaultExportDir,
   isWindows,
+  forbiddenCharactersInDirPath,
+  maxLengthForDirName
 };

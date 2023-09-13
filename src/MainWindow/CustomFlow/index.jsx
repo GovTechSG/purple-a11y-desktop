@@ -131,9 +131,10 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
     } 
 
     const validateLabel = () => {
-      const isValidCustomFlowLabel = services.isValidCustomFlowLabel(customFlowLabel);
+      const isValidCustomFlowLabel = customFlowLabel.length > 0;
       if (!isValidCustomFlowLabel) {
-        const displayMessage = "Only letters (a-z), numbers (0-9), and spaces are allowed."
+        // const displayMessage = "Only letters (a-z), numbers (0-9), and spaces are allowed."
+        const displayMessage = "Custom Flow Label should not be empty.";
         setInputErrorMessage(displayMessage);
         return false; 
       } 

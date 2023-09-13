@@ -17,6 +17,7 @@ const {
   javaPath,
   resultsPath,
   scanResultsPath,
+  forbiddenCharactersInDirPath,
   createPlaywrightContext,
   deleteClonedProfiles,
   backendPath,
@@ -28,6 +29,7 @@ const {
 } = require("./constants");
 const { env, report } = require("process");
 const { readUserDataFromFile, createExportDir } = require("./userDataManager");
+const { escape } = require("querystring");
 const scanHistory = {};
 
 let currentChildProcess;
@@ -302,7 +304,7 @@ const encryptGeneratedScript = (generatedScript) => {
   const password = randomBytes(32); 
   const iv = randomBytes(16);
 
-  const data = fs.readFileSync(generatedScript).toString();  
+  const data = fs.readFileSync(generatedScript).toString();
   const cipher = createCipheriv('aes-256-cfb', password, iv);
   let encrypted = cipher.update(data, 'utf-8', 'hex');
   encrypted += cipher.final('hex');
@@ -327,24 +329,44 @@ const decryptGeneratedScript = (generatedScript, encryptionParams) => {
   fs.writeFileSync(generatedScript, decrypted);
 }
 
-const generateReport = (customFlowLabel, scanId) => {
+const sanitizeLabelForFolderName = (customFlowLabel) => {
+    const maxLengthForLabel = 80; 
+    if (customFlowLabel.length > maxLengthForLabel) customFlowLabel = customFlowLabel.substring(0, maxLengthForLabel);
+    let sanitizedLabel = customFlowLabel;
+    forbiddenCharactersInDirPath.map((character) => {
+      if (sanitizedLabel.includes(character)) sanitizedLabel = sanitizedLabel.replaceAll(character, '_');
+    })
+    sanitizedLabel = sanitizedLabel.replace(/^_+|_+$/g, '');
+    return sanitizedLabel;
+} 
+const injectLabelIntoFolderName = (customFlowLabel, scanId) => {
   const currentFolderNameList = scanHistory[scanId].split('_');
   const currentResultsFolderPath = getResultsFolderPath(scanId);
+  const sanitizedCustomFlowLabel = sanitizeLabelForFolderName(customFlowLabel);
   const newFolderNameList = [
     ...currentFolderNameList.slice(0, 2),
-    customFlowLabel,
+    sanitizedCustomFlowLabel,
     ...currentFolderNameList.slice(2)
   ]
   const newFolderName = newFolderNameList.toString().replaceAll(',', '_');
-  console.log(newFolderName);
   scanHistory[scanId] = newFolderName;
   const newResultsFolderPath = getResultsFolderPath(scanId);
   fs.renameSync(currentResultsFolderPath, newResultsFolderPath)
-
+}
+const escapeHTMLEntitiesInLabel = (customFlowLabel) => {
+  return customFlowLabel
+  .replaceAll(/</g, '&lt;')
+  .replaceAll(/>/g, '&gt;')
+  .replaceAll(/&/g, '&amp;'); 
+}
+const generateReport = (customFlowLabel, scanId) => {
+  injectLabelIntoFolderName(customFlowLabel, scanId);
+  
   const reportPath = getReportPath(scanId);
   const data = fs.readFileSync(reportPath, { encoding: "utf-8" });
-  const result = data.replaceAll(/Custom Flow/g, customFlowLabel);
-  fs.writeFileSync(reportPath, result);
+  const escapedCustomFlowLabel = escapeHTMLEntitiesInLabel(customFlowLabel);
+  const result = data.replaceAll(/Custom Flow/g, escapedCustomFlowLabel);
+  fs.writeFileSync(reportPath, result, {encoding: 'utf-8'});
 };
 
 const getReportPath = (scanId) => {

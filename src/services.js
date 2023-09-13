@@ -103,8 +103,9 @@ const isValidEmail = (email) => {
 };
 
 const isValidCustomFlowLabel = (customFlowLabel) => {
-  const customFlowLabelRegex = /^(?=.{1,50}$)[A-Za-z0-9\s]+$/; 
-  return customFlowLabelRegex.test(customFlowLabel);
+  // const customFlowLabelRegex = /^(?=.{1,50}$)[A-Za-z0-9\s]+$/; 
+  // return customFlowLabelRegex.test(customFlowLabel);
+  return customFlowLabel.length > 0; 
 }
 
 const mailReport = async (formDetails, scanId) => {
