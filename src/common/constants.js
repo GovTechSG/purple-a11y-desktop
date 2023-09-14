@@ -14,9 +14,9 @@ export const viewportTypes = {
 };
 
 export const fileTypes = {
-  "HTML Only": 'html-only',
-  "PDF Only": 'pdf-only',
-  "All": 'all',
+  "Webpages only": 'html-only',
+  "PDF files only": 'pdf-only',
+  "Both webpages and PDF files": 'all',
 };
 
 // key is what will be displayed on the GUI, value is the internal value that Playwright recognises
