@@ -11,8 +11,9 @@ import Modal from "../../common/components/Modal";
 import { BasicAuthForm, BasicAuthFormFooter } from "./BasicAuthForm";
 import EditUserDetailsModal from "./EditUserDetailsModal";
 import NoChromeErrorModal from "./NoChromeErrorModal";
+import Button from "../../common/components/Button";
 
-const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
+const HomePage = ({ isProxy, appVersion, isLatestVersion, setCompletedScanId }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [prevUrlErrorMessage, setPrevUrlErrorMessage] = useState(
@@ -236,7 +237,15 @@ const HomePage = ({ isProxy, appVersion, setCompletedScanId }) => {
           alt="Illustration showing people with sight, hearing, motor and cognitive disabilities"
         />
         <span id="footer-text">
-          Version {appVersion} | Built by GovTech Accessibility Enabling Team
+          Version
+        <Button
+          type="transparent"
+          className="purple-text"
+          // onClick={handleToggleMenu}
+        >
+          {appVersion} {isLatestVersion && '(latest)'}
+        </Button> | Built by GovTech Accessibility Enabling Team
+          {/* Version {appVersion} | Built by GovTech Accessibility Enabling Team */}
         </span>
       </div>
     </div>

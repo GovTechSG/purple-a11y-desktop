@@ -128,3 +128,24 @@ export const handleClickLink = (e, url) => {
 
 export const forbiddenCharactersInDirPath = ['<', '>', ':', '\"', '/', '\\', '|', '?', '*'];
 export const reserveFileNameKeywords = ["CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"];
+
+export const versionComparator = (ver1, ver2) => {
+  // return 1 if ver1 >= ver2, else return -1 
+  const splitVer1 = ver1.split('.'); 
+  const splitVer2 = ver2.split('.'); 
+  let idx = 0; 
+  while (splitVer1[idx] && splitVer2[idx]) {
+    const int1 = parseInt(splitVer1[idx]);
+    const int2 = parseInt(splitVer2[idx]);
+    if (int1 > int2) {
+      return 1; 
+    } else if (int1 < int2) {
+      return -1;
+    }
+    idx++;
+  }
+
+  if (!splitVer1[idx] && splitVer2[idx]) return -1; 
+
+  return 1;
+};

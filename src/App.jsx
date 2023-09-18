@@ -7,6 +7,7 @@ import "./App.css";
 function App() {
   const [status, setStatus] = useState(null);
   const [appVersion, setAppVersion] = useState(null);
+  const [isLatestVersion, setIsLatestVersion] = useState(false);
   const [isProxy, setIsProxy] = useState(false);
 
   useEffect(() => {
@@ -17,9 +18,11 @@ function App() {
     window.services.appStatus((s) => {
       setStatus(s);
     });
-    window.services.getVersionNumber((res) => {
-      setAppVersion(res);
-    });
+
+    window.services.getVersionInfo(({ appVersion, isLatest }) => {
+      setAppVersion(appVersion);
+      setIsLatestVersion(isLatest);
+    })
     
     window.services.getIsProxy((res) => {
       setIsProxy(res)
@@ -31,7 +34,7 @@ function App() {
   }
 
   if (status === "ready") {
-    return <MainWindow isProxy={isProxy} appVersion={appVersion} />;
+    return <MainWindow isProxy={isProxy} appVersion={appVersion} isLatestVersion={isLatestVersion} />;
   }
 
   return null;

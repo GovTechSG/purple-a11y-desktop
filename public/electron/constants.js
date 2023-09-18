@@ -594,6 +594,27 @@ const forbiddenCharactersInDirPath = ['<', '>', ':', '\"', '/', '\\', '|', '?', 
   
 const maxLengthForDirName = 80; 
 
+const versionComparator = (ver1, ver2) => {
+  // return 1 if ver1 >= ver2, else return -1 
+  const splitVer1 = ver1.split('.'); 
+  const splitVer2 = ver2.split('.'); 
+  let idx = 0; 
+  while (splitVer1[idx] && splitVer2[idx]) {
+    const int1 = parseInt(splitVer1[idx]);
+    const int2 = parseInt(splitVer2[idx]);
+    if (int1 > int2) {
+      return 1; 
+    } else if (int1 < int2) {
+      return -1;
+    }
+    idx++;
+  }
+
+  if (!splitVer1[idx] && splitVer2[idx]) return -1; 
+
+  return 1;
+};
+
 module.exports = {
   appPath,
   releaseUrl,
@@ -626,5 +647,6 @@ module.exports = {
   defaultExportDir,
   isWindows,
   forbiddenCharactersInDirPath,
-  maxLengthForDirName
+  maxLengthForDirName,
+  versionComparator,
 };
