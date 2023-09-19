@@ -7,6 +7,8 @@ import {
   viewportTypes,
   devices,
   fileTypes,
+  forbiddenCharactersInDirPath,
+  reserveFileNameKeywords
 } from "./common/constants";
 
 // for use in openUserDataForm
@@ -95,12 +97,26 @@ const getDataForForm = async () => {
 
 const isValidEmail = (email) => {
   const emailRegex = new RegExp(
-    /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/,
+    /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
     "gm"
   );
 
   return emailRegex.test(email);
 };
+
+const isValidCustomFlowLabel = (customFlowLabel) => {
+  const containsReserveWithDot = reserveFileNameKeywords.some(char => customFlowLabel.toLowerCase().includes(char.toLowerCase() + "."));
+  const containsForbiddenCharacters = forbiddenCharactersInDirPath.some((character) => customFlowLabel.includes(character)); 
+  const isEmpty = customFlowLabel.length <= 0;
+  const exceedsMaxLength = customFlowLabel.length > 80;
+  
+  if (isEmpty) return { isValid: false, errorMessage: 'Cannot be empty.'}; 
+  if (exceedsMaxLength) return { isValid: false, errorMessage: 'Cannot exceed 80 characters.'}; 
+  if (containsForbiddenCharacters) return { isValid: false, errorMessage: `Cannot contain ${forbiddenCharactersInDirPath.toString()}`.replaceAll(',', ' , ')}
+  if (containsReserveWithDot) return { isValid: false, errorMessage: `Cannot have '.' appended to ${reserveFileNameKeywords.toString().replaceAll(',', ' , ')} as they are reserved keywords.`}; 
+
+  return {isValid: true}; 
+}
 
 const mailReport = async (formDetails, scanId) => {
   const response = await window.services.mailReport(formDetails, scanId);
@@ -125,6 +141,7 @@ const services = {
   mailReport,
   getIsWindows,
   isValidName,
+  isValidCustomFlowLabel
 };
 
 export default services;

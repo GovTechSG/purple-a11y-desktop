@@ -20,7 +20,7 @@ const UserDetailsForm = ({
   const validateName = () => {
     if (!services.isValidName(name)) {
       setNameInputErrorMessage(
-        "Only alphabets, commas, hyphens allowed."
+        "Only letters (a-z), commas (,), hyphens (-) are allowed."
       );
       return false;
     }
@@ -30,7 +30,7 @@ const UserDetailsForm = ({
 
   const validateEmail = () => {
     if (!services.isValidEmail(email)) {
-      setEmailInputErrorMessage("Please enter a valid email.");
+      setEmailInputErrorMessage("Invalid email address.");
       return false;
     }
 
