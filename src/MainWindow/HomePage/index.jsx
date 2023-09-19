@@ -12,8 +12,9 @@ import { BasicAuthForm, BasicAuthFormFooter } from "./BasicAuthForm";
 import EditUserDetailsModal from "./EditUserDetailsModal";
 import NoChromeErrorModal from "./NoChromeErrorModal";
 import Button from "../../common/components/Button";
+import WhatsNewModal from "./WhatsNewModal";
 
-const HomePage = ({ isProxy, appVersion, isLatestVersion, setCompletedScanId }) => {
+const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [prevUrlErrorMessage, setPrevUrlErrorMessage] = useState(
@@ -25,6 +26,7 @@ const HomePage = ({ isProxy, appVersion, isLatestVersion, setCompletedScanId }) 
   const [showBasicAuthModal, setShowBasicAuthModal] = useState(false);
   const [showEditDataModal, setShowEditDataModal] = useState(false);
   const [showNoChromeErrorModal, setShowNoChromeErrorModal] = useState(false);
+  const [showWhatsNewModal, setShowWhatsNewModal] = useState(false);
 
   useEffect(() => {
     if (
@@ -230,6 +232,14 @@ const HomePage = ({ isProxy, appVersion, isLatestVersion, setCompletedScanId }) 
       {showNoChromeErrorModal &&
         <NoChromeErrorModal showModal={showNoChromeErrorModal} setShowModal={setShowNoChromeErrorModal}/>            
       }
+      {showWhatsNewModal &&
+        <WhatsNewModal
+          showModal={showWhatsNewModal}
+          setShowModal={setShowWhatsNewModal}
+          latestVersion={appVersionInfo.appVersion}
+          latestReleaseNotes={appVersionInfo.latestReleaseNotes}
+        />
+      }
       <div id="home-page-footer">
         <img
           id="app-illustration"
@@ -238,14 +248,19 @@ const HomePage = ({ isProxy, appVersion, isLatestVersion, setCompletedScanId }) 
         />
         <span id="footer-text">
           Version
-        <Button
-          type="transparent"
-          className="purple-text"
-          // onClick={handleToggleMenu}
-        >
-          {appVersion} {isLatestVersion && '(latest)'}
-        </Button> | Built by GovTech Accessibility Enabling Team
-          {/* Version {appVersion} | Built by GovTech Accessibility Enabling Team */}
+          {
+            appVersionInfo.isLatest ? (
+              <>
+                <Button
+                  type="transparent"
+                  className="purple-text"
+                  onClick={() => setShowWhatsNewModal(true)}
+                >
+                  {appVersionInfo.appVersion} {appVersionInfo.isLatest && '(latest)'}
+                </Button> | Built by GovTech Accessibility Enabling Team
+              </>
+            ) : ` ${appVersionInfo.appVersion} | Built by GovTech Accessibility Enabling Team`
+          }
         </span>
       </div>
     </div>
