@@ -5,13 +5,15 @@ const {
   shell,
   session,
 } = require("electron");
-const {getDefaultChromeDataDir} = require("./constants")
+const { getDefaultChromeDataDir } = require("./constants")
 const os = require("os");
+const axios = require("axios");
 const EventEmitter = require("events");
 const constants = require("./constants");
 const scanManager = require("./scanManager");
 const updateManager = require("./updateManager");
 const userDataManager = require("./userDataManager.js");
+const showdown = require('showdown');
 
 const app = electronApp;
 
@@ -162,7 +164,28 @@ app.on("ready", async () => {
   await mainReady;
 
   mainWindow.webContents.send("appStatus", "ready");
-  mainWindow.webContents.send("versionNumber", constants.appVersion);
+  const { data: latestRelease } = await axios.get(
+    `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases/latest`
+  )
+  .catch(err => {
+    console.log('Unable to get the latest release info');
+    return { data: undefined };
+  });
+  if (latestRelease) {
+    const isLatest = constants.versionComparator(constants.appVersion, latestRelease.tag_name) === 1;
+    const markdownConverter = new showdown.Converter();
+    const latestReleaseHtml = markdownConverter.makeHtml(latestRelease.body);
+    mainWindow.webContents.send("versionInfo", {
+      appVersion: constants.appVersion,
+      isLatest,
+      latestReleaseNotes: latestReleaseHtml,
+    });
+  } else {
+    mainWindow.webContents.send("versionInfo", {
+      appVersion: constants.appVersion,
+    });
+  }
+  
   mainWindow.webContents.send("isProxy", constants.proxy);
 
   const userDataEvent = new EventEmitter();

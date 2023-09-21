@@ -18,6 +18,7 @@ const {
   installerExePath,
   macOSExecutablePath,
   getMacOSExecutablePath,
+  versionComparator,
 } = require("./constants");
 const { silentLogger } = require("./logs");
 const { readUserDataFromFile } = require("./userDataManager");
@@ -125,27 +126,6 @@ const unzipBackendAndCleanUp = async () => {
 
   command = `'./hats_shell.sh' npx playwright install webkit`;
   await execCommand(command);
-};
-
-const versionComparator = (ver1, ver2) => {
-  // return 1 if ver1 >= ver2, else return -1 
-  const splitVer1 = ver1.split('.'); 
-  const splitVer2 = ver2.split('.'); 
-  let idx = 0; 
-  while (splitVer1[idx] && splitVer2[idx]) {
-    const int1 = parseInt(splitVer1[idx]);
-    const int2 = parseInt(splitVer2[idx]);
-    if (int1 > int2) {
-      return 1; 
-    } else if (int1 < int2) {
-      return -1;
-    }
-    idx++;
-  }
-
-  if (!splitVer1[idx] && splitVer2[idx]) return -1; 
-
-  return 1;
 };
 
 const isLatestBackendVersion = async () => {

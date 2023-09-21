@@ -1,8 +1,8 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("services", {
-  getVersionNumber: (callback) => {
-    ipcRenderer.on("versionNumber", (event, data) => {
+  getVersionInfo: (callback) => {
+    ipcRenderer.on("versionInfo", (event, data) => {
       callback(data);
     });
   },
