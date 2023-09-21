@@ -41,7 +41,7 @@ jobs:
       - name: Download Purple HATS Backend
         shell: pwsh
         run: |
-          $PHbackendUrl = "https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-windows.zip"
+          $PHbackendUrl = "https://github.com/GovTechSG/purple-hats/releases/download/${{ vars.BE_TAG }}/purple-hats-portable-windows.zip"
           $BEdestinationPath = "${{github.workspace}}\PHLatest.zip"
           $BEextractPath = "D:\a\Purple HATS Backend"
           Invoke-WebRequest -Uri $PHbackendUrl -OutFile $BEdestinationPath
