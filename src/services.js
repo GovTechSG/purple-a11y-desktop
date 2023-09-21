@@ -27,7 +27,8 @@ const startScan = async (scanDetails) => {
     // scanInBackground,
     browser,
     maxConcurrency,
-    falsePositive
+    falsePositive,
+    includeScreenshots,
   } = scanDetails;
 
   currentScanUrl = scanUrl;
@@ -40,6 +41,7 @@ const startScan = async (scanDetails) => {
     maxConcurrency: maxConcurrency,
     falsePositive: falsePositive,
     fileTypes: fileTypes[selectedFileTypes],
+    includeScreenshots,
   };
 
   if (selectedScanType !== Object.keys(scanTypes)[2]) {

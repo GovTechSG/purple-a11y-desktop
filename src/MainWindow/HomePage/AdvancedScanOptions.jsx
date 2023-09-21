@@ -204,6 +204,21 @@ const AdvancedScanOptions = ({
               />
             </div>
           </div>
+          <div id='screenshots-toggle-group'>
+            <input 
+              type="checkbox"
+              id="screenshots-toggle" 
+              aria-describedby="screenshots-tooltip"
+              checked={advancedOptions.includeScreenshots}
+              onChange={handleSetAdvancedOption(
+                "includeScreenshots", 
+                (e) => e.target.checked
+              )} 
+            /> 
+            <label htmlFor="screenshots-toggle">
+              Include element screenshots in the report
+            </label>
+          </div>
           <hr />
           <div className="user-input-group">
             <label id="download-folder-label" className="bold-text">
