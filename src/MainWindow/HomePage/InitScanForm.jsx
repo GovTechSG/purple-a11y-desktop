@@ -32,6 +32,7 @@ const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage }) => {
     // scanInBackground: false,
     maxConcurrency: false, 
     falsePositive: false,
+    includeScreenshots: true,
   });
 
   const togglePageLimitAdjuster = () => {

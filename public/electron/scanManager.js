@@ -54,9 +54,15 @@ const getScanOptions = (details) => {
     name,
     exportDir,
     maxConcurrency,
-    falsePositive
+    falsePositive,
+    includeScreenshots,
   } = details;
   const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`, "-i", fileTypes];
+
+  if (!includeScreenshots) {
+    options.push('-a');
+    options.push('none');
+  }
 
   if (customDevice) {
     options.push("-d", customDevice);
