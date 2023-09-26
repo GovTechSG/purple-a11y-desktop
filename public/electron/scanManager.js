@@ -21,6 +21,7 @@ const {
   createPlaywrightContext,
   deleteClonedProfiles,
   backendPath,
+  isWindows,
 } = require("./constants");
 const {
   browserTypes,
@@ -33,6 +34,12 @@ const { escape } = require("querystring");
 const scanHistory = {};
 
 let currentChildProcess;
+
+let archCommand = [];
+
+if (! isWindows) {
+  archCommand = ["-x86_64","node"];
+}
 
 const killChildProcess = () => {
   if (currentChildProcess) {
@@ -131,17 +138,15 @@ const startScan = async (scanDetails, scanEvent) => {
 
   const response = await new Promise(async (resolve) => {
     const scan = spawn(
-      `node`,
-      [path.join(enginePath, "cli.js"), ...getScanOptions(scanDetails)],
+      os.platform() === "darwin" ? `arch` : `node`,
+      [...archCommand, path.join(enginePath, "cli.js"), ...getScanOptions(scanDetails)],
       {
         cwd: resultsPath,
         env: {
           ...process.env,
           RUNNING_FROM_PH_GUI: true,
-          ...(useChromium && {
-            PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
-            JAVA_HOME: `${javaPath}`
-          }),
+          JAVA_HOME: `${javaPath}`,
+          PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
           PATH: getPathVariable(),
         },
       }
@@ -159,6 +164,7 @@ const startScan = async (scanDetails, scanEvent) => {
       /** Code 0 handled indirectly here (i.e. successful process run),
       as unable to get stdout on close event after changing to spawn from fork */
 
+      console.log(data);
       // Output from combine.js which prints the string "No pages were scanned" if crawled URL <= 0
       // consider this as successful that the process ran,
       // but failure in the sense that no pages were scanned so that we can display a message to the user
@@ -238,14 +244,15 @@ const startReplay = async (generatedScript, scanDetails, scanEvent, isReplay) =>
   }
 
   const response = await new Promise((resolve, reject) => {
-    const replay = spawn(`node`, [path.join(enginePath, "runCustomFlowFromGUI.js"), generatedScript], {
+    const replay = spawn(
+      os.platform() === "darwin" ? `arch` : `node`,
+      [...archCommand, path.join(enginePath, "runCustomFlowFromGUI.js"), generatedScript], {
       cwd: resultsPath,
       env: {
         ...process.env,
         RUNNING_FROM_PH_GUI: true,
-        ...(useChromium && {
-          PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
-        }),
+        PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
+        JAVA_HOME: `${javaPath}`,
         PATH: getPathVariable(),
       },
     });

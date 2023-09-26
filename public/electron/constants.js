@@ -98,7 +98,7 @@ const getPathVariable = () => {
     }`;
   } else {
     const directories = [
-      `${os.arch() === "arm64" ? "nodejs-mac-arm64" : "nodejs-mac-x64"}/bin`,
+      "nodejs-mac-x64/bin",
       "purple-hats/node_modules/.bin",
       "jre/bin",
       "verapdf"
@@ -649,4 +649,5 @@ module.exports = {
   forbiddenCharactersInDirPath,
   maxLengthForDirName,
   versionComparator,
+  javaPath,
 };
