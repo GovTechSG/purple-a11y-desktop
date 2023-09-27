@@ -10,6 +10,7 @@ const EditUserDetailsModal = ({
   initialName,
   initialEmail,
   setShowEditDataModal,
+  setUserData,
 }) => {
   const [editedName, setEditedName] = useState(initialName);
   const [editedEmail, setEditedEmail] = useState(initialEmail);
@@ -26,6 +27,7 @@ const EditUserDetailsModal = ({
   const handleEditUserData = () => {
     window.services.editUserData({ name: editedName, email: editedEmail });
     setShowEditDataModal(false);
+    setUserData((userData) => ({ ...userData, name: editedName, email: editedEmail }))
   };
 
   const setShowModal = (show) => {

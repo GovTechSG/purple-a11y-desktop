@@ -136,16 +136,12 @@ a:hover {
 
 .onboarding-modal .modal-img-container {
   height: 160px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   margin-bottom: 1rem;
 }
 
 .modal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   background-color: rgba(0, 0, 0, 0.2);
 }
 

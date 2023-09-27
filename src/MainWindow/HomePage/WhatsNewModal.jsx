@@ -33,7 +33,6 @@ const WhatsNewModal = ({ showModal, setShowModal, latestVersion, latestReleaseNo
   return (
     <Modal
       id="whats-new-modal"
-      modalSizeClass="mh-100"
       showModal={showModal}
       showHeader={true}
       modalTitle={"What's new in v" + latestVersion}
