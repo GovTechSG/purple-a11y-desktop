@@ -20,12 +20,10 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const [prevUrlErrorMessage, setPrevUrlErrorMessage] = useState(
     location.state
   );
-  // const [email, setEmail] = useState("");
-  // const [name, setName] = useState("");
-  // const [browser, setBrowser] = useState(null);
   const [{ name, email, browser }, setUserData] = useState({
     name: "", 
-    email: ""
+    email: "",
+    browser: null,
   });
   const [showBasicAuthModal, setShowBasicAuthModal] = useState(false);
   const [showEditDataModal, setShowEditDataModal] = useState(false);
@@ -46,18 +44,6 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
       setShowNoChromeErrorModal(true);
     } 
   }, [prevUrlErrorMessage]);
-
-  // useEffect(() => {
-  //   const getUserData = async () => {
-  //     const userData = await services.getUserData();
-  //     setBrowser(userData["browser"]);
-  //     setEmail(userData["email"]);
-  //     setName(userData["name"]);
-  //     setShowWhatsNewModal(!!userData["firstLaunchOnUpdate"]);
-  //   };
-
-  //   getUserData();
-  // });
 
   useEffect(() => {
     const getUserData = async () => {
