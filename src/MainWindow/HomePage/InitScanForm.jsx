@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import Button from "../../common/components/Button";
 import AdvancedScanOptions from "./AdvancedScanOptions";
-import { scanTypes, viewportTypes, devices, fileTypes } from "../../common/constants";
+import { scanTypes, viewportTypes, devices, fileTypes, getDefaultAdvancedOptions } from "../../common/constants";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
 import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
@@ -23,17 +23,7 @@ const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage }) => {
   const viewportOptions = viewportTypes;
   const deviceOptions = isProxy ? [] : Object.keys(devices);
 
-  const [advancedOptions, setAdvancedOptions] = useState({
-    scanType: scanTypeOptions[0],
-    viewport: viewportOptions.desktop,
-    fileTypes: fileTypesOptions[0],
-    device: deviceOptions[0],
-    viewportWidth: "320",
-    // scanInBackground: false,
-    maxConcurrency: false, 
-    falsePositive: false,
-    includeScreenshots: true,
-  });
+  const [advancedOptions, setAdvancedOptions] = useState(getDefaultAdvancedOptions(isProxy));
 
   const togglePageLimitAdjuster = () => {
     if (!openPageLimitAdjuster) {

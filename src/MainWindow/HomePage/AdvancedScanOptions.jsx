@@ -7,6 +7,7 @@ import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg
 import questionMarkIcon from "../../assets/question-mark.svg";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import ToolTip from "../../common/components/ToolTip";
+import { getDefaultAdvancedOptions } from "../../common/constants";
 
 const AdvancedScanOptions = ({
   isProxy,
@@ -62,14 +63,14 @@ const AdvancedScanOptions = ({
       newOptions[option] = val;
       setAdvancedOptions(newOptions);
 
-      if (
-        newOptions.scanType === scanTypeOptions[0] &&
-        newOptions.viewport === viewportOptions.desktop
-      ) {
-        setAdvancedOptionsDirty(false);
-      } else {
-        setAdvancedOptionsDirty(true);
-      }
+      // check if new options are the default
+      const defaultAdvancedOptions = getDefaultAdvancedOptions(isProxy);
+      const isNewOptionsDefault = Object.keys(defaultAdvancedOptions)
+        .reduce((isDefaultSoFar, key) => {
+          return isDefaultSoFar && defaultAdvancedOptions[key] === newOptions[key];
+        }, true);
+      
+      setAdvancedOptionsDirty(!isNewOptionsDefault);
     };
 
   return (
@@ -155,6 +156,21 @@ const AdvancedScanOptions = ({
               onChange={handleSetAdvancedOption("fileTypes")}
             />
           )}
+          <div id='screenshots-toggle-group'>
+            <input 
+              type="checkbox"
+              id="screenshots-toggle" 
+              aria-describedby="screenshots-tooltip"
+              checked={advancedOptions.includeScreenshots}
+              onChange={handleSetAdvancedOption(
+                "includeScreenshots", 
+                (e) => e.target.checked
+              )} 
+            /> 
+            <label htmlFor="screenshots-toggle">
+              Include screenshots
+            </label>
+          </div>
           <div id='false-positive-toggle-group'>
               <input 
                 type="checkbox"
@@ -203,21 +219,6 @@ const AdvancedScanOptions = ({
                 alt="tooltip icon for slow scan mode"
               />
             </div>
-          </div>
-          <div id='screenshots-toggle-group'>
-            <input 
-              type="checkbox"
-              id="screenshots-toggle" 
-              aria-describedby="screenshots-tooltip"
-              checked={advancedOptions.includeScreenshots}
-              onChange={handleSetAdvancedOption(
-                "includeScreenshots", 
-                (e) => e.target.checked
-              )} 
-            /> 
-            <label htmlFor="screenshots-toggle">
-              Include element screenshots in the report
-            </label>
           </div>
           <hr />
           <div className="user-input-group">
