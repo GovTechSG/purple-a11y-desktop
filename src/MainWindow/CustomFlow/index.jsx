@@ -91,9 +91,9 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
               case cliErrorTypes.notASitemap:
                 errorMessageToShow = "Invalid sitemap.";
                 break;
-              case cliErrorTypes.profileDataCopyError:
+              case cliErrorTypes.browserError:
                 errorMessageToShow =
-                  "Error cloning browser profile data. Try closing your opened browser(s) before the next scan.";
+                  "Unable to use browsers. Try closing all opened browser(s) before the next scan.";
                 break;
               case cliErrorTypes.systemError:
               default:
