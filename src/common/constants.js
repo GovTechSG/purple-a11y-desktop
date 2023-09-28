@@ -85,7 +85,7 @@ export const cliErrorTypes = {
   systemError: 14,
   notASitemap: 15,
   unauthorisedBasicAuth: 16,
-  profileDataCopyError: 21,
+  browserError: 17,
 };
 
 export const userDataFormDetails = {
