@@ -1,6 +1,7 @@
 import Modal from "../../common/components/Modal";
 import boxRightArrow from '../../assets/box-right-arrow.png';
 import { useEffect, useRef } from "react";
+import { handleClickLink } from "../../common/constants";
 
 const WhatsNewModalBody = ({ latestReleaseNotes }) => {
   const bodyRef = useRef(null);
@@ -41,7 +42,8 @@ const WhatsNewModal = ({ showModal, setShowModal, latestVersion, latestReleaseNo
         <a
           role="link"
           className="link me-auto" // to align to left
-          href="https://github.com/GovTechSG/purple-hats-desktop/releases"
+          href="#"
+          onClick={(e) => {handleClickLink(e, "https://github.com/GovTechSG/purple-hats-desktop/releases/")}}
         >
           See previous versions
           <img id="box-arrow-right" src={boxRightArrow}></img>
