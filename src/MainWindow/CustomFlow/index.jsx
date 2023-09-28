@@ -93,7 +93,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                 break;
               case cliErrorTypes.browserError:
                 errorMessageToShow =
-                  "Unable to use browsers. Try closing your opened browser(s) before the next scan.";
+                  "Unable to use browsers. Try closing all opened browser(s) before the next scan.";
                 break;
               case cliErrorTypes.systemError:
               default:
