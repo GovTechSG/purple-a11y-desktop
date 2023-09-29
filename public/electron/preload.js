@@ -32,12 +32,19 @@ contextBridge.exposeInMainWorld("services", {
   openResultsFolder: (resultsPath) => {
     ipcRenderer.send("openResultsFolder", resultsPath);
   },
+  openUploadFolder: () => {
+    ipcRenderer.send("openUploadFolder");
+  },
   cleanUpCustomFlowScripts: (() => {
     ipcRenderer.send("cleanUpCustomFlowScripts");
   }),
   getResultsFolderPath: async (scanId) => {
     const reportPath = await ipcRenderer.invoke("getResultsFolderPath", scanId);
     return reportPath;
+  },
+  getUploadFolderPath: async () => {
+    const uploadFolderPath = await ipcRenderer.invoke("getUploadFolderPath");
+    return uploadFolderPath;
   },
   setExportDir: async () => {
     const exportDir = await ipcRenderer.invoke("setExportDir");

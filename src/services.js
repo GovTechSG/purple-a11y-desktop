@@ -73,6 +73,9 @@ const getResultsFolderPath = async (scanId) => {
   const reportPath = await window.services.getResultsFolderPath(scanId);
   return reportPath;
 };
+const getUploadFolderPath = async () => {
+  return await window.services.getUploadFolderPath();
+}
 
 const getUserData = async () => {
   const userData = await window.services.getUserData();
@@ -137,6 +140,7 @@ const services = {
   startScan,
   openReport,
   getResultsFolderPath,
+  getUploadFolderPath,
   getUserData,
   getDataForForm,
   isValidEmail,
