@@ -178,7 +178,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                       Record your custom flow by manually navigating on a new browser window that will open automatically after starting the recording. In the event of a login page, we will solely capture your credentials for this scan and promptly remove them thereafter.
                       <br></br><br></br>
                       If you have any files to be uploaded during the scan, please drop them into{" "}
-                      <a href="#" onClick={handleOpenUploadFolder}>this folder</a>. Do not include any subfolders within the folder.
+                      <a href="#" onClick={handleOpenUploadFolder}>this folder</a>. Do not create any subfolders within the folder.
                       <br></br><br></br>
                       After finishing your flow, please close the browser to continue to the next step.
                     </>}
