@@ -20,9 +20,11 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const [prevUrlErrorMessage, setPrevUrlErrorMessage] = useState(
     location.state
   );
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [browser, setBrowser] = useState(null);
+  const [{ name, email, browser }, setUserData] = useState({
+    name: "", 
+    email: "",
+    browser: null,
+  });
   const [showBasicAuthModal, setShowBasicAuthModal] = useState(false);
   const [showEditDataModal, setShowEditDataModal] = useState(false);
   const [showNoChromeErrorModal, setShowNoChromeErrorModal] = useState(false);
@@ -46,13 +48,14 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   useEffect(() => {
     const getUserData = async () => {
       const userData = await services.getUserData();
-      setBrowser(userData["browser"]);
-      setEmail(userData["email"]);
-      setName(userData["name"]);
+      setUserData(userData);
+      // to show what's new modal on successful update to latest version
+      setShowWhatsNewModal(!!userData["firstLaunchOnUpdate"] && appVersionInfo.isLatest);
+      window.services.editUserData({ firstLaunchOnUpdate: false });
     };
 
     getUserData();
-  });
+  }, []);
 
   useEffect(() => {
     const checkChromeExists = async () => {
@@ -226,6 +229,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
             setShowEditDataModal={setShowEditDataModal}
             initialName={name}
             initialEmail={email}
+            setUserData={setUserData}
           />
         </>
       )}

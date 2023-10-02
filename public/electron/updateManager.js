@@ -21,7 +21,7 @@ const {
   versionComparator,
 } = require("./constants");
 const { silentLogger } = require("./logs");
-const { readUserDataFromFile } = require("./userDataManager");
+const { writeUserDetailsToFile } = require("./userDataManager");
 
 let currentChildProcess;
 
@@ -357,6 +357,7 @@ const run = async (updaterEventEmitter) => {
             const isInstallerScriptLaunched =
               await spawnScriptToLaunchInstaller();
             if (isInstallerScriptLaunched) {
+              writeUserDetailsToFile({ firstLaunchOnUpdate: true });
               updaterEventEmitter.emit("installerLaunched");
             }
           }
@@ -396,6 +397,8 @@ const run = async (updaterEventEmitter) => {
         try {
           await downloadAndUnzipFrontendMac();
           currentChildProcess = null;
+
+          writeUserDetailsToFile({ firstLaunchOnUpdate: true });
           updaterEventEmitter.emit("restartTriggered");
         } catch (e) {
           silentLogger.error(e.toString());

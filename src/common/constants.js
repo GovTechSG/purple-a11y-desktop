@@ -76,6 +76,20 @@ export const devices = {
   "Motorola Moto G4": "Moto G4",
 };
 
+export const getDefaultAdvancedOptions = (isProxy) => {
+  const deviceOptions = isProxy ? [] : Object.keys(devices);
+  return {
+    scanType: Object.keys(scanTypes)[0],
+    viewport: viewportTypes.desktop,
+    fileTypes: Object.keys(fileTypes)[0],
+    device: deviceOptions[0],
+    viewportWidth: "320",
+    maxConcurrency: false, 
+    falsePositive: false,
+    includeScreenshots: true,
+  }
+};
+
 // exit codes returned by Purple HATS cli when there is an error with the URL provided
 export const cliErrorCodes = new Set([11, 12, 13, 14, 15, 16, 17]);
 export const cliErrorTypes = {

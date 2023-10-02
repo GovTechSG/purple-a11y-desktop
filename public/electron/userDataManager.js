@@ -12,9 +12,8 @@ const readUserDataFromFile = () => {
 
 const writeUserDetailsToFile = (userDetails) => {
     const data = readUserDataFromFile();
-    data.name = userDetails.name; 
-    data.email = userDetails.email;
-    fs.writeFileSync(userDataFilePath, JSON.stringify(data));
+    const newData = { ...data, ...userDetails };
+    fs.writeFileSync(userDataFilePath, JSON.stringify(newData));
 }
 
 const createExportDir = (path) => {
@@ -107,5 +106,6 @@ module.exports = {
     init,
     setData, 
     readUserDataFromFile,
+    writeUserDetailsToFile,
     createExportDir,
 }
