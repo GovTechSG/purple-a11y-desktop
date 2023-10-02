@@ -35,12 +35,6 @@ const scanHistory = {};
 
 let currentChildProcess;
 
-let archCommand = [];
-
-if (! isWindows) {
-  archCommand = ["-x86_64","node"];
-}
-
 const killChildProcess = () => {
   if (currentChildProcess) {
     currentChildProcess.kill("SIGKILL");
@@ -138,8 +132,8 @@ const startScan = async (scanDetails, scanEvent) => {
 
   const response = await new Promise(async (resolve) => {
     const scan = spawn(
-      os.platform() === "darwin" ? `arch` : `node`,
-      [...archCommand, path.join(enginePath, "cli.js"), ...getScanOptions(scanDetails)],
+      'node',
+      [path.join(enginePath, "cli.js"), ...getScanOptions(scanDetails)],
       {
         cwd: resultsPath,
         env: {
@@ -245,8 +239,8 @@ const startReplay = async (generatedScript, scanDetails, scanEvent, isReplay) =>
 
   const response = await new Promise((resolve, reject) => {
     const replay = spawn(
-      os.platform() === "darwin" ? `arch` : `node`,
-      [...archCommand, path.join(enginePath, "runCustomFlowFromGUI.js"), generatedScript], {
+      'node',
+      [path.join(enginePath, "runCustomFlowFromGUI.js"), generatedScript], {
       cwd: resultsPath,
       env: {
         ...process.env,
