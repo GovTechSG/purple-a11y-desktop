@@ -14,7 +14,6 @@ const {
   getPathVariable,
   customFlowGeneratedScriptsPath,
   playwrightBrowsersPath,
-  javaPath,
   resultsPath,
   scanResultsPath,
   forbiddenCharactersInDirPath,
@@ -139,7 +138,6 @@ const startScan = async (scanDetails, scanEvent) => {
         env: {
           ...process.env,
           RUNNING_FROM_PH_GUI: true,
-          JAVA_HOME: `${javaPath}`,
           PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
           PATH: getPathVariable(),
         },
@@ -246,7 +244,6 @@ const startReplay = async (generatedScript, scanDetails, scanEvent, isReplay) =>
         ...process.env,
         RUNNING_FROM_PH_GUI: true,
         PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
-        JAVA_HOME: `${javaPath}`,
         PATH: getPathVariable(),
       },
     });
