@@ -26,6 +26,7 @@ const {
   browserTypes,
   getDefaultChromeDataDir,
   getDefaultEdgeDataDir,
+  uploadFolderName,
 } = require("./constants");
 const { env, report } = require("process");
 const { readUserDataFromFile, createExportDir } = require("./userDataManager");
@@ -538,6 +539,15 @@ const init = (scanEvent) => {
   ipcMain.handle("getResultsFolderPath", async (_event, scanId) => {
     const resultsPath = getResultsFolderPath(scanId);
     return resultsPath;
+  })
+
+  ipcMain.handle("getUploadFolderPath", async () => {
+    const { exportDir } = readUserDataFromFile();
+    const uploadFolderPath = path.join(exportDir, uploadFolderName);
+    if (!fs.existsSync(uploadFolderPath)) {
+      fs.mkdirSync(uploadFolderPath);
+    }
+    return uploadFolderPath;
   })
 
   ipcMain.on("cleanUpCustomFlowScripts", async () => {

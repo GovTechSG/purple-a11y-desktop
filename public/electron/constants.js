@@ -614,6 +614,8 @@ const versionComparator = (ver1, ver2) => {
   return 1;
 };
 
+const uploadFolderName = "Upload Files";
+
 module.exports = {
   appPath,
   releaseUrl,
@@ -648,4 +650,5 @@ module.exports = {
   forbiddenCharactersInDirPath,
   maxLengthForDirName,
   versionComparator,
+  uploadFolderName,
 };
