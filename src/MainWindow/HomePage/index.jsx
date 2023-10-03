@@ -20,7 +20,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const [prevUrlErrorMessage, setPrevUrlErrorMessage] = useState(
     location.state
   );
-  const [{ name, email, browser, firstLaunchOnUpdate }, setUserData] = useState({
+  const [{ name, email, browser }, setUserData] = useState({
     name: "", 
     email: "",
     browser: null,
@@ -244,12 +244,6 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
         <NoChromeErrorModal showModal={showNoChromeErrorModal} setShowModal={setShowNoChromeErrorModal}/>            
       }
       {showWhatsNewModal &&
-      //   setTimeout(() => <WhatsNewModal
-      //   showModal={showWhatsNewModal}
-      //   setShowModal={setShowWhatsNewModal}
-      //   latestVersion={appVersionInfo.appVersion}
-      //   latestReleaseNotes={appVersionInfo.latestReleaseNotes}
-      // />, firstLaunchOnUpdate ? 500 : 0)
         <WhatsNewModal
           showModal={showWhatsNewModal}
           setShowModal={setShowWhatsNewModal}
