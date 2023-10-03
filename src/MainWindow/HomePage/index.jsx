@@ -20,7 +20,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const [prevUrlErrorMessage, setPrevUrlErrorMessage] = useState(
     location.state
   );
-  const [{ name, email, browser }, setUserData] = useState({
+  const [{ name, email, browser, firstLaunchOnUpdate }, setUserData] = useState({
     name: "", 
     email: "",
     browser: null,
@@ -50,11 +50,18 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
       const userData = await services.getUserData();
       setUserData(userData);
       // to show what's new modal on successful update to latest version
-      setShowWhatsNewModal(!!userData["firstLaunchOnUpdate"] && appVersionInfo.isLatest);
-      window.services.editUserData({ firstLaunchOnUpdate: false });
+      const handleShowModal = () => {
+        setShowWhatsNewModal(!!userData["firstLaunchOnUpdate"] && appVersionInfo.isLatest);
+        window.services.editUserData({ firstLaunchOnUpdate: false });
+      }
+      const whatsNewModalTimeout = setTimeout(
+        handleShowModal,
+        !!userData["firstLaunchOnUpdate"] ? 500 : 0,
+      )
+      return () => clearTimeout(whatsNewModalTimeout);
     };
 
-    getUserData();
+    return getUserData();
   }, []);
 
   useEffect(() => {
@@ -237,6 +244,12 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
         <NoChromeErrorModal showModal={showNoChromeErrorModal} setShowModal={setShowNoChromeErrorModal}/>            
       }
       {showWhatsNewModal &&
+      //   setTimeout(() => <WhatsNewModal
+      //   showModal={showWhatsNewModal}
+      //   setShowModal={setShowWhatsNewModal}
+      //   latestVersion={appVersionInfo.appVersion}
+      //   latestReleaseNotes={appVersionInfo.latestReleaseNotes}
+      // />, firstLaunchOnUpdate ? 500 : 0)
         <WhatsNewModal
           showModal={showWhatsNewModal}
           setShowModal={setShowWhatsNewModal}
