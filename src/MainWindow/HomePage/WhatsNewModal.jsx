@@ -1,6 +1,6 @@
 import Modal from "../../common/components/Modal";
 import boxRightArrow from "../../assets/box-right-arrow.png";
-import { useEffect, useRef, createElement } from "react";
+import { createElement } from "react";
 import { handleClickLink } from "../../common/constants";
 
 const WhatsNewModal = ({
@@ -10,7 +10,8 @@ const WhatsNewModal = ({
   latestReleaseNotes,
 }) => {
 
-  const injectReleaseNotes = (body) => {
+  // create react elements from release notes html string
+  const getReleaseNotes = () => {
     // inject parsed release notes into div element
     const releaseNotesNode = document.createElement("div");
     releaseNotesNode.innerHTML = latestReleaseNotes;
@@ -26,51 +27,53 @@ const WhatsNewModal = ({
     const headings = releaseNotesNode.getElementsByTagName("h4");
     const headingsLen = headings.length;
     const uls = releaseNotesNode.getElementsByTagName("ul");
+    const reactElems = [];
     for (let i = 0; i < headingsLen; i++) {
-      const heading = headings[0];
-      const ul = uls[0];
-      heading.removeAttribute("id"); // remove redundant id
+      const heading = headings[i];
+      const ul = uls[i];
 
-      // group together within a div
-      const whatsNewSection = document.createElement("div");
-      whatsNewSection.classList.add("whats-new-section");
-      whatsNewSection.appendChild(heading);
-      whatsNewSection.appendChild(ul);
-
-      // put content into final modal body
-      body.appendChild(whatsNewSection);
+      const headingElem = createElement("h4", {}, heading.innerHTML);
+      const liElems = [];
+      for (let li of ul.getElementsByTagName("li")) {
+        const liChildren = li.childNodes;
+        const liChildElems = [];
+        for (let child of liChildren) {
+          const tag = child.nodeName;
+          if (tag === "#text") {
+            liChildElems.push(child.textContent);
+          } else {
+            liChildElems.push(createElement(tag.toLowerCase(), {}, child.innerText));
+          }
+        }
+        const liElem = createElement("li", {}, ...liChildElems);
+        liElems.push(liElem);
+      }
+      const ulElem = createElement("ul", {}, ...liElems);
+      const section = createElement("div", { className: "whats-new-section" }, headingElem, ulElem);
+      reactElems.push(section);
     }
+    return reactElems;
   };
 
-  const injectGithubLink = (body) => {
-    const linkElem = document.createElement("a");
-    linkElem.href = "#";
-    linkElem.role = "link";
-    linkElem.onClick = (e) => {
-      handleClickLink(
-        e,
-        "https://github.com/GovTechSG/purple-hats-desktop/releases/"
-      );
-    };
-    const innerHTML = `
-      See previous versions <img id="box-arrow-right" src="${boxRightArrow}"></img>
-    `
-    linkElem.innerHTML = innerHTML;
-    body.appendChild(linkElem);
-  }
-
-  useEffect(() => {
-    const modalBodyNode = document.querySelector("#whats-new-modal .modal-body");
-    if (!modalBodyNode || !latestReleaseNotes) return;
-    injectReleaseNotes(modalBodyNode);
-    injectGithubLink(modalBodyNode);
-  }, [latestReleaseNotes]);
+  const getGithubLink = () => {
+    return (
+      <a
+        href="#"
+        role="link"
+        onClick={(e) => handleClickLink(e, "https://github.com/GovTechSG/purple-hats-desktop/releases/")}
+      >
+        See previous versions{" "}
+        <img id="box-arrow-right" src={boxRightArrow}></img>
+      </a>
+    );
+  };
 
   return (
     <Modal
       id="whats-new-modal"
       showModal={showModal}
       showHeader={true}
+      modalBody={[...getReleaseNotes(), getGithubLink()]}
       modalSizeClass="modal-lg modal-dialog-centered"
       modalTitle={"What's new in v" + latestVersion}
       setShowModal={setShowModal}

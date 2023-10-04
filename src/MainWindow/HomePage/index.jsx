@@ -58,10 +58,11 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
         handleShowModal,
         !!userData["firstLaunchOnUpdate"] ? 500 : 0,
       )
-      return () => clearTimeout(whatsNewModalTimeout);
+      return whatsNewModalTimeout;
     };
 
-    return getUserData();
+    const whatsNewModalTimeout = getUserData();
+    return () => clearTimeout(whatsNewModalTimeout);
   }, []);
 
   useEffect(() => {
