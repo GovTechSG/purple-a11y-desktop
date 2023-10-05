@@ -116,7 +116,6 @@ const downloadBackend = async (tag=undefined) => {
       "https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-hats-portable-mac.zip";
   }
 
-  // const command = `curl '${downloadUrl}' -o '${phZipPath}' -L && mkdir '${backendPath}'`;
   const command = `curl '${downloadUrl}' -o '${phZipPath}' -L && rm -rf '${backendPath}' && mkdir '${backendPath}'`;
 
   return async () => await execCommand(command);
@@ -167,32 +166,15 @@ const getLatestBackendVersion = async () => {
       const tag = release.tag_name;
       if (versionComparator(frontendReleaseVer, tag) === 1
         && !(versionComparator(engineVersion, tag) === 1)) {
-        // frontendReleaseVer >= this release
-        // and current engine version is less than this release
-        return tag;
+        // frontendReleaseVer >= this backend release
+        // and current engine version is less than this backend release
+        return tag; // do update
       }
     }
     return undefined; // no need to update
   } catch (e) {
     console.log(`Unable to check latest version, skipping\n${e.toString()}`);
     return undefined;
-  }
-};
-
-const isLatestBackendVersion = async () => {
-  try {
-    const { data } = await axiosInstance.get(releaseUrl);
-
-    const latestVersion = data.tag_name;
-    const engineVersion = getEngineVersion();
-
-    console.log("Engine version installed: ", engineVersion);
-    console.log("Latest version found: ", latestVersion);
-
-    return versionComparator(engineVersion, latestVersion) === 1;
-  } catch (e) {
-    console.log(`Unable to check latest version, skipping\n${e.toString()}`);
-    return true;
   }
 };
 
@@ -481,6 +463,7 @@ const run = async (updaterEventEmitter) => {
         processesToRun.push(unzipBackendAndCleanUp);
       } else {
         // if fetching of latest backend version from github api fails for any reason,
+        // or no update to be downloaded,
         // toUpdateBackendVer will be undefined so that the app will just launch straightaway
         if (toUpdateBackendVer) {
           const userResponse = new Promise((resolve) => {
