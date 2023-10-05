@@ -143,46 +143,36 @@ const getLatestBackendVersion = async () => {
     );
     const frontendReleaseVer = frontendRelease.tag_name;
 
-    const backendExists = fs.existsSync(backendPath);
-    console.log(backendExists, 'backendExists', backendPath);
+    let backendExists = fs.existsSync(backendPath);
+    let engineVersion;
+
+    try {
+      engineVersion = getEngineVersion();
+    } catch (e) {
+      backendExists = false;
+    }
+
     if (!backendExists) {
-      console.log('no engine');
       for (let release of allReleases) {
         const tag = release.tag_name;
-        console.log('checking release tag', tag);
-        console.log(versionComparator(frontendReleaseVer, tag) === 1);
         if (versionComparator(frontendReleaseVer, tag) === 1) {
-          console.log('download backend release', tag);
           return tag;
         }
       }
+      return undefined;
     }
-    
-    const engineVersion = getEngineVersion();
-    
-    console.log('engine', engineVersion, 'frontendReleaseVer', frontendReleaseVer);
+        
     // data sorted in descending order
     for (let release of allReleases) {
       const tag = release.tag_name;
-      console.log('checking release tag', tag);
-      console.log(versionComparator(frontendReleaseVer, tag) === 1);
-      if (!engineVersion) {
-        console.log('no engine');
-        if (versionComparator(frontendReleaseVer, tag) === 1) {
-          console.log('download backend release', tag);
-          return tag;
-        }
-      } else if (versionComparator(frontendReleaseVer, tag) === 1
+      if (versionComparator(frontendReleaseVer, tag) === 1
         && !(versionComparator(engineVersion, tag) === 1)) {
-        console.log('found a backend version');
         // frontendReleaseVer >= this release
         // and current engine version is less than this release
-        console.log('download backend release', tag);
         return tag;
       }
     }
-    console.log("no need for update");
-    return undefined;
+    return undefined; // no need to update
   } catch (e) {
     console.log(`Unable to check latest version, skipping\n${e.toString()}`);
     return undefined;
@@ -386,8 +376,8 @@ const run = async (updaterEventEmitter) => {
   const phZipExists = fs.existsSync(phZipPath);
 
   updaterEventEmitter.emit("checking");
+
   const toUpdateBackendVer = await getLatestBackendVersion();
-  console.log(toUpdateBackendVer, 'toUpdateBackendVer');
 
   // Auto updates via installer is only applicable for Windows
   // Auto updates for backend on Windows will be done via a powershell script due to %ProgramFiles% permission
@@ -395,7 +385,6 @@ const run = async (updaterEventEmitter) => {
     // Frontend update via Installer for Windows
     // Will also update backend as it is packaged in the installer
     if (!(await isLatestFrontendVersion())) {
-      // updaterEventEmitter.emit("checking");
       const userResponse = new Promise((resolve) => {
         updaterEventEmitter.emit("promptFrontendUpdate", resolve);
       });
@@ -434,8 +423,6 @@ const run = async (updaterEventEmitter) => {
     }
     // Backend update via GitHub for Windows
     else if (toUpdateBackendVer) {
-    // else if (!(await isLatestBackendVersion())) {
-      // updaterEventEmitter.emit("checking");
       const userResponse = new Promise((resolve) => {
         updaterEventEmitter.emit("promptBackendUpdate", resolve);
       });
@@ -449,7 +436,6 @@ const run = async (updaterEventEmitter) => {
     }
   } else {
     if (!(await isLatestFrontendVersion())) {
-      // updaterEventEmitter.emit("checking");
       const userResponse = new Promise((resolve) => {
         updaterEventEmitter.emit("promptFrontendUpdate", resolve);
       });
@@ -494,16 +480,8 @@ const run = async (updaterEventEmitter) => {
         updaterEventEmitter.emit("settingUp");
         processesToRun.push(unzipBackendAndCleanUp);
       } else {
-        // updaterEventEmitter.emit("checking");
-        // let isUpdateAvailable;
-        // isUpdateAvailable = !(await isLatestBackendVersion());
-
-        // if fetching of latest backend version from github api fails for any reason,
-        // isUpdateAvailable will be set to false so that the app will just launch straightaway
-
         // if fetching of latest backend version from github api fails for any reason,
         // toUpdateBackendVer will be undefined so that the app will just launch straightaway
-        // if (isUpdateAvailable) {
         if (toUpdateBackendVer) {
           const userResponse = new Promise((resolve) => {
             updaterEventEmitter.emit("promptBackendUpdate", resolve);
