@@ -140,7 +140,11 @@ const getLatestBackendVersion = async () => {
     const { data: frontendRelease } = await axiosInstance.get(
       `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases/latest`
     );
+    const appFrontendVer = getFrontendVersion();
     const frontendReleaseVer = frontendRelease.tag_name;
+    const frontendVerToCompare = appFrontendVer > frontendReleaseVer
+      ? appFrontendVer
+      : frontendReleaseVer;
 
     let backendExists = fs.existsSync(backendPath);
     let engineVersion;
@@ -154,7 +158,7 @@ const getLatestBackendVersion = async () => {
     if (!backendExists) {
       for (let release of allReleases) {
         const tag = release.tag_name;
-        if (versionComparator(frontendReleaseVer, tag) === 1) {
+        if (versionComparator(frontendVerToCompare, tag) === 1) {
           return tag;
         }
       }
@@ -164,7 +168,7 @@ const getLatestBackendVersion = async () => {
     // data sorted in descending order
     for (let release of allReleases) {
       const tag = release.tag_name;
-      if (versionComparator(frontendReleaseVer, tag) === 1
+      if (versionComparator(frontendVerToCompare, tag) === 1
         && !(versionComparator(engineVersion, tag) === 1)) {
         // frontendReleaseVer >= this backend release
         // and current engine version is less than this backend release
