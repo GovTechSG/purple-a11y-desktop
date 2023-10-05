@@ -18,6 +18,8 @@ const appPath =
 const releaseUrl =
   "https://api.github.com/repos/GovTechSG/purple-hats/releases/latest";
 
+const allReleasesUrl = "https://api.github.com/repos/GovTechSG/purple-hats/releases";
+
 const frontendReleaseUrl =
   os.platform() === "win32"
     ? "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-hats-desktop-windows.zip"
@@ -651,4 +653,5 @@ module.exports = {
   maxLengthForDirName,
   versionComparator,
   uploadFolderName,
+  allReleasesUrl,
 };
