@@ -7,16 +7,17 @@ module.exports = {
       x64ArchFiles: "*" // replace with any relevant glob pattern
     },
     ignore: [
-      './build/electron',
-      './build/purple-hats-logo',
-      './extraResources',
-      './errors.txt',
-      './tests',
-      './playwright-report',
-      './installer.ps1',
-      './.github'
+      'build/electron',
+      'build/purple-hats-logo',
+      'errors.txt',
+      'tests',
+      'Test.md',
+      'playwright-report',
+      'installer.ps1',
+      'hats_for_windows.iss',
+      '.github'
     ],
-    ...(os.platform() === 'darwin' && { extraResource: ["./extraResources/purple-hats-portable-mac.zip"]})
+    ...(os.platform() === 'darwin' && { extraResource: ["/tmp/purple-hats-portable-mac.zip"]})
   },
   rebuildConfig: {},
   makers: [
