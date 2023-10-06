@@ -13,11 +13,26 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
 
+      - name: Enable Long File Path in Registry
+        shell: pwsh
+        run: |
+          Start-Process powershell -Verb runAs -ArgumentList 'New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -PropertyType "DWORD" -Value "1"'
+      
       - name: Download node.js version from nodejs.org
         run: |
           curl -o ./nodejs-win.zip --create-dirs https://nodejs.org/dist/v18.18.0/node-v18.18.0-win-x64.zip 
           mkdir nodejs-win && tar -xzf nodejs-win.zip -C nodejs-win --strip-components=1 && rm ./nodejs-win.zip
         working-directory: ${{github.workspace}}
+
+      - name: Download Inno Setup
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "${{github.workspace}}\is.exe" 
+          $env:path = "$env:path" + ";${env:programfiles(x86)}\Inno Setup 6"
+
+      - name: Move Inno Setup script to root
+        shell: pwsh
+        run: Copy-Item -Path "${{github.workspace}}\Purple HATS-win32-x64\resources\app\hats_for_windows.iss" -Destination "${{github.workspace}}\hats_for_windows.iss" -Force
 
       - name: Install Node Modules and Build for Windows
         run: |
@@ -33,11 +48,6 @@ jobs:
         run: |
           Move-Item  "${{github.workspace}}\out\Purple HATS-win32-x64" -Destination "${{github.workspace}}\Purple HATS-win32-x64" -Force
       
-      - name: Enable Long File Path in Registry
-        shell: pwsh
-        run: |
-          Start-Process powershell -Verb runAs -ArgumentList 'New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -PropertyType "DWORD" -Value "1"'
-      
       - name: Download Purple HATS Backend
         shell: pwsh
         run: |
@@ -47,16 +57,6 @@ jobs:
           Invoke-WebRequest -Uri $PHbackendUrl -OutFile $BEdestinationPath
           Expand-Archive -Path $BEdestinationPath -DestinationPath $BEextractPath -Force
           Remove-Item -Path $BEdestinationPath
-
-      - name: Move Inno Setup script to root
-        shell: pwsh
-        run: Copy-Item -Path "${{github.workspace}}\Purple HATS-win32-x64\resources\app\hats_for_windows.iss" -Destination "${{github.workspace}}\hats_for_windows.iss" -Force
-
-      - name: Download Inno Setup
-        shell: pwsh
-        run: |
-          Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "${{github.workspace}}\is.exe" 
-          $env:path = "$env:path" + ";${env:programfiles(x86)}\Inno Setup 6"
 
       - name: Execute Inno Setup script to compile installer
         shell: pwsh
