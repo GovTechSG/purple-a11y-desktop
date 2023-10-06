@@ -18,6 +18,8 @@ const appPath =
 const releaseUrl =
   "https://api.github.com/repos/GovTechSG/purple-hats/releases/latest";
 
+const allReleasesUrl = "https://api.github.com/repos/GovTechSG/purple-hats/releases";
+
 const frontendReleaseUrl =
   os.platform() === "win32"
     ? "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-hats-desktop-windows.zip"
@@ -42,6 +44,9 @@ const getMacOSExecutablePath = () => {
   return executablePath;
 };
 const macOSExecutablePath = getMacOSExecutablePath();
+
+// const macOSPrepackageBackend = path.join(macOSExecutablePath, "Contents", "Resources", "purple-hats-portable-mac.zip");
+const macOSPrepackageBackend = path.join(process.resourcesPath, "purple-hats-portable-mac.zip");
 
 const resultsPath =
   os.platform() === "win32"
@@ -651,4 +656,6 @@ module.exports = {
   maxLengthForDirName,
   versionComparator,
   uploadFolderName,
+  allReleasesUrl,
+  macOSPrepackageBackend,
 };

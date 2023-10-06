@@ -1,3 +1,5 @@
+const os = require("os");
+
 module.exports = {
   packagerConfig: {
     icon: 'public/purple-hats-logo',
@@ -7,7 +9,8 @@ module.exports = {
     ignore: [
       '/build/electron',
       '/build/purple-hats-logo'
-    ]
+    ],
+    ...(os.platform() === 'darwin' && { extraResource: ["./extraResources/purple-hats-portable-mac.zip"]})
   },
   rebuildConfig: {},
   makers: [

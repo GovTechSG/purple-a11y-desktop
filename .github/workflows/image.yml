@@ -131,6 +131,7 @@ jobs:
           npm run make-mac
         env:
           CI: ""
+          BE_TAG: "${{ vars.BE_TAG }}"
         working-directory: ${{github.workspace}}
 
       - name: Move and rename universal binary zip (Mac)
