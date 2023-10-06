@@ -7,8 +7,14 @@ module.exports = {
       x64ArchFiles: "*" // replace with any relevant glob pattern
     },
     ignore: [
-      '/build/electron',
-      '/build/purple-hats-logo'
+      './build/electron',
+      './build/purple-hats-logo',
+      './extraResources',
+      './errors.txt',
+      './tests',
+      './playwright-report',
+      './installer.ps1',
+      './.github'
     ],
     ...(os.platform() === 'darwin' && { extraResource: ["./extraResources/purple-hats-portable-mac.zip"]})
   },

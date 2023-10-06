@@ -25,7 +25,7 @@
     "eject": "react-scripts eject",
     "package": "electron-forge package",
     "make": "react-scripts build && electron-forge make",
-    "make-mac": "mkdir -p \"./extraResources/\" && curl -L -o \"./extraResources/purple-hats-portable-mac.zip\" https://github.com/GovTechSG/purple-hats/releases/download/$BE_TAG/purple-hats-portable-mac.zip && react-scripts build && electron-forge make --arch=universal --platform darwin",
+    "make-mac": "rm -rf ./out && mkdir -p \"./extraResources/\" && curl -L -o \"./extraResources/purple-hats-portable-mac.zip\" https://github.com/GovTechSG/purple-hats/releases/download/$BE_TAG/purple-hats-portable-mac.zip && react-scripts build && electron-forge make --arch=universal --platform darwin",
     "make-win": "react-scripts build && electron-forge make --arch=x64 --platform win32"
   },
   "config": {
