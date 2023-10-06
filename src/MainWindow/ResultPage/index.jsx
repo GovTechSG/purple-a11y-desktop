@@ -2,13 +2,16 @@ import { useEffect, useMemo, useState } from "react";
 import Button from "../../common/components/Button";
 import "./ResultPage.scss";
 import services from "../../services";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { handleClickLink } from "../../common/constants";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import { ReactComponent as CheckCircleIcon } from "../../assets/check-circle.svg";
 import { ReactComponent as BoxArrowUpRightIcon } from "../../assets/box-arrow-up-right.svg";
-import { ReactComponent as ReturnIcon } from "../../assets/return.svg";
 import { ReactComponent as MailIcon } from "../../assets/mail.svg";
 import { ReactComponent as MailSuccessIcon } from "../../assets/mail-success.svg";
+import houseIcon from "../../assets/house.svg"; 
+import thumbsUpIcon from "../../assets/hand-thumbs-up.svg";
+import arrowRepeatIcon from "../../assets/arrow-repeat.svg";
 import EditMailDetailsModal from "./EditMailDetailsModal";
 
 const ResultPage = ({ completedScanId: scanId }) => {
@@ -18,16 +21,17 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const [email, setEmail] = useState("");
   const [isEvent, setIsEvent] = useState(false);
   const [resultsPath, setResultsPath] = useState(null);
-  const [showCustomFlowReplayButton, setShowCustomFlowReplayButton] =
-    useState(false);
+  const [showCustomFlowReplayButton, setShowCustomFlowReplayButton] = useState(false);
+  const [customFlowLabel, setCustomFlowLabel] = useState('');
+  const [feedbackFormUrl, setFeedbackFormUrl] = useState(null);
   const [isWindows, setIsWindows] = useState(false);
   const [mailStatus, setMailStatus] = useState("send");
-  const [showEditMailDetailsModal, setShowEditMailDetailsModal] =
-    useState(false);
-
+  const [showEditMailDetailsModal, setShowEditMailDetailsModal] = useState(false);
+    
   useEffect(() => {
     if (state?.isCustomScan) {
       setShowCustomFlowReplayButton(state.isCustomScan);
+      setCustomFlowLabel(state.customFlowLabel)
     }
   }, []);
 
@@ -53,6 +57,16 @@ const ResultPage = ({ completedScanId: scanId }) => {
 
     getResultsPath();
   }, []);
+
+  useEffect(() => {
+    const getFeedbackFormUrl = async () => {
+      const feedbackFormUrl = await services.getFeedbackFormUrl();
+      console.log(feedbackFormUrl);
+      setFeedbackFormUrl(feedbackFormUrl);
+    }
+
+    getFeedbackFormUrl();
+  }, [])
 
   const initialSubject = useMemo(() => {
     if (!scanType) {
@@ -122,27 +136,39 @@ const ResultPage = ({ completedScanId: scanId }) => {
               {resultsPath}
             </a>
           </p>
+          <Button id="view-button" type="primary" onClick={handleViewReport}>
+            <ButtonSvgIcon
+              className={`box-arrow-up-right-icon `}
+              svgIcon={<BoxArrowUpRightIcon />}
+            />
+            View report
+          </Button>
+          <hr/>
+          <div id="other-actions">
+            <p>Other actions</p>
+            <a
+              role="link"
+              className="link"
+              href="#"
+              onClick={(e) => {handleClickLink(e, feedbackFormUrl)}}
+            >
+              <img src={thumbsUpIcon}></img>
+              Help us improve
+            </a>
+            { showCustomFlowReplayButton && 
+              <Link to="/custom_flow" state={{ isReplay: true }}>
+                <img src={arrowRepeatIcon}></img>
+                Rerun custom flow {`(${customFlowLabel})`}
+              </Link>
+            }
+            <hr/>
+            <Link to="/" onClick={handleScanAgain}>
+              <img src={houseIcon}></img>
+              Back To Home 
+            </Link>
+          </div>
+          
           <div id="btn-container">
-            <button id="scan-again" onClick={handleScanAgain}>
-              <ButtonSvgIcon
-                svgIcon={<ReturnIcon />}
-                className={`return-icon`}
-              />
-              Back to Home
-            </button>
-            <Button id="view-button" type="primary" onClick={handleViewReport}>
-              <ButtonSvgIcon
-                className={`box-arrow-up-right-icon `}
-                svgIcon={<BoxArrowUpRightIcon />}
-              />
-              {/* <i className="bi bi-box-arrow-up-right" /> */}
-              View report
-            </Button>
-            {showCustomFlowReplayButton && (
-              <Button id="replay-btn" type="primary" onClick={replayCustomFlow}>
-                Replay
-              </Button>
-            )}
             {isWindows && isEvent && mailStatus === "send" && (
               <Button
                 id="mail-report-button"

@@ -8,7 +8,8 @@ import {
   devices,
   fileTypes,
   forbiddenCharactersInDirPath,
-  reserveFileNameKeywords
+  reserveFileNameKeywords,
+  feedbackFormInputFields
 } from "./common/constants";
 
 // for use in openUserDataForm
@@ -100,6 +101,15 @@ const getDataForForm = async () => {
   };
 };
 
+const getFeedbackFormUrl = async () => {
+  const { formUrl, urlScannedField, versionNumberField } = feedbackFormInputFields;
+  const phEngineVersion = await window.services.getEngineVersion();
+  const encodedUrlScanned = encodeURIComponent(currentScanUrl); 
+  const encodedVersionNumber = encodeURIComponent(phEngineVersion);
+  const feedbackFormUrl = `${formUrl}/?${urlScannedField}=${encodedUrlScanned}&${versionNumberField}=${encodedVersionNumber}`;
+  return feedbackFormUrl;
+};
+
 const isValidEmail = (email) => {
   const emailRegex = new RegExp(
     /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
@@ -143,6 +153,7 @@ const services = {
   getUploadFolderPath,
   getUserData,
   getDataForForm,
+  getFeedbackFormUrl,
   isValidEmail,
   mailReport,
   getIsWindows,

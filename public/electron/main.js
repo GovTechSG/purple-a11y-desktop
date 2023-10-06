@@ -146,11 +146,18 @@ app.on("ready", async () => {
   scanEvent.on("scanningCompleted", () => {
     mainWindow.webContents.send("scanningCompleted");
   })
-
+  scanEvent.on('urlIsValid', () => {
+    mainWindow.webContents.send('urlIsValid');
+  })
+  
   ipcMain.on("openLink", (_event, url) => {
     shell.openExternal(url);
   });
 
+  ipcMain.handle('getEngineVersion', () => {
+    return constants.getEngineVersion();
+  })
+  
   ipcMain.handle("checkChromeExistsOnMac", () => {
     if (os.platform() === 'darwin') {
       return getDefaultChromeDataDir();

@@ -5,8 +5,9 @@ import { scanTypes, viewportTypes, devices, fileTypes, getDefaultAdvancedOptions
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
 import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
+import LoadingSpinner from "../../common/components/LoadingSpinner";
 
-const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage }) => {
+const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage, scanButtonIsClicked, setScanButtonIsClicked }) => {
   const [openPageLimitAdjuster, setOpenPageLimitAdjuster] = useState(false);
   const pageLimitAdjuster = useRef();
 
@@ -43,6 +44,7 @@ const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage }) => {
       advancedOptions.viewportWidth = 414;
     }
 
+    setScanButtonIsClicked(true);
     startScan({ scanUrl: scanUrl.trim(), pageLimit, ...advancedOptions });
   };
 
@@ -105,9 +107,14 @@ const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage }) => {
               )}
             </div>
           )}
-          <Button type="primary" className="scan-btn" onClick={handleScanButtonClicked}>
-            Scan
-          </Button>
+          {scanButtonIsClicked 
+              ?  <Button type="disabled" className="scan-btn">
+                  <LoadingSpinner></LoadingSpinner>
+                </Button>
+              :  <Button type="primary" className="scan-btn" onClick={handleScanButtonClicked}>
+                  Scan
+                </Button>
+          }
         </div>
         {prevUrlErrorMessage && (
           <span id="url-error-message" className="error-text">

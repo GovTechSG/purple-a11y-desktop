@@ -38,6 +38,10 @@ contextBridge.exposeInMainWorld("services", {
   cleanUpCustomFlowScripts: (() => {
     ipcRenderer.send("cleanUpCustomFlowScripts");
   }),
+  getEngineVersion: async () => {
+    const phEngineVersion = await ipcRenderer.invoke('getEngineVersion'); 
+    return phEngineVersion;
+  },
   getResultsFolderPath: async (scanId) => {
     const reportPath = await ipcRenderer.invoke("getResultsFolderPath", scanId);
     return reportPath;
@@ -80,6 +84,11 @@ contextBridge.exposeInMainWorld("services", {
       callback();
     });
   },  
+  urlIsValid: (callback) => {
+    ipcRenderer.on('urlIsValid', () => {
+      callback();
+    })
+  },
   userDataExists: (callback) => {
     ipcRenderer.on("userDataExists", (event, data) => {
       callback(data);

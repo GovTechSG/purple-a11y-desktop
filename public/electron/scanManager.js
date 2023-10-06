@@ -157,7 +157,6 @@ const startScan = async (scanDetails, scanEvent) => {
       /** Code 0 handled indirectly here (i.e. successful process run),
       as unable to get stdout on close event after changing to spawn from fork */
 
-      console.log(data);
       // Output from combine.js which prints the string "No pages were scanned" if crawled URL <= 0
       // consider this as successful that the process ran,
       // but failure in the sense that no pages were scanned so that we can display a message to the user
@@ -167,6 +166,10 @@ const startScan = async (scanDetails, scanEvent) => {
         resolve({ success: false });
       }
 
+      if (data.includes("Url is valid")) {
+        scanEvent.emit('urlIsValid');
+      }
+      
       if (scanDetails.scanType === 'custom' && data.includes('generatedScript')) {
         const generatedScriptName = data.trim();
         console.log('generated script: ', generatedScriptName);
