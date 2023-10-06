@@ -7,6 +7,8 @@ module.exports = {
       x64ArchFiles: "*" // replace with any relevant glob pattern
     },
     ignore: [
+      'nodejs-mac-arm64',
+      'nodejs-mac-x64',
       'build/electron',
       'build/purple-hats-logo',
       'errors.txt',
