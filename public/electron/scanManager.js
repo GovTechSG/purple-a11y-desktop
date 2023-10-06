@@ -166,6 +166,10 @@ const startScan = async (scanDetails, scanEvent) => {
         resolve({ success: false });
       }
 
+      if (data.includes("Url is valid")) {
+        scanEvent.emit('urlIsValid');
+      }
+      
       if (scanDetails.scanType === 'custom' && data.includes('generatedScript')) {
         const generatedScriptName = data.trim();
         console.log('generated script: ', generatedScriptName);

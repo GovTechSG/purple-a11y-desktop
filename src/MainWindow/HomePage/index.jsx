@@ -16,10 +16,7 @@ import WhatsNewModal from "./WhatsNewModal";
 
 const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [prevUrlErrorMessage, setPrevUrlErrorMessage] = useState(
-    location.state
-  );
+  const [prevUrlErrorMessage, setPrevUrlErrorMessage] = useState('');
   const [{ name, email, browser }, setUserData] = useState({
     name: "", 
     email: "",
@@ -29,6 +26,27 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const [showEditDataModal, setShowEditDataModal] = useState(false);
   const [showNoChromeErrorModal, setShowNoChromeErrorModal] = useState(false);
   const [showWhatsNewModal, setShowWhatsNewModal] = useState(false);
+  const [url, setUrl] = useState('');
+  const [scanButtonIsClicked, setScanButtonIsClicked] = useState(false);
+
+  useEffect(() => {
+    if (scanButtonIsClicked) {
+      setPrevUrlErrorMessage('');
+      window.services.urlIsValid(() => {
+        navigate('/scanning', {state: {url}});
+      })
+    }
+  }, [scanButtonIsClicked])
+
+  useEffect(() => {
+    if (prevUrlErrorMessage && scanButtonIsClicked) {
+      setScanButtonIsClicked(false);
+    }
+  }, [prevUrlErrorMessage])
+
+  useEffect(() => {
+    
+  })
 
   useEffect(() => {
     if (
@@ -74,6 +92,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   };
 
   const startScan = async (scanDetails) => {
+    setUrl(scanDetails.scanUrl);
     scanDetails.browser = isProxy ? "edge" : browser;
 
     if (scanDetails.scanUrl.length === 0) {
@@ -97,8 +116,8 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
       return;
     } 
 
-    navigate("/scanning", {state: {url: scanDetails.scanUrl}});
     const response = await services.startScan(scanDetails);
+    console.log(response);
 
     if (response.noChrome) {
       navigate("/", { state: 'No chrome browser' });
@@ -145,7 +164,8 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           errorMessageToShow = "Something went wrong. Please try again later.";
       }
       console.log(`status error: ${response.statusCode}`);
-      navigate("/", { state: errorMessageToShow });
+      // navigate("/", { state: errorMessageToShow });
+      setPrevUrlErrorMessage(errorMessageToShow);
       return;
     } else if (response.statusCode) {
       console.error(
@@ -197,6 +217,8 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           isProxy={isProxy}
           startScan={startScan}
           prevUrlErrorMessage={prevUrlErrorMessage}
+          scanButtonIsClicked={scanButtonIsClicked}
+          setScanButtonIsClicked={setScanButtonIsClicked}
         />
       </div>
       {showBasicAuthModal && (

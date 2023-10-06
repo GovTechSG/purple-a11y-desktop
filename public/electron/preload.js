@@ -84,6 +84,11 @@ contextBridge.exposeInMainWorld("services", {
       callback();
     });
   },  
+  urlIsValid: (callback) => {
+    ipcRenderer.on('urlIsValid', () => {
+      callback();
+    })
+  },
   userDataExists: (callback) => {
     ipcRenderer.on("userDataExists", (event, data) => {
       callback(data);
