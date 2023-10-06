@@ -27,6 +27,15 @@ const { writeUserDetailsToFile } = require("./userDataManager");
 
 let currentChildProcess;
 
+let engineVersion;
+
+try {
+  engineVersion = getEngineVersion();
+} catch (e) {
+}
+
+const appFrontendVer = getFrontendVersion();
+
 const killChildProcess = () => {
   if (currentChildProcess) {
     currentChildProcess.kill("SIGKILL");
@@ -143,20 +152,12 @@ const getLatestBackendVersion = async () => {
     const { data: frontendRelease } = await axiosInstance.get(
       `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases/latest`
     );
-    const appFrontendVer = getFrontendVersion();
     const frontendReleaseVer = frontendRelease.tag_name;
     const frontendVerToCompare = versionComparator(appFrontendVer, frontendReleaseVer) === 1
       ? appFrontendVer
       : frontendReleaseVer;
 
     let backendExists = fs.existsSync(backendPath);
-    let engineVersion;
-
-    try {
-      engineVersion = getEngineVersion();
-    } catch (e) {
-      backendExists = false;
-    }
 
     if (!backendExists) {
       for (let release of allReleases) {
@@ -450,7 +451,8 @@ const run = async (updaterEventEmitter) => {
 
     if (isInterruptedUpdate && toUpdateBackendVer) {
       updaterEventEmitter.emit("updatingBackend");
-      if (!backendExists) {
+      // Trigger an unzip from Resources folder if backend does not exist or backend is older
+      if (!backendExists || (versionComparator(engineVersion, appFrontendVer) !== 1)) {
         if (fs.existsSync(macOSPrepackageBackend)) {
           processesToRun.push(await unzipBackendAndCleanUp(macOSPrepackageBackend));
         } else {
@@ -466,7 +468,8 @@ const run = async (updaterEventEmitter) => {
         );
       }
     } else {
-      if (!backendExists) {
+      // Trigger an unzip from Resources folder if backend does not exist or backend is older
+      if (!backendExists || (versionComparator(engineVersion, appFrontendVer) !== 1)) {
         updaterEventEmitter.emit("settingUp");
         if (fs.existsSync(macOSPrepackageBackend)) {
           processesToRun.push(await unzipBackendAndCleanUp(macOSPrepackageBackend));
