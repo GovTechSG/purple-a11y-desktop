@@ -145,7 +145,7 @@ const getLatestBackendVersion = async () => {
     );
     const appFrontendVer = getFrontendVersion();
     const frontendReleaseVer = frontendRelease.tag_name;
-    const frontendVerToCompare = appFrontendVer > frontendReleaseVer
+    const frontendVerToCompare = versionComparator(appFrontendVer, frontendReleaseVer) === 1
       ? appFrontendVer
       : frontendReleaseVer;
 
