@@ -490,7 +490,6 @@ const run = async (updaterEventEmitter) => {
     }
 
     for (const proc of processesToRun) {
-      console.log(proc);
       await proc();
     }
   }
