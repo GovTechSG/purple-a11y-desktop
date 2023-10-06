@@ -69,7 +69,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   }, [])
 
   const isValidHttpUrl = (input) => {
-    const regexForUrl = new RegExp(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    const regexForUrl = new RegExp("^(http|https):/{2}.+$", "gmi");
     return regexForUrl.test(input);
   };
 
