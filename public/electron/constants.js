@@ -45,6 +45,9 @@ const getMacOSExecutablePath = () => {
 };
 const macOSExecutablePath = getMacOSExecutablePath();
 
+// const macOSPrepackageBackend = path.join(macOSExecutablePath, "Contents", "Resources", "purple-hats-portable-mac.zip");
+const macOSPrepackageBackend = path.join(process.resourcesPath, "purple-hats-portable-mac.zip");
+
 const resultsPath =
   os.platform() === "win32"
     ? path.join(process.env.APPDATA, "Purple HATS")
@@ -654,4 +657,5 @@ module.exports = {
   versionComparator,
   uploadFolderName,
   allReleasesUrl,
+  macOSPrepackageBackend,
 };

@@ -20,6 +20,7 @@ const {
   getMacOSExecutablePath,
   versionComparator,
   allReleasesUrl,
+  macOSPrepackageBackend,
 } = require("./constants");
 const { silentLogger } = require("./logs");
 const { writeUserDetailsToFile } = require("./userDataManager");
@@ -121,16 +122,18 @@ const downloadBackend = async (tag=undefined) => {
   return async () => await execCommand(command);
 };
 
-const unzipBackendAndCleanUp = async () => {
-  let command = `tar -xf '${phZipPath}' -C '${backendPath}' &&
-    rm '${phZipPath}' &&
+const unzipBackendAndCleanUp = async (zipPath=phZipPath) => {
+  let unzipCommand = `mkdir -p '${backendPath}' && tar -xf '${zipPath}' -C '${backendPath}' &&
+    rm '${zipPath}' &&
     cd '${backendPath}' &&
     './hats_shell.sh' echo "Initialise"
     `;
-  await execCommand(command);
+  // await execCommand(command);
 
-  command = `cd '${backendPath}' && './hats_shell.sh' npx playwright install webkit`;
-  await execCommand(command);
+  // return async () => await execCommand(command);
+  return async () => {
+    await execCommand(unzipCommand);
+  }
 };
 
 const getLatestBackendVersion = async () => {
@@ -448,23 +451,31 @@ const run = async (updaterEventEmitter) => {
     if (isInterruptedUpdate && toUpdateBackendVer) {
       updaterEventEmitter.emit("updatingBackend");
       if (!backendExists) {
-        processesToRun.push(await downloadBackend(toUpdateBackendVer), unzipBackendAndCleanUp);
+        if (fs.existsSync(macOSPrepackageBackend)) {
+          processesToRun.push(await unzipBackendAndCleanUp(macOSPrepackageBackend));
+        } else {
+          processesToRun.push(await downloadBackend(toUpdateBackendVer), await unzipBackendAndCleanUp());
+        }
       } else if (phZipExists) {
-        processesToRun.push(unzipBackendAndCleanUp);
+        processesToRun.push(await unzipBackendAndCleanUp());
       } else {
         processesToRun.push(
           cleanUpBackend,
           await downloadBackend(toUpdateBackendVer),
-          unzipBackendAndCleanUp
+          await unzipBackendAndCleanUp()
         );
       }
     } else {
-      if (!backendExists && toUpdateBackendVer) {
+      if (!backendExists) {
         updaterEventEmitter.emit("settingUp");
-        processesToRun.push(await downloadBackend(toUpdateBackendVer), unzipBackendAndCleanUp);
+        if (fs.existsSync(macOSPrepackageBackend)) {
+          processesToRun.push(await unzipBackendAndCleanUp(macOSPrepackageBackend));
+        } else {
+          processesToRun.push(await downloadBackend(toUpdateBackendVer), await unzipBackendAndCleanUp());
+        }
       } else if (phZipExists) {
         updaterEventEmitter.emit("settingUp");
-        processesToRun.push(unzipBackendAndCleanUp);
+        processesToRun.push(await unzipBackendAndCleanUp());
       } else {
         // if fetching of latest backend version from github api fails for any reason,
         // or no update to be downloaded,
@@ -482,7 +493,7 @@ const run = async (updaterEventEmitter) => {
               backUpData,
               cleanUpBackend,
               await downloadBackend(toUpdateBackendVer),
-              unzipBackendAndCleanUp
+              await unzipBackendAndCleanUp()
             );
           }
         }
