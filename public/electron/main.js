@@ -151,6 +151,10 @@ app.on("ready", async () => {
     shell.openExternal(url);
   });
 
+  ipcMain.handle('getEngineVersion', () => {
+    return constants.getEngineVersion();
+  })
+  
   ipcMain.handle("checkChromeExistsOnMac", () => {
     if (os.platform() === 'darwin') {
       return getDefaultChromeDataDir();

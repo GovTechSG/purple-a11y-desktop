@@ -60,15 +60,16 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   useEffect(() => {
     const checkChromeExists = async () => {
       const chromeExists = await window.services.checkChromeExistsOnMac();
-      console.log("chrome exists: ", chromeExists);
+
       if (!chromeExists) {
         setShowNoChromeErrorModal(true);
       }
     }
     checkChromeExists();
   }, [])
+
   const isValidHttpUrl = (input) => {
-    const regexForUrl = new RegExp("^(http|https):/{2}.+$", "gmi");
+    const regexForUrl = new RegExp(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
     return regexForUrl.test(input);
   };
 
@@ -79,6 +80,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
       setPrevUrlErrorMessage("URL cannot be empty.");
       return;
     }
+
     if (!isValidHttpUrl(scanDetails.scanUrl)) {
       setPrevUrlErrorMessage("Invalid URL.");
       return;
