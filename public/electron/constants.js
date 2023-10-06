@@ -61,8 +61,15 @@ const installerExePath = path.join(
 
 const enginePath = path.join(backendPath, "purple-hats");
 
-const getEngineVersion = () =>
-  require(path.join(enginePath, "package.json")).version;
+const getEngineVersion = () => {
+  const enginePackageFile = fs.readFileSync(path.join(enginePath, "package.json"), 'utf8');
+  try {
+    const enginePackage = JSON.parse(enginePackageFile);
+    return enginePackage.version;
+  } catch (error) {
+    return null;
+  }
+};
 
 const getFrontendVersion = () => {
   // Directory is only valid for and used by Windows
