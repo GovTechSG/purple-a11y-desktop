@@ -45,6 +45,7 @@ const EditUserDetailsModal = ({
         showModal={showModal}
         showHeader={true}
         modalTitle={"Edit your profile"}
+        modalSizeClass="modal-dialog-centered"
         modalBody={
           <>
             <UserDetailsForm

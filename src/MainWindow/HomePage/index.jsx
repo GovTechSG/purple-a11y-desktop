@@ -68,11 +68,19 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
       const userData = await services.getUserData();
       setUserData(userData);
       // to show what's new modal on successful update to latest version
-      setShowWhatsNewModal(!!userData["firstLaunchOnUpdate"] && appVersionInfo.isLatest);
-      window.services.editUserData({ firstLaunchOnUpdate: false });
+      const handleShowModal = () => {
+        setShowWhatsNewModal(!!userData["firstLaunchOnUpdate"] && appVersionInfo.isLatest);
+        window.services.editUserData({ firstLaunchOnUpdate: false });
+      }
+      const whatsNewModalTimeout = setTimeout(
+        handleShowModal,
+        !!userData["firstLaunchOnUpdate"] ? 500 : 0,
+      )
+      return whatsNewModalTimeout;
     };
 
-    getUserData();
+    const whatsNewModalTimeout = getUserData();
+    return () => clearTimeout(whatsNewModalTimeout);
   }, []);
 
   useEffect(() => {

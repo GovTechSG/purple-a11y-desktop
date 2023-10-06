@@ -574,6 +574,19 @@ a {
   opacity: 95%;
 }
 
+.whats-new-section {
+  margin-bottom: 1.5rem;
+}
+
+.whats-new-section h4 {
+  border-bottom: 1px solid #B5C5CA;
+	padding-bottom: 0.5rem;
+}
+
+hr {
+  background-color: #B5C5CA;
+}
+
 /* @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Roboto:ital,wght@0,100;1,100&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Viga"); */
 /* cyrillic-ext */
