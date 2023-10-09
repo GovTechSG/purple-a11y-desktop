@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from "react-router";
 import { cliErrorCodes, cliErrorTypes } from "../../common/constants";
 import services from "../../services";
 import './CustomFlow.scss';
-import arrowRight from "../../assets/arrow-right.svg";
+import arrowRightGrey from "../../assets/arrow-right-grey.svg";
+import arrowRightWhite from "../../assets/arrow-right-white.svg";
 import editIcon from "../../assets/box-edit.svg";
 import exclaimTriangleIcon from "../../assets/exclamation-triangle.svg";
 import thumbsUpIcon from "../../assets/hand-thumbs-up.svg";
@@ -49,6 +50,7 @@ const PrepareStep = ({ scanDetails, setStep }) => {
   };
 
   const isAllSet = isPostLogin !== null && isFileUpload !== null && !isPostLogin && !isFileUpload;
+  const isButtonDisabled = isPostLogin === null || isFileUpload === null;
 
   return (
     <>
@@ -92,9 +94,9 @@ const PrepareStep = ({ scanDetails, setStep }) => {
         <Alert alertClassName="alert-custom mb-5" icon={thumbsUpIcon}>
           It looks like you're all set for the custom flow scan, let's get started!
         </Alert>}
-        <button className="primary custom-flow-button ms-auto" type="submit" disabled={isPostLogin === null && isFileUpload === null}>
+        <button className="primary custom-flow-button ms-auto" type="submit" disabled={isButtonDisabled}>
           Next step&nbsp;
-          <img src={arrowRight}></img>
+          <img src={isButtonDisabled ? arrowRightGrey : arrowRightWhite}></img>
         </button>
       </form>
     </>
