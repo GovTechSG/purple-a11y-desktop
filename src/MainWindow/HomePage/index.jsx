@@ -164,15 +164,13 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           errorMessageToShow = "Invalid sitemap.";
           break;
         case cliErrorTypes.browserError:
-          errorMessageToShow =
-            "Unable to use browsers. Try closing all opened browser(s) before the next scan.";
-          break;
+          navigate('/error', { state: { isBrowserError: true }});
+          return;
         case cliErrorTypes.systemError:
         default:
           errorMessageToShow = "Something went wrong. Please try again later.";
       }
       console.log(`status error: ${response.statusCode}`);
-      // navigate("/", { state: errorMessageToShow });
       setPrevUrlErrorMessage(errorMessageToShow);
       return;
     } else if (response.statusCode) {

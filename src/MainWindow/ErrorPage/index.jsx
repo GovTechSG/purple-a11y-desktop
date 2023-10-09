@@ -10,10 +10,15 @@ const ErrorPage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const [isCustomScan, setIsCustomScan] = useState(false);
+  const [isBrowserError, setIsBrowserError] = useState(false);
 
   useEffect(() => {
-    if (state && state.isCustomScan) {
+    if (state?.isCustomScan) {
       setIsCustomScan(state.isCustomScan);
+    }
+
+    if (state?.isBrowserError) {
+      setIsBrowserError(state.isBrowserError);
     }
   }, []);
 
@@ -38,8 +43,13 @@ const ErrorPage = () => {
         className={`exclamation-circle-icon`}
         svgIcon={<ExclamationCircleIcon />}
       />
-      {/* <i className="bi bi-exclamation-circle"></i> */}
-      <h1>Something went wrong! Please try again.</h1>
+      {isBrowserError
+        ? <>
+            <h1>Unable to use browser to scan</h1>
+            <p>Please close either Google Chrome or Microsoft Edge browser.</p>
+          </>
+        : <h1>Something went wrong! Please try again.</h1>
+      }
       {isCustomScan
       ? (
         <>
@@ -52,7 +62,7 @@ const ErrorPage = () => {
         </Button>
         </>
       )
-      : <Button role="link" type="primary" onClick={handleBackToHome}>
+      : <Button role="link" type="primary" className='try-again-btn' onClick={handleBackToHome}>
           Try Again
         </Button>}
     </div>
