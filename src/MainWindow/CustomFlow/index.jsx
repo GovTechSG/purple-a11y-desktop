@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router";
 import { cliErrorCodes, cliErrorTypes } from "../../common/constants";
 import services from "../../services";
 import './CustomFlow.scss';
+import arrowLeft from "../../assets/arrow-left.svg";
 import arrowRightGrey from "../../assets/arrow-right-grey.svg";
 import arrowRightWhite from "../../assets/arrow-right-white.svg";
 import editIcon from "../../assets/box-edit.svg";
@@ -18,6 +19,7 @@ import ButtonWithBoxRightArrowIcon from "./components/ButtonWithBoxRightArrowIco
 import DoneScanningStatus from "../../common/components/DoneScanningStatus";
 import LoadingScanningStatus from "../../common/components/LoadingScanningStatus";
 import Alert from "../../common/components/Alert";
+import { Link } from "react-router-dom";
 
 const PrepareStep = ({ scanDetails, setStep }) => {
   const [isPostLogin, setIsPostLogin] = useState(null);
@@ -330,7 +332,13 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
       <div id="custom-flow">
         { scanDetails && 
           <>
-            <ProgressStepComponent step={step}></ProgressStepComponent>
+            <div className="d-flex flex-column gap-2">
+              <Link to="/" className="text-decoration-none">
+                <img src={arrowLeft}></img>
+                &nbsp;Back to Home
+              </Link>
+              <ProgressStepComponent step={step}></ProgressStepComponent>
+            </div>
             <div className="custom-flow-content">{currentDisplay()}</div>
           </>
         }
