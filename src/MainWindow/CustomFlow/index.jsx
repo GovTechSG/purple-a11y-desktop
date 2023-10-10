@@ -21,7 +21,7 @@ import LoadingScanningStatus from "../../common/components/LoadingScanningStatus
 import Alert from "../../common/components/Alert";
 import { Link } from "react-router-dom";
 
-const PrepareStep = ({ scanDetails, setStep }) => {
+const PrepareStep = ({ scanDetails, setStep, setScanDetails }) => {
   const [isPostLogin, setIsPostLogin] = useState(null);
   const [isFileUpload, setIsFileUpload] = useState(null);
   const [fileUploadFolder, setFileUploadFolder] = useState(undefined);
@@ -41,6 +41,10 @@ const PrepareStep = ({ scanDetails, setStep }) => {
 
   const onClickNextStep = (e) => {
     e.preventDefault();
+    // get responses
+    const scanMetadata = { isPostLogin, isFileUpload };
+    const newScanDetails = { ...scanDetails, scanMetadata };
+    setScanDetails(newScanDetails);
     setStep(2);
   };
 
@@ -133,7 +137,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
           }
           setGeneratedScript(generatedScript);
           setScanDetails(scanDetails);
-          setStep(2);
+          setStep(3);
         }
     }, [])
 
@@ -151,7 +155,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
     }, [done])
 
     const onClickRecord = async () => {
-      setLoading(true); 
+      setLoading(true);
       await startRecording();
     }
         
@@ -253,7 +257,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
         switch (step) {
           case 1: {
             return (
-              <PrepareStep scanDetails={scanDetails} setStep={setStep} />
+              <PrepareStep scanDetails={scanDetails} setStep={setStep} setScanDetails={setScanDetails} />
             )
           }
           case 2: {

@@ -57,6 +57,7 @@ const getScanOptions = (details) => {
     maxConcurrency,
     falsePositive,
     includeScreenshots,
+    metadata,
   } = details;
   const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`, "-i", fileTypes];
 
@@ -99,6 +100,10 @@ const getScanOptions = (details) => {
 
   if (falsePositive) {
     options.push("-f", "true");
+  }
+
+  if (metadata) {
+    options.push("-q", metadata);
   }
 
   return options;
