@@ -86,7 +86,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   useEffect(() => {
     const checkChromeExists = async () => {
       const chromeExists = await window.services.checkChromeExistsOnMac();
-
+      
       if (!chromeExists) {
         setShowNoChromeErrorModal(true);
       }
@@ -127,11 +127,6 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
     const response = await services.startScan(scanDetails);
     console.log(response);
 
-    if (response.noChrome) {
-      navigate("/", { state: 'No chrome browser' });
-      return;
-    }
-
     if (response.failedToCreateExportDir) {
       navigate("/", { state: 'Unable to create download directory' });
       return;
@@ -164,15 +159,13 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           errorMessageToShow = "Invalid sitemap.";
           break;
         case cliErrorTypes.browserError:
-          errorMessageToShow =
-            "Unable to use browsers. Try closing all opened browser(s) before the next scan.";
-          break;
+          navigate('/error', { state: { isBrowserError: true }});
+          return;
         case cliErrorTypes.systemError:
         default:
           errorMessageToShow = "Something went wrong. Please try again later.";
       }
       console.log(`status error: ${response.statusCode}`);
-      // navigate("/", { state: errorMessageToShow });
       setPrevUrlErrorMessage(errorMessageToShow);
       return;
     } else if (response.statusCode) {
