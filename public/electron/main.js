@@ -14,6 +14,7 @@ const scanManager = require("./scanManager");
 const updateManager = require("./updateManager");
 const userDataManager = require("./userDataManager.js");
 const showdown = require('showdown');
+const { escape } = require("querystring");
 
 const app = electronApp;
 
@@ -181,7 +182,11 @@ app.on("ready", async () => {
   if (latestRelease) {
     const isLatest = constants.versionComparator(constants.appVersion, latestRelease.tag_name) === 1;
     const markdownConverter = new showdown.Converter();
-    const latestReleaseHtml = markdownConverter.makeHtml(latestRelease.body);
+    const escapedBody = latestRelease.body
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+    const latestReleaseHtml = markdownConverter.makeHtml(escapedBody);
     mainWindow.webContents.send("versionInfo", {
       appVersion: constants.appVersion,
       isLatest,
