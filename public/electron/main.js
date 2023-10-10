@@ -14,7 +14,6 @@ const scanManager = require("./scanManager");
 const updateManager = require("./updateManager");
 const userDataManager = require("./userDataManager.js");
 const showdown = require('showdown');
-const { escape } = require("querystring");
 
 const app = electronApp;
 
