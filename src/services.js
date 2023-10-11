@@ -30,6 +30,7 @@ const startScan = async (scanDetails) => {
     maxConcurrency,
     falsePositive,
     includeScreenshots,
+    scanMetadata,
   } = scanDetails;
 
   currentScanUrl = scanUrl;
@@ -43,6 +44,7 @@ const startScan = async (scanDetails) => {
     falsePositive: falsePositive,
     fileTypes: fileTypes[selectedFileTypes],
     includeScreenshots,
+    metadata: JSON.stringify(scanMetadata),
   };
 
   if (selectedScanType !== Object.keys(scanTypes)[2]) {

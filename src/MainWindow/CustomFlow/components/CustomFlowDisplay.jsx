@@ -11,7 +11,7 @@ const CustomFlowDisplay = ({
         <div className="custom-flow-header-content">
           <img className="custom-flow-header-img" src={icon}></img>
           <div className="custom-flow-header-title-container">
-            <p className="custom-flow-header-step">STEP {step} of 3</p>
+            <p className="custom-flow-header-step">STEP {step} of 4</p>
             <h3 className="custom-flow-header-title">{title}</h3>
           </div>
         </div>

@@ -276,7 +276,6 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           alt="Illustration showing people with sight, hearing, motor and cognitive disabilities"
         />
         <span id="footer-text">
-          Version
           {
             appVersionInfo.isLatest ? (
               <>
@@ -285,10 +284,10 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
                   className="purple-text"
                   onClick={() => setShowWhatsNewModal(true)}
                 >
-                  {appVersionInfo.appVersion} {appVersionInfo.isLatest && '(latest)'}
+                  Version {appVersionInfo.appVersion} {appVersionInfo.isLatest && '(latest)'}
                 </Button> | Built by GovTech Accessibility Enabling Team
               </>
-            ) : ` ${appVersionInfo.appVersion} | Built by GovTech Accessibility Enabling Team`
+            ) : `Version ${appVersionInfo.appVersion} | Built by GovTech Accessibility Enabling Team`
           }
         </span>
       </div>

@@ -181,7 +181,11 @@ app.on("ready", async () => {
   if (latestRelease) {
     const isLatest = constants.versionComparator(constants.appVersion, latestRelease.tag_name) === 1;
     const markdownConverter = new showdown.Converter();
-    const latestReleaseHtml = markdownConverter.makeHtml(latestRelease.body);
+    const escapedBody = latestRelease.body
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+    const latestReleaseHtml = markdownConverter.makeHtml(escapedBody);
     mainWindow.webContents.send("versionInfo", {
       appVersion: constants.appVersion,
       isLatest,

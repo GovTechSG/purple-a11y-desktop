@@ -37,11 +37,13 @@ const ProgressStepComponent = ({step}) => {
         <div className="progress-step-container">
             <h4>CUSTOM FLOW</h4>
             <div className="progress-step-list">
-                <ProgressStepItemComponent num={1} label={'Record'} />
+                <ProgressStepItemComponent num={1} label={'Prepare'} />
                 <ProgressStepBarComponent num={1} />
-                <ProgressStepItemComponent num={2} label={'Replay'} />
+                <ProgressStepItemComponent num={2} label={'Record'} />
                 <ProgressStepBarComponent num={2} />
-                <ProgressStepItemComponent num={3} label={'Label'} />
+                <ProgressStepItemComponent num={3} label={'Replay'} />
+                <ProgressStepBarComponent num={3} />
+                <ProgressStepItemComponent num={4} label={'Label'} />
             </div>
         </div>
     )
