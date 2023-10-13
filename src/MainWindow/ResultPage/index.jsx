@@ -5,13 +5,13 @@ import services from "../../services";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { handleClickLink } from "../../common/constants";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
-import { ReactComponent as CheckCircleIcon } from "../../assets/check-circle.svg";
-import { ReactComponent as BoxArrowUpRightIcon } from "../../assets/box-arrow-up-right.svg";
 import { ReactComponent as MailIcon } from "../../assets/mail.svg";
 import { ReactComponent as MailSuccessIcon } from "../../assets/mail-success.svg";
 import houseIcon from "../../assets/house.svg"; 
 import thumbsUpIcon from "../../assets/hand-thumbs-up.svg";
 import arrowRepeatIcon from "../../assets/arrow-repeat.svg";
+import checkCircleIcon from '../../assets/check-circle.svg'; 
+import boxArrowUpRightIcon from "../../assets/box-arrow-up-right.svg";
 import EditMailDetailsModal from "./EditMailDetailsModal";
 
 const ResultPage = ({ completedScanId: scanId }) => {
@@ -125,86 +125,80 @@ const ResultPage = ({ completedScanId: scanId }) => {
     <div id="result-page">
       <div id="main-container">
         <div id="main-contents">
-          <ButtonSvgIcon
-            className={`check-circle-icon`}
-            svgIcon={<CheckCircleIcon />}
-          />
+          <img alt="" src={checkCircleIcon}></img>
           <h1>Scan completed</h1>
           <p id="download-content">
             You can find the downloaded report at{" "}
             <a href="#" onClick={handleOpenResultsFolder}>
               {resultsPath}
-            </a>
+            </a>.
           </p>
           <Button id="view-button" type="primary" onClick={handleViewReport}>
-            <ButtonSvgIcon
-              className={`box-arrow-up-right-icon `}
-              svgIcon={<BoxArrowUpRightIcon />}
-            />
+           <img alt="" src={boxArrowUpRightIcon}></img>
             View report
           </Button>
-          <hr/>
+          <hr class="my-5"/>
           <div id="other-actions">
-            <p>Other actions</p>
+            <h2>Other actions</h2>
             <a
-              role="link"
-              className="link"
               href="#"
               onClick={(e) => {handleClickLink(e, feedbackFormUrl)}}
             >
-              <img src={thumbsUpIcon}></img>
+              <img alt="" src={thumbsUpIcon}></img>
               Help us improve
             </a>
             { showCustomFlowReplayButton && 
               <Link to="/custom_flow" state={{ isReplay: true }}>
-                <img src={arrowRepeatIcon}></img>
+                <img alt="" src={arrowRepeatIcon}></img>
                 Rerun custom flow {`(${customFlowLabel})`}
               </Link>
             }
             <hr/>
             <Link to="/" onClick={handleScanAgain}>
-              <img src={houseIcon}></img>
+              <img alt="" src={houseIcon}></img>
               Back To Home 
             </Link>
           </div>
-          
-          <div id="btn-container">
-            {isWindows && isEvent && mailStatus === "send" && (
-              <Button
-                id="mail-report-button"
-                type="primary"
-                className="bold-text"
-                onClick={() => setShowEditMailDetailsModal(true)}
-              >
-                <ButtonSvgIcon svgIcon={<MailIcon />} className={`mail-icon`} />
-                Mail report
-              </Button>
-            )}
-            {isWindows && isEvent && mailStatus === "sending" && (
-              <Button
-                id="mail-report-button"
-                type="primary"
-                className="bold-text"
-                disabled="disabled"
-              >
-                <ButtonSvgIcon svgIcon={<MailIcon />} className={`mail-icon`} />
-                Sending mail...
-              </Button>
-            )}
-            {isWindows && isEvent && mailStatus === "sent" && (
-              <Button
-                id="mail-report-button"
-                type="primary"
-                disabled="disabled"
-              >
-                <ButtonSvgIcon
-                  svgIcon={<MailSuccessIcon />}
-                  className={`mail-icon`}
-                />
-                Report mailed
-              </Button>
-            )}
-          </div>
+          {isWindows && isEvent && (
+            <div id="btn-container">
+              {mailStatus === "send" && (
+                <Button
+                  id="mail-report-button"
+                  type="primary"
+                  className="bold-text"
+                  onClick={() => setShowEditMailDetailsModal(true)}
+                >
+                  <ButtonSvgIcon svgIcon={<MailIcon />} className={`mail-icon`} />
+                  Mail report
+                </Button>
+              )}
+              {mailStatus === "sending" && (
+                <Button
+                  id="mail-report-button"
+                  type="primary"
+                  className="bold-text"
+                  disabled="disabled"
+                >
+                  <ButtonSvgIcon svgIcon={<MailIcon />} className={`mail-icon`} />
+                  Sending mail...
+                </Button>
+              )}
+              {mailStatus === "sent" && (
+                <Button
+                  id="mail-report-button"
+                  type="primary"
+                  disabled="disabled"
+                >
+                  <ButtonSvgIcon
+                    svgIcon={<MailSuccessIcon />}
+                    className={`mail-icon`}
+                  />
+                  Report mailed
+                </Button>
+              )}
+            </div>
+          )
+          }
           {showEditMailDetailsModal && (
             <EditMailDetailsModal
               showModal={showEditMailDetailsModal}
