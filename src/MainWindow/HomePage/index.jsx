@@ -128,11 +128,8 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
     window.localStorage.setItem("scanDetails", JSON.stringify(scanDetails));
 
     const checkUrlResponse = await services.validateUrlConnectivity(scanDetails);
-    // valid url -> success: true 
-    // invalid url -> success: false, status code: xx, message: xx
 
     if (checkUrlResponse.success) {
-      // if urlIsValid then we start scan or go custom flow page 
        if (scanDetails.scanType === 'Custom flow') {
           navigate('/custom_flow', { state: { scanDetails }});
           return;
@@ -140,8 +137,6 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           navigate('/scanning', { state: { url: scanDetails.scanUrl } });
           const scanResponse = await services.startScan(scanDetails);
           
-          // successful scan -> success: true, completedScanId: xx -> /result 
-          // unsuccessful scan -> success: false -> /error
           if (scanResponse.failedToCreateExportDir) {
             setPrevUrlErrorMessage('Unable to create download directory');
             return;
