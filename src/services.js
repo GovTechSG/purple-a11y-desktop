@@ -16,6 +16,43 @@ import {
 let currentScanUrl;
 let currentScanType;
 
+const validateUrlConnectivity = async (scanDetails) => {
+  const {
+    scanType: selectedScanType,
+    scanUrl,
+    viewport,
+    device,
+    viewportWidth,
+    browser,
+    fileTypes: selectedFileTypes,
+  } = scanDetails;
+
+  currentScanUrl = scanUrl;
+  currentScanType = selectedScanType;
+
+  const scanArgs = {
+    scanType: scanTypes[selectedScanType],
+    url: scanUrl,
+    browser: browser,
+    fileTypes: fileTypes[selectedFileTypes],
+  };
+
+  if (viewport === viewportTypes.mobile) {
+    scanArgs.customDevice = "Mobile";
+  }
+
+  if (viewport === viewportTypes.specific) {
+    scanArgs.customDevice = devices[device];
+  }
+
+  if (viewport === viewportTypes.custom) {
+    scanArgs.viewportWidth = viewportWidth;
+  }
+
+  const response = await window.services.validateUrlConnectivity(scanArgs);
+  return response;
+}
+
 const startScan = async (scanDetails) => {
   const {
     scanType: selectedScanType,
@@ -64,7 +101,6 @@ const startScan = async (scanDetails) => {
   }
 
   const response = await window.services.startScan(scanArgs);
-  console.log("services: ", response);
   return response;
 };
 
@@ -160,7 +196,8 @@ const services = {
   mailReport,
   getIsWindows,
   isValidName,
-  isValidCustomFlowLabel
+  isValidCustomFlowLabel,
+  validateUrlConnectivity
 };
 
 export default services;

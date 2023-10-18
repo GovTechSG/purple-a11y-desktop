@@ -32,9 +32,15 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   useEffect(() => {
     if (scanButtonIsClicked) {
       setPrevUrlErrorMessage('');
-      window.services.urlIsValid(() => {
-        navigate('/scanning', {state: {url}});
-      })
+      // window.services.urlIsValid(() => {
+      //   const scanDetails = JSON.parse(window.localStorage.getItem('scanDetails')); 
+      //   if (scanDetails.scanType === 'Custom flow') {
+      //     navigate('/custom_flow', {state: {scanDetails}});
+      //     return; 
+      //   } else {
+      //     navigate('/scanning', {state: {url}});
+      //   }
+      // })
     }
   }, [scanButtonIsClicked])
 
@@ -100,7 +106,6 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   };
 
   const startScan = async (scanDetails) => {
-    setUrl(scanDetails.scanUrl);
     scanDetails.browser = isProxy ? "edge" : browser;
 
     if (scanDetails.scanUrl.length === 0) {
@@ -119,67 +124,77 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
 
     window.localStorage.setItem("scanDetails", JSON.stringify(scanDetails));
 
-    if (scanDetails.scanType === 'Custom flow') {
-      navigate('/custom_flow', {state: {scanDetails: scanDetails}});
-      return;
-    } 
 
-    const response = await services.startScan(scanDetails);
-    console.log(response);
+    const checkUrlResponse = await services.validateUrlConnectivity(scanDetails);
+    // valid url -> success: true 
+    // invalid url -> success: false, status code: xx, message: xx
 
-    if (response.failedToCreateExportDir) {
-      navigate("/", { state: 'Unable to create download directory' });
-      return;
-    }
+    if (checkUrlResponse.success) {
+      // if urlIsValid then we start scan or go custom flow page 
+       if (scanDetails.scanType === 'Custom flow') {
+          navigate('/custom_flow', { state: { scanDetails }});
+          return;
+        } else {
+          navigate('/scanning', { state: { url: scanDetails.scanUrl } });
+          const scanResponse = await services.startScan(scanDetails);
+          
+          // successful scan -> success: true, completedScanId: xx -> /result 
+          // unsuccessful scan -> success: false -> /error
+          if (scanResponse.failedToCreateExportDir) {
+            setPrevUrlErrorMessage('Unable to create download directory');
+            return;
+          }
 
-    if (response.success) {
-      setCompletedScanId(response.scanId);
-      if (scanDetails.scanType === 'Custom flow') {
-        navigate("/custom_flow");
+          if (scanResponse.success) {
+            setCompletedScanId(scanResponse.scanId);
+            navigate("/result");
+            return;
+          } else {
+            /* When no pages were scanned (e.g. out of domain upon redirects when valid URL was entered),
+                redirects user to error page to going to result page with empty result */
+            navigate("/error");
+            return; 
+          }   
+        }
+    } else {
+      if (checkUrlResponse.failedToCreateExportDir) {
+        setPrevUrlErrorMessage('Unable to create download directory');
         return;
       }
-      navigate("/result");
-      return;
-    }
 
-    if (cliErrorCodes.has(response.statusCode)) {
-      let errorMessageToShow;
-      switch (response.statusCode) {
-        /* technically urlErrorTypes.invalidUrl is not needed since this case
-        was handled above, but just for completeness */
-        case cliErrorTypes.unauthorisedBasicAuth:
-          errorMessageToShow = "Unauthorised Basic Authentication.";
-          break;
-        case cliErrorTypes.invalidUrl:
-        case cliErrorTypes.cannotBeResolved:
-        case cliErrorTypes.errorStatusReceived:
-          errorMessageToShow = "Invalid URL.";
-          break;
-        case cliErrorTypes.notASitemap:
-          errorMessageToShow = "Invalid sitemap.";
-          break;
-        case cliErrorTypes.browserError:
-          navigate('/error', { state: { isBrowserError: true }});
-          return;
-        case cliErrorTypes.systemError:
-        default:
-          errorMessageToShow = "Something went wrong. Please try again later.";
-      }
-      console.log(`status error: ${response.statusCode}`);
-      setPrevUrlErrorMessage(errorMessageToShow);
-      return;
-    } else if (response.statusCode) {
-      console.error(
-        `unexpected status error: (code ${response.statusCode})`,
-        response.message
-      );
+      if (cliErrorCodes.has(checkUrlResponse.statusCode)) {
+        let errorMessageToShow;
+        switch (checkUrlResponse.statusCode) {
+          /* technically urlErrorTypes.invalidUrl is not needed since this case
+          was handled above, but just for completeness */
+          case cliErrorTypes.unauthorisedBasicAuth:
+            errorMessageToShow = "Unauthorised Basic Authentication.";
+            break;
+          case cliErrorTypes.invalidUrl:
+          case cliErrorTypes.cannotBeResolved:
+          case cliErrorTypes.errorStatusReceived:
+            errorMessageToShow = "Invalid URL.";
+            break;
+          case cliErrorTypes.notASitemap:
+            errorMessageToShow = "Invalid sitemap.";
+            break;
+          case cliErrorTypes.browserError:
+            navigate('/error', { state: { isBrowserError: true }});
+            return;
+          case cliErrorTypes.systemError:
+          default:
+            errorMessageToShow = "Something went wrong. Please try again later.";
+        }
+        console.log(`status error: ${checkUrlResponse.statusCode}`);
+        setPrevUrlErrorMessage(errorMessageToShow);
+        return;
+      } else if (checkUrlResponse.statusCode) {
+        console.error(
+          `unexpected status error: (code ${checkUrlResponse.statusCode})`,
+          checkUrlResponse.message
+        );
+      }  
     }
-
-    /* When no pages were scanned (e.g. out of domain upon redirects when valid URL was entered),
-    redirects user to error page to going to result page with empty result
-    */
-    navigate("/error");
-    return;
   };
 
   const areUserDetailsSet = name !== "" && email !== "";

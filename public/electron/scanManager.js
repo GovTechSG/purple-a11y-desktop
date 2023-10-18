@@ -109,6 +109,58 @@ const getScanOptions = (details) => {
   return options;
 };
 
+const validateUrlConnectivity = async (scanDetails) => {
+  console.log('Validating URL...');
+
+  const userData = readUserDataFromFile(); 
+  if (userData) {
+    scanDetails.email = userData.email;
+    scanDetails.name = userData.name;
+    scanDetails.exportDir = userData.exportDir;
+    const success = createExportDir(userData.exportDir);
+    if (!success) return  { failedToCreateExportDir: true }
+  }
+
+  const response = await new Promise(async (resolve) => {
+    const check = spawn(
+      "node",
+      [path.join(enginePath, "cli.js"), ...getScanOptions(scanDetails)],
+      {
+        cwd: resultsPath,
+        env: {
+          ...process.env,
+          VALIDATE_URL_PH_GUI: true, 
+          PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
+          PATH: getPathVariable(),
+        },
+      }
+    );
+
+    currentChildProcess = check;
+
+    check.stderr.setEncoding("utf8");
+    check.stderr.on("data", function (data) {
+      console.log("stderr: " + data);
+    });
+
+    check.stdout.setEncoding("utf8");
+    check.stdout.on("data", async (data) => {
+      if (data.includes("Url is valid")) {
+        resolve({ success: true });
+      }
+    });
+
+    check.on("close", (code) => {
+      if (code !== 0) {
+        resolve({ success: false, statusCode: code });
+      }
+      currentChildProcess = null;
+    });
+  })
+
+  return response; 
+}
+
 const startScan = async (scanDetails, scanEvent) => {
   const { scanType, url } = scanDetails;
   console.log(`Starting new ${scanType} scan at ${url}.`);
@@ -167,10 +219,6 @@ const startScan = async (scanDetails, scanEvent) => {
         resolve({ success: false });
       }
 
-      if (data.includes("Url is valid")) {
-        scanEvent.emit('urlIsValid');
-      }
-      
       if (scanDetails.scanType === 'custom' && data.includes('generatedScript')) {
         const generatedScriptName = data.trim();
         console.log('generated script: ', generatedScriptName);
@@ -218,6 +266,7 @@ const startScan = async (scanDetails, scanEvent) => {
     // as successful resolves are handled above
     scan.on("close", (code) => {
       if (code !== 0) {
+        console.log('didnt close successfully: ', code);
         resolve({ success: false, statusCode: code });
       }
       currentChildProcess = null;
@@ -516,6 +565,10 @@ const moveCustomFlowResultsToExportDir = (scanId, resultsFolderName, isReplay) =
 }
 
 const init = (scanEvent) => {
+  ipcMain.handle("validateUrlConnectivity", async (_event, scanDetails) => {
+    return await validateUrlConnectivity(scanDetails); 
+  })
+
   ipcMain.handle("startScan", async (_event, scanDetails) => {
     return await startScan(scanDetails, scanEvent);
   });
