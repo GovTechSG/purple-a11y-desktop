@@ -30,29 +30,28 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const [scanButtonIsClicked, setScanButtonIsClicked] = useState(false);
 
   useEffect(() => {
-    if (scanButtonIsClicked) {
+    if (scanButtonIsClicked && prevUrlErrorMessage) {
       setPrevUrlErrorMessage('');
-      // window.services.urlIsValid(() => {
-      //   const scanDetails = JSON.parse(window.localStorage.getItem('scanDetails')); 
-      //   if (scanDetails.scanType === 'Custom flow') {
-      //     navigate('/custom_flow', {state: {scanDetails}});
-      //     return; 
-      //   } else {
-      //     navigate('/scanning', {state: {url}});
-      //   }
-      // })
     }
   }, [scanButtonIsClicked])
-
-  useEffect(() => {
-    if (prevUrlErrorMessage && scanButtonIsClicked) {
-      setScanButtonIsClicked(false);
-    }
-  }, [prevUrlErrorMessage])
-
-  useEffect(() => {
-    
-  })
+  // useEffect(() => {
+  //   console.log('1 scan button is clicked: ', scanButtonIsClicked);
+  //   console.log('1 prev error msg: ', prevUrlErrorMessage);
+  //   if (scanButtonIsClicked) {
+  //     console.log('set error message to empty');
+  //     setPrevUrlErrorMessage('');
+  //     setScanButtonIsClicked(false);
+  //   }
+  // }, [scanButtonIsClicked])
+  
+  // useEffect(() => {
+  //   console.log('2 scan button is clicked: ', scanButtonIsClicked);
+  //   console.log('2 prev error msg: ', prevUrlErrorMessage);
+  //   if (prevUrlErrorMessage && scanButtonIsClicked) {
+  //     console.log('set scan button to false');
+  //     setScanButtonIsClicked(false);
+  //   }
+  // }, [prevUrlErrorMessage])
 
   useEffect(() => {
     if (
@@ -109,21 +108,24 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
     scanDetails.browser = isProxy ? "edge" : browser;
 
     if (scanDetails.scanUrl.length === 0) {
+      setScanButtonIsClicked(false);
       setPrevUrlErrorMessage("URL cannot be empty.");
       return;
     }
 
     if (!isValidHttpUrl(scanDetails.scanUrl)) {
+      setScanButtonIsClicked(false);
       setPrevUrlErrorMessage("Invalid URL.");
       return;
     }
+
     if (!navigator.onLine) {
+      setScanButtonIsClicked(false);
       setPrevUrlErrorMessage("No internet connection.");
       return;
     }
 
     window.localStorage.setItem("scanDetails", JSON.stringify(scanDetails));
-
 
     const checkUrlResponse = await services.validateUrlConnectivity(scanDetails);
     // valid url -> success: true 
@@ -157,6 +159,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           }   
         }
     } else {
+      setScanButtonIsClicked(false);
       if (checkUrlResponse.failedToCreateExportDir) {
         setPrevUrlErrorMessage('Unable to create download directory');
         return;

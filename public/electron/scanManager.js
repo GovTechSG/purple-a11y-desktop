@@ -266,7 +266,6 @@ const startScan = async (scanDetails, scanEvent) => {
     // as successful resolves are handled above
     scan.on("close", (code) => {
       if (code !== 0) {
-        console.log('didnt close successfully: ', code);
         resolve({ success: false, statusCode: code });
       }
       currentChildProcess = null;
