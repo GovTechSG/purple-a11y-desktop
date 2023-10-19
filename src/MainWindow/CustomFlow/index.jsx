@@ -170,39 +170,6 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
           setDone(true);
           return;
         }
-
-        if (cliErrorCodes.has(response.statusCode)) {
-            let errorMessageToShow;
-            switch (response.statusCode) {
-              /* technically urlErrorTypes.invalidUrl is not needed since this case
-              was handled above, but just for completeness */
-              case cliErrorTypes.unauthorisedBasicAuth:
-                errorMessageToShow = "Unauthorised Basic Authentication.";
-                break;
-              case cliErrorTypes.invalidUrl:
-              case cliErrorTypes.cannotBeResolved:
-              case cliErrorTypes.errorStatusReceived:
-                errorMessageToShow = "Invalid URL.";
-                break;
-              case cliErrorTypes.notASitemap:
-                errorMessageToShow = "Invalid sitemap.";
-                break;
-              case cliErrorTypes.browserError:
-                navigate('/error', { state: { isBrowserError: true }})
-                return;
-              case cliErrorTypes.systemError:
-              default:
-                errorMessageToShow = "Something went wrong. Please try again later.";
-            }
-            console.log(`status error: ${response.statusCode}`);
-            navigate("/", { state: errorMessageToShow });
-            return;
-          }
-          /* When no pages were scanned (e.g. out of domain upon redirects when valid URL was entered),
-          redirects user to error page to going to result page with empty result
-          */
-          navigate("/error");
-          return;
     }
 
     const onClickReplay = async () => {

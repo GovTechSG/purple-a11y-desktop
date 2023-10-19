@@ -15,6 +15,10 @@ contextBridge.exposeInMainWorld("services", {
     const chromeExists = await ipcRenderer.invoke("checkChromeExistsOnMac"); 
     return chromeExists;
   },
+  validateUrlConnectivity: async (scanDetails) => {
+    const results = await ipcRenderer.invoke('validateUrlConnectivity', scanDetails);
+    return results;
+  },
   startScan: async (scanDetails) => {
     const results = await ipcRenderer.invoke("startScan", scanDetails);
     return results;
@@ -83,11 +87,6 @@ contextBridge.exposeInMainWorld("services", {
     ipcRenderer.on("scanningCompleted", () => {
       callback();
     });
-  },  
-  urlIsValid: (callback) => {
-    ipcRenderer.on('urlIsValid', () => {
-      callback();
-    })
   },
   userDataExists: (callback) => {
     ipcRenderer.on("userDataExists", (event, data) => {

@@ -146,9 +146,6 @@ app.on("ready", async () => {
   scanEvent.on("scanningCompleted", () => {
     mainWindow.webContents.send("scanningCompleted");
   })
-  scanEvent.on('urlIsValid', () => {
-    mainWindow.webContents.send('urlIsValid');
-  })
   
   ipcMain.on("openLink", (_event, url) => {
     shell.openExternal(url);
