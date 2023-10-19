@@ -10,14 +10,6 @@
     margin: auto;
   }
 
-  #main-contents {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0 2rem;
-  }
-
   #form-container {
     height: 100%;
     display: flex;
@@ -52,7 +44,8 @@
     font-family: "Viga";
     font-size: 2rem;
     font-weight: 400;
-    margin-bottom: 2.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
   }
 
   #btn-container {
@@ -90,16 +83,9 @@
     margin-right: 0.5rem;
   }
 
-  hr {
-    border-color: #b5c5ca;
-    width: 115%;
-    margin: 2rem 0;
-  }
-
   #main-contents a {
     text-underline-offset: 0.5rem;
   }
-
 
   #other-actions {
     width: 100%;
@@ -110,7 +96,7 @@
     border-radius: 4px;
   }
 
-  #other-actions p {
+  #other-actions h2 {
     margin-bottom: 1rem;
     font-size: 18px;
     font-weight: 700;
@@ -120,16 +106,11 @@
   #other-actions a {
     display: flex;
     text-decoration: none;
-    margin-top: 0.5rem;
   }
 
-  #other-actions img {
+  #other-actions img,
+  #view-button img {
     margin-right: 0.5rem;
-  }
-
-  #other-actions hr {
-    width: 100%;
-    margin: 1rem 0;
   }
 
   #main-contents a:before {

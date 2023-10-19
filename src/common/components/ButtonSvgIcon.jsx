@@ -1,6 +1,6 @@
-const ButtonSvgIcon = ({ className, focusable = false, svgIcon }) => {
+const ButtonSvgIcon = ({ className, svgIcon }) => {
   return (
-    <span aria-hidden focusable={focusable} className={`${className}`}>
+    <span aria-hidden className={`${className}`}>
       {svgIcon}
     </span>
   );

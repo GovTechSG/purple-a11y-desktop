@@ -584,6 +584,7 @@ a {
 }
 
 hr {
+  opacity: 1;
   background-color: #B5C5CA;
 }
 
