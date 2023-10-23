@@ -17,6 +17,7 @@ const AdvancedScanOptions = ({
   deviceOptions,
   advancedOptions,
   setAdvancedOptions,
+  scanButtonIsClicked
 }) => {
   const [openAdvancedOptionsMenu, setOpenAdvancedOptionsMenu] = useState(false);
   const [advancedOptionsDirty, setAdvancedOptionsDirty] = useState(false);
@@ -25,6 +26,15 @@ const AdvancedScanOptions = ({
   const [showMaxConcurrencyTooltip, setShowMaxConcurrencyTooltip] =
     useState(false);
   const menu = useRef();
+
+  useEffect(() => {
+    if (openAdvancedOptionsMenu) {
+      const menuElem = document.getElementById('advanced-options-menu'); 
+      const menuInputElemList = menuElem.querySelectorAll('input, select, button');  
+      menuInputElemList.forEach(elem => elem.disabled = scanButtonIsClicked);
+      
+    }
+  }, [openAdvancedOptionsMenu, scanButtonIsClicked])
 
   const handleToggleMenu = () => {
     if (!openAdvancedOptionsMenu) {

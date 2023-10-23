@@ -150,6 +150,7 @@ const InitScanForm = ({
         deviceOptions={deviceOptions}
         advancedOptions={advancedOptions}
         setAdvancedOptions={setAdvancedOptions}
+        scanButtonIsClicked={scanButtonIsClicked}
       />
     </div>
   );

@@ -66,6 +66,7 @@ button:disabled {
   background-color: #e7ecee;
   color: #97adb5;
   pointer-events: none;
+  cursor: not-allowed;
 }
 
 button.transparent {
@@ -312,7 +313,6 @@ a:hover {
 }
 
 .change-download-btn {
-  background-color: #fff;
   border-left: 1px solid #b5c5ca;
   padding: 4px 0 4px 8px;
 }
