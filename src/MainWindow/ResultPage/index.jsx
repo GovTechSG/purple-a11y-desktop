@@ -61,7 +61,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
   useEffect(() => {
     const getFeedbackFormUrl = async () => {
       const feedbackFormUrl = await services.getFeedbackFormUrl();
-      console.log(feedbackFormUrl);
       setFeedbackFormUrl(feedbackFormUrl);
     }
 

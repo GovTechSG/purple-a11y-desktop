@@ -70,7 +70,7 @@ const EditUserDetailsModal = ({
           <button
             type="submit"
             form={formID}
-            className={`${isSubmitDisabled ? '' : 'primary'} modal-button`}
+            className={`primary modal-button`}
             disabled={isSubmitDisabled}
           >
             Update

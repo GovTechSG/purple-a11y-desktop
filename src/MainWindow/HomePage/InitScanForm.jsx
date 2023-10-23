@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "../../common/components/Button";
 import AdvancedScanOptions from "./AdvancedScanOptions";
 import {
@@ -40,12 +40,20 @@ const InitScanForm = ({
     getDefaultAdvancedOptions(isProxy)
   );
 
-  const togglePageLimitAdjuster = () => {
-    if (!openPageLimitAdjuster) {
-      setOpenPageLimitAdjuster(true);
-    } else {
-      pageLimitAdjuster.current.style.animationName = "button-fade-out";
-      setTimeout(() => setOpenPageLimitAdjuster(false), 200);
+  useEffect(() => {
+    const urlBarElem = document.getElementById("url-bar");
+    const urlBarInputList = urlBarElem.querySelectorAll("input, button");
+    urlBarInputList.forEach((elem) => (elem.disabled = scanButtonIsClicked));
+  }, [scanButtonIsClicked, prevUrlErrorMessage]);
+
+  const togglePageLimitAdjuster = (e) => {
+    if (!e.target.closest("button:disabled")) {
+      if (!openPageLimitAdjuster) {
+        setOpenPageLimitAdjuster(true);
+      } else {
+        pageLimitAdjuster.current.style.animationName = "button-fade-out";
+        setTimeout(() => setOpenPageLimitAdjuster(false), 200);
+      }
     }
   };
 
@@ -82,7 +90,7 @@ const InitScanForm = ({
                 <Button
                   type="transparent"
                   id="page-limit-toggle-button"
-                  onClick={togglePageLimitAdjuster}
+                  onClick={(e) => togglePageLimitAdjuster(e)}
                 >
                   capped at{" "}
                   <span className="purple-text">
@@ -122,27 +130,14 @@ const InitScanForm = ({
                 )}
               </div>
             )}
-          {scanButtonIsClicked ? (
-            <Button type="disabled" className="scan-btn">
-              <LoadingSpinner></LoadingSpinner>
-            </Button>
-          ) : (
-            <Button
-              type="primary"
-              className="scan-btn"
-              onClick={handleScanButtonClicked}
-            >
-              Scan
-            </Button>
-          )}
-          {scanButtonIsClicked 
-              ?  <Button type="" className="scan-btn" disabled>
-                  <LoadingSpinner></LoadingSpinner>
-                </Button>
-              :  <Button type="primary" className="scan-btn" onClick={handleScanButtonClicked}>
-                  Scan
-                </Button>
-          }
+          <Button
+            type="primary"
+            className="scan-btn"
+            onClick={handleScanButtonClicked}
+            disabled={scanButtonIsClicked}
+          >
+            {scanButtonIsClicked ? <LoadingSpinner></LoadingSpinner> : "Scan"}
+          </Button>
         </div>
         {prevUrlErrorMessage && (
           <span id="url-error-message" className="error-text">
