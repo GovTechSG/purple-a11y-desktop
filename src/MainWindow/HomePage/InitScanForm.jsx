@@ -135,6 +135,14 @@ const InitScanForm = ({
               Scan
             </Button>
           )}
+          {scanButtonIsClicked 
+              ?  <Button type="" className="scan-btn" disabled>
+                  <LoadingSpinner></LoadingSpinner>
+                </Button>
+              :  <Button type="primary" className="scan-btn" onClick={handleScanButtonClicked}>
+                  Scan
+                </Button>
+          }
         </div>
         {prevUrlErrorMessage && (
           <span id="url-error-message" className="error-text">
