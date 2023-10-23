@@ -3,7 +3,7 @@ const Alert = ({ alertClassName, children, icon }) => {
     <div className={`alert d-flex flex-row ${alertClassName ? alertClassName : ""}`}>
       {
         icon &&
-        <div className="me-2"><img src={icon}></img></div>
+        <div className="me-2"><img src={icon} alt=""></img></div>
       }
       <div>
       {children}

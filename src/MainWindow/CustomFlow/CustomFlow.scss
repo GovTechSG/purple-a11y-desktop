@@ -6,7 +6,7 @@
     justify-content: center;
 
     .custom-flow-content {
-        max-width: 600px;
+        width: 600px;
     }
 
     .custom-flow-header {
@@ -72,13 +72,12 @@
     }
 
     .prepare-form-section {
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
     }
 
-    .prepare-input-field {
-        padding: 0.5rem;
-        display: flex;
-        gap: 1rem;
+    .prepare-form-legend {
+        font-size: 1rem;
+        margin-bottom: 1rem;
     }
 
     .alert-custom{
