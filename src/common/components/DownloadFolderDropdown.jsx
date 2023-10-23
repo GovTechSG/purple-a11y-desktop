@@ -20,7 +20,7 @@ const DownloadFolderDropdown = ({
 
 
     const handleSetExportDir = async (e) => { 
-      if (!e.target.closest('button:disabled')) {
+      if (!e.currentTarget.disabled) {
         const exportDir = await window.services.setExportDir(); 
         setExportDir(exportDir);
       } 

@@ -47,7 +47,7 @@ const InitScanForm = ({
   }, [scanButtonIsClicked, prevUrlErrorMessage]);
 
   const togglePageLimitAdjuster = (e) => {
-    if (!e.target.closest("button:disabled")) {
+    if (!e.currentTarget.disabled) {
       if (!openPageLimitAdjuster) {
         setOpenPageLimitAdjuster(true);
       } else {
