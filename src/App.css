@@ -68,13 +68,15 @@ button:disabled {
   border-radius: 4px;
   background-color: #e7ecee;
   color: #97adb5;
-  cursor: not-allowed;
 }
 
-button:disabled:active {
+button:disabled:active, input:disabled:active, select:disabled:active {
   pointer-events: none;
 }
 
+button:disabled, input:disabled, select:disabled {
+  cursor: not-allowed;
+}
 button.transparent {
   background-color: transparent;
   border: none;
