@@ -6,15 +6,15 @@ import { handleClickLink } from "../../common/constants";
 const WhatsNewModal = ({
   showModal,
   setShowModal,
-  latestVersion,
-  latestReleaseNotes,
+  version,
+  releaseNotes,
 }) => {
 
   // create react elements from release notes html string
   const getReleaseNotes = () => {
     // inject parsed release notes into div element
     const releaseNotesNode = document.createElement("div");
-    releaseNotesNode.innerHTML = latestReleaseNotes;
+    releaseNotesNode.innerHTML = releaseNotes;
 
     // remove unneeded info
     const allElements = releaseNotesNode.childNodes;
@@ -75,7 +75,7 @@ const WhatsNewModal = ({
       showHeader={true}
       modalBody={[...getReleaseNotes(), getGithubLink()]}
       modalSizeClass="modal-lg modal-dialog-centered"
-      modalTitle={"What's new in v" + latestVersion}
+      modalTitle={"What's new in v" + version}
       setShowModal={setShowModal}
     />
   );

@@ -151,6 +151,7 @@ export const reserveFileNameKeywords = ["CON", "PRN", "AUX", "NUL", "COM1", "COM
 
 export const versionComparator = (ver1, ver2) => {
   // return 1 if ver1 >= ver2, else return -1 
+  console.log(ver1, ver2);
   const splitVer1 = ver1.split('.'); 
   const splitVer2 = ver2.split('.'); 
   let idx = 0; 
