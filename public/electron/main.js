@@ -406,46 +406,46 @@ app.on("ready", async () => {
 
   // TODO: determine info to send to UI for new "About" modal
   // get all releases 
-  // const { data: releases } = await axios.get(
-  //   `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases`
-  // )
-  // .catch(err => {
-  //   console.log('Unable to get releases');
-  //   return { data: undefined };
-  // });
-  // // get latest prerelease info for lab mode users 
-  // // get latest release info for normal users
-  // if (releases) {
-  //   // sort releases in descending publish date order
-  //   const sorted = releases.sort((a, b) => b.published_at - a.published_at);
-  //   const prereleases = sorted.filter(rel => rel.prerelease); // get all prereleases
-  //   const regReleases = sorted.filter(rel => !rel.prerelease); // get all regular releases
-  //   let latestPre = prereleases[0];
-  //   latestPre.tag_name = "0.9.29" // TEST ONLY DELETE LATER
-  //   const latestRel = regReleases[0];
+  const { data: releases } = await axios.get(
+    `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases`
+  )
+  .catch(err => {
+    console.log('Unable to get releases');
+    return { data: undefined };
+  });
+  // get latest prerelease info for lab mode users 
+  // get latest release info for normal users
+  if (releases) {
+    // sort releases in descending publish date order
+    const sorted = releases.sort((a, b) => b.published_at - a.published_at);
+    const prereleases = sorted.filter(rel => rel.prerelease); // get all prereleases
+    const regReleases = sorted.filter(rel => !rel.prerelease); // get all regular releases
+    let latestPre = prereleases[0];
+    latestPre.tag_name = "0.9.29" // TEST ONLY DELETE LATER
+    const latestRel = regReleases[0];
 
-  //   // handle case where release > prerelease version
-  //   if (constants.versionComparator(latestRel.tag_name, latestPre.tag_name) === 1) {
-  //     latestPre = latestRel;
-  //   }
+    // handle case where release > prerelease version
+    if (constants.versionComparator(latestRel.tag_name, latestPre.tag_name) === 1) {
+      latestPre = latestRel;
+    }
 
-  //   const markdownConverter = new showdown.Converter();
-  //   const latestPreNotes = markdownToHTML(markdownConverter, latestPre.body);
-  //   const latestRelNotes = markdownToHTML(markdownConverter, latestRel.body);
-  //   // send above 2 info to ui, compare app version within the modal component later
-  //   mainWindow.webContents.send("versionInfo", {
-  //     appVersion: constants.appVersion,
-  //     latestInfo: latestRel,
-  //     latestPrereleaseInfo: latestPre,
-  //     latestPreNotes,
-  //     latestRelNotes,
-  //   });
-  // } else {
-  //   mainWindow.webContents.send("versionInfo", {
-  //     appVersion: constants.appVersion,
-  //   });
-  // }
-  mainWindow.webContents.send("versionInfo", testData);
+    const markdownConverter = new showdown.Converter();
+    const latestPreNotes = markdownToHTML(markdownConverter, latestPre.body);
+    const latestRelNotes = markdownToHTML(markdownConverter, latestRel.body);
+    // send above 2 info to ui, compare app version within the modal component later
+    mainWindow.webContents.send("versionInfo", {
+      appVersion: constants.appVersion,
+      latestInfo: latestRel,
+      latestPrereleaseInfo: latestPre,
+      latestPreNotes,
+      latestRelNotes,
+    });
+  } else {
+    mainWindow.webContents.send("versionInfo", {
+      appVersion: constants.appVersion,
+    });
+  }
+  // mainWindow.webContents.send("versionInfo", testData);
 
   // const { data: latestRelease } = await axios.get(
   //   `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases/latest`

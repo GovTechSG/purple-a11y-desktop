@@ -296,10 +296,10 @@ const downloadAndUnzipFrontendWindows = async () => {
  */
 const downloadAndUnzipFrontendMac = async (tag=undefined) => {
   const downloadUrl = tag 
-    ? tag
+    ? `https://github.com/GovTechSG/purple-hats-desktop/releases/download/${tag}/purple-hats-desktop-macos.zip`
     : frontendReleaseUrl;
   const command = `
-  curl -L '${frontendReleaseUrl}' -o '${resultsPath}/purple-hats-desktop-mac.zip' &&
+  curl -L '${downloadUrl}' -o '${resultsPath}/purple-hats-desktop-mac.zip' &&
   mv '${macOSExecutablePath}' '${path.join(
     macOSExecutablePath,
     ".."
@@ -462,7 +462,10 @@ const run = async (updaterEventEmitter) => {
       }
     }
   } else {
-    if (!(await isLatestFrontendVersion())) {
+    // user is on mac
+    const frontendVerToUpdate = await getLatestFrontendVersion();
+    if (frontendVerToUpdate) {
+    // if (!(await isLatestFrontendVersion())) {
       const userResponse = new Promise((resolve) => {
         updaterEventEmitter.emit("promptFrontendUpdate", resolve);
       });
@@ -475,7 +478,7 @@ const run = async (updaterEventEmitter) => {
         // Relaunch the app with new binaries if the frontend update is successful
         // If unsuccessful, the app will be launched with existing frontend
         try {
-          await downloadAndUnzipFrontendMac();
+          await downloadAndUnzipFrontendMac(frontendVerToUpdate);
           currentChildProcess = null;
 
           writeUserDetailsToFile({ firstLaunchOnUpdate: true });
