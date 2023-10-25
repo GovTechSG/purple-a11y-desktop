@@ -90,7 +90,6 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
       const userData = await services.getUserData();
       setUserData(userData);
       // to show what's new modal on successful update to latest version
-      // TODO: consider isLabMode when determining whether to show modal on first launch
       const handleShowModal = () => {
         setShowWhatsNewModal(!!userData["firstLaunchOnUpdate"] && isLatest());
         window.services.editUserData({ firstLaunchOnUpdate: false });
