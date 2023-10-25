@@ -3,31 +3,48 @@ import { useLocation, useNavigate } from "react-router";
 import a11yLogo from "../../assets/a11y-logo.svg";
 import appIllustration from "../../assets/app-illustration.svg";
 import editIcon from "../../assets/edit-icon.svg";
+import labModeOff from "../../assets/lab-icon-off.svg";
+import labModeOn from "../../assets/lab-icon-on.svg";
 import InitScanForm from "./InitScanForm";
 import "./HomePage.scss";
 import services from "../../services";
-import { cliErrorCodes, cliErrorTypes } from "../../common/constants";
+import { cliErrorCodes, cliErrorTypes, versionComparator } from "../../common/constants";
 import Modal from "../../common/components/Modal";
 import { BasicAuthForm, BasicAuthFormFooter } from "./BasicAuthForm";
 import EditUserDetailsModal from "./EditUserDetailsModal";
 import NoChromeErrorModal from "./NoChromeErrorModal";
 import Button from "../../common/components/Button";
 import WhatsNewModal from "./WhatsNewModal";
+import AboutModal from "./AboutModal";
 
 const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const navigate = useNavigate();
   const [prevUrlErrorMessage, setPrevUrlErrorMessage] = useState('');
-  const [{ name, email, browser }, setUserData] = useState({
+  const [{ name, email, browser, isLabMode }, setUserData] = useState({
     name: "", 
     email: "",
     browser: null,
+    isLabMode: false,
   });
   const [showBasicAuthModal, setShowBasicAuthModal] = useState(false);
   const [showEditDataModal, setShowEditDataModal] = useState(false);
   const [showNoChromeErrorModal, setShowNoChromeErrorModal] = useState(false);
   const [showWhatsNewModal, setShowWhatsNewModal] = useState(false);
+  const [showAboutPhModal, setShowAboutPhModal] = useState(false);
   const [url, setUrl] = useState('');
   const [scanButtonIsClicked, setScanButtonIsClicked] = useState(false);
+
+  const isLatest = () => {
+    console.log(appVersionInfo, "APP VERSION INFO");
+    const currVer = appVersionInfo.appVersion;
+    const latestToCompare = isLabMode
+      ? appVersionInfo.latestPrereleaseInfo
+      : appVersionInfo.latestInfo;
+    if (latestToCompare) {
+      return versionComparator(currVer, latestToCompare.tag_name) === 1;
+    }
+    return false; // if release info is undefined (unable to fetch)
+  };
 
   useEffect(() => {
     if (scanButtonIsClicked && prevUrlErrorMessage) {
@@ -73,8 +90,9 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
       const userData = await services.getUserData();
       setUserData(userData);
       // to show what's new modal on successful update to latest version
+      // TODO: consider isLabMode when determining whether to show modal on first launch
       const handleShowModal = () => {
-        setShowWhatsNewModal(!!userData["firstLaunchOnUpdate"] && appVersionInfo.isLatest);
+        setShowWhatsNewModal(!!userData["firstLaunchOnUpdate"] && isLatest());
         window.services.editUserData({ firstLaunchOnUpdate: false });
       }
       const whatsNewModalTimeout = setTimeout(
@@ -87,6 +105,11 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
     const whatsNewModalTimeout = getUserData();
     return () => clearTimeout(whatsNewModalTimeout);
   }, []);
+
+  const editUserData = (info) => {
+    setUserData(initData => ({ ...initData, ...info }));
+    window.services.editUserData(info);
+  };
 
   useEffect(() => {
     const checkChromeExists = async () => {
@@ -274,12 +297,21 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
       {showNoChromeErrorModal &&
         <NoChromeErrorModal showModal={showNoChromeErrorModal} setShowModal={setShowNoChromeErrorModal}/>            
       }
-      {showWhatsNewModal &&
+      {showWhatsNewModal && 
         <WhatsNewModal
           showModal={showWhatsNewModal}
           setShowModal={setShowWhatsNewModal}
-          latestVersion={appVersionInfo.appVersion}
-          latestReleaseNotes={appVersionInfo.latestReleaseNotes}
+          version={appVersionInfo.appVersion}
+          releaseNotes={isLabMode ? appVersionInfo.latestPreNotes : appVersionInfo.latestRelNotes}
+        />
+      }
+      {showAboutPhModal &&
+        <AboutModal
+          showModal={showAboutPhModal}
+          setShowModal={setShowAboutPhModal}
+          appVersionInfo={appVersionInfo}
+          isLabMode={isLabMode}
+          setIsLabMode={(bool) => editUserData({ isLabMode: bool })}
         />
       }
       <div id="home-page-footer">
@@ -290,17 +322,16 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
         />
         <span id="footer-text">
           {
-            appVersionInfo.isLatest ? (
-              <>
-                <Button
-                  type="transparent"
-                  className="purple-text"
-                  onClick={() => setShowWhatsNewModal(true)}
-                >
-                  Version {appVersionInfo.appVersion} {appVersionInfo.isLatest && '(latest)'}
-                </Button> | Built by GovTech Accessibility Enabling Team
-              </>
-            ) : `Version ${appVersionInfo.appVersion} | Built by GovTech Accessibility Enabling Team`
+            <>
+              <Button
+                type="transparent"
+                className="purple-text"
+                onClick={() => setShowAboutPhModal(true)}
+              >
+                <img className="me-2" src={isLabMode ? labModeOn : labModeOff} alt="" />
+                Version {appVersionInfo.appVersion} {isLatest() && '(latest)'}
+              </Button> | Built by GovTech Accessibility Enabling Team
+            </>
           }
         </span>
       </div>

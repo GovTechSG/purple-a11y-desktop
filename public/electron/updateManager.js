@@ -23,15 +23,24 @@ const {
   macOSPrepackageBackend,
 } = require("./constants");
 const { silentLogger } = require("./logs");
-const { writeUserDetailsToFile } = require("./userDataManager");
+const { writeUserDetailsToFile, readUserDataFromFile } = require("./userDataManager");
 
 let currentChildProcess;
 
 let engineVersion;
+let isLabMode = false;
 
 try {
   engineVersion = getEngineVersion();
 } catch (e) {
+}
+
+try {
+  // to get isLabMode flag from userData.txt to determine version to update to
+  const userData = readUserDataFromFile();
+  isLabMode = !!userData.isLabMode; // ensure value is a boolean
+} catch (e) {
+  // unable to read user data, leave isLabMode as false
 }
 
 const appFrontendVer = getFrontendVersion();
@@ -206,6 +215,31 @@ const isLatestFrontendVersion = async () => {
   }
 };
 
+const getLatestFrontendVersion = async () => {
+  try {
+    let verToCompare;
+    if (isLabMode) {
+      const { data } = await axiosInstance.get(
+        `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases`
+      );
+      verToCompare = data.filter(entry => entry.prerelease)[0].tag_name;
+    } else {
+      const { data } = await axiosInstance.get(
+        `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases/latest`
+      );
+      verToCompare = data.tag_name;
+    }
+    const frontendVersion = getFrontendVersion();
+    if (versionComparator(frontendVersion, verToCompare) === -1) {
+      return verToCompare;
+    }
+    return undefined;
+  } catch (e) {
+    console.log(`Unable to check latest frontend version, skipping\n${e.toString()}`);
+    return undefined;
+  }
+};
+
 /**
  * Spawns a PowerShell process to download and unzip the frontend
  * @returns {Promise<boolean>} true if the frontend was downloaded and unzipped successfully, false otherwise
@@ -260,7 +294,10 @@ const downloadAndUnzipFrontendWindows = async () => {
 /**
  * Spawns a Shell Command process to download and unzip the frontend
  */
-const downloadAndUnzipFrontendMac = async () => {
+const downloadAndUnzipFrontendMac = async (tag=undefined) => {
+  const downloadUrl = tag 
+    ? tag
+    : frontendReleaseUrl;
   const command = `
   curl -L '${frontendReleaseUrl}' -o '${resultsPath}/purple-hats-desktop-mac.zip' &&
   mv '${macOSExecutablePath}' '${path.join(

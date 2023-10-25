@@ -20,6 +20,7 @@ function App() {
 
     window.services.getVersionInfo((appVersionInfo) => {
       setAppVersionInfo(appVersionInfo);
+      // setAppVersionInfo({ ...appVersionInfo, latestInfo: { version: "0.9.28" } , latestPrereleaseInfo: { version: "0.9.29"}})
     })
     
     window.services.getIsProxy((res) => {
