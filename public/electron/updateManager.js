@@ -195,45 +195,48 @@ const getLatestBackendVersion = async () => {
   }
 };
 
-const isLatestFrontendVersion = async () => {
-  try {
-    const { data } = await axiosInstance.get(
-      `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases/latest`
-    );
+// const isLatestFrontendVersion = async () => {
+//   try {
+//     const { data } = await axiosInstance.get(
+//       `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases/latest`
+//     );
 
-    const latestVersion = data.tag_name;
-    const frontendVersion = getFrontendVersion();
-    console.log("Frontend version installed: ", frontendVersion);
-    console.log("Latest frontend version found: ", latestVersion);
+//     const latestVersion = data.tag_name;
+//     const frontendVersion = getFrontendVersion();
+//     console.log("Frontend version installed: ", frontendVersion);
+//     console.log("Latest frontend version found: ", latestVersion);
 
-    return versionComparator(frontendVersion, latestVersion) === 1;
-  } catch (e) {
-    console.log(
-      `Unable to check latest frontend version, skipping\n${e.toString()}`
-    );
-    return true;
-  }
-};
+//     return versionComparator(frontendVersion, latestVersion) === 1;
+//   } catch (e) {
+//     console.log(
+//       `Unable to check latest frontend version, skipping\n${e.toString()}`
+//     );
+//     return true;
+//   }
+// };
 
 const getLatestFrontendVersion = async () => {
   try {
     let verToCompare;
+    const { data: allFrontendReleases } = await axiosInstance.get(
+      `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases`
+    );
+    // sort by descending publish date
+    const sorted = allFrontendReleases.sort((a, b) => b.published_at - a.published_at);
+    const latestRelease = sorted.filter(entry => !entry.prerelease)[0].tag_name;
+    const latestPrerelease = sorted.filter(entry => entry.prerelease)[0].tag_name;
     if (isLabMode) {
-      const { data } = await axiosInstance.get(
-        `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases`
-      );
-      verToCompare = data.filter(entry => entry.prerelease)[0].tag_name;
+      // handle case where latest release ver > latest prerelease version
+      verToCompare = versionComparator(latestRelease, latestPrerelease) === 1
+        ? latestRelease
+        : latestPrerelease;
     } else {
-      const { data } = await axiosInstance.get(
-        `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases/latest`
-      );
-      verToCompare = data.tag_name;
+      verToCompare = latestRelease;
     }
-    const frontendVersion = getFrontendVersion();
-    if (versionComparator(frontendVersion, verToCompare) === -1) {
+    if (versionComparator(appFrontendVer, verToCompare) === -1) {
       return verToCompare;
     }
-    return undefined;
+    return undefined; // no need for update
   } catch (e) {
     console.log(`Unable to check latest frontend version, skipping\n${e.toString()}`);
     return undefined;
@@ -244,11 +247,14 @@ const getLatestFrontendVersion = async () => {
  * Spawns a PowerShell process to download and unzip the frontend
  * @returns {Promise<boolean>} true if the frontend was downloaded and unzipped successfully, false otherwise
  */
-const downloadAndUnzipFrontendWindows = async () => {
+const downloadAndUnzipFrontendWindows = async (tag=undefined) => {
+  const downloadUrl = tag 
+    ? `https://github.com/GovTechSG/purple-hats-desktop/releases/download/${tag}/purple-hats-desktop-windows.zip`
+    : frontendReleaseUrl;
   const shellScript = `
   $webClient = New-Object System.Net.WebClient
   try {
-    $webClient.DownloadFile("${frontendReleaseUrl}", "${resultsPath}\\purple-hats-desktop-windows.zip")
+    $webClient.DownloadFile("${downloadUrl}", "${resultsPath}\\purple-hats-desktop-windows.zip")
   } catch {
     Write-Host "Error: Unable to download frontend"
     throw "Unable to download frontend"
@@ -405,13 +411,14 @@ const run = async (updaterEventEmitter) => {
   updaterEventEmitter.emit("checking");
 
   const toUpdateBackendVer = await getLatestBackendVersion();
+  const toUpdateFrontendVer = await getLatestFrontendVersion();
 
   // Auto updates via installer is only applicable for Windows
   // Auto updates for backend on Windows will be done via a powershell script due to %ProgramFiles% permission
   if (os.platform() === "win32") {
     // Frontend update via Installer for Windows
     // Will also update backend as it is packaged in the installer
-    if (!(await isLatestFrontendVersion())) {
+    if (toUpdateFrontendVer) {
       const userResponse = new Promise((resolve) => {
         updaterEventEmitter.emit("promptFrontendUpdate", resolve);
       });
@@ -423,7 +430,7 @@ const run = async (updaterEventEmitter) => {
         let isDownloadFrontendSuccess = null;
 
         try {
-          isDownloadFrontendSuccess = await downloadAndUnzipFrontendWindows();
+          isDownloadFrontendSuccess = await downloadAndUnzipFrontendWindows(toUpdateFrontendVer);
         } catch (e) {
           silentLogger.error(e.toString());
         }
@@ -463,9 +470,7 @@ const run = async (updaterEventEmitter) => {
     }
   } else {
     // user is on mac
-    const frontendVerToUpdate = await getLatestFrontendVersion();
-    if (frontendVerToUpdate) {
-    // if (!(await isLatestFrontendVersion())) {
+    if (toUpdateFrontendVer) {
       const userResponse = new Promise((resolve) => {
         updaterEventEmitter.emit("promptFrontendUpdate", resolve);
       });
@@ -478,7 +483,7 @@ const run = async (updaterEventEmitter) => {
         // Relaunch the app with new binaries if the frontend update is successful
         // If unsuccessful, the app will be launched with existing frontend
         try {
-          await downloadAndUnzipFrontendMac(frontendVerToUpdate);
+          await downloadAndUnzipFrontendMac(toUpdateFrontendVer);
           currentChildProcess = null;
 
           writeUserDetailsToFile({ firstLaunchOnUpdate: true });
