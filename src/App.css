@@ -63,9 +63,14 @@ button.secondary:active {
   color: #472bc4;
 }
 
-button.primary:disabled, .download-dropdown-btn:disabled {
+button.primary:disabled {
   background-color: #e7ecee!important;
   color: #97adb5!important;
+}
+
+.download-dropdown-btn:disabled {
+  background-color: #E7ECEE;
+  color: #4A6168; 
 }
 
 button:disabled, input:disabled, select:disabled {
@@ -84,15 +89,15 @@ button.transparent {
 }
 
 .scan-btn .loading-spinner {
-  height: 2rem;
-  width: 2rem;
+  height: 1.5rem;
+  width: 1.5rem;
   vertical-align: middle;
 }
 
 .scan-btn .loading-spinner:after {
-  height: 2rem;
-  width: 2rem;
-  border-width: 4px;
+  height: 1.5rem;
+  width: 1.5rem;
+  border-width: 2px;
   margin: 0;
   border-color: #97ADB580 !important;
   border-top-color: #97adb5 !important;

@@ -8,6 +8,8 @@ import questionMarkIcon from "../../assets/question-mark.svg";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import ToolTip from "../../common/components/ToolTip";
 import { getDefaultAdvancedOptions } from "../../common/constants";
+import purpleEditIcon from "../../assets/edit-icon.svg";
+import greyEditIcon from "../../assets/grey-edit-icon.svg";
 
 const AdvancedScanOptions = ({
   isProxy,
@@ -33,6 +35,8 @@ const AdvancedScanOptions = ({
       const menuInputElemList = menuElem.querySelectorAll('input, select, button');  
       menuInputElemList.forEach(elem => elem.disabled = scanButtonIsClicked);
       
+      const downloadDropdownEditIcon = document.querySelector('.download-dropdown-btn .change-download-btn img'); 
+      downloadDropdownEditIcon.src = scanButtonIsClicked ? greyEditIcon : purpleEditIcon;
     }
   }, [openAdvancedOptionsMenu, scanButtonIsClicked])
 
