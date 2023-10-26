@@ -75,7 +75,7 @@ const ExternalLink = ({ url, children, linkClass }) => {
   );
 };
 
-const AppDescription = ({ version, isMostUpdated }) => {
+const AppDescription = ({ version, needsUpdate }) => {
   const releaseNotesUrl = `https://github.com/GovTechSG/purple-hats-desktop/releases/tag/${version}`;
   const a11yWebsiteUrl = "https://go.gov.sg/a11y";
   const privacyPolicyUrl = "https://www.tech.gov.sg/privacy/";
@@ -87,7 +87,7 @@ const AppDescription = ({ version, isMostUpdated }) => {
         <div>
           <p className="m-0 bold-text">Purple HATS</p>
           <p className="m-0 d-inline-block me-3">
-            Version {version} {isMostUpdated && "(latest stable build)"}
+            Version {version} {!needsUpdate && "(latest stable build)"}
           </p>
           <ExternalLink url={releaseNotesUrl}>See release notes</ExternalLink>
         </div>
@@ -114,17 +114,20 @@ const AboutModal = ({
 }) => {
   const { appVersion, latestInfo, latestPrereleaseInfo } = appVersionInfo;
   const [toUpdateVer, setToUpdateVer] = useState(undefined);
-
-  // TODO: get the actual latest version number, not just a boolean value isLatest
-  // maybe get both the latest prerelease + latest release, determine which to use based on isLabMode
+  const [needsUpdate, setNeedsUpdate] = useState(true);
 
   useEffect(() => {
-    // TODO: determine whether user is able to update to a latest version
+    if (!latestInfo || !latestPrereleaseInfo) {
+      // if unable to fetch release info, dont show update alert / "(latest)" label
+      setNeedsUpdate(true);
+      return setToUpdateVer(undefined);
+    }
     const latestVerToUpdate = latestInfo.tag_name;
     const latestPrereleaseToUpdate = latestPrereleaseInfo.tag_name;
 
     const toCompare = isLabMode ? latestPrereleaseToUpdate : latestVerToUpdate;
     const isNeedUpdate = versionComparator(appVersion, toCompare) === -1;
+    setNeedsUpdate(isNeedUpdate);
 
     if (isNeedUpdate) {
       setToUpdateVer(toCompare);
@@ -142,7 +145,7 @@ const AboutModal = ({
       modalBody={
         <>
           {toUpdateVer && <UpdateAlert latestVer={toUpdateVer} />}
-          <AppDescription version={appVersion} isMostUpdated={!toUpdateVer} />
+          <AppDescription version={appVersion} needsUpdate={needsUpdate} />
           <LabModeDescription
             isLabMode={isLabMode}
             setIsLabMode={setIsLabMode}
