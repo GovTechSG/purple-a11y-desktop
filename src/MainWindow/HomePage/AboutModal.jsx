@@ -38,8 +38,8 @@ const LabModeDescription = ({ isLabMode, setIsLabMode }) => {
   return (
     <div className="card">
       <div className="card-body p-3">
-        <div className="d-flex gap-2">
-          <p className="bold-text card-title">
+        <div className="d-flex gap-2 align-items-center mb-2">
+          <p className="bold-text card-title mb-0 me-2">
             <img
               className="me-2"
               src={isLabMode ? labModeOn : labModeOff}
