@@ -8,6 +8,7 @@ const {
 const { getDefaultChromeDataDir } = require("./constants")
 const os = require("os");
 const axios = require("axios");
+const https = require("https");
 const EventEmitter = require("events");
 const constants = require("./constants");
 const scanManager = require("./scanManager");

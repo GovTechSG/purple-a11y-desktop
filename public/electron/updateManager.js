@@ -1,9 +1,7 @@
 const os = require("os");
 const path = require("path");
 const fs = require("fs");
-const https = require("https");
 const { exec, spawn } = require("child_process");
-const axios = require("axios");
 const {
   getEngineVersion,
   getFrontendVersion,
