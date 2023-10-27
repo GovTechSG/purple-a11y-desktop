@@ -84,6 +84,7 @@ jobs:
             
   mac-install-purple:
     runs-on: self-hosted
+    environment: macos
     
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
