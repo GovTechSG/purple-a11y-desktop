@@ -49,7 +49,17 @@ function createMainWindow() {
 
 // TODO set ipcMain messages
 app.on("ready", async () => {
-  const { data: releaseInfo } = await axios.get('https://greyguy21.github.io/purple-hats-desktop/latest-release.json')
+  const axiosInstance = axios.create({
+    httpsAgent: new https.Agent({
+      rejectUnauthorized: false,
+      headers: {
+        // 'X-Forwarded-For': 'xxx',
+        "User-Agent": "axios",
+      },
+    }),
+  });
+  
+  const { data: releaseInfo } = await axiosInstance.get('https://greyguy21.github.io/purple-hats-desktop/latest-release.json')
   .catch((e) => {
     console.log("Unable to get release info");
     return { data: undefined };
