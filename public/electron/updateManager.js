@@ -99,20 +99,18 @@ const getLatestFrontendVersion = async () => {
     // const { data: allFrontendReleases } = await axiosInstance.get(
     //   `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases`
     // );
-    const { 
-      latestRelease, 
-      latestPrerelease
-    } = await axiosInstance.get('https://greyguy21.github.io/purple-hats-desktop/latest-release.json'); 
-    console.log('latest release: ', latestRelease, ' latest pre-release: ', latestPrerelease)
+    const response = await axiosInstance.get('https://greyguy21.github.io/purple-hats-desktop/latest-release.json'); 
+    const { latestPreRelease, latestRelease } = response.data; 
+    
     // sort by descending publish date
     // const sorted = allFrontendReleases.sort((a, b) => b.published_at - a.published_at);
     // const latestRelease = sorted.filter(entry => !entry.prerelease)[0].tag_name;
     // const latestPrerelease = sorted.filter(entry => entry.prerelease)[0].tag_name;
     if (isLabMode) {
       // handle case where latest release ver > latest prerelease version
-      verToCompare = versionComparator(latestRelease, latestPrerelease) === 1
+      verToCompare = versionComparator(latestRelease, latestPreRelease) === 1
         ? latestRelease
-        : latestPrerelease;
+        : latestPreRelease;
     } else {
       verToCompare = latestRelease;
     }
@@ -325,7 +323,7 @@ const run = async (updaterEventEmitter) => {
           if (fs.existsSync(macOSPrepackageBackend)) {
             await unzipBackendAndCleanUp(macOSPrepackageBackend);
           }
-          
+
           writeUserDetailsToFile({ firstLaunchOnUpdate: true });
           updaterEventEmitter.emit("restartTriggered");
         } catch (e) {
