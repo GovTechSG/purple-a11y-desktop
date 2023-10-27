@@ -93,14 +93,14 @@ const unzipBackendAndCleanUp = async (zipPath=phZipPath) => {
   }
 };
 
-const getLatestFrontendVersion = async () => {
+const getLatestFrontendVersion = async (latestRelease, latestPreRelease) => {
   try {
     let verToCompare;
     // const { data: allFrontendReleases } = await axiosInstance.get(
     //   `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases`
     // );
-    const response = await axiosInstance.get('https://greyguy21.github.io/purple-hats-desktop/latest-release.json'); 
-    const { latestPreRelease, latestRelease } = response.data; 
+    // const response = await axiosInstance.get('https://greyguy21.github.io/purple-hats-desktop/latest-release.json'); 
+    // const { latestPreRelease, latestRelease } = response.data; 
     
     // sort by descending publish date
     // const sorted = allFrontendReleases.sort((a, b) => b.published_at - a.published_at);
@@ -235,7 +235,7 @@ const spawnScriptToLaunchInstaller = () => {
   });
 };
 
-const run = async (updaterEventEmitter) => {
+const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
   const processesToRun = [];
 
   const isInterruptedUpdate = fs.existsSync(updateBackupsFolder);
@@ -245,7 +245,7 @@ const run = async (updaterEventEmitter) => {
   updaterEventEmitter.emit("checking");
 
   // const toUpdateBackendVer = await getLatestBackendVersion();
-  const toUpdateFrontendVer = await getLatestFrontendVersion();
+  const toUpdateFrontendVer = await getLatestFrontendVersion(latestRelease, latestPreRelease);
 
   // Auto updates via installer is only applicable for Windows
   // Auto updates for backend on Windows will be done via a powershell script due to %ProgramFiles% permission
