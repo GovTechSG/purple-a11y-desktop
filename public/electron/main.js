@@ -219,6 +219,7 @@ app.on("ready", async () => {
     const markdownConverter = new showdown.Converter();
     const newestFormattedNotes = markdownToHTML(markdownConverter, newestNotes);
     const latestRelNotes = markdownToHTML(markdownConverter, latestReleaseNotes);
+
     mainWindow.webContents.send("versionInfo", {
       appVersion: constants.appVersion,
       latestInfo: { tag_name: latestRelease },
