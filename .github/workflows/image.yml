@@ -128,6 +128,9 @@ jobs:
         env:
           CI: ""
           BE_TAG: "${{ vars.BE_TAG }}"
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         working-directory: ${{github.workspace}}
 
       - name: Move and rename universal binary zip (Mac)
