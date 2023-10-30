@@ -37,7 +37,7 @@ const LabModeDescription = ({ isLabMode, setIsLabMode }) => {
 
   return (
     <div className="card">
-      <div className="card-body p-3">
+      <div className="card-body px-3 py-2">
         <div className="d-flex gap-2 align-items-center mb-2">
           <p className="bold-text card-title mb-0 me-2">
             <img
@@ -112,18 +112,18 @@ const AboutModal = ({
   isLabMode,
   setIsLabMode,
 }) => {
-  const { appVersion, latestInfo, latestPrereleaseInfo } = appVersionInfo;
+  const { appVersion, latestVer, latestPrereleaseVer } = appVersionInfo;
   const [toUpdateVer, setToUpdateVer] = useState(undefined);
   const [needsUpdate, setNeedsUpdate] = useState(true);
 
   useEffect(() => {
-    if (!latestInfo || !latestPrereleaseInfo) {
+    if (!latestVer || !latestPrereleaseVer) {
       // if unable to fetch release info, dont show update alert / "(latest)" label
       setNeedsUpdate(true);
       return setToUpdateVer(undefined);
     }
-    const latestVerToUpdate = latestInfo.tag_name;
-    const latestPrereleaseToUpdate = latestPrereleaseInfo.tag_name;
+    const latestVerToUpdate = latestVer;
+    const latestPrereleaseToUpdate = latestPrereleaseVer;
 
     const toCompare = isLabMode ? latestPrereleaseToUpdate : latestVerToUpdate;
     const isNeedUpdate = versionComparator(appVersion, toCompare) === -1;

@@ -223,8 +223,8 @@ app.on("ready", async () => {
 
     mainWindow.webContents.send("versionInfo", {
       appVersion: constants.appVersion,
-      latestInfo: { tag_name: latestRelease },
-      latestPrereleaseInfo: { tag_name: newestVer },
+      latestVer: latestRelease,
+      latestPrereleaseVer: newestVer,
       latestPreNotes: newestFormattedNotes,
       latestRelNotes,
     });

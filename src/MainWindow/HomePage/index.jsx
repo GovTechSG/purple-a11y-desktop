@@ -35,15 +35,27 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const [scanButtonIsClicked, setScanButtonIsClicked] = useState(false);
 
   const isLatest = () => {
-    console.log(appVersionInfo, "APP VERSION INFO");
     const currVer = appVersionInfo.appVersion;
     const latestToCompare = isLabMode
-      ? appVersionInfo.latestPrereleaseInfo
-      : appVersionInfo.latestInfo;
+      ? appVersionInfo.latestPrereleaseVer
+      : appVersionInfo.latestVer;
     if (latestToCompare) {
-      return versionComparator(currVer, latestToCompare.tag_name) === 1;
+      return versionComparator(currVer, latestToCompare) === 1;
     }
     return false; // if release info is undefined (unable to fetch)
+  };
+
+  const getReleaseNotesOnUpdate = (appVersionInfo) => {
+    // to get release notes to show on first launch after update
+    const currVer = appVersionInfo.appVersion;
+    const prereleaseVer = appVersionInfo.latestPrereleaseVer;
+    const releaseVer = appVersionInfo.latestVer;
+    if (currVer === prereleaseVer) {
+      return appVersionInfo.latestPreNotes;
+    } else if (currVer === releaseVer) {
+      return appVersionInfo.latestRelNotes;
+    }
+    return undefined;
   };
 
   useEffect(() => {
@@ -51,24 +63,6 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
       setPrevUrlErrorMessage('');
     }
   }, [scanButtonIsClicked])
-  // useEffect(() => {
-  //   console.log('1 scan button is clicked: ', scanButtonIsClicked);
-  //   console.log('1 prev error msg: ', prevUrlErrorMessage);
-  //   if (scanButtonIsClicked) {
-  //     console.log('set error message to empty');
-  //     setPrevUrlErrorMessage('');
-  //     setScanButtonIsClicked(false);
-  //   }
-  // }, [scanButtonIsClicked])
-  
-  // useEffect(() => {
-  //   console.log('2 scan button is clicked: ', scanButtonIsClicked);
-  //   console.log('2 prev error msg: ', prevUrlErrorMessage);
-  //   if (prevUrlErrorMessage && scanButtonIsClicked) {
-  //     console.log('set scan button to false');
-  //     setScanButtonIsClicked(false);
-  //   }
-  // }, [prevUrlErrorMessage])
 
   useEffect(() => {
     if (
@@ -296,12 +290,12 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
       {showNoChromeErrorModal &&
         <NoChromeErrorModal showModal={showNoChromeErrorModal} setShowModal={setShowNoChromeErrorModal}/>            
       }
-      {showWhatsNewModal && 
+      {showWhatsNewModal && getReleaseNotesOnUpdate(appVersionInfo) && 
         <WhatsNewModal
           showModal={showWhatsNewModal}
           setShowModal={setShowWhatsNewModal}
           version={appVersionInfo.appVersion}
-          releaseNotes={isLabMode ? appVersionInfo.latestPreNotes : appVersionInfo.latestRelNotes}
+          releaseNotes={getReleaseNotesOnUpdate(appVersionInfo)}
         />
       }
       {showAboutPhModal &&
