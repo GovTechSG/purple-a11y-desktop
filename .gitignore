@@ -135,3 +135,6 @@ dist
 /actions-runner/
 
 /extraResources/
+
+#docs 
+/docs
