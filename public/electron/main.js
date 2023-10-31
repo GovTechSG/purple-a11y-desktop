@@ -60,7 +60,7 @@ app.on("ready", async () => {
     }),
   });
   
-  const { data: releaseInfo } = await axiosInstance.get('https://greyguy21.github.io/purple-hats-desktop/latest-release.json')
+  const { data: releaseInfo } = await axiosInstance.get('https://govtechsg.github.io/purple-hats-desktop/latest-release.json')
   .catch((e) => {
     console.log("Unable to get release info");
     return { data: undefined };
