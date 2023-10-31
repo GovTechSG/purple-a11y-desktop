@@ -104,6 +104,11 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
     return regexForUrl.test(input);
   };
 
+  const isValidFilepath = (input) => {
+    const regexForFilepath = /^(file:\/\/|\/|[A-Z]:\\).*/gm;
+    return regexForFilepath.test(input);
+  }
+
   const startScan = async (scanDetails) => {
     scanDetails.browser = isProxy ? "edge" : browser;
 
@@ -113,7 +118,13 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
       return;
     }
 
-    if (!isValidHttpUrl(scanDetails.scanUrl)) {
+    if (scanDetails.scanType === "Sitemap crawl") {
+      if (!isValidHttpUrl(scanDetails.scanUrl) && !isValidFilepath(scanDetails.scanUrl)) {
+        setScanButtonIsClicked(false);
+        setPrevUrlErrorMessage("Invalid sitemap.");
+        return; 
+      }
+    } else if (!isValidHttpUrl(scanDetails.scanUrl)) {
       setScanButtonIsClicked(false);
       setPrevUrlErrorMessage("Invalid URL.");
       return;
