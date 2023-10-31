@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Button from "../../common/components/Button";
 import SelectField from "./SelectField";
 import DownloadFolderDropdown from "../../common/components/DownloadFolderDropdown";
@@ -20,8 +20,10 @@ const AdvancedScanOptions = ({
 }) => {
   const [openAdvancedOptionsMenu, setOpenAdvancedOptionsMenu] = useState(false);
   const [advancedOptionsDirty, setAdvancedOptionsDirty] = useState(false);
-  const [isMaxConcurrencyMouseEvent, setIsMaxConcurrencyMouseEvent] = useState(false);
-  const [showMaxConcurrencyTooltip, setShowMaxConcurrencyTooltip] = useState(false);
+  const [isMaxConcurrencyMouseEvent, setIsMaxConcurrencyMouseEvent] =
+    useState(false);
+  const [showMaxConcurrencyTooltip, setShowMaxConcurrencyTooltip] =
+    useState(false);
   const menu = useRef();
 
   const handleToggleMenu = () => {
@@ -35,14 +37,14 @@ const AdvancedScanOptions = ({
 
   const handleMaxConcurrencyOnFocus = () => {
     if (!isMaxConcurrencyMouseEvent) {
-      setShowMaxConcurrencyTooltip(true); 
+      setShowMaxConcurrencyTooltip(true);
     }
-  }
+  };
 
   const handleMaxConcurrencyOnMouseEnter = () => {
     setShowMaxConcurrencyTooltip(false);
-    setIsMaxConcurrencyMouseEvent(true); 
-  }
+    setIsMaxConcurrencyMouseEvent(true);
+  };
 
   /*
   by default, new value of the selected option will be set to event.target.value
@@ -65,11 +67,15 @@ const AdvancedScanOptions = ({
 
       // check if new options are the default
       const defaultAdvancedOptions = getDefaultAdvancedOptions(isProxy);
-      const isNewOptionsDefault = Object.keys(defaultAdvancedOptions)
-        .reduce((isDefaultSoFar, key) => {
-          return isDefaultSoFar && defaultAdvancedOptions[key] === newOptions[key];
-        }, true);
-      
+      const isNewOptionsDefault = Object.keys(defaultAdvancedOptions).reduce(
+        (isDefaultSoFar, key) => {
+          return (
+            isDefaultSoFar && defaultAdvancedOptions[key] === newOptions[key]
+          );
+        },
+        true
+      );
+
       setAdvancedOptionsDirty(!isNewOptionsDefault);
     };
 
@@ -111,15 +117,16 @@ const AdvancedScanOptions = ({
             options={Object.values(viewportOptions)}
             onChange={handleSetAdvancedOption("viewport")}
           />
-          {advancedOptions.viewport === viewportOptions.specific && !isProxy && (
-            <SelectField
-              id="specific-device-dropdown"
-              label="Device:"
-              initialValue={advancedOptions.device}
-              options={deviceOptions}
-              onChange={handleSetAdvancedOption("device")}
-            />
-          )}
+          {advancedOptions.viewport === viewportOptions.specific &&
+            !isProxy && (
+              <SelectField
+                id="specific-device-dropdown"
+                label="Device:"
+                initialValue={advancedOptions.device}
+                options={deviceOptions}
+                onChange={handleSetAdvancedOption("device")}
+              />
+            )}
           {advancedOptions.viewport === viewportOptions.custom && (
             <div className="user-input-group">
               <label htmlFor="viewport-width-input" className="bold-text">
@@ -147,79 +154,81 @@ const AdvancedScanOptions = ({
               />
             </div>
           )}
-          {advancedOptions.scanType !== scanTypeOptions[2] && (
-            <SelectField
-              id="file-type-dropdown"
-              label="File Type:"
-              initialValue={advancedOptions.fileTypes}
-              options={fileTypesOptions}
-              onChange={handleSetAdvancedOption("fileTypes")}
-            />
-          )}
-          <div id='screenshots-toggle-group'>
-            <input 
+          {advancedOptions.scanType !== scanTypeOptions[2] &&
+            advancedOptions.scanType !== scanTypeOptions[3] && (
+              <SelectField
+                id="file-type-dropdown"
+                label="File Type:"
+                initialValue={advancedOptions.fileTypes}
+                options={fileTypesOptions}
+                onChange={handleSetAdvancedOption("fileTypes")}
+              />
+            )}
+          <div id="screenshots-toggle-group">
+            <input
               type="checkbox"
-              id="screenshots-toggle" 
+              id="screenshots-toggle"
               aria-describedby="screenshots-tooltip"
               checked={advancedOptions.includeScreenshots}
               onChange={handleSetAdvancedOption(
-                "includeScreenshots", 
-                (e) => e.target.checked
-              )} 
-            /> 
-            <label htmlFor="screenshots-toggle">
-              Include screenshots
-            </label>
-          </div>
-          <div id='false-positive-toggle-group'>
-              <input 
-                type="checkbox"
-                id="false-positive-toggle" 
-                aria-describedby="false-positive-tooltip"
-                checked={advancedOptions.falsePositive}
-                onChange={handleSetAdvancedOption(
-                  "falsePositive", 
-                  (e) => e.target.checked
-                )} 
-              /> 
-              <label htmlFor="false-positive-toggle">
-                Show potential false positive issues
-              </label>
-          </div>
-          <div id="max-concurrency-toggle-group">
-            <input
-              type="checkbox"
-              id="max-concurrency-toggle"
-              aria-describedby='max-concurrency-tooltip'
-              checked={advancedOptions.maxConcurrency}
-              onFocus={() => handleMaxConcurrencyOnFocus()}
-              onBlur={() => setShowMaxConcurrencyTooltip(false)}
-              onMouseEnter={() => handleMaxConcurrencyOnMouseEnter()}
-              onMouseLeave={() => setIsMaxConcurrencyMouseEvent(false)}
-              onChange={handleSetAdvancedOption(
-                "maxConcurrency",
+                "includeScreenshots",
                 (e) => e.target.checked
               )}
             />
-            <label htmlFor="max-concurrency-toggle">
-              Slow Scan Mode
-            </label>
-            <div className="custom-tooltip-container">
-              <ToolTip 
-                description={'Scan 1 page at a time instead of multiple pages concurrently.'} 
-                id='max-concurrency-tooltip'
-                showToolTip={showMaxConcurrencyTooltip}
-              />
-              <img 
-                className='tooltip-img' 
-                src={questionMarkIcon} 
-                aria-describedby='max-concurrency-tooltip' 
-                onMouseEnter={() => setShowMaxConcurrencyTooltip(true)} 
-                onMouseLeave={() => setShowMaxConcurrencyTooltip(false)} 
-                alt="tooltip icon for slow scan mode"
-              />
-            </div>
+            <label htmlFor="screenshots-toggle">Include screenshots</label>
           </div>
+          <div id="false-positive-toggle-group">
+            <input
+              type="checkbox"
+              id="false-positive-toggle"
+              aria-describedby="false-positive-tooltip"
+              checked={advancedOptions.falsePositive}
+              onChange={handleSetAdvancedOption(
+                "falsePositive",
+                (e) => e.target.checked
+              )}
+            />
+            <label htmlFor="false-positive-toggle">
+              Show potential false positive issues
+            </label>
+          </div>
+          {advancedOptions.scanType !== scanTypeOptions[3] && (
+            <div id="max-concurrency-toggle-group">
+              <input
+                type="checkbox"
+                id="max-concurrency-toggle"
+                aria-describedby="max-concurrency-tooltip"
+                checked={advancedOptions.maxConcurrency}
+                onFocus={() => handleMaxConcurrencyOnFocus()}
+                onBlur={() => setShowMaxConcurrencyTooltip(false)}
+                onMouseEnter={() => handleMaxConcurrencyOnMouseEnter()}
+                onMouseLeave={() => setIsMaxConcurrencyMouseEvent(false)}
+                onChange={handleSetAdvancedOption(
+                  "maxConcurrency",
+                  (e) => e.target.checked
+                )}
+              />
+
+              <label htmlFor="max-concurrency-toggle">Slow Scan Mode</label>
+              <div className="custom-tooltip-container">
+                <ToolTip
+                  description={
+                    "Scan 1 page at a time instead of multiple pages concurrently."
+                  }
+                  id="max-concurrency-tooltip"
+                  showToolTip={showMaxConcurrencyTooltip}
+                />
+                <img
+                  className="tooltip-img"
+                  src={questionMarkIcon}
+                  aria-describedby="max-concurrency-tooltip"
+                  onMouseEnter={() => setShowMaxConcurrencyTooltip(true)}
+                  onMouseLeave={() => setShowMaxConcurrencyTooltip(false)}
+                  alt="tooltip icon for slow scan mode"
+                />
+              </div>
+            </div>
+          )}
           <hr />
           <div className="user-input-group">
             <label id="download-folder-label" className="bold-text">
