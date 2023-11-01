@@ -17,14 +17,16 @@ const UpdateAlert = ({ latestVer }) => {
 
   return (
     <Alert alertClassName="alert-custom mb-4">
-      <div className="flex-grow-1">
-        <h4>Update available ({latestVer})</h4>
-        To update, restart Purple HATS.
+      <div className="d-flex justify-content-center">
+        <div className="flex-grow-1">
+          <h4>Update available ({latestVer})</h4>
+          To update, restart Purple HATS.
+        </div>
+        <Button className="primary align-self-center" onClick={handleRestartApp}>
+          Restart
+          <img className="ms-2" src={arrowRepeat} alt="" />
+        </Button>
       </div>
-      <Button className="primary align-self-center" onClick={handleRestartApp}>
-        Restart
-        <img className="ms-2" src={arrowRepeat} alt="" />
-      </Button>
     </Alert>
   );
 };
