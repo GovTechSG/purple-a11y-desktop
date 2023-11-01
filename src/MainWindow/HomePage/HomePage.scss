@@ -50,6 +50,11 @@
     margin-right: 0.5rem;
   }
 
+  #url-input:disabled {
+    color: #6A8A95;
+    background-color: transparent;
+  }
+
   #url-input:focus {
     outline: none !important;
     border-bottom: 1px solid #785ef0;
@@ -62,6 +67,11 @@
     background-color: transparent;
     font-size: 0.875rem;
     white-space: nowrap;
+    color: #333 !important;
+  }
+
+  #page-limit-toggle-button:disabled span {
+    color: #6A8A95;
   }
 
   #page-limit-adjuster {
@@ -138,6 +148,13 @@
     width: 77%;
   }
 
+  #scan-type-dropdown:disabled,
+  #viewport-type-dropdown:disabled,
+  #file-type-dropdown:disabled {
+    background-color: #E7ECEE;
+    color: #4A6168;
+  }
+
   #max-concurrency-toggle-group,
   #false-positive-toggle-group,
   #screenshots-toggle-group {
@@ -176,6 +193,18 @@
   #false-positive-toggle:checked[type="checkbox"],
   #screenshots-toggle:checked[type="checkbox"] {
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='%23fff' viewBox='0 0 16 16'%3E%3Cpath d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/%3E%3C/svg%3E");
+  }
+
+  #max-concurrency-toggle:checked:disabled,
+  #false-positive-toggle:checked:disabled,
+  #screenshots-toggle:checked:disabled {
+    background-color: #B5C5CA;
+  }
+
+  #max-concurrency-toggle:disabled,
+  #false-positive-toggle:disabled,
+  #screenshots-toggle:disabled {
+    background-color: #E7ECEE;
   }
 
   .user-input-group {

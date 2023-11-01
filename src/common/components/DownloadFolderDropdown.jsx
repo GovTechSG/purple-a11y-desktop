@@ -1,7 +1,3 @@
-import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
-import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
-import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
-import Button from "../../common/components/Button";
 import folder from "../../assets/folder.svg";
 import { useEffect, useState } from "react";
 import services from "../../services";
@@ -22,14 +18,17 @@ const DownloadFolderDropdown = ({
         getExportDir();
     }, [])
 
-    const handleSetExportDir = async () => {
+
+    const handleSetExportDir = async (e) => { 
+      if (!e.currentTarget.disabled) {
         const exportDir = await window.services.setExportDir(); 
         setExportDir(exportDir);
+      } 
     }
 
     return (
         <div className={dropdownClassName}>
-          <button className="dir-info-button download-dropdown-btn" aria-describedby="download-folder-label" onClick={handleSetExportDir}>
+          <button className="dir-info-button download-dropdown-btn" aria-describedby="download-folder-label" onClick={(e) => handleSetExportDir(e)}>
             <div className="d-flex download-path">
               <img src={folder}></img>
               <span id="dir-info">{exportDir}</span>
