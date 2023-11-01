@@ -70,7 +70,6 @@ const AdvancedScanOptions = ({
           return isDefaultSoFar && defaultAdvancedOptions[key] === newOptions[key];
         }, true);
       
-      setAdvancedOptionsDirty(!isNewOptionsDefault);
     };
 
   return (
@@ -169,6 +168,20 @@ const AdvancedScanOptions = ({
             /> 
             <label htmlFor="screenshots-toggle">
               Include screenshots
+            </label>
+          </div>
+          <div id='subdomain-toggle-group'>
+            <input 
+              type="checkbox"
+              id="subdomain-toggle"
+              checked={advancedOptions.includeSubdomains}
+              onChange={handleSetAdvancedOption(
+                "includeSubdomains", 
+                (e) => e.target.checked
+              )} 
+            /> 
+            <label htmlFor="subdomain-toggle">
+              Allow subdomains for scans
             </label>
           </div>
           <div id='false-positive-toggle-group'>

@@ -140,20 +140,23 @@
 
   #max-concurrency-toggle-group,
   #false-positive-toggle-group,
-  #screenshots-toggle-group {
+  #screenshots-toggle-group,
+  #subdomain-toggle-group {
     display: flex;
     align-items: center;
     height: 1.75rem;
   }
 
   #false-positive-toggle-group,
-  #screenshots-toggle-group {
+  #screenshots-toggle-group,
+  #subdomain-toggle-group {
     margin-bottom: 1rem;
   }
 
   #max-concurrency-toggle,
   #false-positive-toggle,
-  #screenshots-toggle {
+  #screenshots-toggle,
+  #subdomain-toggle {
     appearance: none;
     background-color: #fff;
     background-position: 50%;
@@ -168,13 +171,15 @@
 
   #max-concurrency-toggle:checked,
   #false-positive-toggle:checked,
-  #screenshots-toggle:checked {
+  #screenshots-toggle:checked,
+  #subdomain-toggle:checked {
     background-color: #785ef0;
   }
 
   #max-concurrency-toggle:checked[type="checkbox"],
   #false-positive-toggle:checked[type="checkbox"],
-  #screenshots-toggle:checked[type="checkbox"] {
+  #screenshots-toggle:checked[type="checkbox"], 
+  #subdomain-toggle:checked[type="checkbox"] {
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='%23fff' viewBox='0 0 16 16'%3E%3Cpath d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/%3E%3C/svg%3E");
   }
 
