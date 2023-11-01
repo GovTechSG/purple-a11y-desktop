@@ -170,20 +170,22 @@ const AdvancedScanOptions = ({
               Include screenshots
             </label>
           </div>
-          <div id='subdomain-toggle-group'>
-            <input 
-              type="checkbox"
-              id="subdomain-toggle"
-              checked={advancedOptions.includeSubdomains}
-              onChange={handleSetAdvancedOption(
-                "includeSubdomains", 
-                (e) => e.target.checked
-              )} 
-            /> 
-            <label htmlFor="subdomain-toggle">
-              Allow subdomains for scans
-            </label>
-          </div>
+          { advancedOptions.scanType === 'Website crawl' && 
+            <div id='subdomain-toggle-group'>
+              <input 
+                type="checkbox"
+                id="subdomain-toggle"
+                checked={advancedOptions.includeSubdomains}
+                onChange={handleSetAdvancedOption(
+                  "includeSubdomains", 
+                  (e) => e.target.checked
+                )} 
+              /> 
+              <label htmlFor="subdomain-toggle">
+                Allow subdomains for scans
+              </label>
+            </div>
+          }
           <div id='false-positive-toggle-group'>
               <input 
                 type="checkbox"
