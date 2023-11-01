@@ -124,6 +124,19 @@
     margin-right: 0.5rem;
   }
 
+  ul.actions-list {
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+  
+  ul.actions-list li {
+    list-style-type: none;
+  }
+  
+  ul.actions-list li:not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+
 
   .bi-envelope {
     margin-right: 0.5rem;
