@@ -8,6 +8,7 @@ const {
 const { getDefaultChromeDataDir } = require("./constants")
 const os = require("os");
 const axios = require("axios");
+const https = require("https");
 const EventEmitter = require("events");
 const constants = require("./constants");
 const scanManager = require("./scanManager");
@@ -49,6 +50,29 @@ function createMainWindow() {
 
 // TODO set ipcMain messages
 app.on("ready", async () => {
+  const axiosInstance = axios.create({
+    httpsAgent: new https.Agent({
+      rejectUnauthorized: false,
+      headers: {
+        // 'X-Forwarded-For': 'xxx',
+        "User-Agent": "axios",
+      },
+    }),
+  });
+  
+  const { data: releaseInfo } = await axiosInstance.get('https://govtechsg.github.io/purple-hats-desktop/latest-release.json')
+  .catch((e) => {
+    console.log("Unable to get release info");
+    return { data: undefined };
+  });
+
+  const {
+    latestRelease,
+    latestPreRelease,
+    latestReleaseNotes,
+    latestPreReleaseNotes
+  } = releaseInfo ? releaseInfo : {};
+
   // create settings file if it does not exist
   await userDataManager.init();
 
@@ -125,7 +149,8 @@ app.on("ready", async () => {
     updateEvent.on("frontendDownloadFailed", () => {
       launchWindow.webContents.send("launchStatus", "frontendDownloadFailed");
     });
-    await updateManager.run(updateEvent);
+
+    await updateManager.run(updateEvent, latestRelease, latestPreRelease);
 
     launchWindow.close();
   }
@@ -153,6 +178,11 @@ app.on("ready", async () => {
 
   ipcMain.handle('getEngineVersion', () => {
     return constants.getEngineVersion();
+  });
+
+  ipcMain.on("restartApp", (_event) => {
+    app.relaunch();
+    app.exit();
   })
   
   ipcMain.handle("checkChromeExistsOnMac", () => {
@@ -168,25 +198,35 @@ app.on("ready", async () => {
   await mainReady;
 
   mainWindow.webContents.send("appStatus", "ready");
-  const { data: latestRelease } = await axios.get(
-    `https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases/latest`
-  )
-  .catch(err => {
-    console.log('Unable to get the latest release info');
-    return { data: undefined };
-  });
-  if (latestRelease) {
-    const isLatest = constants.versionComparator(constants.appVersion, latestRelease.tag_name) === 1;
-    const markdownConverter = new showdown.Converter();
-    const escapedBody = latestRelease.body
+
+  const markdownToHTML = (converter, md) => {
+    const escaped = md
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;");
-    const latestReleaseHtml = markdownConverter.makeHtml(escapedBody);
+    return converter.makeHtml(escaped);
+  };
+
+  if (releaseInfo) {
+    let newestVer = latestPreRelease;
+    let newestNotes = latestPreReleaseNotes;
+
+    // handle case where release > prerelease version
+    if (constants.versionComparator(latestRelease, latestPreRelease) === 1) {
+      newestVer = latestRelease;
+      newestNotes = latestReleaseNotes;
+    }
+    
+    const markdownConverter = new showdown.Converter();
+    const newestFormattedNotes = markdownToHTML(markdownConverter, newestNotes);
+    const latestRelNotes = markdownToHTML(markdownConverter, latestReleaseNotes);
+
     mainWindow.webContents.send("versionInfo", {
       appVersion: constants.appVersion,
-      isLatest,
-      latestReleaseNotes: latestReleaseHtml,
+      latestVer: latestRelease,
+      latestPrereleaseVer: newestVer,
+      latestPreNotes: newestFormattedNotes,
+      latestRelNotes,
     });
   } else {
     mainWindow.webContents.send("versionInfo", {

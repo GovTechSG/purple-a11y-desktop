@@ -1,0 +1,59 @@
+name: Generate Latest Release JSON
+
+on:
+  workflow_dispatch:
+  release:
+    types: [released, prereleased]
+
+jobs:
+  generate_latest_release_json:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        ref: 'docs'
+
+    - name: Get release data
+      run: |
+        LATEST_RELEASE=$(curl -s "https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases/latest")
+        ALL_RELEASES=$(curl -s "https://api.github.com/repos/GovTechSG/purple-hats-desktop/releases")
+        
+        # Extract the latest release and pre-release tags
+        LATEST_RELEASE_TAG=$(echo "$LATEST_RELEASE" | jq -r '.tag_name')
+        LATEST_PRE_RELEASE_TAG=$(echo "$ALL_RELEASES" | jq -r '[.[] | select(.prerelease) | .tag_name] | first')
+
+        # Extract the latest release and pre-release notes 
+        LATEST_RELEASE_NOTES=$(echo "$LATEST_RELEASE" | jq -r '.body' | jq -s -R -r @json)
+        LATEST_PRE_RELEASE_NOTES=$(echo "$ALL_RELEASES" | jq -r '[.[] | select(.prerelease)][0] | .body' | jq -s -R -r @json)
+        
+        # Extract all release and pre-release tags as comma-separated strings
+        ALL_RELEASE_TAGS=$(echo "$ALL_RELEASES" | jq -r '[.[] | select(.prerelease | not) | .tag_name | "\"\(.)\""] | join(",")')
+        ALL_PRE_RELEASE_TAGS=$(echo "$ALL_RELEASES" | jq -r '[.[] | select(.prerelease) | .tag_name | "\"\(.)\""] | join(",")')
+        
+        # Create the JSON file in the 'docs' folder
+        mkdir -p docs
+        echo "{
+          \"latestRelease\": \"$LATEST_RELEASE_TAG\",
+          \"latestPreRelease\": \"$LATEST_PRE_RELEASE_TAG\",
+          \"allReleaseTags\": [$ALL_RELEASE_TAGS],
+          \"allPreReleaseTags\": [$ALL_PRE_RELEASE_TAGS],
+          \"latestReleaseNotes\": $LATEST_RELEASE_NOTES,
+          \"latestPreReleaseNotes\": $LATEST_PRE_RELEASE_NOTES
+        }" > docs/latest-release.json
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Show generated JSON
+      run: cat docs/latest-release.json
+
+    - name: Commit JSON file
+      run: |
+        git config --local user.name "${GITHUB_ACTOR}"
+        git config --local user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+
+        git add docs/latest-release.json
+        git commit -m "Update latest-release.json"
+        git push
+

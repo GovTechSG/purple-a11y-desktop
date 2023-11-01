@@ -593,6 +593,11 @@ hr {
   border-color: #785ef0;
 }
 
+.alert-custom{
+  background-color:#F7F6FE;
+  border-color: #785EF0;
+}
+
 /* @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Roboto:ital,wght@0,100;1,100&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Viga"); */
 /* cyrillic-ext */
