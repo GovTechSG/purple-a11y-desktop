@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "../../common/components/Button";
 import SelectField from "./SelectField";
 import DownloadFolderDropdown from "../../common/components/DownloadFolderDropdown";
