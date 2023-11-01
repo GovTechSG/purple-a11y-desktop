@@ -5,7 +5,7 @@ const Alert = ({ alertClassName, children, icon }) => {
         icon &&
         <div className="me-2"><img src={icon} alt=""></img></div>
       }
-      <div class="d-flex justify-content-center flex-grow-1">
+      <div class="flex-grow-1">
       {children}
       </div>
     </div>
