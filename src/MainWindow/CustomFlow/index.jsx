@@ -67,35 +67,39 @@ const PrepareStep = ({ scanDetails, setStep, setScanDetails }) => {
         url={scanDetails.scanUrl}
       />
       <form onSubmit={onClickNextStep}>
-        <div className="prepare-form-section">
-          <p className="bold-text">Does your custom flow have any post-login webpages?</p>
-          <label className="prepare-input-field">
-            <input className="form-check-input" name="post-login" id="post-login-yes-input" type="radio" value={isPostLogin} onChange={handleCheckInput(setIsPostLogin, true)} /> Yes
-          </label>
-          <label className="prepare-input-field">
-            <input className="form-check-input" name="post-login" id="post-login-no-input" type="radio" value={!isPostLogin} onChange={handleCheckInput(setIsPostLogin, false)} /> No
-          </label>
+        <fieldset className="prepare-form-section">
+          <legend className="prepare-form-legend bold-text">1. Does your custom flow have any post-login webpages?</legend>
+          <div className="form-check py-2">
+            <input className="form-check-input" name="post-login" id="post-login-yes-input" type="radio" value={isPostLogin} onChange={handleCheckInput(setIsPostLogin, true)} />
+            <label className="form-check-label" for="post-login-yes-input">Yes</label>
+          </div>
+          <div className="form-check py-2">
+            <input className="form-check-input" name="post-login" id="post-login-no-input" type="radio" value={!isPostLogin} onChange={handleCheckInput(setIsPostLogin, false)} />
+            <label className="form-check-label" for="post-login-no-input">No</label>
+          </div>
           {isPostLogin &&
           <Alert alertClassName="alert-custom mb-5 mt-3" icon={exclaimTriangleIcon}>
             Ensure post-login webpages can be revisited using the same login credentials to allow Purple HATS to replay the steps for scanning.
           </Alert>}
-        </div>
+        </fieldset>
         
-        <div className="prepare-form-section">
-          <p className="bold-text">Does your custom flow have any file upload fields?</p>
-          <label className="prepare-input-field">
-            <input className="form-check-input" name="file-upload" id="post-login-yes-input" type="radio" value={isFileUpload} onChange={handleCheckInput(setIsFileUpload, true)} /> Yes
-          </label>
-          <label className="prepare-input-field">
-            <input className="form-check-input" name="file-upload" id="post-login-no-input" type="radio" value={!isFileUpload} onChange={handleCheckInput(setIsFileUpload, false)} /> No
-          </label>
+        <fieldset className="prepare-form-section">
+          <legend className="prepare-form-legend bold-text">2. Does your custom flow have any file upload fields?</legend>
+          <div className="form-check py-2">
+            <input className="form-check-input" name="file-upload" id="file-upload-yes-input" type="radio" value={isFileUpload} onChange={handleCheckInput(setIsFileUpload, true)} />
+            <label className="form-check-label" for="file-upload-yes-input">Yes</label>
+          </div>
+          <div className="form-check py-2">
+            <input className="form-check-input" name="file-upload" id="file-upload-no-input" type="radio" value={!isFileUpload} onChange={handleCheckInput(setIsFileUpload, false)} />
+            <label className="form-check-label" for="file-upload-no-input">No</label>
+          </div>
           {isFileUpload && fileUploadFolder && 
           <Alert alertClassName="alert-custom mb-5 mt-3" icon={exclaimTriangleIcon}>
             If form contains file upload fields, place the same file{"(s)"} in{" "}
             <a href="#" onClick={handleOpenUploadFolder}>{fileUploadFolder}</a>{" "}
             to allow Purple HATS to attach the same file{"(s)"} when replaying the steps.
           </Alert>}
-        </div>
+        </fieldset>
         {isAllSet && 
         <Alert alertClassName="alert-custom mb-5" icon={thumbsUpIcon}>
           It looks like you're all set for the custom flow scan, let's get started!
@@ -302,11 +306,13 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
       <div id="custom-flow">
         { scanDetails && 
           <>
-            <div className="d-flex flex-column gap-2">
-              <Link to="/" className="text-decoration-none">
-                <img src={arrowLeft}></img>
-                &nbsp;Back to Home
-              </Link>
+            <div>
+              {/* <div class="mb-2">
+                <Link to="/" className="text-decoration-none">
+                  <img src={arrowLeft} alt=""></img>
+                  &nbsp;Back to Home
+                </Link>
+              </div> */}
               <ProgressStepComponent step={step}></ProgressStepComponent>
             </div>
             <div className="custom-flow-content">{currentDisplay()}</div>
