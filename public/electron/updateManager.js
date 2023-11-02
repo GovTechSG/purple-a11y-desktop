@@ -336,18 +336,16 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
           currentChildProcess = null;
 
           if (fs.existsSync(macOSPrepackageBackend)) {
-            await unzipBackendAndCleanUp(macOSPrepackageBackend);
+            processesToRun.push(await unzipBackendAndCleanUp(macOSPrepackageBackend));
           }
 
           writeUserDetailsToFile({ firstLaunchOnUpdate: true });
-          updaterEventEmitter.emit("restartTriggered");
+          processesToRun.push(() => updaterEventEmitter.emit("restartTriggered"));
         } catch (e) {
           silentLogger.error(e.toString());
         }
       } 
-    }
-    
-    if (!backendExists) {
+    } else if (!backendExists) {
       updaterEventEmitter.emit('settingUp');
       if (fs.existsSync(macOSPrepackageBackend)) {
         // Trigger an unzip from Resources folder if backend does not exist or backend is older
