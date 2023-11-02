@@ -121,7 +121,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   };
 
   const isValidFilepath = (input) => {
-    const regexForFilepath = /^(file:\/\/|\/|[A-Z]:\\).*/gm;
+    const regexForFilepath = /^(file:\/\/\/|\/|[A-Z]:\\).*/gm;
     return regexForFilepath.test(input);
   }
 
