@@ -311,17 +311,11 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
         } else {
           updaterEventEmitter.emit("frontendDownloadFailed");
         }
-      } else if (!backendExists) {
-        updaterEventEmitter.emit('settingUp');
-        // Trigger download for backend via Github if backend does not exist
-        await downloadAndUnzipBackendWindows(appFrontendVer);
-        // if (phZipExists) {
-        //   processesToRun.push(await unzipBackendAndCleanUp());
-        // } else {
-        //   // Trigger download for backend via Github if backend does not exist
-        //   await downloadAndUnzipBackendWindows(appFrontendVer);
-        // }
       }
+    } else if (!backendExists) {
+      updaterEventEmitter.emit('settingUp');
+      // Trigger download for backend via Github if backend does not exist
+      await downloadAndUnzipBackendWindows(appFrontendVer);
     }
   } else {
     // user is on mac
@@ -351,18 +345,8 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
           silentLogger.error(e.toString());
         }
       } 
-    } else {
-      // console.log(backendExists, "backendExists");
-      // if (backendExists) {
-      //   updaterEventEmitter.emit('settingUp');
-      //   if (fs.existsSync(macOSPrepackageBackend)) {
-      //     // Trigger an unzip from Resources folder if backend does not exist or backend is older
-      //     await unzipBackendAndCleanUp(macOSPrepackageBackend);
-      //   } else {
-      //     processesToRun.push(await downloadBackend(appFrontendVer), await unzipBackendAndCleanUp());
-      //   }
-      // }
     }
+    
     if (!backendExists) {
       updaterEventEmitter.emit('settingUp');
       if (fs.existsSync(macOSPrepackageBackend)) {
