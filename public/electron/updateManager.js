@@ -313,11 +313,11 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
         }
       } else {
         if (!backendExists) {
+          updaterEventEmitter.emit('settingUp');
           if (phZipExists) {
             processesToRun.push(await unzipBackendAndCleanUp());
           } else {
             // Trigger download for backend via Github if backend does not exist
-            updaterEventEmitter.emit('settingUp');
             await downloadAndUnzipBackendWindows(appFrontendVer);
           }
         }
