@@ -61,7 +61,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
   useEffect(() => {
     const getFeedbackFormUrl = async () => {
       const feedbackFormUrl = await services.getFeedbackFormUrl();
-      console.log(feedbackFormUrl);
       setFeedbackFormUrl(feedbackFormUrl);
     }
 
@@ -140,24 +139,29 @@ const ResultPage = ({ completedScanId: scanId }) => {
           <hr class="my-5"/>
           <div id="other-actions">
             <h2>Other actions</h2>
-            <a
-              href="#"
-              onClick={(e) => {handleClickLink(e, feedbackFormUrl)}}
-            >
-              <img alt="" src={thumbsUpIcon}></img>
-              Help us improve
-            </a>
-            { showCustomFlowReplayButton && 
-              <Link to="/custom_flow" state={{ isReplay: true }}>
-                <img alt="" src={arrowRepeatIcon}></img>
-                Rerun custom flow {`(${customFlowLabel})`}
-              </Link>
-            }
-            <hr/>
-            <Link to="/" onClick={handleScanAgain}>
-              <img alt="" src={houseIcon}></img>
-              Back To Home 
-            </Link>
+            <ul class="actions-list">
+              <li>
+                <a href="#" onClick={(e) => {handleClickLink(e, feedbackFormUrl)}}>
+                  <img alt="" src={thumbsUpIcon}></img>
+                  Help us improve
+                </a>
+              </li>     
+              { showCustomFlowReplayButton && 
+                <li>
+                  <Link to="/custom_flow" state={{ isReplay: true }}>
+                    <img alt="" src={arrowRepeatIcon}></img>
+                    Rerun custom flow {`(${customFlowLabel})`}
+                  </Link>
+                </li>
+              }
+              <li>
+                <hr/>
+                <Link to="/" onClick={handleScanAgain}>
+                  <img alt="" src={houseIcon}></img>
+                  Back To Home 
+                </Link>    
+              </li>
+            </ul>
           </div>
           {isWindows && isEvent && (
             <div id="btn-container">

@@ -242,7 +242,7 @@ const OnboardingComponent = ({ setDataExistStatus }) => {
             <button
               type="submit"
               form={formID}
-              className="primary modal-button modal-half-button modal-right-button"
+              className={`primary modal-button modal-half-button modal-right-button`}
               disabled={isSubmitDisabled}
             >
               I consent

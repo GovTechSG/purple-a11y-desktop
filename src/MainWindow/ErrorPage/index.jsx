@@ -62,7 +62,7 @@ const ErrorPage = () => {
         </Button>
         </>
       )
-      : <Button role="link" type="primary" className='try-again-btn' onClick={handleBackToHome}>
+      : <Button role="link" type="primary" onClick={handleBackToHome}>
           Try Again
         </Button>}
     </div>

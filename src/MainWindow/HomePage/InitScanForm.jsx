@@ -1,13 +1,25 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "../../common/components/Button";
 import AdvancedScanOptions from "./AdvancedScanOptions";
-import { scanTypes, viewportTypes, devices, fileTypes, getDefaultAdvancedOptions } from "../../common/constants";
+import {
+  scanTypes,
+  viewportTypes,
+  devices,
+  fileTypes,
+  getDefaultAdvancedOptions,
+} from "../../common/constants";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
 import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 
-const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage, scanButtonIsClicked, setScanButtonIsClicked }) => {
+const InitScanForm = ({
+  isProxy,
+  startScan,
+  prevUrlErrorMessage,
+  scanButtonIsClicked,
+  setScanButtonIsClicked,
+}) => {
   const [openPageLimitAdjuster, setOpenPageLimitAdjuster] = useState(false);
   const pageLimitAdjuster = useRef();
 
@@ -24,14 +36,24 @@ const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage, scanButtonIsCli
   const viewportOptions = viewportTypes;
   const deviceOptions = isProxy ? [] : Object.keys(devices);
 
-  const [advancedOptions, setAdvancedOptions] = useState(getDefaultAdvancedOptions(isProxy));
+  const [advancedOptions, setAdvancedOptions] = useState(
+    getDefaultAdvancedOptions(isProxy)
+  );
 
-  const togglePageLimitAdjuster = () => {
-    if (!openPageLimitAdjuster) {
-      setOpenPageLimitAdjuster(true);
-    } else {
-      pageLimitAdjuster.current.style.animationName = "button-fade-out";
-      setTimeout(() => setOpenPageLimitAdjuster(false), 200);
+  useEffect(() => {
+    const urlBarElem = document.getElementById("url-bar");
+    const urlBarInputList = urlBarElem.querySelectorAll("input, button");
+    urlBarInputList.forEach((elem) => (elem.disabled = scanButtonIsClicked));
+  }, [scanButtonIsClicked, prevUrlErrorMessage]);
+
+  const togglePageLimitAdjuster = (e) => {
+    if (!e.currentTarget.disabled) {
+      if (!openPageLimitAdjuster) {
+        setOpenPageLimitAdjuster(true);
+      } else {
+        pageLimitAdjuster.current.style.animationName = "button-fade-out";
+        setTimeout(() => setOpenPageLimitAdjuster(false), 200);
+      }
     }
   };
 
@@ -62,59 +84,60 @@ const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage, scanButtonIsCli
             value={scanUrl}
             onChange={(e) => setScanUrl(e.target.value)}
           />
-          {advancedOptions.scanType !== scanTypeOptions[2] && (
-            <div>
-              <Button
-                type="transparent"
-                id="page-limit-toggle-button"
-                onClick={togglePageLimitAdjuster}
-              >
-                capped at{" "}
-                <span className="purple-text">
-                  {pageLimit} pages{" "}
-                  {openPageLimitAdjuster ? (
-                    <ButtonSvgIcon
-                      className={`chevron-up-icon`}
-                      svgIcon={<ChevronUpIcon />}
-                    />
-                  ) : (
-                    // <i className="bi bi-chevron-up" />
-                    <ButtonSvgIcon
-                      className={`chevron-down-icon`}
-                      svgIcon={<ChevronDownIcon />}
-                    />
-                    // <i className="bi bi-chevron-down" />
-                  )}
-                </span>
-              </Button>
-              {openPageLimitAdjuster && (
-                <div id="page-limit-adjuster" ref={pageLimitAdjuster}>
-                  <input
-                    type="number"
-                    id="page-limit-input"
-                    step="10"
-                    min="1"
-                    value={pageLimit}
-                    onChange={(e) => setPageLimit(e.target.value)}
-                    onBlur={(e) => {
-                      if (Number(e.target.value) <= 0) {
-                        setPageLimit(1);
-                      }
-                    }}
-                  />
-                  <label htmlFor="page-limit-input">pages</label>
-                </div>
-              )}
-            </div>
-          )}
-          {scanButtonIsClicked 
-              ?  <Button type="disabled" className="scan-btn">
-                  <LoadingSpinner></LoadingSpinner>
+          {advancedOptions.scanType !== scanTypeOptions[2] &&
+            advancedOptions.scanType !== scanTypeOptions[3] && (
+              <div>
+                <Button
+                  type="transparent"
+                  id="page-limit-toggle-button"
+                  onClick={(e) => togglePageLimitAdjuster(e)}
+                >
+                  capped at{" "}
+                  <span className="purple-text">
+                    {pageLimit} pages{" "}
+                    {openPageLimitAdjuster ? (
+                      <ButtonSvgIcon
+                        className={`chevron-up-icon`}
+                        svgIcon={<ChevronUpIcon />}
+                      />
+                    ) : (
+                      // <i className="bi bi-chevron-up" />
+                      <ButtonSvgIcon
+                        className={`chevron-down-icon`}
+                        svgIcon={<ChevronDownIcon />}
+                      />
+                      // <i className="bi bi-chevron-down" />
+                    )}
+                  </span>
                 </Button>
-              :  <Button type="primary" className="scan-btn" onClick={handleScanButtonClicked}>
-                  Scan
-                </Button>
-          }
+                {openPageLimitAdjuster && (
+                  <div id="page-limit-adjuster" ref={pageLimitAdjuster}>
+                    <input
+                      type="number"
+                      id="page-limit-input"
+                      step="10"
+                      min="1"
+                      value={pageLimit}
+                      onChange={(e) => setPageLimit(e.target.value)}
+                      onBlur={(e) => {
+                        if (Number(e.target.value) <= 0) {
+                          setPageLimit(1);
+                        }
+                      }}
+                    />
+                    <label htmlFor="page-limit-input">pages</label>
+                  </div>
+                )}
+              </div>
+            )}
+          <Button
+            type="primary"
+            className="scan-btn"
+            onClick={handleScanButtonClicked}
+            disabled={scanButtonIsClicked}
+          >
+            {scanButtonIsClicked ? <LoadingSpinner></LoadingSpinner> : "Scan"}
+          </Button>
         </div>
         {prevUrlErrorMessage && (
           <span id="url-error-message" className="error-text">
@@ -130,6 +153,7 @@ const InitScanForm = ({ isProxy, startScan, prevUrlErrorMessage, scanButtonIsCli
         deviceOptions={deviceOptions}
         advancedOptions={advancedOptions}
         setAdvancedOptions={setAdvancedOptions}
+        scanButtonIsClicked={scanButtonIsClicked}
       />
     </div>
   );

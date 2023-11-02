@@ -11,6 +11,9 @@ contextBridge.exposeInMainWorld("services", {
       callback(data);
     });
   },
+  restartApp: () => {
+    ipcRenderer.send("restartApp");
+  },
   checkChromeExistsOnMac: async () => {
     const chromeExists = await ipcRenderer.invoke("checkChromeExistsOnMac"); 
     return chromeExists;
