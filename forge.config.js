@@ -29,8 +29,7 @@ module.exports = {
       'hats_for_windows.iss',
       '.github'
     ],
-    // omit portable-zip in the .app as it causes issues as more work is needed to include it for electron-forge code signing
-    // ...(os.platform() === 'darwin' && { extraResource: ["/tmp/purple-hats-portable-mac.zip"]})
+    ...(os.platform() === 'darwin' && { extraResource: ["/tmp/purple-hats-portable-mac.zip"]})
   },
   rebuildConfig: {},
   makers: [
