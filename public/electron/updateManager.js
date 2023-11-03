@@ -208,11 +208,67 @@ const spawnScriptToLaunchInstaller = () => {
   });
 };
 
+/**
+ * Spawns a powershell child_process which then runs a powershell script with admin priviledges
+ * This will cause a pop-up on the user's ends
+ */
+const downloadAndUnzipBackendWindows = async (tag=undefined) => {
+  const scriptPath = path.join(
+    __dirname,
+    "..",
+    "..",
+    "scripts",
+    "downloadAndUnzipBackend.ps1"
+  );
+  return new Promise((resolve, reject) => {
+    const ps = spawn("powershell.exe", [
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      scriptPath,
+      tag, // release tag to download
+    ]); // Log any output from the PowerShell script
+
+    currentChildProcess = ps;
+
+    ps.stdout.on("data", (data) => {
+      silentLogger.log(data.toString());
+      console.log(data.toString());
+    });
+
+    // Log any errors from the PowerShell script
+    ps.stderr.on("data", (data) => {
+      silentLogger.log(data.toString());
+      console.error(data.toString());
+      currentChildProcess = null;
+      resolve(false);
+    });
+
+    ps.on("exit", (code) => {
+      currentChildProcess = null;
+      if (code === 0) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+  });
+};
+
+const downloadBackend = async (tag=undefined) => {
+  const downloadUrl = `https://github.com/GovTechSG/purple-hats/releases/download/${tag}/purple-hats-portable-mac.zip`;
+  const command = `curl '${downloadUrl}' -o '${phZipPath}' -L && rm -rf '${backendPath}' && mkdir '${backendPath}'`;
+
+  return async () => await execCommand(command);
+};
+
 const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
   const processesToRun = [];
 
   updaterEventEmitter.emit("checking");
 
+  const backendExists = fs.existsSync(backendPath);
+  const phZipExists = fs.existsSync(phZipPath);
   const toUpdateFrontendVer = await getLatestFrontendVersion(latestRelease, latestPreRelease);
 
   // Auto updates via installer is only applicable for Windows
@@ -256,6 +312,10 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
           updaterEventEmitter.emit("frontendDownloadFailed");
         }
       }
+    } else if (!backendExists) {
+      updaterEventEmitter.emit('settingUp');
+      // Trigger download for backend via Github if backend does not exist
+      await downloadAndUnzipBackendWindows(appFrontendVer);
     }
   } else {
     // user is on mac
@@ -276,14 +336,22 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
           currentChildProcess = null;
 
           if (fs.existsSync(macOSPrepackageBackend)) {
-            await unzipBackendAndCleanUp(macOSPrepackageBackend);
+            processesToRun.push(await unzipBackendAndCleanUp(macOSPrepackageBackend));
           }
 
           writeUserDetailsToFile({ firstLaunchOnUpdate: true });
-          updaterEventEmitter.emit("restartTriggered");
+          processesToRun.push(() => updaterEventEmitter.emit("restartTriggered"));
         } catch (e) {
           silentLogger.error(e.toString());
         }
+      } 
+    } else if (!backendExists) {
+      updaterEventEmitter.emit('settingUp');
+      if (fs.existsSync(macOSPrepackageBackend)) {
+        // Trigger an unzip from Resources folder if backend does not exist or backend is older
+        processesToRun.push(await unzipBackendAndCleanUp(macOSPrepackageBackend));
+      } else {
+        processesToRun.push(await downloadBackend(appFrontendVer), await unzipBackendAndCleanUp());
       }
     }
 
