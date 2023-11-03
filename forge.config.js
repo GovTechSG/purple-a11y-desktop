@@ -6,6 +6,16 @@ module.exports = {
     osxUniversal: { // config options for `@electron/universal`
       x64ArchFiles: "*" // replace with any relevant glob pattern
     },
+    osxSign: {
+      hardenedRuntime: true,
+      'gatekeeper-assess': false,
+    }, 
+    osxNotarize: {
+      tool: 'notarytool',
+      appleId: process.env.APPLE_ID,
+      appleIdPassword: process.env.APPLE_PASSWORD,
+      teamId: process.env.APPLE_TEAM_ID
+    },
     ignore: [
       'nodejs-mac-arm64',
       'nodejs-mac-x64',
@@ -19,7 +29,8 @@ module.exports = {
       'hats_for_windows.iss',
       '.github'
     ],
-    ...(os.platform() === 'darwin' && { extraResource: ["/tmp/purple-hats-portable-mac.zip"]})
+    // omit portable-zip in the .app as it causes issues as more work is needed to include it for electron-forge code signing
+    // ...(os.platform() === 'darwin' && { extraResource: ["/tmp/purple-hats-portable-mac.zip"]})
   },
   rebuildConfig: {},
   makers: [
