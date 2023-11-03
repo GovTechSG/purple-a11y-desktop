@@ -88,6 +88,7 @@ export const getDefaultAdvancedOptions = (isProxy) => {
     maxConcurrency: false, 
     falsePositive: false,
     includeScreenshots: true,
+    includeSubdomains: true
   }
 };
 

@@ -191,20 +191,36 @@ const AdvancedScanOptions = ({
             />
             <label htmlFor="screenshots-toggle">Include screenshots</label>
           </div>
-          <div id="false-positive-toggle-group">
-            <input
-              type="checkbox"
-              id="false-positive-toggle"
-              aria-describedby="false-positive-tooltip"
-              checked={advancedOptions.falsePositive}
-              onChange={handleSetAdvancedOption(
-                "falsePositive",
-                (e) => e.target.checked
-              )}
-            />
-            <label htmlFor="false-positive-toggle">
-              Show potential false positive issues
-            </label>
+          { advancedOptions.scanType === scanTypeOptions[0] && 
+            <div id='subdomain-toggle-group'>
+              <input 
+                type="checkbox"
+                id="subdomain-toggle"
+                checked={advancedOptions.includeSubdomains}
+                onChange={handleSetAdvancedOption(
+                  "includeSubdomains", 
+                  (e) => e.target.checked
+                )} 
+              /> 
+              <label htmlFor="subdomain-toggle">
+                Allow subdomains for scans
+              </label>
+            </div>
+          }
+          <div id='false-positive-toggle-group'>
+              <input 
+                type="checkbox"
+                id="false-positive-toggle" 
+                aria-describedby="false-positive-tooltip"
+                checked={advancedOptions.falsePositive}
+                onChange={handleSetAdvancedOption(
+                  "falsePositive", 
+                  (e) => e.target.checked
+                )} 
+              /> 
+              <label htmlFor="false-positive-toggle">
+                Show potential false positive issues
+              </label>
           </div>
           {advancedOptions.scanType !== scanTypeOptions[3] && (
             <div id="max-concurrency-toggle-group">

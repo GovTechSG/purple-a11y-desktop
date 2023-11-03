@@ -57,6 +57,7 @@ const getScanOptions = (details) => {
     maxConcurrency,
     falsePositive,
     includeScreenshots,
+    includeSubdomains,
     metadata,
   } = details;
   const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`, "-i", fileTypes];
@@ -64,6 +65,11 @@ const getScanOptions = (details) => {
   if (!includeScreenshots) {
     options.push('-a');
     options.push('none');
+  }
+
+  if (!includeSubdomains && scanType === 'website') {
+    options.push('-s');
+    options.push('same-hostname');
   }
 
   if (customDevice) {

@@ -67,6 +67,7 @@ const startScan = async (scanDetails) => {
     maxConcurrency,
     falsePositive,
     includeScreenshots,
+    includeSubdomains,
     scanMetadata,
   } = scanDetails;
 
@@ -83,6 +84,7 @@ const startScan = async (scanDetails) => {
     falsePositive: falsePositive,
     fileTypes: fileTypes[selectedFileTypes],
     includeScreenshots,
+    includeSubdomains,
     metadata: JSON.stringify(scanMetadata),
   };
 
