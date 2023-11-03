@@ -44,6 +44,7 @@ const InitScanForm = ({
     const urlBarElem = document.getElementById("url-bar");
     const urlBarInputList = urlBarElem.querySelectorAll("input, button");
     urlBarInputList.forEach((elem) => (elem.disabled = scanButtonIsClicked));
+    setOpenPageLimitAdjuster(false);
   }, [scanButtonIsClicked, prevUrlErrorMessage]);
 
   const togglePageLimitAdjuster = (e) => {
