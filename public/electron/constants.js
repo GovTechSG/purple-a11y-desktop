@@ -628,6 +628,8 @@ const versionComparator = (ver1, ver2) => {
 
 const uploadFolderName = "Upload Files";
 
+const hashPath = path.join(appPath, 'backendHash.txt');
+
 module.exports = {
   appPath,
   releaseUrl,
@@ -665,4 +667,5 @@ module.exports = {
   uploadFolderName,
   allReleasesUrl,
   macOSPrepackageBackend,
+  hashPath,
 };

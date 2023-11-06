@@ -6,16 +6,18 @@ module.exports = {
     osxUniversal: { // config options for `@electron/universal`
       x64ArchFiles: "*" // replace with any relevant glob pattern
     },
-    osxSign: {
-      hardenedRuntime: true,
-      'gatekeeper-assess': false,
-    }, 
-    osxNotarize: {
-      tool: 'notarytool',
-      appleId: process.env.APPLE_ID,
-      appleIdPassword: process.env.APPLE_PASSWORD,
-      teamId: process.env.APPLE_TEAM_ID
-    },
+    ...(process.env.APPLE_ID && {
+      osxSign: {
+        hardenedRuntime: true,
+        'gatekeeper-assess': false,
+      }, 
+      osxNotarize: {
+        tool: 'notarytool',
+        appleId: process.env.APPLE_ID,
+        appleIdPassword: process.env.APPLE_PASSWORD,
+        teamId: process.env.APPLE_TEAM_ID
+      }
+    }),
     ignore: [
       'nodejs-mac-arm64',
       'nodejs-mac-x64',
