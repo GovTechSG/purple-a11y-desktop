@@ -1,6 +1,7 @@
 const os = require("os");
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
 const { exec, spawn } = require("child_process");
 const {
   getEngineVersion,
@@ -14,6 +15,7 @@ const {
   macOSExecutablePath,
   versionComparator,
   macOSPrepackageBackend,
+  hashPath,
 } = require("./constants");
 const { silentLogger } = require("./logs");
 const { writeUserDetailsToFile, readUserDataFromFile } = require("./userDataManager");
@@ -48,37 +50,45 @@ const execCommand = async (command) => {
   let options = { cwd: appPath };
 
   const execution = new Promise((resolve) => {
-    const process = exec(command, options, (err, _stdout, stderr) => {
+    const process = exec(command, options, (err, stdout, stderr) => {
       if (err) {
         console.log("error with running command:", command);
         silentLogger.error(stderr.toString());
       }
       currentChildProcess = null;
-      resolve();
+      resolve(stdout);
     });
     currentChildProcess = process;
   });
 
-  await execution;
+  return await execution;
 };
 
+// get hash value of prepackage zip
+const hashPrepackage = async (prepackagePath) => {
+  const zipFileReadStream = fs.createReadStream(prepackagePath);
+  return new Promise((resolve) => {
+    const hash = crypto.createHash("sha256");
+    zipFileReadStream.on("data", (data) => {
+      hash.update(data);
+    });
+    zipFileReadStream.on("end", () => {
+      const computedHash = hash.digest("hex");
+      resolve(computedHash);
+    });
+  })
+};
+
+// unzip backend zip for mac
 const unzipBackendAndCleanUp = async (zipPath=phZipPath) => {
   let unzipCommand = `mkdir -p '${backendPath}' && tar -xf '${zipPath}' -C '${backendPath}' &&
     rm '${zipPath}' &&
     cd '${backendPath}' &&
     './hats_shell.sh' echo "Initialise"
     `;
-  // await execCommand(command);
-  const unzip = `mkdir -p '${backendPath}' && tar -xf '${zipPath}' -C '${backendPath}'`;
-  const init = `cd '${backendPath}' &&
-  './hats_shell.sh' echo "Initialise"`;
 
-  // return async () => await execCommand(command);
   return async () => {
-    await execCommand(unzip);
-    fs.unlinkSync(zipPath);
-    await execCommand(init);
-    // await execCommand(unzipCommand);
+    await execCommand(unzipCommand);
   }
 };
 
@@ -268,6 +278,28 @@ const downloadBackend = async (tag=undefined) => {
   return async () => await execCommand(command);
 };
 
+const validateZipFile = async (zipPath) => {
+  const isZipValid = async (zipPath) => {
+    const command = `
+      if unzip -t ${zipPath} >/dev/null 2>&1; then
+        echo "true" 
+      else
+        echo "false"
+      fi
+    `;
+    const result = await execCommand(command);
+    return result.trim() === 'true';
+  }
+  return fs.existsSync(zipPath) && await isZipValid(zipPath);
+};
+
+const hashAndSaveZip = (zipPath) => {
+  return async () => {
+    const currHash = await hashPrepackage(zipPath);
+    fs.writeFileSync(hashPath, currHash);
+  }
+}
+
 const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
   const processesToRun = [];
 
@@ -341,8 +373,15 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
           await downloadAndUnzipFrontendMac(toUpdateFrontendVer);
           currentChildProcess = null;
 
-          if (fs.existsSync(macOSPrepackageBackend)) {
+          if (await validateZipFile(macOSPrepackageBackend)) {
+            processesToRun.push(hashAndSaveZip(macOSPrepackageBackend));
             processesToRun.push(await unzipBackendAndCleanUp(macOSPrepackageBackend));
+          } else {
+            processesToRun.push(
+              await downloadBackend(toUpdateFrontendVer),
+              hashAndSaveZip(phZipPath),
+              await unzipBackendAndCleanUp()
+            );
           }
 
           writeUserDetailsToFile({ firstLaunchOnUpdate: true });
@@ -353,12 +392,37 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
       } 
     } else if (!backendExists) {
       updaterEventEmitter.emit('settingUp');
-      if (fs.existsSync(macOSPrepackageBackend)) {
+      if (await validateZipFile(macOSPrepackageBackend)) {
         // Trigger an unzip from Resources folder if backend does not exist or backend is older
-        processesToRun.push(await unzipBackendAndCleanUp(macOSPrepackageBackend));
+        processesToRun.push(
+          await unzipBackendAndCleanUp(macOSPrepackageBackend),
+          hashAndSaveZip(macOSPrepackageBackend)
+        );
       } else {
-        processesToRun.push(await downloadBackend(appFrontendVer), await unzipBackendAndCleanUp());
+        processesToRun.push(
+          await downloadBackend(appFrontendVer),
+          hashAndSaveZip(phZipPath),
+          await unzipBackendAndCleanUp()
+        );
       }
+    } else if (backendExists && await validateZipFile(macOSPrepackageBackend)) {
+      // compare zip file hash to determine whether to unzip
+      // current hash of prepackage
+      const currHash = await hashPrepackage(macOSPrepackageBackend);
+      if (fs.existsSync(hashPath)) {
+        // check if match 
+        const hash = fs.readFileSync(hashPath, "utf-8"); // stored hash
+        // compare 
+        if (hash === currHash) {
+          // dont unzip
+          return;
+        } 
+      }
+      processesToRun.push(() => updaterEventEmitter.emit('settingUp'));
+      // unzip
+      processesToRun.push(await unzipBackendAndCleanUp(macOSPrepackageBackend));
+      // write hash
+      processesToRun.push(() => fs.writeFileSync(hashPath, currHash));
     }
 
     for (const proc of processesToRun) {
