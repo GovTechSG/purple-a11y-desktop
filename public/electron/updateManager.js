@@ -69,10 +69,16 @@ const unzipBackendAndCleanUp = async (zipPath=phZipPath) => {
     './hats_shell.sh' echo "Initialise"
     `;
   // await execCommand(command);
+  const unzip = `mkdir -p '${backendPath}' && tar -xf '${zipPath}' -C '${backendPath}'`;
+  const init = `cd '${backendPath}' &&
+  './hats_shell.sh' echo "Initialise"`;
 
   // return async () => await execCommand(command);
   return async () => {
-    await execCommand(unzipCommand);
+    await execCommand(unzip);
+    fs.unlinkSync(zipPath);
+    await execCommand(init);
+    // await execCommand(unzipCommand);
   }
 };
 
