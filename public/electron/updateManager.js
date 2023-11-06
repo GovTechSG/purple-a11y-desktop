@@ -82,7 +82,6 @@ const hashPrepackage = async (prepackagePath) => {
 // unzip backend zip for mac
 const unzipBackendAndCleanUp = async (zipPath=phZipPath) => {
   let unzipCommand = `mkdir -p '${backendPath}' && tar -xf '${zipPath}' -C '${backendPath}' &&
-    rm '${zipPath}' &&
     cd '${backendPath}' &&
     './hats_shell.sh' echo "Initialise"
     `;
@@ -278,10 +277,11 @@ const downloadBackend = async (tag=undefined) => {
   return async () => await execCommand(command);
 };
 
+// MacOS only
 const validateZipFile = async (zipPath) => {
   const isZipValid = async (zipPath) => {
     const command = `
-      if unzip -t ${zipPath} >/dev/null 2>&1; then
+      if unzip -t "${zipPath}" >/dev/null 2>&1; then
         echo "true" 
       else
         echo "false"
