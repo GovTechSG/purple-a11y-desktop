@@ -226,13 +226,11 @@ app.on("ready", async () => {
     mainWindow.webContents.send("versionInfo", {
       appVersion: constants.appVersion,
       latestVer: latestRelease,
-      // latestPrereleaseVer: newestVer,
-      latestPrereleaseVer: "0.9.33",
+      latestPrereleaseVer: newestVer,
       latestPreNotes: newestFormattedNotes,
       latestRelNotes,
       allReleaseTags,
-      // allPreReleaseTags,
-      allPreReleaseTags: ["0.9.33", ...allPreReleaseTags],
+      allPreReleaseTags,
     });
   } else {
     mainWindow.webContents.send("versionInfo", {

@@ -95,9 +95,11 @@ const PrepareStep = ({ scanDetails, setStep, setScanDetails }) => {
           </div>
           {isFileUpload && fileUploadFolder && 
           <Alert alertClassName="alert-primary mt-3" icon={exclaimTriangleIcon}>
-            If form contains file upload fields, place the same file{"(s)"} in{" "}
-            <a href="#" onClick={handleOpenUploadFolder}>{fileUploadFolder}</a>{" "}
-            to allow Purple HATS to attach the same file{"(s)"} when replaying the steps.
+            <p className="mb-0">
+              If form contains file upload fields, place the same file{"(s)"} in{" "}
+              <a href="#" onClick={handleOpenUploadFolder}>{fileUploadFolder}</a>{" "}
+              to allow Purple HATS to attach the same file{"(s)"} when replaying the steps.
+            </p>
           </Alert>}
         </fieldset>
 

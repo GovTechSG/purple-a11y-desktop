@@ -16,21 +16,19 @@ const UpdateAlert = ({ latestVer, isLabMode }) => {
 
   return (
     <Alert alertClassName="alert-primary mb-5 gap-5">
-      <div className="d-flex justify-content-center">
-        <div className="flex-grow-1">
-          <h4>Update available ({latestVer} - latest {isLabMode ? 'pre-release' : 'stable build'})</h4>
-          <p className="mb-0">To update, restart Purple HATS.</p>
-        </div>
-        <Button
-          type="btn-primary"
-          className="align-self-center"
-          onClick={handleRestartApp}
-          aria-label="Restart Purple HATS"
-        >
-          <img src={arrowRepeat} alt="" />
-          Restart
-        </Button>
+      <div className="flex-grow-1">
+        <h4>Update available ({latestVer} - latest {isLabMode ? 'pre-release' : 'stable build'})</h4>
+        <p className="mb-0">To update, restart Purple HATS.</p>
       </div>
+      <Button
+        type="btn-primary"
+        className="align-self-center"
+        onClick={handleRestartApp}
+        aria-label="Restart Purple HATS"
+      >
+        <img src={arrowRepeat} alt="" />
+        Restart
+      </Button>
     </Alert>
   );
 };
