@@ -298,6 +298,7 @@
   #about-ph-modal .form-switch .form-check-input:checked::before {
     color: #fff;
     content: "ON";
+    padding-left: 2px;
   }
 
   @keyframes button-fade-in {

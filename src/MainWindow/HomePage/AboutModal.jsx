@@ -1,6 +1,5 @@
 import Alert from "../../common/components/Alert";
 import Modal from "../../common/components/Modal";
-import Switch from "../../common/components/Switch";
 import arrowRepeat from "../../assets/arrow-repeat-white.svg";
 import boxRightArrow from "../../assets/box-right-arrow.png";
 import labModeOff from "../../assets/lab-icon-off.svg";
@@ -16,15 +15,15 @@ const UpdateAlert = ({ latestVer }) => {
   };
 
   return (
-    <Alert alertClassName="alert-custom mb-4">
+    <Alert alertClassName="alert-primary mb-5 gap-5">
       <div className="d-flex justify-content-center">
         <div className="flex-grow-1">
           <h4>Update available ({latestVer})</h4>
-          To update, restart Purple HATS.
+          <p className="mb-0">To update, restart Purple HATS.</p>
         </div>
-        <Button className="primary align-self-center" onClick={handleRestartApp}>
+        <Button type="primary" className="align-self-center" onClick={handleRestartApp} aria-label="Restart Purple HATS">
+          <img src={arrowRepeat} alt="" />
           Restart
-          <img className="ms-2" src={arrowRepeat} alt="" />
         </Button>
       </div>
     </Alert>
@@ -39,9 +38,9 @@ const LabModeDescription = ({ isLabMode, setIsLabMode }) => {
 
   return (
     <div className="card">
-      <div className="card-body px-3 py-2">
+      <div className="card-body p-3">
         <div className="d-flex gap-2 align-items-center mb-2">
-          <p className="bold-text card-title mb-0 me-2">
+          <p id="labmode-label" className="bold-text card-title mb-0 me-2">
             <img
               className="me-2"
               src={isLabMode ? labModeOn : labModeOff}
@@ -49,7 +48,17 @@ const LabModeDescription = ({ isLabMode, setIsLabMode }) => {
             />
             Lab mode
           </p>
-          <Switch isChecked={isLabMode} onChange={handleToggleLabMode} />
+          {/* custom toggle switch */}
+          <div class="form-switch form-check mb-2">
+            <input
+              aria-labelledby="labmode-label"
+              id="labmode-toggle"
+              class="form-check-input"
+              type="checkbox"
+              onChange={handleToggleLabMode}
+              checked={isLabMode}
+            />
+          </div>
         </div>
         <p className="card-text">
           Lab mode grants early access to our pre-releases with existing feature
@@ -83,9 +92,9 @@ const AppDescription = ({ version, needsUpdate }) => {
   const privacyPolicyUrl = "https://www.tech.gov.sg/privacy/";
 
   return (
-    <div className="mb-4">
+    <div className="mb-5">
       <div className="d-flex gap-3">
-        <img id="ph-logo" src={phLogo} alt="Logo of Purple HATS" />
+        <img src={phLogo} alt="Purple HATS logo" />
         <div>
           <p className="m-0 bold-text">Purple HATS</p>
           <p className="m-0 d-inline-block me-3">
@@ -94,11 +103,11 @@ const AppDescription = ({ version, needsUpdate }) => {
           <ExternalLink url={releaseNotesUrl}>See release notes</ExternalLink>
         </div>
       </div>
-      <p className="my-2">
+      <p className="mt-3 mb-2">
         Built by GovTech Accessibility Enabling (A11y) Team.
       </p>
-      <div>
-        <ExternalLink url={a11yWebsiteUrl} linkClass="me-3">
+      <div className="d-flex gap-3">
+        <ExternalLink url={a11yWebsiteUrl}>
           A11Y Website
         </ExternalLink>
         <ExternalLink url={privacyPolicyUrl}>Privacy Policy</ExternalLink>
@@ -146,7 +155,8 @@ const AboutModal = ({
       modalBodyClassName="pt-1"
       modalBody={
         <>
-          {toUpdateVer && <UpdateAlert latestVer={toUpdateVer} />}
+          {/* {toUpdateVer && <UpdateAlert latestVer={toUpdateVer} />} */}
+          <UpdateAlert latestVer="0.9.33" />
           <AppDescription version={appVersion} needsUpdate={needsUpdate} />
           <LabModeDescription
             isLabMode={isLabMode}
