@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import a11yLogo from "../../assets/a11y-logo.svg";
 import appIllustration from "../../assets/app-illustration.svg";
@@ -33,6 +33,25 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const [showAboutPhModal, setShowAboutPhModal] = useState(false);
   const [url, setUrl] = useState('');
   const [scanButtonIsClicked, setScanButtonIsClicked] = useState(false);
+
+  // function that determines whether version is a prerelease/stable build
+  const getVersionLabel = useCallback((version) => {
+    const {
+      latestVer,
+      latestPrereleaseVer,
+      allReleaseTags,
+      allPreReleaseTags
+    } = appVersionInfo;
+    if (latestVer === version) return 'latest stable build';
+    if (latestPrereleaseVer === version) return 'latest pre-release';
+
+    if (allReleaseTags.includes(version)) {
+      return 'stable build';
+    } else if (allPreReleaseTags.includes(version)) {
+      return 'pre-release';
+    }
+    return undefined; // if cannot be determined, this should not happen
+  }, [appVersionInfo]);
 
   const isLatest = () => {
     const currVer = appVersionInfo.appVersion;
@@ -314,6 +333,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           showModal={showAboutPhModal}
           setShowModal={setShowAboutPhModal}
           appVersionInfo={appVersionInfo}
+          appVersionLabel={getVersionLabel(appVersionInfo.appVersion)}
           isLabMode={isLabMode}
           setIsLabMode={(bool) => editUserData({ isLabMode: bool })}
         />
@@ -333,7 +353,8 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
                 onClick={() => setShowAboutPhModal(true)}
               >
                 <img className="me-2" src={isLabMode ? labModeOn : labModeOff} alt="" />
-                Version {appVersionInfo.appVersion} {isLatest() && '(latest)'}
+                Version {appVersionInfo.appVersion}{" "}
+                {getVersionLabel(appVersionInfo.appVersion) && `(${getVersionLabel(appVersionInfo.appVersion)})`}
               </Button> | Built by GovTech Accessibility Enabling Team
             </>
           }

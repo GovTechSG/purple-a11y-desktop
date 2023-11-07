@@ -9,7 +9,7 @@ import { handleClickLink, versionComparator } from "../../common/constants";
 import { useEffect, useState } from "react";
 import Button from "../../common/components/Button";
 
-const UpdateAlert = ({ latestVer }) => {
+const UpdateAlert = ({ latestVer, isLabMode }) => {
   const handleRestartApp = (e) => {
     window.services.restartApp();
   };
@@ -18,10 +18,15 @@ const UpdateAlert = ({ latestVer }) => {
     <Alert alertClassName="alert-primary mb-5 gap-5">
       <div className="d-flex justify-content-center">
         <div className="flex-grow-1">
-          <h4>Update available ({latestVer})</h4>
+          <h4>Update available ({latestVer} - latest {isLabMode ? 'pre-release' : 'stable build'})</h4>
           <p className="mb-0">To update, restart Purple HATS.</p>
         </div>
-        <Button type="btn-primary" className="align-self-center" onClick={handleRestartApp} aria-label="Restart Purple HATS">
+        <Button
+          type="btn-primary"
+          className="align-self-center"
+          onClick={handleRestartApp}
+          aria-label="Restart Purple HATS"
+        >
           <img src={arrowRepeat} alt="" />
           Restart
         </Button>
@@ -86,7 +91,7 @@ const ExternalLink = ({ url, children, linkClass }) => {
   );
 };
 
-const AppDescription = ({ version, needsUpdate }) => {
+const AppDescription = ({ version, versionLabel }) => {
   const releaseNotesUrl = `https://github.com/GovTechSG/purple-hats-desktop/releases/tag/${version}`;
   const a11yWebsiteUrl = "https://go.gov.sg/a11y";
   const privacyPolicyUrl = "https://www.tech.gov.sg/privacy/";
@@ -98,7 +103,7 @@ const AppDescription = ({ version, needsUpdate }) => {
         <div>
           <p className="m-0 bold-text">Purple HATS</p>
           <p className="m-0 d-inline-block me-3">
-            Version {version} {!needsUpdate && "(latest stable build)"}
+            Version {version} {versionLabel && `(${versionLabel})`}
           </p>
           <ExternalLink url={releaseNotesUrl}>See release notes</ExternalLink>
         </div>
@@ -107,9 +112,7 @@ const AppDescription = ({ version, needsUpdate }) => {
         Built by GovTech Accessibility Enabling (A11y) Team.
       </p>
       <div className="d-flex gap-3">
-        <ExternalLink url={a11yWebsiteUrl}>
-          A11Y Website
-        </ExternalLink>
+        <ExternalLink url={a11yWebsiteUrl}>A11Y Website</ExternalLink>
         <ExternalLink url={privacyPolicyUrl}>Privacy Policy</ExternalLink>
       </div>
     </div>
@@ -120,17 +123,20 @@ const AboutModal = ({
   showModal,
   setShowModal,
   appVersionInfo,
+  appVersionLabel,
   isLabMode,
   setIsLabMode,
 }) => {
-  const { appVersion, latestVer, latestPrereleaseVer } = appVersionInfo;
+  const {
+    appVersion,
+    latestVer,
+    latestPrereleaseVer,
+  } = appVersionInfo;
   const [toUpdateVer, setToUpdateVer] = useState(undefined);
-  const [needsUpdate, setNeedsUpdate] = useState(true);
 
   useEffect(() => {
     if (!latestVer || !latestPrereleaseVer) {
-      // if unable to fetch release info, dont show update alert / "(latest)" label
-      setNeedsUpdate(true);
+      // if unable to fetch release info, dont show update alert
       return setToUpdateVer(undefined);
     }
     const latestVerToUpdate = latestVer;
@@ -138,7 +144,6 @@ const AboutModal = ({
 
     const toCompare = isLabMode ? latestPrereleaseToUpdate : latestVerToUpdate;
     const isNeedUpdate = versionComparator(appVersion, toCompare) === -1;
-    setNeedsUpdate(isNeedUpdate);
 
     if (isNeedUpdate) {
       setToUpdateVer(toCompare);
@@ -146,11 +151,6 @@ const AboutModal = ({
       setToUpdateVer(undefined);
     }
   }, [isLabMode]);
-
-  // function that determines whether version is a prerelease/stable build
-  const getVersionType = () => {
-
-  };
 
   return (
     <Modal
@@ -160,9 +160,8 @@ const AboutModal = ({
       modalBodyClassName="pt-1"
       modalBody={
         <>
-          {/* {toUpdateVer && <UpdateAlert latestVer={toUpdateVer} />} */}
-          <UpdateAlert latestVer="0.9.33" />
-          <AppDescription version={appVersion} needsUpdate={needsUpdate} />
+          {toUpdateVer && <UpdateAlert latestVer={toUpdateVer} isLabMode={isLabMode} />}
+          <AppDescription version={appVersion} versionLabel={appVersionLabel} />
           <LabModeDescription
             isLabMode={isLabMode}
             setIsLabMode={setIsLabMode}
