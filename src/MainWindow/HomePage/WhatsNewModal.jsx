@@ -63,7 +63,7 @@ const WhatsNewModal = ({
         onClick={(e) => handleClickLink(e, "https://github.com/GovTechSG/purple-hats-desktop/releases/")}
       >
         See previous versions{" "}
-        <img id="box-arrow-right" src={boxRightArrow}></img>
+        <img className="external-link" src={boxRightArrow}></img>
       </a>
     );
   };

@@ -21,7 +21,7 @@ const UpdateAlert = ({ latestVer }) => {
           <h4>Update available ({latestVer})</h4>
           <p className="mb-0">To update, restart Purple HATS.</p>
         </div>
-        <Button type="primary" className="align-self-center" onClick={handleRestartApp} aria-label="Restart Purple HATS">
+        <Button type="button" className="btn-primary align-self-center" onClick={handleRestartApp} aria-label="Restart Purple HATS">
           <img src={arrowRepeat} alt="" />
           Restart
         </Button>
@@ -81,7 +81,7 @@ const ExternalLink = ({ url, children, linkClass }) => {
       onClick={(e) => handleClickLink(e, url)}
     >
       {children}
-      <img id="box-arrow-right" src={boxRightArrow} alt=""></img>
+      <img className="external-link" src={boxRightArrow} alt=""></img>
     </a>
   );
 };
