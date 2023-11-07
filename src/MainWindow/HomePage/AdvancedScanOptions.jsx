@@ -178,10 +178,11 @@ const AdvancedScanOptions = ({
                 onChange={handleSetAdvancedOption("fileTypes")}
               />
             )}
-          <div id="screenshots-toggle-group">
+          <div id="screenshots-toggle-group" class="advanced-options-toggle-group">
             <input
               type="checkbox"
               id="screenshots-toggle"
+              class="advanced-options-toggle"
               aria-describedby="screenshots-tooltip"
               checked={advancedOptions.includeScreenshots}
               onChange={handleSetAdvancedOption(
@@ -192,10 +193,11 @@ const AdvancedScanOptions = ({
             <label htmlFor="screenshots-toggle">Include screenshots</label>
           </div>
           { advancedOptions.scanType === scanTypeOptions[0] && 
-            <div id='subdomain-toggle-group'>
+            <div id='subdomain-toggle-group' class="advanced-options-toggle-group">
               <input 
                 type="checkbox"
                 id="subdomain-toggle"
+                class="advanced-options-toggle"
                 checked={advancedOptions.includeSubdomains}
                 onChange={handleSetAdvancedOption(
                   "includeSubdomains", 
@@ -207,10 +209,11 @@ const AdvancedScanOptions = ({
               </label>
             </div>
           }
-          <div id='false-positive-toggle-group'>
+          <div id='false-positive-toggle-group' class="advanced-options-toggle-group">
               <input 
                 type="checkbox"
                 id="false-positive-toggle" 
+                class="advanced-options-toggle"
                 aria-describedby="false-positive-tooltip"
                 checked={advancedOptions.falsePositive}
                 onChange={handleSetAdvancedOption(
@@ -223,10 +226,11 @@ const AdvancedScanOptions = ({
               </label>
           </div>
           {advancedOptions.scanType !== scanTypeOptions[3] && (
-            <div id="max-concurrency-toggle-group">
+            <div id="max-concurrency-toggle-group" class="advanced-options-toggle-group">
               <input
                 type="checkbox"
                 id="max-concurrency-toggle"
+                class="advanced-options-toggle"
                 aria-describedby="max-concurrency-tooltip"
                 checked={advancedOptions.maxConcurrency}
                 onFocus={() => handleMaxConcurrencyOnFocus()}

@@ -155,10 +155,7 @@
     color: #4A6168;
   }
 
-  #max-concurrency-toggle-group,
-  #false-positive-toggle-group,
-  #screenshots-toggle-group,
-  #subdomain-toggle-group {
+  .advanced-options-toggle-group {
     display: flex;
     align-items: center;
     height: 1.75rem;
@@ -170,10 +167,7 @@
     margin-bottom: 1rem;
   }
 
-  #max-concurrency-toggle,
-  #false-positive-toggle,
-  #screenshots-toggle,
-  #subdomain-toggle {
+  .advanced-options-toggle {
     appearance: none;
     background-color: #fff;
     background-position: 50%;
@@ -186,29 +180,19 @@
     width: 1.5rem;
   }
 
-  #max-concurrency-toggle:checked,
-  #false-positive-toggle:checked,
-  #screenshots-toggle:checked,
-  #subdomain-toggle:checked {
+  .advanced-options-toggle:checked {
     background-color: #785ef0;
   }
 
-  #max-concurrency-toggle:checked[type="checkbox"],
-  #false-positive-toggle:checked[type="checkbox"],
-  #screenshots-toggle:checked[type="checkbox"], 
-  #subdomain-toggle:checked[type="checkbox"] {
+  .advanced-options-toggle:checked[type="checkbox"] {
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='%23fff' viewBox='0 0 16 16'%3E%3Cpath d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/%3E%3C/svg%3E");
   }
 
-  #max-concurrency-toggle:checked:disabled,
-  #false-positive-toggle:checked:disabled,
-  #screenshots-toggle:checked:disabled {
+  .advanced-options-toggle:checked:disabled {
     background-color: #B5C5CA;
   }
 
-  #max-concurrency-toggle:disabled,
-  #false-positive-toggle:disabled,
-  #screenshots-toggle:disabled {
+  .advanced-options-toggle:disabled {
     background-color: #E7ECEE;
   }
 
