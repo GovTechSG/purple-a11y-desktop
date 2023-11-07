@@ -97,7 +97,7 @@ const AdvancedScanOptions = ({
     <div>
       <div id="advanced-options-toggle-button">
         <Button
-          type="transparent"
+          type="btn-link"
           className={"purple-text" + (advancedOptionsDirty ? " bold-text" : "")}
           onClick={handleToggleMenu}
         >

@@ -147,6 +147,11 @@ const AboutModal = ({
     }
   }, [isLabMode]);
 
+  // function that determines whether version is a prerelease/stable build
+  const getVersionType = () => {
+
+  };
+
   return (
     <Modal
       id="about-ph-modal"

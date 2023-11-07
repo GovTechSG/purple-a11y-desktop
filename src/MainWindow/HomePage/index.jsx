@@ -328,7 +328,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           {
             <>
               <Button
-                type="transparent"
+                type="btn-link"
                 className="purple-text"
                 onClick={() => setShowAboutPhModal(true)}
               >

@@ -53,15 +53,6 @@ h3 {
   color: #97adb5!important;
 }
 
-/* button.secondary {
-  padding: 0.25rem 2rem;
-  border: 1px solid #785ef0;
-  background-color: #fff;
-  border-radius: 4px;
-  color: #785ef0;
-  transition: 0.1s background-color, 0.1s color;
-} */
-
 .btn-secondary {
   padding: 0.25rem 2rem;
   border: 1px solid #785ef0;
@@ -71,20 +62,10 @@ h3 {
   transition: 0.1s background-color, 0.1s color;
 }
 
-/* button.secondary:hover {
-  background-color: #ebe8fd;
-  color: #5b3bed;
-} */
-
 .btn-secondary:hover {
   background-color: #ebe8fd;
   color: #5b3bed;
 }
-
-/* button.secondary:active {
-  background-color: #c0b4f8;
-  color: #472bc4;
-} */
 
 .btn-secondary:active {
   background-color: #c0b4f8;
@@ -100,9 +81,14 @@ button:disabled, input:disabled, select:disabled {
   cursor: not-allowed;
 }
 
-button.transparent {
+.btn-link {
   background-color: transparent;
   border: none;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  color: #5b3bed;
 }
 
 .scan-btn {

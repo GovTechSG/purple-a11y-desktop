@@ -89,7 +89,7 @@ const InitScanForm = ({
             advancedOptions.scanType !== scanTypeOptions[3] && (
               <div>
                 <Button
-                  type="transparent"
+                  type="btn-link"
                   id="page-limit-toggle-button"
                   onClick={(e) => togglePageLimitAdjuster(e)}
                 >
