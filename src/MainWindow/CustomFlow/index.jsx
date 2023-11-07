@@ -78,7 +78,7 @@ const PrepareStep = ({ scanDetails, setStep, setScanDetails }) => {
             <label className="form-check-label" for="post-login-no-input">No</label>
           </div>
           {isPostLogin &&
-          <Alert alertClassName="alert-custom mb-5 mt-3" icon={exclaimTriangleIcon}>
+          <Alert alertClassName="alert-custom mt-3" icon={exclaimTriangleIcon}>
             Ensure post-login webpages can be revisited using the same login credentials to allow Purple HATS to replay the steps for scanning.
           </Alert>}
         </fieldset>
@@ -94,12 +94,13 @@ const PrepareStep = ({ scanDetails, setStep, setScanDetails }) => {
             <label className="form-check-label" for="file-upload-no-input">No</label>
           </div>
           {isFileUpload && fileUploadFolder && 
-          <Alert alertClassName="alert-custom mb-5 mt-3" icon={exclaimTriangleIcon}>
+          <Alert alertClassName="alert-custom mt-3" icon={exclaimTriangleIcon}>
             If form contains file upload fields, place the same file{"(s)"} in{" "}
             <a href="#" onClick={handleOpenUploadFolder}>{fileUploadFolder}</a>{" "}
             to allow Purple HATS to attach the same file{"(s)"} when replaying the steps.
           </Alert>}
         </fieldset>
+
         {isAllSet && 
         <Alert alertClassName="alert-custom mb-5" icon={thumbsUpIcon}>
           It looks like you're all set for the custom flow scan, let's get started!
