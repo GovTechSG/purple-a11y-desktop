@@ -111,9 +111,14 @@ const ResultPage = ({ completedScanId: scanId }) => {
       { subject: finalSubject, emailAddresses: emails },
       scanId
     );
+    
     if (response.success) {
       alert("Report successfully mailed");
       setMailStatus("sent");
+
+      setTimeout(() => {
+        setMailStatus('send');
+      }, 1500);
     } else {
       alert("Report failed to mail");
       setMailStatus("send");
@@ -132,10 +137,50 @@ const ResultPage = ({ completedScanId: scanId }) => {
               {resultsPath}
             </a>.
           </p>
-          <Button id="view-button" type="primary" onClick={handleViewReport}>
-           <img alt="" src={boxArrowUpRightIcon}></img>
-            View report
-          </Button>
+          <div id="btn-container">
+            <Button id="view-button" type="primary" onClick={handleViewReport}>
+            <img alt="" src={boxArrowUpRightIcon}></img>
+              View report
+            </Button>
+            {/* {isWindows && isEvent && ( */}
+            { true && 
+                <>
+                  {mailStatus === "send" && (
+                  <Button
+                    id="mail-report-button"
+                    type="secondary"
+                    onClick={() => setShowEditMailDetailsModal(true)}
+                  >
+                    <ButtonSvgIcon svgIcon={<MailIcon />} className={`mail-icon`} />
+                    Email report
+                  </Button>
+                  )}
+                  {mailStatus === "sending" && (
+                    <Button
+                      id="mail-report-button"
+                      type="secondary"
+                      disabled="disabled"
+                    >
+                      <ButtonSvgIcon svgIcon={<MailIcon />} className={`mail-icon`} />
+                      Sending mail...
+                    </Button>
+                  )}
+                  {mailStatus === "sent" && (
+                    <Button
+                      id="mail-report-button"
+                      type="secondary"
+                      disabled="disabled"
+                    >
+                      <ButtonSvgIcon
+                        svgIcon={<MailSuccessIcon />}
+                        className={`mail-icon`}
+                      />
+                      Report mailed
+                    </Button>
+                  )}
+              </>
+          }
+          </div>
           <hr class="my-5"/>
           <div id="other-actions">
             <h2>Other actions</h2>
@@ -163,46 +208,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
               </li>
             </ul>
           </div>
-          {isWindows && isEvent && (
-            <div id="btn-container">
-              {mailStatus === "send" && (
-                <Button
-                  id="mail-report-button"
-                  type="primary"
-                  className="bold-text"
-                  onClick={() => setShowEditMailDetailsModal(true)}
-                >
-                  <ButtonSvgIcon svgIcon={<MailIcon />} className={`mail-icon`} />
-                  Mail report
-                </Button>
-              )}
-              {mailStatus === "sending" && (
-                <Button
-                  id="mail-report-button"
-                  type="primary"
-                  className="bold-text"
-                  disabled="disabled"
-                >
-                  <ButtonSvgIcon svgIcon={<MailIcon />} className={`mail-icon`} />
-                  Sending mail...
-                </Button>
-              )}
-              {mailStatus === "sent" && (
-                <Button
-                  id="mail-report-button"
-                  type="primary"
-                  disabled="disabled"
-                >
-                  <ButtonSvgIcon
-                    svgIcon={<MailSuccessIcon />}
-                    className={`mail-icon`}
-                  />
-                  Report mailed
-                </Button>
-              )}
-            </div>
-          )
-          }
           {showEditMailDetailsModal && (
             <EditMailDetailsModal
               showModal={showEditMailDetailsModal}

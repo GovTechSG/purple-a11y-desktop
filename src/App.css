@@ -45,7 +45,7 @@ button.primary:active {
 }
 
 button.secondary {
-  padding: 0.25rem 2rem;
+  padding: 0.25rem 1rem;
   border: 1px solid #785ef0;
   background-color: #fff;
   border-radius: 4px;
