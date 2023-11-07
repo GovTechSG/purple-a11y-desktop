@@ -57,12 +57,12 @@ const ErrorPage = () => {
           <img src={returnIcon}></img>
           &nbsp;Back To Home
         </button>
-        <Button id="replay-btn" type="primary" onClick={replayCustomFlow}>
+        <Button id="replay-btn" type="btn-primary" onClick={replayCustomFlow}>
           Replay
         </Button>
         </>
       )
-      : <Button role="link" type="primary" onClick={handleBackToHome}>
+      : <Button role="link" type="btn-primary" onClick={handleBackToHome}>
           Try Again
         </Button>}
     </div>

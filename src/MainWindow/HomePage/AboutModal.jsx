@@ -21,7 +21,7 @@ const UpdateAlert = ({ latestVer }) => {
           <h4>Update available ({latestVer})</h4>
           <p className="mb-0">To update, restart Purple HATS.</p>
         </div>
-        <Button type="button" className="btn-primary align-self-center" onClick={handleRestartApp} aria-label="Restart Purple HATS">
+        <Button type="btn-primary" className="align-self-center" onClick={handleRestartApp} aria-label="Restart Purple HATS">
           <img src={arrowRepeat} alt="" />
           Restart
         </Button>

@@ -81,12 +81,12 @@ const LaunchWindow = () => {
         <div>
           <h1>New update available</h1>
           <p>Would you like to update now? It may take a few minutes.</p>
-          <Button type="secondary" onClick={handlePromptUpdateResponse(false)}>
+          <Button type="btn-secondary" onClick={handlePromptUpdateResponse(false)}>
             Later
           </Button>
           <Button
             id="proceed-button"
-            type="primary"
+            type="btn-primary"
             onClick={handlePromptUpdateResponse(true)}
           >
             Update
@@ -103,14 +103,14 @@ const LaunchWindow = () => {
           <h1>New installer has been downloaded</h1>
           <p>Would you like to run the installer now?</p>
           <Button
-            type="secondary"
+            type="btn-secondary"
             onClick={handlePromptLaunchInstallerResponse(false)}
           >
             Later
           </Button>
           <Button
             id="proceed-button"
-            type="primary"
+            type="btn-primary"
             onClick={handlePromptLaunchInstallerResponse(true)}
           >
             Run
@@ -127,14 +127,14 @@ const LaunchWindow = () => {
           <h1>New App has been downloaded</h1>
           <p>Would you like to restart the application?</p>
           <Button
-            type="secondary"
+            type="btn-secondary"
             onClick={handlePromptRestartAppResponse(false)}
           >
             Later
           </Button>
           <Button
             id="proceed-button"
-            type="primary"
+            type="btn-primary"
             onClick={handlePromptRestartAppResponse(true)}
           >
             Run

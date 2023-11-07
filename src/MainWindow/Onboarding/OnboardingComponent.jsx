@@ -50,7 +50,7 @@ const OnboardingComponent = ({ setDataExistStatus }) => {
 
   const backButton = (
     <Button
-      type="secondary"
+      type="btn-secondary"
       className="secondary modal-button modal-half-button modal-left-button"
       onClick={handleOnBackClick}
     >
@@ -59,7 +59,7 @@ const OnboardingComponent = ({ setDataExistStatus }) => {
   );
   const nextButton = (
     <Button
-      type="primary"
+      type="btn-primary"
       className="modal-button modal-half-button modal-right-button"
       onClick={handleOnNextClick}
     >
@@ -216,7 +216,7 @@ const OnboardingComponent = ({ setDataExistStatus }) => {
       case 1: {
         return (
           <Button
-            type="primary"
+            type="btn-primary"
             className="modal-button modal-full-button"
             onClick={handleOnNextClick}
           >
@@ -242,7 +242,7 @@ const OnboardingComponent = ({ setDataExistStatus }) => {
             <button
               type="submit"
               form={formID}
-              className={`primary modal-button modal-half-button modal-right-button`}
+              className={`btn-primary modal-button modal-half-button modal-right-button`}
               disabled={isSubmitDisabled}
             >
               I consent

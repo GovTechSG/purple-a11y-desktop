@@ -136,7 +136,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
             .
           </p>
           <div id="btn-container">
-            <Button id="view-button" type="primary" onClick={handleViewReport}>
+            <Button id="view-button" type="btn-primary" onClick={handleViewReport}>
               <img alt="" src={boxArrowUpRightIcon}></img>
               View report
             </Button>
@@ -145,7 +145,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
                 {mailStatus === "send" && (
                   <Button
                     id="mail-report-button"
-                    type="secondary"
+                    type="btn-secondary"
                     onClick={() => setShowEditMailDetailsModal(true)}
                   >
                     <ButtonSvgIcon
@@ -158,7 +158,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
                 {mailStatus === "sending" && (
                   <Button
                     id="mail-report-button"
-                    type="secondary"
+                    type="btn-secondary"
                     disabled="disabled"
                   >
                     <ButtonSvgIcon

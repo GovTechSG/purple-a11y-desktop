@@ -105,7 +105,7 @@ const PrepareStep = ({ scanDetails, setStep, setScanDetails }) => {
         <Alert alertClassName="alert-custom mb-5" icon={thumbsUpIcon}>
           It looks like you're all set for the custom flow scan, let's get started!
         </Alert>}
-        <button className={`primary custom-flow-button ms-auto`} type="submit" disabled={isButtonDisabled}>
+        <button className={`btn-primary custom-flow-button ms-auto`} type="submit" disabled={isButtonDisabled}>
           Next step&nbsp;
           <img src={isButtonDisabled ? arrowRightGrey : arrowRightWhite}></img>
         </button>
@@ -295,7 +295,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                     aria-invalid={!!inputErrorMessage}
                   />
                   <div className="error-text" id="invalid-label-error">{inputErrorMessage}</div>
-                  <button type="submit" className={`primary custom-label-button`} disabled={inputErrorMessage}>Generate Report</button>
+                  <button type="submit" className={`btn-primary custom-label-button`} disabled={inputErrorMessage}>Generate Report</button>
                 </form>
               </>
             )

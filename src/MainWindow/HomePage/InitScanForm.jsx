@@ -132,7 +132,7 @@ const InitScanForm = ({
               </div>
             )}
           <Button
-            type="primary"
+            type="btn-primary"
             className="scan-btn"
             onClick={handleScanButtonClicked}
             disabled={scanButtonIsClicked}
