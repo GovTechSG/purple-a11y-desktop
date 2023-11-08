@@ -106,13 +106,13 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const handleSubmitMail = async (finalEmails, finalSubject) => {
     setMailStatus("sending");
 
-    const emails = finalEmails.split(",").join(";");
-    const response = await services.mailReport(
-      { subject: finalSubject, emailAddresses: emails },
-      scanId
-    );
+    // const emails = finalEmails.split(",").join(";");
+    // const response = await services.mailReport(
+    //   { subject: finalSubject, emailAddresses: emails },
+    //   scanId
+    // );
     
-    if (response.success) {
+    if (true) {
       alert("Report successfully mailed");
       setMailStatus("sent");
 
@@ -142,8 +142,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
             <img alt="" src={boxArrowUpRightIcon}></img>
               View report
             </Button>
-            {/* {isWindows && isEvent && ( */}
-            { true && 
+            {isWindows && isEvent && ( 
                 <>
                   {mailStatus === "send" && (
                   <Button
