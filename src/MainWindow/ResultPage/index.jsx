@@ -142,7 +142,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
             <img alt="" src={boxArrowUpRightIcon}></img>
               View report
             </Button>
-            {isWindows && isEvent && ( 
+            {isWindows && isEvent && 
                 <>
                   {mailStatus === "send" && (
                   <Button
