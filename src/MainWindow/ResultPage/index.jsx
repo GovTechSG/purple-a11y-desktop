@@ -106,13 +106,13 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const handleSubmitMail = async (finalEmails, finalSubject) => {
     setMailStatus("sending");
 
-    // const emails = finalEmails.split(",").join(";");
-    // const response = await services.mailReport(
-    //   { subject: finalSubject, emailAddresses: emails },
-    //   scanId
-    // );
+    const emails = finalEmails.split(",").join(";");
+    const response = await services.mailReport(
+      { subject: finalSubject, emailAddresses: emails },
+      scanId
+    );
     
-    if (true) {
+    if (response.success) {
       alert("Report successfully mailed");
       setMailStatus("sent");
 
