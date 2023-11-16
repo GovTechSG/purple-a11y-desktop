@@ -51,6 +51,7 @@
   #btn-container {
     display: flex;
     flex-direction: row;
+    gap: 2rem;
   }
 
   #download-content {
@@ -144,10 +145,6 @@
 
   .bi-envelope-check {
     margin-right: 0.5rem;
-  }
-
-  .modal-content {
-    width: 700px;
   }
 
   .user-form-field {

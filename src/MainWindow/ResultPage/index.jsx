@@ -7,10 +7,10 @@ import { handleClickLink } from "../../common/constants";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import { ReactComponent as MailIcon } from "../../assets/mail.svg";
 import { ReactComponent as MailSuccessIcon } from "../../assets/mail-success.svg";
-import houseIcon from "../../assets/house.svg"; 
+import houseIcon from "../../assets/house.svg";
 import thumbsUpIcon from "../../assets/hand-thumbs-up.svg";
 import arrowRepeatIcon from "../../assets/arrow-repeat.svg";
-import checkCircleIcon from '../../assets/check-circle.svg'; 
+import checkCircleIcon from "../../assets/check-circle.svg";
 import boxArrowUpRightIcon from "../../assets/box-arrow-up-right.svg";
 import EditMailDetailsModal from "./EditMailDetailsModal";
 
@@ -21,17 +21,19 @@ const ResultPage = ({ completedScanId: scanId }) => {
   const [email, setEmail] = useState("");
   const [isEvent, setIsEvent] = useState(false);
   const [resultsPath, setResultsPath] = useState(null);
-  const [showCustomFlowReplayButton, setShowCustomFlowReplayButton] = useState(false);
-  const [customFlowLabel, setCustomFlowLabel] = useState('');
+  const [showCustomFlowReplayButton, setShowCustomFlowReplayButton] =
+    useState(false);
+  const [customFlowLabel, setCustomFlowLabel] = useState("");
   const [feedbackFormUrl, setFeedbackFormUrl] = useState(null);
   const [isWindows, setIsWindows] = useState(false);
   const [mailStatus, setMailStatus] = useState("send");
-  const [showEditMailDetailsModal, setShowEditMailDetailsModal] = useState(false);
-    
+  const [showEditMailDetailsModal, setShowEditMailDetailsModal] =
+    useState(false);
+
   useEffect(() => {
     if (state?.isCustomScan) {
       setShowCustomFlowReplayButton(state.isCustomScan);
-      setCustomFlowLabel(state.customFlowLabel)
+      setCustomFlowLabel(state.customFlowLabel);
     }
   }, []);
 
@@ -62,10 +64,10 @@ const ResultPage = ({ completedScanId: scanId }) => {
     const getFeedbackFormUrl = async () => {
       const feedbackFormUrl = await services.getFeedbackFormUrl();
       setFeedbackFormUrl(feedbackFormUrl);
-    }
+    };
 
     getFeedbackFormUrl();
-  }, [])
+  }, []);
 
   const initialSubject = useMemo(() => {
     if (!scanType) {
@@ -111,13 +113,13 @@ const ResultPage = ({ completedScanId: scanId }) => {
       { subject: finalSubject, emailAddresses: emails },
       scanId
     );
+
     if (response.success) {
       alert("Report successfully mailed");
-      setMailStatus("sent");
     } else {
       alert("Report failed to mail");
-      setMailStatus("send");
     }
+    setMailStatus("send");
   };
 
   return (
@@ -130,79 +132,77 @@ const ResultPage = ({ completedScanId: scanId }) => {
             You can find the downloaded report at{" "}
             <a href="#" onClick={handleOpenResultsFolder}>
               {resultsPath}
-            </a>.
+            </a>
+            .
           </p>
-          <Button id="view-button" type="primary" onClick={handleViewReport}>
-           <img alt="" src={boxArrowUpRightIcon}></img>
-            View report
-          </Button>
-          <hr class="my-5"/>
+          <div id="btn-container">
+            <Button id="view-button" type="primary" onClick={handleViewReport}>
+              <img alt="" src={boxArrowUpRightIcon}></img>
+              View report
+            </Button>
+            {isWindows && isEvent && (
+              <>
+                {mailStatus === "send" && (
+                  <Button
+                    id="mail-report-button"
+                    type="secondary"
+                    onClick={() => setShowEditMailDetailsModal(true)}
+                  >
+                    <ButtonSvgIcon
+                      svgIcon={<MailIcon />}
+                      className={`mail-icon`}
+                    />
+                    Email report
+                  </Button>
+                )}
+                {mailStatus === "sending" && (
+                  <Button
+                    id="mail-report-button"
+                    type="secondary"
+                    disabled="disabled"
+                  >
+                    <ButtonSvgIcon
+                      svgIcon={<MailIcon />}
+                      className={`mail-icon`}
+                    />
+                    Sending mail...
+                  </Button>
+                )}
+              </>
+            )}
+          </div>
+          <hr class="my-5" />
           <div id="other-actions">
             <h2>Other actions</h2>
             <ul class="actions-list">
               <li>
-                <a href="#" onClick={(e) => {handleClickLink(e, feedbackFormUrl)}}>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    handleClickLink(e, feedbackFormUrl);
+                  }}
+                >
                   <img alt="" src={thumbsUpIcon}></img>
                   Help us improve
                 </a>
-              </li>     
-              { showCustomFlowReplayButton && 
+              </li>
+              {showCustomFlowReplayButton && (
                 <li>
                   <Link to="/custom_flow" state={{ isReplay: true }}>
                     <img alt="" src={arrowRepeatIcon}></img>
                     Rerun custom flow {`(${customFlowLabel})`}
                   </Link>
                 </li>
-              }
+              )}
               <li>
-                <hr/>
+                <hr />
                 <Link to="/" onClick={handleScanAgain}>
                   <img alt="" src={houseIcon}></img>
-                  Back To Home 
-                </Link>    
+                  Back To Home
+                </Link>
               </li>
             </ul>
           </div>
-          {isWindows && isEvent && (
-            <div id="btn-container">
-              {mailStatus === "send" && (
-                <Button
-                  id="mail-report-button"
-                  type="primary"
-                  className="bold-text"
-                  onClick={() => setShowEditMailDetailsModal(true)}
-                >
-                  <ButtonSvgIcon svgIcon={<MailIcon />} className={`mail-icon`} />
-                  Mail report
-                </Button>
-              )}
-              {mailStatus === "sending" && (
-                <Button
-                  id="mail-report-button"
-                  type="primary"
-                  className="bold-text"
-                  disabled="disabled"
-                >
-                  <ButtonSvgIcon svgIcon={<MailIcon />} className={`mail-icon`} />
-                  Sending mail...
-                </Button>
-              )}
-              {mailStatus === "sent" && (
-                <Button
-                  id="mail-report-button"
-                  type="primary"
-                  disabled="disabled"
-                >
-                  <ButtonSvgIcon
-                    svgIcon={<MailSuccessIcon />}
-                    className={`mail-icon`}
-                  />
-                  Report mailed
-                </Button>
-              )}
-            </div>
-          )
-          }
           {showEditMailDetailsModal && (
             <EditMailDetailsModal
               showModal={showEditMailDetailsModal}

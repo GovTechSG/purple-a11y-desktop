@@ -45,7 +45,7 @@ button.primary:active {
 }
 
 button.secondary {
-  padding: 0.25rem 2rem;
+  padding: 0.25rem 1rem;
   border: 1px solid #785ef0;
   background-color: #fff;
   border-radius: 4px;
@@ -63,9 +63,10 @@ button.secondary:active {
   color: #472bc4;
 }
 
-button.primary:disabled {
+button.primary:disabled, button.secondary:disabled {
   background-color: #e7ecee!important;
   color: #97adb5!important;
+  border: none!important;
 }
 
 .download-dropdown-btn:disabled {
