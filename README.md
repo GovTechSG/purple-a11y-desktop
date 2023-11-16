@@ -192,6 +192,9 @@ Defaults to the screen size of iPhone 11.
 
 Enter a custom width in pixels. Minimum width is 320px and maximum width is 1080px.
 
+## Accessibility Scan Results
+For details on which accessibility scan results trigger "Must Fix" / "Good to Fix" findings, you may refer to [Scan Issue Details](https://github.com/GovTechSG/purple-hats/blob/master/DETAILS.md).
+
 ## Additional Information on Data
 
 Purple HATS Desktop uses third-party open-source tools that may be downloaded over the Internet during the installation process of Purple HATS. Users should be aware of the libraries used by examining `package.json`.
