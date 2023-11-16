@@ -107,7 +107,7 @@ const EditMailDetailsModal = ({
         <button
           type="submit"
           form="edit-mail-details-form"
-          className={`primarymodal-button`}
+          className={`primary modal-button`}
           disabled={isSubmitDisabled}
         >
           Send Mail
