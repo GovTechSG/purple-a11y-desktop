@@ -114,11 +114,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
     
     if (response.success) {
       alert("Report successfully mailed");
-      setMailStatus("sent");
-
-      setTimeout(() => {
-        setMailStatus('send');
-      }, 1500);
+      setMailStatus("send");
     } else {
       alert("Report failed to mail");
       setMailStatus("send");
@@ -162,19 +158,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
                     >
                       <ButtonSvgIcon svgIcon={<MailIcon />} className={`mail-icon`} />
                       Sending mail...
-                    </Button>
-                  )}
-                  {mailStatus === "sent" && (
-                    <Button
-                      id="mail-report-button"
-                      type="secondary"
-                      disabled="disabled"
-                    >
-                      <ButtonSvgIcon
-                        svgIcon={<MailSuccessIcon />}
-                        className={`mail-icon`}
-                      />
-                      Report mailed
                     </Button>
                   )}
               </>
