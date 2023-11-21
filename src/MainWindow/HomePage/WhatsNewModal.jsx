@@ -18,10 +18,10 @@ const WhatsNewModal = ({
 
     // remove unneeded info
     const allElements = releaseNotesNode.childNodes;
-    const toRemoveUpToId = "newfeatures";
+    const toRemoveUpToId = "whatsnew";
     for (const element of allElements) {
-      if (element.id === toRemoveUpToId) break;
       element.remove();
+      if (element.id === toRemoveUpToId) break;
     }
 
     const headings = releaseNotesNode.getElementsByTagName("h4");
