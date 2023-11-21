@@ -50,8 +50,7 @@ Purple HATS is a customisable, automated accessibility testing tool that allows 
 
 ### Run Purple HATS Desktop MacOS
 
-* Right-click Purple HATS then click "Open" in the pop-up menu.
-* Click "Open" again to accept the pop-up message “macOS cannot verify…”.
+* Double-click Purple HATS then click "Open" in the pop-up menu.
 * Purple HATS will start setting up. This process may take up to 5 minutes.
 
 </details>
