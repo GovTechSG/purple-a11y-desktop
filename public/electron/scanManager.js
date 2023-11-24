@@ -465,6 +465,8 @@ const mailResults = async (formDetails, scanId) => {
     $mail.body = "Hi there,
     
 Please see the attached accessibility scan results with Purple HATS (report.html).
+You can download Purple HATS at the following link: https://go.gov.sg/get-purplehats.
+
 Feel free to reach us at accessibility@tech.gov.sg if you have any questions.
 
 Thank you.
