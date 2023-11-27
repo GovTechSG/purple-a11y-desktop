@@ -226,8 +226,8 @@ app.on("ready", async () => {
     mainWindow.webContents.send("versionInfo", {
       appVersion: constants.appVersion,
       latestVer: latestRelease,
-      latestPrereleaseVer: newestVer,
-      latestPreNotes: newestFormattedNotes,
+      latestVerForLab: newestVer,
+      latestNotesForLab: newestFormattedNotes,
       latestRelNotes,
       allReleaseTags,
       allPreReleaseTags,

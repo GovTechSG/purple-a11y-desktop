@@ -38,12 +38,12 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const getVersionLabel = useCallback((version) => {
     const {
       latestVer,
-      latestPrereleaseVer,
+      latestVerForLab,
       allReleaseTags,
       allPreReleaseTags
     } = appVersionInfo;
     if (latestVer === version) return 'latest stable build';
-    if (latestPrereleaseVer === version) return 'latest pre-release';
+    if (latestVerForLab === version) return 'latest pre-release';
 
     if (allReleaseTags.includes(version)) {
       return 'stable build';
@@ -56,7 +56,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const isLatest = () => {
     const currVer = appVersionInfo.appVersion;
     const latestToCompare = isLabMode
-      ? appVersionInfo.latestPrereleaseVer
+      ? appVersionInfo.latestVerForLab
       : appVersionInfo.latestVer;
     if (latestToCompare) {
       return versionComparator(currVer, latestToCompare) === 1;
@@ -67,10 +67,10 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const getReleaseNotesOnUpdate = (appVersionInfo) => {
     // to get release notes to show on first launch after update
     const currVer = appVersionInfo.appVersion;
-    const prereleaseVer = appVersionInfo.latestPrereleaseVer;
+    const latestLabVer = appVersionInfo.latestVerForLab;
     const releaseVer = appVersionInfo.latestVer;
-    if (currVer === prereleaseVer) {
-      return appVersionInfo.latestPreNotes;
+    if (currVer === latestLabVer) {
+      return appVersionInfo.latestNotesForLab;
     } else if (currVer === releaseVer) {
       return appVersionInfo.latestRelNotes;
     }

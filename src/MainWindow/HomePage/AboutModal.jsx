@@ -9,7 +9,7 @@ import { handleClickLink, versionComparator } from "../../common/constants";
 import { useEffect, useState } from "react";
 import Button from "../../common/components/Button";
 
-const UpdateAlert = ({ latestVer, isLabMode }) => {
+const UpdateAlert = ({ latestVer, isPrerelease }) => {
   const handleRestartApp = (e) => {
     window.services.restartApp();
   };
@@ -17,7 +17,7 @@ const UpdateAlert = ({ latestVer, isLabMode }) => {
   return (
     <Alert alertClassName="alert-primary mb-5 gap-5">
       <div className="flex-grow-1">
-        <h4>Update available ({latestVer} - latest {isLabMode ? 'pre-release' : 'stable build'})</h4>
+        <h4>Update available ({latestVer} - latest {isPrerelease ? 'pre-release' : 'stable build'})</h4>
         <p className="mb-0">To update, restart Purple HATS.</p>
       </div>
       <Button
@@ -128,19 +128,17 @@ const AboutModal = ({
   const {
     appVersion,
     latestVer,
-    latestPrereleaseVer,
+    latestVerForLab,
   } = appVersionInfo;
   const [toUpdateVer, setToUpdateVer] = useState(undefined);
 
   useEffect(() => {
-    if (!latestVer || !latestPrereleaseVer) {
+    if (!latestVer || !latestVerForLab) {
       // if unable to fetch release info, dont show update alert
       return setToUpdateVer(undefined);
     }
-    const latestVerToUpdate = latestVer;
-    const latestPrereleaseToUpdate = latestPrereleaseVer;
 
-    const toCompare = isLabMode ? latestPrereleaseToUpdate : latestVerToUpdate;
+    const toCompare = isLabMode ? latestVerForLab : latestVer;
     const isNeedUpdate = versionComparator(appVersion, toCompare) === -1;
 
     if (isNeedUpdate) {
@@ -158,7 +156,7 @@ const AboutModal = ({
       modalBodyClassName="pt-1"
       modalBody={
         <>
-          {toUpdateVer && <UpdateAlert latestVer={toUpdateVer} isLabMode={isLabMode} />}
+          {toUpdateVer && <UpdateAlert latestVer={toUpdateVer} isPrerelease={toUpdateVer !== latestVer} />}
           <AppDescription version={appVersion} versionLabel={appVersionLabel} />
           <LabModeDescription
             isLabMode={isLabMode}
