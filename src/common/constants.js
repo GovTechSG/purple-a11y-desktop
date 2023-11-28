@@ -1,4 +1,4 @@
-import boxRightArrow from "../assets/box-right-arrow.png";
+import boxRightArrow from "../assets/box-arrow-up-right-purple.svg";
 
 export const scanTypes = {
   "Website crawl": "website",

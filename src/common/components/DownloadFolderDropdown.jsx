@@ -1,7 +1,7 @@
-import folder from "../../assets/folder.svg";
+import folder from "../../assets/folder-grey.svg";
 import { useEffect, useState } from "react";
 import services from "../../services";
-import editIcon from "../../assets/edit-icon.svg";
+import editIcon from "../../assets/edit-pencil-purple.svg";
 
 const DownloadFolderDropdown = ({
   isOnboarding

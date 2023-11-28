@@ -9,8 +9,8 @@ import {
   getDefaultAdvancedOptions,
 } from "../../common/constants";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
-import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
-import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
+import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up-purple.svg";
+import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down-white.svg";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 
 const InitScanForm = ({

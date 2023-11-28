@@ -1,5 +1,5 @@
 import Modal from "../../common/components/Modal";
-import boxRightArrow from "../../assets/box-right-arrow.png";
+import boxRightArrow from "../../assets/box-arrow-up-right-purple.svg";
 import { createElement } from "react";
 import { handleClickLink } from "../../common/constants";
 

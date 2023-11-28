@@ -1,7 +1,7 @@
 import Button from "../../common/components/Button";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import "./ErrorPage.scss";
-import returnIcon from "../../assets/return.svg";
+import returnIcon from "../../assets/return-purple.svg";
 import { useNavigate, useLocation } from "react-router";
 import { ReactComponent as ExclamationCircleIcon } from "../../assets/exclamation-circle.svg";
 import { useState, useEffect } from "react";

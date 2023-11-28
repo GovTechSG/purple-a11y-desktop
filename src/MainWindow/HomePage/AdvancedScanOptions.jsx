@@ -2,14 +2,14 @@ import { useState, useRef, useEffect } from "react";
 import Button from "../../common/components/Button";
 import SelectField from "./SelectField";
 import DownloadFolderDropdown from "../../common/components/DownloadFolderDropdown";
-import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
-import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
-import questionMarkIcon from "../../assets/question-mark.svg";
+import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up-purple.svg";
+import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down-white.svg";
+import questionMarkIcon from "../../assets/question-mark-light-grey.svg";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import ToolTip from "../../common/components/ToolTip";
 import { getDefaultAdvancedOptions } from "../../common/constants";
-import purpleEditIcon from "../../assets/edit-icon.svg";
-import greyEditIcon from "../../assets/grey-edit-icon.svg";
+import purpleEditIcon from "../../assets/edit-pencil-purple.svg";
+import greyEditIcon from "../../assets/edit-pencil-grey.svg";
 
 const AdvancedScanOptions = ({
   isProxy,

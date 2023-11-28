@@ -1,4 +1,4 @@
-import boxRightArrowIcon from "../../../assets/box-arrow-up-right.svg";
+import boxRightArrowIcon from "../../../assets/box-arrow-up-right-white.svg";
 
  const ButtonWithBoxRightArrowIcon = ({onClick, buttonLabel}) => {
     return (
