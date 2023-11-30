@@ -1,7 +1,7 @@
 import Button from "../../common/components/Button";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import "./ErrorPage.scss";
-import returnIcon from "../../assets/return.svg";
+import returnIcon from "../../assets/return-purple.svg";
 import { useNavigate, useLocation } from "react-router";
 import { ReactComponent as ExclamationCircleIcon } from "../../assets/exclamation-circle.svg";
 import { useState, useEffect } from "react";
@@ -57,12 +57,12 @@ const ErrorPage = () => {
           <img src={returnIcon}></img>
           &nbsp;Back To Home
         </button>
-        <Button id="replay-btn" type="primary" onClick={replayCustomFlow}>
+        <Button id="replay-btn" type="btn-primary" onClick={replayCustomFlow}>
           Replay
         </Button>
         </>
       )
-      : <Button role="link" type="primary" onClick={handleBackToHome}>
+      : <Button role="link" type="btn-primary" onClick={handleBackToHome}>
           Try Again
         </Button>}
     </div>

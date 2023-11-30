@@ -9,8 +9,8 @@ import {
   getDefaultAdvancedOptions,
 } from "../../common/constants";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
-import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up.svg";
-import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down.svg";
+import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up-purple.svg";
+import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down-white.svg";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 
 const InitScanForm = ({
@@ -89,7 +89,7 @@ const InitScanForm = ({
             advancedOptions.scanType !== scanTypeOptions[3] && (
               <div>
                 <Button
-                  type="transparent"
+                  type="btn-link"
                   id="page-limit-toggle-button"
                   onClick={(e) => togglePageLimitAdjuster(e)}
                 >
@@ -132,7 +132,7 @@ const InitScanForm = ({
               </div>
             )}
           <Button
-            type="primary"
+            type="btn-primary"
             className="scan-btn"
             onClick={handleScanButtonClicked}
             disabled={scanButtonIsClicked}

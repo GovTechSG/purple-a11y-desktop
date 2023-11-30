@@ -3,12 +3,12 @@ import { useLocation, useNavigate } from "react-router";
 import { cliErrorCodes, cliErrorTypes } from "../../common/constants";
 import services from "../../services";
 import './CustomFlow.scss';
-import arrowLeft from "../../assets/arrow-left.svg";
+import arrowLeft from "../../assets/arrow-left-purple.svg";
 import arrowRightGrey from "../../assets/arrow-right-grey.svg";
 import arrowRightWhite from "../../assets/arrow-right-white.svg";
 import editIcon from "../../assets/box-edit.svg";
-import exclaimTriangleIcon from "../../assets/exclamation-triangle.svg";
-import thumbsUpIcon from "../../assets/hand-thumbs-up.svg";
+import exclaimTriangleIcon from "../../assets/exclamation-triangle-purple.svg";
+import thumbsUpIcon from "../../assets/hand-thumbs-up-purple.svg";
 import recordIcon from "../../assets/record-icon.svg";
 import replayIcon from "../../assets/replay-icon.svg"; 
 import labelIcon from "../../assets/label-icon.svg";
@@ -78,7 +78,7 @@ const PrepareStep = ({ scanDetails, setStep, setScanDetails }) => {
             <label className="form-check-label" for="post-login-no-input">No</label>
           </div>
           {isPostLogin &&
-          <Alert alertClassName="alert-custom mb-5 mt-3" icon={exclaimTriangleIcon}>
+          <Alert alertClassName="alert-primary mt-3" icon={exclaimTriangleIcon}>
             Ensure post-login webpages can be revisited using the same login credentials to allow Purple HATS to replay the steps for scanning.
           </Alert>}
         </fieldset>
@@ -94,17 +94,20 @@ const PrepareStep = ({ scanDetails, setStep, setScanDetails }) => {
             <label className="form-check-label" for="file-upload-no-input">No</label>
           </div>
           {isFileUpload && fileUploadFolder && 
-          <Alert alertClassName="alert-custom mb-5 mt-3" icon={exclaimTriangleIcon}>
-            If form contains file upload fields, place the same file{"(s)"} in{" "}
-            <a href="#" onClick={handleOpenUploadFolder}>{fileUploadFolder}</a>{" "}
-            to allow Purple HATS to attach the same file{"(s)"} when replaying the steps.
+          <Alert alertClassName="alert-primary mt-3" icon={exclaimTriangleIcon}>
+            <p className="mb-0">
+              If form contains file upload fields, place the same file{"(s)"} in{" "}
+              <a href="#" onClick={handleOpenUploadFolder}>{fileUploadFolder}</a>{" "}
+              to allow Purple HATS to attach the same file{"(s)"} when replaying the steps.
+            </p>
           </Alert>}
         </fieldset>
+
         {isAllSet && 
-        <Alert alertClassName="alert-custom mb-5" icon={thumbsUpIcon}>
+        <Alert alertClassName="alert-primary mb-5" icon={thumbsUpIcon}>
           It looks like you're all set for the custom flow scan, let's get started!
         </Alert>}
-        <button className={`primary custom-flow-button ms-auto`} type="submit" disabled={isButtonDisabled}>
+        <button className={`btn-primary custom-flow-button ms-auto`} type="submit" disabled={isButtonDisabled}>
           Next step&nbsp;
           <img src={isButtonDisabled ? arrowRightGrey : arrowRightWhite}></img>
         </button>
@@ -294,7 +297,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                     aria-invalid={!!inputErrorMessage}
                   />
                   <div className="error-text" id="invalid-label-error">{inputErrorMessage}</div>
-                  <button type="submit" className={`primary custom-label-button`} disabled={inputErrorMessage}>Generate Report</button>
+                  <button type="submit" className={`btn-primary custom-label-button`} disabled={inputErrorMessage}>Generate Report</button>
                 </form>
               </>
             )

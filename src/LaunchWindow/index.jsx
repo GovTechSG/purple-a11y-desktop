@@ -3,6 +3,36 @@ import Button from "../common/components/Button";
 import { useEffect, useState } from "react";
 import "./LaunchWindow.scss";
 
+const Prompt = ({
+  header,
+  desc,
+  proceedLabel,
+  dismissLabel,
+  proceedHandler,
+  dismissHandler
+}) => {
+  return (
+    <div id="launch-window">
+      <div>
+        <h1>{header}</h1>
+        <p>{desc}</p>
+        <div className="d-flex justify-content-center">
+          <Button type="btn-secondary" onClick={dismissHandler}>
+            {dismissLabel}
+          </Button>
+          <Button
+            id="proceed-button"
+            type="btn-primary"
+            onClick={proceedHandler}
+          >
+            {proceedLabel}
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+};
+
 const LaunchWindow = () => {
   const [launchStatus, setLaunchStatus] = useState(null);
   const [promptUpdate, setPromptUpdate] = useState(false);
@@ -77,70 +107,40 @@ const LaunchWindow = () => {
 
   if (promptUpdate) {
     return (
-      <div id="launch-window">
-        <div>
-          <h1>New update available</h1>
-          <p>Would you like to update now? It may take a few minutes.</p>
-          <Button type="secondary" onClick={handlePromptUpdateResponse(false)}>
-            Later
-          </Button>
-          <Button
-            id="proceed-button"
-            type="primary"
-            onClick={handlePromptUpdateResponse(true)}
-          >
-            Update
-          </Button>
-        </div>
-      </div>
+      <Prompt
+        header="New update available"
+        desc="Would you like to update now? It may take a few minutes."
+        proceedLabel="Update"
+        proceedHandler={handlePromptUpdateResponse(true)}
+        dismissLabel="Later"
+        dismissHandler={handlePromptUpdateResponse(false)}
+      />
     );
   }
 
   if (launchStatus === "frontendDownloadComplete") {
     return (
-      <div id="launch-window">
-        <div>
-          <h1>New installer has been downloaded</h1>
-          <p>Would you like to run the installer now?</p>
-          <Button
-            type="secondary"
-            onClick={handlePromptLaunchInstallerResponse(false)}
-          >
-            Later
-          </Button>
-          <Button
-            id="proceed-button"
-            type="primary"
-            onClick={handlePromptLaunchInstallerResponse(true)}
-          >
-            Run
-          </Button>
-        </div>
-      </div>
+      <Prompt
+        header="New installer has been downloaded"
+        desc="Would you like to run the installer now?"
+        proceedLabel="Run"
+        proceedHandler={handlePromptLaunchInstallerResponse(true)}
+        dismissLabel="Later"
+        dismissHandler={handlePromptLaunchInstallerResponse(false)}
+      />
     );
   }
 
   if (launchStatus === "frontendDownloadCompleteMacOS") {
     return (
-      <div id="launch-window">
-        <div>
-          <h1>New App has been downloaded</h1>
-          <p>Would you like to restart the application?</p>
-          <Button
-            type="secondary"
-            onClick={handlePromptRestartAppResponse(false)}
-          >
-            Later
-          </Button>
-          <Button
-            id="proceed-button"
-            type="primary"
-            onClick={handlePromptRestartAppResponse(true)}
-          >
-            Run
-          </Button>
-        </div>
-      </div>
+      <Prompt
+        header="New App has been downloaded"
+        desc="Would you like to restart the application?"
+        proceedLabel="Run"
+        proceedHandler={handlePromptRestartAppResponse(true)}
+        dismissLabel="Later"
+        dismissHandler={handlePromptRestartAppResponse(false)}
+      />
     );
   }
 

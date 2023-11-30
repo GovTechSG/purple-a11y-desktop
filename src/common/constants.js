@@ -1,4 +1,4 @@
-import boxRightArrow from "../assets/box-right-arrow.png";
+import boxRightArrow from "../assets/box-arrow-up-right-purple.svg";
 
 export const scanTypes = {
   "Website crawl": "website",
@@ -137,7 +137,7 @@ export const policyUrlElem = (
     onClick={(e) => {handleClickLink(e, "https://www.tech.gov.sg/privacy/")}}
   >
     GovTech's Privacy Policy
-    <img id="box-arrow-right" src={boxRightArrow}></img>
+    <img className="external-link" src={boxRightArrow}></img>
   </a>
 );
 

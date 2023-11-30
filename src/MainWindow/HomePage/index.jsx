@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import a11yLogo from "../../assets/a11y-logo.svg";
 import appIllustration from "../../assets/app-illustration.svg";
-import editIcon from "../../assets/edit-icon.svg";
+import editIcon from "../../assets/edit-pencil-purple.svg";
 import labModeOff from "../../assets/lab-icon-off.svg";
 import labModeOn from "../../assets/lab-icon-on.svg";
 import InitScanForm from "./InitScanForm";
@@ -34,10 +34,29 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const [url, setUrl] = useState('');
   const [scanButtonIsClicked, setScanButtonIsClicked] = useState(false);
 
+  // function that determines whether version is a prerelease/stable build
+  const getVersionLabel = useCallback((version) => {
+    const {
+      latestVer,
+      latestVerForLab,
+      allReleaseTags,
+      allPreReleaseTags
+    } = appVersionInfo;
+    if (latestVer === version) return 'latest stable build';
+    if (latestVerForLab === version) return 'latest pre-release';
+
+    if (allReleaseTags.includes(version)) {
+      return 'stable build';
+    } else if (allPreReleaseTags.includes(version)) {
+      return 'pre-release';
+    }
+    return undefined; // if cannot be determined, this should not happen
+  }, [appVersionInfo]);
+
   const isLatest = () => {
     const currVer = appVersionInfo.appVersion;
     const latestToCompare = isLabMode
-      ? appVersionInfo.latestPrereleaseVer
+      ? appVersionInfo.latestVerForLab
       : appVersionInfo.latestVer;
     if (latestToCompare) {
       return versionComparator(currVer, latestToCompare) === 1;
@@ -48,10 +67,10 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const getReleaseNotesOnUpdate = (appVersionInfo) => {
     // to get release notes to show on first launch after update
     const currVer = appVersionInfo.appVersion;
-    const prereleaseVer = appVersionInfo.latestPrereleaseVer;
+    const latestLabVer = appVersionInfo.latestVerForLab;
     const releaseVer = appVersionInfo.latestVer;
-    if (currVer === prereleaseVer) {
-      return appVersionInfo.latestPreNotes;
+    if (currVer === latestLabVer) {
+      return appVersionInfo.latestNotesForLab;
     } else if (currVer === releaseVer) {
       return appVersionInfo.latestRelNotes;
     }
@@ -314,6 +333,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           showModal={showAboutPhModal}
           setShowModal={setShowAboutPhModal}
           appVersionInfo={appVersionInfo}
+          appVersionLabel={getVersionLabel(appVersionInfo.appVersion)}
           isLabMode={isLabMode}
           setIsLabMode={(bool) => editUserData({ isLabMode: bool })}
         />
@@ -328,12 +348,13 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           {
             <>
               <Button
-                type="transparent"
+                type="btn-link"
                 className="purple-text"
                 onClick={() => setShowAboutPhModal(true)}
               >
                 <img className="me-2" src={isLabMode ? labModeOn : labModeOff} alt="" />
-                Version {appVersionInfo.appVersion} {isLatest() && '(latest)'}
+                Version {appVersionInfo.appVersion}{" "}
+                {getVersionLabel(appVersionInfo.appVersion) && `(${getVersionLabel(appVersionInfo.appVersion)})`}
               </Button> | Built by GovTech Accessibility Enabling Team
             </>
           }

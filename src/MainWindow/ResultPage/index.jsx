@@ -5,13 +5,12 @@ import services from "../../services";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { handleClickLink } from "../../common/constants";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
-import { ReactComponent as MailIcon } from "../../assets/mail.svg";
-import { ReactComponent as MailSuccessIcon } from "../../assets/mail-success.svg";
-import houseIcon from "../../assets/house.svg";
-import thumbsUpIcon from "../../assets/hand-thumbs-up.svg";
-import arrowRepeatIcon from "../../assets/arrow-repeat.svg";
+import { ReactComponent as MailIcon } from "../../assets/mail-purple.svg";
+import houseIcon from "../../assets/house-purple.svg";
+import thumbsUpIcon from "../../assets/hand-thumbs-up-purple.svg";
+import arrowRepeatIcon from "../../assets/arrow-repeat-purple.svg";
 import checkCircleIcon from "../../assets/check-circle.svg";
-import boxArrowUpRightIcon from "../../assets/box-arrow-up-right.svg";
+import boxArrowUpRightIcon from "../../assets/box-arrow-up-right-white.svg";
 import EditMailDetailsModal from "./EditMailDetailsModal";
 
 const ResultPage = ({ completedScanId: scanId }) => {
@@ -136,7 +135,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
             .
           </p>
           <div id="btn-container">
-            <Button id="view-button" type="primary" onClick={handleViewReport}>
+            <Button id="view-button" type="btn-primary" onClick={handleViewReport}>
               <img alt="" src={boxArrowUpRightIcon}></img>
               View report
             </Button>
@@ -145,7 +144,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
                 {mailStatus === "send" && (
                   <Button
                     id="mail-report-button"
-                    type="secondary"
+                    type="btn-secondary"
                     onClick={() => setShowEditMailDetailsModal(true)}
                   >
                     <ButtonSvgIcon
@@ -158,7 +157,7 @@ const ResultPage = ({ completedScanId: scanId }) => {
                 {mailStatus === "sending" && (
                   <Button
                     id="mail-report-button"
-                    type="secondary"
+                    type="btn-secondary"
                     disabled="disabled"
                   >
                     <ButtonSvgIcon

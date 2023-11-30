@@ -1,8 +1,7 @@
 import Alert from "../../common/components/Alert";
 import Modal from "../../common/components/Modal";
-import Switch from "../../common/components/Switch";
 import arrowRepeat from "../../assets/arrow-repeat-white.svg";
-import boxRightArrow from "../../assets/box-right-arrow.png";
+import boxRightArrow from "../../assets/box-arrow-up-right-purple.svg";
 import labModeOff from "../../assets/lab-icon-off.svg";
 import labModeOn from "../../assets/lab-icon-on.svg";
 import phLogo from "../../assets/purple-hats-logo.svg";
@@ -10,23 +9,26 @@ import { handleClickLink, versionComparator } from "../../common/constants";
 import { useEffect, useState } from "react";
 import Button from "../../common/components/Button";
 
-const UpdateAlert = ({ latestVer }) => {
+const UpdateAlert = ({ latestVer, isPrerelease }) => {
   const handleRestartApp = (e) => {
     window.services.restartApp();
   };
 
   return (
-    <Alert alertClassName="alert-custom mb-4">
-      <div className="d-flex justify-content-center">
-        <div className="flex-grow-1">
-          <h4>Update available ({latestVer})</h4>
-          To update, restart Purple HATS.
-        </div>
-        <Button className="primary align-self-center" onClick={handleRestartApp}>
-          Restart
-          <img className="ms-2" src={arrowRepeat} alt="" />
-        </Button>
+    <Alert alertClassName="alert-primary mb-5 gap-5">
+      <div className="flex-grow-1">
+        <h4>Update available ({latestVer} - latest {isPrerelease ? 'pre-release' : 'stable build'})</h4>
+        <p className="mb-0">To update, restart Purple HATS.</p>
       </div>
+      <Button
+        type="btn-primary"
+        className="align-self-center"
+        onClick={handleRestartApp}
+        aria-label="Restart Purple HATS"
+      >
+        <img src={arrowRepeat} alt="" />
+        Restart
+      </Button>
     </Alert>
   );
 };
@@ -39,9 +41,9 @@ const LabModeDescription = ({ isLabMode, setIsLabMode }) => {
 
   return (
     <div className="card">
-      <div className="card-body px-3 py-2">
+      <div className="card-body p-3">
         <div className="d-flex gap-2 align-items-center mb-2">
-          <p className="bold-text card-title mb-0 me-2">
+          <p id="labmode-label" className="bold-text card-title mb-0 me-2">
             <img
               className="me-2"
               src={isLabMode ? labModeOn : labModeOff}
@@ -49,7 +51,17 @@ const LabModeDescription = ({ isLabMode, setIsLabMode }) => {
             />
             Lab mode
           </p>
-          <Switch isChecked={isLabMode} onChange={handleToggleLabMode} />
+          {/* custom toggle switch */}
+          <div class="form-switch form-check mb-2">
+            <input
+              aria-labelledby="labmode-label"
+              id="labmode-toggle"
+              class="form-check-input"
+              type="checkbox"
+              onChange={handleToggleLabMode}
+              checked={isLabMode}
+            />
+          </div>
         </div>
         <p className="card-text">
           Lab mode grants early access to our pre-releases with existing feature
@@ -72,35 +84,33 @@ const ExternalLink = ({ url, children, linkClass }) => {
       onClick={(e) => handleClickLink(e, url)}
     >
       {children}
-      <img id="box-arrow-right" src={boxRightArrow} alt=""></img>
+      <img className="external-link" src={boxRightArrow} alt=""></img>
     </a>
   );
 };
 
-const AppDescription = ({ version, needsUpdate }) => {
+const AppDescription = ({ version, versionLabel }) => {
   const releaseNotesUrl = `https://github.com/GovTechSG/purple-hats-desktop/releases/tag/${version}`;
   const a11yWebsiteUrl = "https://go.gov.sg/a11y";
   const privacyPolicyUrl = "https://www.tech.gov.sg/privacy/";
 
   return (
-    <div className="mb-4">
+    <div className="mb-5">
       <div className="d-flex gap-3">
-        <img id="ph-logo" src={phLogo} alt="Logo of Purple HATS" />
+        <img src={phLogo} alt="Purple HATS logo" />
         <div>
           <p className="m-0 bold-text">Purple HATS</p>
           <p className="m-0 d-inline-block me-3">
-            Version {version} {!needsUpdate && "(latest stable build)"}
+            Version {version} {versionLabel && `(${versionLabel})`}
           </p>
           <ExternalLink url={releaseNotesUrl}>See release notes</ExternalLink>
         </div>
       </div>
-      <p className="my-2">
+      <p className="mt-3 mb-2">
         Built by GovTech Accessibility Enabling (A11y) Team.
       </p>
-      <div>
-        <ExternalLink url={a11yWebsiteUrl} linkClass="me-3">
-          A11Y Website
-        </ExternalLink>
+      <div className="d-flex gap-3">
+        <ExternalLink url={a11yWebsiteUrl}>A11Y Website</ExternalLink>
         <ExternalLink url={privacyPolicyUrl}>Privacy Policy</ExternalLink>
       </div>
     </div>
@@ -111,25 +121,25 @@ const AboutModal = ({
   showModal,
   setShowModal,
   appVersionInfo,
+  appVersionLabel,
   isLabMode,
   setIsLabMode,
 }) => {
-  const { appVersion, latestVer, latestPrereleaseVer } = appVersionInfo;
+  const {
+    appVersion,
+    latestVer,
+    latestVerForLab,
+  } = appVersionInfo;
   const [toUpdateVer, setToUpdateVer] = useState(undefined);
-  const [needsUpdate, setNeedsUpdate] = useState(true);
 
   useEffect(() => {
-    if (!latestVer || !latestPrereleaseVer) {
-      // if unable to fetch release info, dont show update alert / "(latest)" label
-      setNeedsUpdate(true);
+    if (!latestVer || !latestVerForLab) {
+      // if unable to fetch release info, dont show update alert
       return setToUpdateVer(undefined);
     }
-    const latestVerToUpdate = latestVer;
-    const latestPrereleaseToUpdate = latestPrereleaseVer;
 
-    const toCompare = isLabMode ? latestPrereleaseToUpdate : latestVerToUpdate;
+    const toCompare = isLabMode ? latestVerForLab : latestVer;
     const isNeedUpdate = versionComparator(appVersion, toCompare) === -1;
-    setNeedsUpdate(isNeedUpdate);
 
     if (isNeedUpdate) {
       setToUpdateVer(toCompare);
@@ -146,8 +156,8 @@ const AboutModal = ({
       modalBodyClassName="pt-1"
       modalBody={
         <>
-          {toUpdateVer && <UpdateAlert latestVer={toUpdateVer} />}
-          <AppDescription version={appVersion} needsUpdate={needsUpdate} />
+          {toUpdateVer && <UpdateAlert latestVer={toUpdateVer} isPrerelease={toUpdateVer !== latestVer} />}
+          <AppDescription version={appVersion} versionLabel={appVersionLabel} />
           <LabModeDescription
             isLabMode={isLabMode}
             setIsLabMode={setIsLabMode}

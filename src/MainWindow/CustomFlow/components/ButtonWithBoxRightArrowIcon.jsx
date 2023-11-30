@@ -1,8 +1,8 @@
-import boxRightArrowIcon from "../../../assets/box-arrow-up-right.svg";
+import boxRightArrowIcon from "../../../assets/box-arrow-up-right-white.svg";
 
  const ButtonWithBoxRightArrowIcon = ({onClick, buttonLabel}) => {
     return (
-    <button className="primary custom-flow-button" type="button" onClick={onClick}>
+    <button className="btn-primary custom-flow-button" type="button" onClick={onClick}>
         {buttonLabel}&nbsp;
         <img src={boxRightArrowIcon}></img>
     </button>

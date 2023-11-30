@@ -27,46 +27,54 @@ h3 {
   font-weight: bold;
 }
 
-button.primary {
+.btn-primary {
   padding: 0.25rem 1rem;
   border: none;
   border-radius: 4px;
   background-color: #785ef0;
   color: white;
   transition: 0.1s background-color;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  justify-content: center;
 }
 
-button.primary:hover {
+.btn-primary:hover {
   background-color: #5b3bed;
 }
 
-button.primary:active {
+.btn-primary:active {
   background-color: #472bc4;
 }
 
-button.secondary {
+.btn-primary:disabled, .btn-secondary:disabled {
+  background-color: #e7ecee!important;
+  color: #97adb5!important;
+  border: none!important;
+}
+
+.btn-secondary {
   padding: 0.25rem 1rem;
   border: 1px solid #785ef0;
   background-color: #fff;
   border-radius: 4px;
   color: #785ef0;
   transition: 0.1s background-color, 0.1s color;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  justify-content: center;
 }
 
-button.secondary:hover {
+.btn-secondary:hover {
   background-color: #ebe8fd;
   color: #5b3bed;
 }
 
-button.secondary:active {
+.btn-secondary:active {
   background-color: #c0b4f8;
   color: #472bc4;
-}
-
-button.primary:disabled, button.secondary:disabled {
-  background-color: #e7ecee!important;
-  color: #97adb5!important;
-  border: none!important;
 }
 
 .download-dropdown-btn:disabled {
@@ -78,15 +86,21 @@ button:disabled, input:disabled, select:disabled {
   cursor: not-allowed;
 }
 
-button.transparent {
+.btn-link {
   background-color: transparent;
   border: none;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  color: #5b3bed;
 }
 
 .scan-btn {
   padding: 0.25rem 2rem!important;
   border-radius: 50rem !important;
   border: none;
+  display: block;
 }
 
 .scan-btn .loading-spinner {
@@ -404,7 +418,7 @@ a {
   color: #785ef0;
 }
 
-#box-arrow-right {
+.external-link {
   padding-left: 0.25rem;
 }
 
@@ -602,7 +616,7 @@ hr {
   border-color: #785ef0;
 }
 
-.alert-custom{
+.alert-primary {
   background-color:#F7F6FE;
   border-color: #785EF0;
 }

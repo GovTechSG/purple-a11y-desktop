@@ -70,7 +70,9 @@ app.on("ready", async () => {
     latestRelease,
     latestPreRelease,
     latestReleaseNotes,
-    latestPreReleaseNotes
+    latestPreReleaseNotes,
+    allReleaseTags,
+    allPreReleaseTags
   } = releaseInfo ? releaseInfo : {};
 
   // create settings file if it does not exist
@@ -224,9 +226,11 @@ app.on("ready", async () => {
     mainWindow.webContents.send("versionInfo", {
       appVersion: constants.appVersion,
       latestVer: latestRelease,
-      latestPrereleaseVer: newestVer,
-      latestPreNotes: newestFormattedNotes,
+      latestVerForLab: newestVer,
+      latestNotesForLab: newestFormattedNotes,
       latestRelNotes,
+      allReleaseTags,
+      allPreReleaseTags,
     });
   } else {
     mainWindow.webContents.send("versionInfo", {

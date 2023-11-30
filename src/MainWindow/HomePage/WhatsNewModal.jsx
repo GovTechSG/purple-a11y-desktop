@@ -1,5 +1,5 @@
 import Modal from "../../common/components/Modal";
-import boxRightArrow from "../../assets/box-right-arrow.png";
+import boxRightArrow from "../../assets/box-arrow-up-right-purple.svg";
 import { createElement } from "react";
 import { handleClickLink } from "../../common/constants";
 
@@ -63,7 +63,7 @@ const WhatsNewModal = ({
         onClick={(e) => handleClickLink(e, "https://github.com/GovTechSG/purple-hats-desktop/releases/")}
       >
         See previous versions{" "}
-        <img id="box-arrow-right" src={boxRightArrow}></img>
+        <img className="external-link" src={boxRightArrow}></img>
       </a>
     );
   };
