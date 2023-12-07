@@ -118,12 +118,12 @@ const getLatestFrontendVersion = async (latestRelease, latestPreRelease) => {
  */
 const downloadAndUnzipFrontendWindows = async (tag=undefined) => {
   const downloadUrl = tag 
-    ? `https://github.com/GovTechSG/purple-hats-desktop/releases/download/${tag}/purple-hats-desktop-windows.zip`
+    ? `https://github.com/GovTechSG/purple-hats-desktop/releases/download/${tag}/purple-a11y-desktop-windows.zip`
     : frontendReleaseUrl;
   const shellScript = `
   $webClient = New-Object System.Net.WebClient
   try {
-    $webClient.DownloadFile("${downloadUrl}", "${resultsPath}\\purple-hats-desktop-windows.zip")
+    $webClient.DownloadFile("${downloadUrl}", "${resultsPath}\\purple-a11y-desktop-windows.zip")
   } catch {
     Write-Host "Error: Unable to download frontend"
     throw "Unable to download frontend"
@@ -131,7 +131,7 @@ const downloadAndUnzipFrontendWindows = async (tag=undefined) => {
   }
 
   try {
-    Expand-Archive -Path "${resultsPath}\\purple-hats-desktop-windows.zip" -DestinationPath "${resultsPath}\\purple-hats-desktop-windows" -Force
+    Expand-Archive -Path "${resultsPath}\\purple-a11y-desktop-windows.zip" -DestinationPath "${resultsPath}\\purple-a11y-desktop-windows" -Force
   } catch {
     Write-Host "Error: Unable to unzip frontend"
     throw "Unable to unzip frontend"
@@ -171,21 +171,21 @@ const downloadAndUnzipFrontendWindows = async (tag=undefined) => {
  */
 const downloadAndUnzipFrontendMac = async (tag=undefined) => {
   const downloadUrl = tag 
-    ? `https://github.com/GovTechSG/purple-hats-desktop/releases/download/${tag}/purple-hats-desktop-macos.zip`
+    ? `https://github.com/GovTechSG/purple-hats-desktop/releases/download/${tag}/purple-a11y-desktop-macos.zip`
     : frontendReleaseUrl;
   const command = `
-  curl -L '${downloadUrl}' -o '${resultsPath}/purple-hats-desktop-mac.zip' &&
+  curl -L '${downloadUrl}' -o '${resultsPath}/purple-a11y-desktop-mac.zip' &&
   mv '${macOSExecutablePath}' '${path.join(
     macOSExecutablePath,
     ".."
-  )}/Purple Hats Old.app' &&
-  ditto -xk '${resultsPath}/purple-hats-desktop-mac.zip' '${path.join(
+  )}/Purple A11y Old.app' &&
+  ditto -xk '${resultsPath}/purple-a11y-desktop-mac.zip' '${path.join(
     macOSExecutablePath,
     ".."
   )}' &&
-  rm '${resultsPath}/purple-hats-desktop-mac.zip' &&
-  rm -rf '${path.join(macOSExecutablePath, "..")}/Purple Hats Old.app' &&
-  xattr -rd com.apple.quarantine '${path.join(macOSExecutablePath, "..")}/Purple HATS.app' `;
+  rm '${resultsPath}/purple-a11y-desktop-mac.zip' &&
+  rm -rf '${path.join(macOSExecutablePath, "..")}/Purple A11y Old.app' &&
+  xattr -rd com.apple.quarantine '${path.join(macOSExecutablePath, "..")}/Purple A11y.app' `;
 
   await execCommand(command);
 
@@ -271,7 +271,7 @@ const downloadAndUnzipBackendWindows = async (tag=undefined) => {
 };
 
 const downloadBackend = async (tag=undefined) => {
-  const downloadUrl = `https://github.com/GovTechSG/purple-hats/releases/download/${tag}/purple-hats-portable-mac.zip`;
+  const downloadUrl = `https://github.com/GovTechSG/purple-hats/releases/download/${tag}/purple-a11y-portable-mac.zip`;
   const command = `curl '${downloadUrl}' -o '${phZipPath}' -L && rm -rf '${backendPath}' && mkdir '${backendPath}'`;
 
   return async () => await execCommand(command);

@@ -79,7 +79,7 @@ const PrepareStep = ({ scanDetails, setStep, setScanDetails }) => {
           </div>
           {isPostLogin &&
           <Alert alertClassName="alert-primary mt-3" icon={exclaimTriangleIcon}>
-            Ensure post-login webpages can be revisited using the same login credentials to allow Purple HATS to replay the steps for scanning.
+            Ensure post-login webpages can be revisited using the same login credentials to allow Purple A11y to replay the steps for scanning.
           </Alert>}
         </fieldset>
         
@@ -98,7 +98,7 @@ const PrepareStep = ({ scanDetails, setStep, setScanDetails }) => {
             <p className="mb-0">
               If form contains file upload fields, place the same file{"(s)"} in{" "}
               <a href="#" onClick={handleOpenUploadFolder}>{fileUploadFolder}</a>{" "}
-              to allow Purple HATS to attach the same file{"(s)"} when replaying the steps.
+              to allow Purple A11y to attach the same file{"(s)"} when replaying the steps.
             </p>
           </Alert>}
         </fieldset>
@@ -265,7 +265,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                   step={3}
                   title={"Replay"}
                   url={scanDetails.scanUrl}
-                  description={"Purple HATS will replay and scan the recorded flow on a new browser window."}
+                  description={"Purple A11y will replay and scan the recorded flow on a new browser window."}
                 />
                 { !loading 
                     ? done 

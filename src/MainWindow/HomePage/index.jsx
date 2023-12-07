@@ -292,7 +292,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
             <>
               <BasicAuthForm handleBasicAuthSubmit={handleBasicAuthSubmit} />
               <p className="mb-0">
-                Purple HATS will solely capture your credentials for this scan
+                Purple A11y will solely capture your credentials for this scan
                 and promptly remove them thereafter.
               </p>
             </>

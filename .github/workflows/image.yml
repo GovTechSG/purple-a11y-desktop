@@ -42,45 +42,45 @@ jobs:
       - name: Move build to root
         shell: pwsh
         run: |
-          Move-Item  "${{github.workspace}}\out\Purple HATS-win32-x64" -Destination "${{github.workspace}}\Purple HATS-win32-x64" -Force
+          Move-Item  "${{github.workspace}}\out\Purple A11y-win32-x64" -Destination "${{github.workspace}}\Purple A11y-win32-x64" -Force
       
-      - name: Download Purple HATS Backend
+      - name: Download Purple A11y Backend
         shell: pwsh
         run: |
-          $PHbackendUrl = "https://github.com/GovTechSG/purple-hats/releases/download/${{ vars.BE_TAG }}/purple-hats-portable-windows.zip"
+          $PHbackendUrl = "https://github.com/GovTechSG/purple-hats/releases/download/${{ vars.BE_TAG }}/purple-a11y-portable-windows.zip"
           $BEdestinationPath = "${{github.workspace}}\PHLatest.zip"
-          $BEextractPath = "D:\a\Purple HATS Backend"
+          $BEextractPath = "D:\a\Purple A11y Backend"
           Invoke-WebRequest -Uri $PHbackendUrl -OutFile $BEdestinationPath
           Expand-Archive -Path $BEdestinationPath -DestinationPath $BEextractPath -Force
           Remove-Item -Path $BEdestinationPath
 
       - name: Execute Inno Setup script to compile installer
         shell: pwsh
-        run: ISCC /O"${{github.workspace}}" "${{github.workspace}}\hats_for_windows.iss"
+        run: ISCC /O"${{github.workspace}}" "${{github.workspace}}\a11y_for_windows.iss"
 
       - name: Move compiled installer to Workspace
         run: |
           New-Item -Path setup -ItemType Directory
-          Move-Item -Path mysetup.exe -Destination setup\Purple-Hats-Setup.exe
+          Move-Item -Path mysetup.exe -Destination setup\Purple-A11y-Setup.exe
         working-directory: ${{github.workspace}}
 
       - name: Zip Setup file (Windows)
         shell: pwsh
-        run: Compress-Archive -Path ${{github.workspace}}/setup/* -DestinationPath purple-hats-desktop-windows.zip
+        run: Compress-Archive -Path ${{github.workspace}}/setup/* -DestinationPath purple-a11y-desktop-windows.zip
         working-directory: ${{github.workspace}}
         
-      - name: Upload Purple HATS Windows setup artifact
+      - name: Upload Purple A11y Windows setup artifact
         uses: actions/upload-artifact@v3
         with:
-          name: purple-hats-desktop-windows
-          path: purple-hats-desktop-windows.zip
+          name: purple-a11y-desktop-windows
+          path: purple-a11y-desktop-windows.zip
 
       - name: Release Windows artifact
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            purple-hats-desktop-windows.zip
+            purple-a11y-desktop-windows.zip
             
   mac-install-purple:
     runs-on: self-hosted
@@ -136,18 +136,18 @@ jobs:
 
       - name: Move and rename universal binary zip (Mac)
         run: |
-          mv *.zip "${{github.workspace}}/purple-hats-desktop-macos.zip"
+          mv *.zip "${{github.workspace}}/purple-a11y-desktop-macos.zip"
         working-directory: ${{github.workspace}}/out/make/zip/darwin/universal
         
       - name: Upload Mac artifact
         uses: actions/upload-artifact@v3
         with:
-          name: purple-hats-desktop-macos
-          path: purple-hats-desktop-macos.zip
+          name: purple-a11y-desktop-macos
+          path: purple-a11y-desktop-macos.zip
 
       - name: Release Mac artifact
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            purple-hats-desktop-macos.zip
+            purple-a11y-desktop-macos.zip

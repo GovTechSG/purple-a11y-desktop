@@ -1,6 +1,6 @@
 {
-  "name": "purplehatsdesktop",
-  "productName": "Purple HATS",
+  "name": "purplea11ydesktop",
+  "productName": "Purple A11y",
   "version": "0.9.35",
   "private": true,
   "dependencies": {
@@ -25,7 +25,7 @@
     "eject": "react-scripts eject",
     "package": "electron-forge package",
     "make": "react-scripts build && electron-forge make",
-    "make-mac": "rm -rf ./out && curl -L -o \"/tmp/purple-hats-portable-mac.zip\" https://github.com/GovTechSG/purple-hats/releases/download/$BE_TAG/purple-hats-portable-mac.zip && react-scripts build && electron-forge make --arch=universal --platform darwin",
+    "make-mac": "rm -rf ./out && curl -L -o \"/tmp/purple-a11y-portable-mac.zip\" https://github.com/GovTechSG/purple-hats/releases/download/$BE_TAG/purple-a11y-portable-mac.zip && react-scripts build && electron-forge make --arch=universal --platform darwin",
     "make-win": "react-scripts build && electron-forge make --arch=x64 --platform win32"
   },
   "config": {
@@ -69,5 +69,5 @@
     "postcss": "^8.4.31"
   },
   "author": "Accessibility Enabling Team, GovTech",
-  "description": "Purple HATS Desktop"
+  "description": "Purple A11y Desktop"
 }

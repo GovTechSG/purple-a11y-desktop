@@ -28,10 +28,10 @@ module.exports = {
       'Test.md',
       'playwright-report',
       'installer.ps1',
-      'hats_for_windows.iss',
+      'a11y_for_windows.iss',
       '.github'
     ],
-    ...(os.platform() === 'darwin' && { extraResource: ["/tmp/purple-hats-portable-mac.zip"]})
+    ...(os.platform() === 'darwin' && { extraResource: ["/tmp/purple-a11y-portable-mac.zip"]})
   },
   rebuildConfig: {},
   makers: [

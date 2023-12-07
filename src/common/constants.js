@@ -92,7 +92,7 @@ export const getDefaultAdvancedOptions = (isProxy) => {
   }
 };
 
-// exit codes returned by Purple HATS cli when there is an error with the URL provided
+// exit codes returned by Purple A11y cli when there is an error with the URL provided
 export const cliErrorCodes = new Set([11, 12, 13, 14, 15, 16, 17]);
 export const cliErrorTypes = {
   invalidUrl: 11,
