@@ -6,14 +6,27 @@ import { useNavigate, useLocation } from "react-router";
 import { ReactComponent as ExclamationCircleIcon } from "../../assets/exclamation-circle.svg";
 import { useState, useEffect } from "react";
 import { errorStates } from "../../common/constants";
+import services from "../../services"
 
 const ErrorPage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const [ errorState, setErrorState ] = useState('');
+  //todo: check commenting out here is correct
+//   const [isCustomScan, setIsCustomScan] = useState(false);
+//   const [isBrowserError, setIsBrowserError] = useState(false);
+  const [errorLog, setErrorLog] = useState(null);
 
   useEffect(() => {
     if (state?.errorState) setErrorState(state.errorState);
+    const getErrorLog = async () => {
+      const timeOfScan = state.timeOfScan;
+      const timeOfError = new Date();
+      const log = await services.getErrorLog(timeOfScan, timeOfError);
+      const alog = "hi"
+      setErrorLog(alog);
+    }
+    getErrorLog();
   }, []);
 
   const replayCustomFlow = async () => {
@@ -48,6 +61,14 @@ const ErrorPage = () => {
 
   }
 
+  const copyErrorLog=() => {
+    navigator.clipboard.writeText(errorLog);
+    console.log(errorLog,"check in fn")
+
+    // Alert the copied text
+    alert("Copied the text: " + errorLog);
+  }
+
   return (
     <div id="error-page">
       <ButtonSvgIcon
@@ -70,8 +91,9 @@ const ErrorPage = () => {
           )
           : <Button role="link" type="btn-primary" onClick={handleBackToHome}>
               Try Again
-            </Button>
-        }
+            </Button>}
+          {errorLog&&<Button type="btn-secondary" onClick={copyErrorLog}>Copy Error Log</Button>}
+
       </div>
     </div>
   );
