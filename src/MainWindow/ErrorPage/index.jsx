@@ -20,7 +20,7 @@ const ErrorPage = () => {
   useEffect(() => {
     if (state?.errorState) setErrorState(state.errorState);
     const getErrorLog = async () => {
-      const timeOfScan = state.timeOfScan;
+      const timeOfScan = state?.timeOfScan;
       const timeOfError = new Date();
       const log = await services.getErrorLog(timeOfScan, timeOfError);
       setErrorLog(log);
