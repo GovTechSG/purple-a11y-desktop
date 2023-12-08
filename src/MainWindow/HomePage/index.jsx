@@ -184,7 +184,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
         } else {
           navigate('/scanning', { state: { url: scanDetails.scanUrl } });
           const scanResponse = await services.startScan(scanDetails);
-          
+
           if (scanResponse.failedToCreateExportDir) {
             setPrevUrlErrorMessage('Unable to create download directory');
             return;
@@ -198,8 +198,8 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
             /* When no pages were scanned (e.g. out of domain upon redirects when valid URL was entered),
                 redirects user to error page to going to result page with empty result */
             navigate("/error", { state: { errorState: errorStates.noPagesScannedError }});
-            return; 
-          }   
+            return;
+          }
         }
     } else {
       setScanButtonIsClicked(false);
@@ -239,7 +239,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           `unexpected status error: (code ${checkUrlResponse.statusCode})`,
           checkUrlResponse.message
         );
-      }  
+      }
     }
   };
 
