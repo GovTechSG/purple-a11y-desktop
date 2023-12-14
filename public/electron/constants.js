@@ -22,8 +22,8 @@ const allReleasesUrl = "https://api.github.com/repos/GovTechSG/purple-hats/relea
 
 const frontendReleaseUrl =
   os.platform() === "win32"
-    ? "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-hats-desktop-windows.zip"
-    : "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-hats-desktop-macos.zip";
+    ? "https://github.com/GovTechSG/purple-a11y-desktop/releases/latest/download/purple-a11y-desktop-windows.zip"
+    : "https://github.com/GovTechSG/purple-a11y-desktop/releases/latest/download/purple-a11y-desktop-macos.zip";
 
 const backendPath = path.join(appPath, "Purple HATS Backend");
 const frontendPath = path.join(appPath, "Purple HATS Frontend");

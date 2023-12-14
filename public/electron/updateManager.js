@@ -81,9 +81,15 @@ const hashPrepackage = async (prepackagePath) => {
 
 // unzip backend zip for mac
 const unzipBackendAndCleanUp = async (zipPath=phZipPath) => {
-  let unzipCommand = `mkdir -p '${backendPath}' && tar -xf '${zipPath}' -C '${backendPath}' &&
-    cd '${backendPath}' &&
-    './hats_shell.sh' echo "Initialise"
+  const tempBackendPath = path.join(
+    os.homedir(),
+    "Library",
+    "Application Support",
+    "Purple A11y",
+    "Purple A11y Backend");
+  let unzipCommand = `mkdir -p '${tempBackendPath}' && tar -xf '${zipPath}' -C '${tempBackendPath}' &&
+    cd '${tempBackendPath}' &&
+    './a11y_shell.sh' echo "Initialise"
     `;
 
   return async () => {
@@ -118,12 +124,13 @@ const getLatestFrontendVersion = async (latestRelease, latestPreRelease) => {
  */
 const downloadAndUnzipFrontendWindows = async (tag=undefined) => {
   const downloadUrl = tag 
-    ? `https://github.com/GovTechSG/purple-hats-desktop/releases/download/${tag}/purple-hats-desktop-windows.zip`
+    ? `https://github.com/GovTechSG/purple-a11y-desktop/releases/download/${tag}/purple-a11y-desktop-windows.zip`
     : frontendReleaseUrl;
+  const tempResultsPath = path.join(process.env.APPDATA, "Purple A11y");
   const shellScript = `
   $webClient = New-Object System.Net.WebClient
   try {
-    $webClient.DownloadFile("${downloadUrl}", "${resultsPath}\\purple-hats-desktop-windows.zip")
+    $webClient.DownloadFile("${downloadUrl}", "${tempResultsPath}\\purple-a11y-desktop-windows.zip")
   } catch {
     Write-Host "Error: Unable to download frontend"
     throw "Unable to download frontend"
@@ -131,7 +138,7 @@ const downloadAndUnzipFrontendWindows = async (tag=undefined) => {
   }
 
   try {
-    Expand-Archive -Path "${resultsPath}\\purple-hats-desktop-windows.zip" -DestinationPath "${resultsPath}\\purple-hats-desktop-windows" -Force
+    Expand-Archive -Path "${tempResultsPath}\\purple-a11y-desktop-windows.zip" -DestinationPath "${tempResultsPath}\\purple-a11y-desktop-windows" -Force
   } catch {
     Write-Host "Error: Unable to unzip frontend"
     throw "Unable to unzip frontend"
@@ -171,21 +178,27 @@ const downloadAndUnzipFrontendWindows = async (tag=undefined) => {
  */
 const downloadAndUnzipFrontendMac = async (tag=undefined) => {
   const downloadUrl = tag 
-    ? `https://github.com/GovTechSG/purple-hats-desktop/releases/download/${tag}/purple-hats-desktop-macos.zip`
+    ? `https://github.com/GovTechSG/purple-a11y-desktop/releases/download/${tag}/purple-a11y-desktop-macos.zip`
     : frontendReleaseUrl;
+  const tempResultsPath = path.join(
+    os.homedir(),
+    "Library",
+    "Application Support",
+    "Purple A11y"
+  )
   const command = `
-  curl -L '${downloadUrl}' -o '${resultsPath}/purple-hats-desktop-mac.zip' &&
+  curl -L '${downloadUrl}' -o '${tempResultsPath}/purple-a11y-desktop-mac.zip' &&
   mv '${macOSExecutablePath}' '${path.join(
     macOSExecutablePath,
     ".."
   )}/Purple Hats Old.app' &&
-  ditto -xk '${resultsPath}/purple-hats-desktop-mac.zip' '${path.join(
+  ditto -xk '${tempResultsPath}/purple-a11y-desktop-mac.zip' '${path.join(
     macOSExecutablePath,
     ".."
   )}' &&
-  rm '${resultsPath}/purple-hats-desktop-mac.zip' &&
+  rm '${tempResultsPath}/purple-a11y-desktop-mac.zip' &&
   rm -rf '${path.join(macOSExecutablePath, "..")}/Purple Hats Old.app' &&
-  xattr -rd com.apple.quarantine '${path.join(macOSExecutablePath, "..")}/Purple HATS.app' `;
+  xattr -rd com.apple.quarantine '${path.join(macOSExecutablePath, "..")}/Purple A11y.app' `;
 
   await execCommand(command);
 
@@ -197,7 +210,13 @@ const downloadAndUnzipFrontendMac = async (tag=undefined) => {
  * @returns {Promise<boolean>} true if the installer executable was launched successfully, false otherwise
  */
 const spawnScriptToLaunchInstaller = () => {
-  const shellScript = `Start-Process -FilePath "${installerExePath}"`;
+  const tempResultsPath = path.join(process.env.APPDATA, "Purple A11y");
+  const tempInstallerExePath = path.join(
+    tempResultsPath,
+    "purple-a11y-desktop-windows",
+    "Purple-A11y-Setup.exe"
+  );
+  const shellScript = `Start-Process -FilePath "${tempInstallerExePath}"`;
 
   return new Promise((resolve, reject) => {
     const ps = spawn("powershell.exe", ["-Command", shellScript]);
@@ -271,7 +290,7 @@ const downloadAndUnzipBackendWindows = async (tag=undefined) => {
 };
 
 const downloadBackend = async (tag=undefined) => {
-  const downloadUrl = `https://github.com/GovTechSG/purple-hats/releases/download/${tag}/purple-hats-portable-mac.zip`;
+  const downloadUrl = `https://github.com/GovTechSG/purple-a11y/releases/download/${tag}/purple-a11y-portable-mac.zip`;
   const command = `curl '${downloadUrl}' -o '${phZipPath}' -L && rm -rf '${backendPath}' && mkdir '${backendPath}'`;
 
   return async () => await execCommand(command);
@@ -307,7 +326,8 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
 
   const backendExists = fs.existsSync(backendPath);
   const phZipExists = fs.existsSync(phZipPath);
-  const toUpdateFrontendVer = await getLatestFrontendVersion(latestRelease, latestPreRelease);
+  // TODO: Hardcoded version
+  const toUpdateFrontendVer = "0.9.40";
 
   // Auto updates via installer is only applicable for Windows
   // Auto updates for backend on Windows will be done via a powershell script due to %ProgramFiles% permission
@@ -342,7 +362,8 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
             const isInstallerScriptLaunched =
               await spawnScriptToLaunchInstaller();
             if (isInstallerScriptLaunched) {
-              writeUserDetailsToFile({ firstLaunchOnUpdate: true });
+              // TODO: Should not need this, basically fresh install because userData.txt should not exist
+              // writeUserDetailsToFile({ firstLaunchOnUpdate: true });
               updaterEventEmitter.emit("installerLaunched");
             }
           }
@@ -351,8 +372,11 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
         }
       }
     } else if (!backendExists) {
+      // TODO: should not enter here
+      console.log("Should not enter backend does not exist block")
       updaterEventEmitter.emit('settingUp');
       // Trigger download for backend via Github if backend does not exist
+      // TODO: Did not work on this for updater (old impl)
       await downloadAndUnzipBackendWindows(appFrontendVer);
     }
   } else {
@@ -377,6 +401,8 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
             processesToRun.push(hashAndSaveZip(macOSPrepackageBackend));
             processesToRun.push(await unzipBackendAndCleanUp(macOSPrepackageBackend));
           } else {
+            // TODO: should not enter here
+            console.log("Should not be invalid, double check impl of validateZipFile")
             processesToRun.push(
               await downloadBackend(toUpdateFrontendVer),
               hashAndSaveZip(phZipPath),
@@ -384,7 +410,8 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
             );
           }
 
-          writeUserDetailsToFile({ firstLaunchOnUpdate: true });
+          // TODO: Should not need this, basically fresh install because userData.txt should not exist
+          // writeUserDetailsToFile({ firstLaunchOnUpdate: true });
           processesToRun.push(() => updaterEventEmitter.emit("restartTriggered"));
         } catch (e) {
           silentLogger.error(e.toString());
