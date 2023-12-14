@@ -32,7 +32,7 @@ jobs:
 
       - name: Install Node Modules and Build for Windows
         run: |
-          $env:Path = "${{github.workspace}}\nodejs-win;${{github.workspace}}\purple-hats-desktop\node_modules\.bin;$env:Path;";
+          $env:Path = "${{github.workspace}}\nodejs-win;${{github.workspace}}\purple-a11y-desktop\node_modules\.bin;$env:Path;";
           npm install
           npm run make-win
         env:
@@ -47,7 +47,7 @@ jobs:
       - name: Download Purple A11y Backend
         shell: pwsh
         run: |
-          $PHbackendUrl = "https://github.com/GovTechSG/purple-hats/releases/download/${{ vars.BE_TAG }}/purple-a11y-portable-windows.zip"
+          $PHbackendUrl = "https://github.com/GovTechSG/purple-a11y/releases/download/${{ vars.BE_TAG }}/purple-a11y-portable-windows.zip"
           $BEdestinationPath = "${{github.workspace}}\PHLatest.zip"
           $BEextractPath = "D:\a\Purple A11y Backend"
           Invoke-WebRequest -Uri $PHbackendUrl -OutFile $BEdestinationPath
@@ -117,7 +117,7 @@ jobs:
             export PATH_TO_NODE="${{github.workspace}}/nodejs-mac-x64/bin"
           fi
           export PATH="$PATH_TO_NODE:$PATH"
-          export PATH="$PWD/purple-hats-desktop/node_modules/.bin:$PATH"
+          export PATH="$PWD/purple-a11y-desktop/node_modules/.bin:$PATH"
         env:
           CI: ""
         working-directory: ${{github.workspace}}

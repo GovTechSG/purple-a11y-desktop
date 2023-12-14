@@ -465,7 +465,7 @@ const mailResults = async (formDetails, scanId) => {
     $mail.body = "Hi there,
     
 Please see the attached accessibility scan results with Purple A11y (report.html).
-You can download Purple A11y at the following link: https://go.gov.sg/get-purplehats.
+You can download Purple A11y at the following link: https://go.gov.sg/get-purplea11y.
 
 Feel free to reach us at accessibility@tech.gov.sg if you have any questions.
 

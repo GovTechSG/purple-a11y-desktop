@@ -2,7 +2,7 @@ const os = require("os");
 
 module.exports = {
   packagerConfig: {
-    icon: 'public/purple-hats-logo',
+    icon: 'public/purple-a11y-logo',
     osxUniversal: { // config options for `@electron/universal`
       x64ArchFiles: "*" // replace with any relevant glob pattern
     },
@@ -22,7 +22,7 @@ module.exports = {
       'nodejs-mac-arm64',
       'nodejs-mac-x64',
       'build/electron',
-      'build/purple-hats-logo',
+      'build/purple-a11y-logo',
       'errors.txt',
       'tests',
       'Test.md',

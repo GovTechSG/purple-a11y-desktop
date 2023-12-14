@@ -4,7 +4,7 @@ import arrowRepeat from "../../assets/arrow-repeat-white.svg";
 import boxRightArrow from "../../assets/box-arrow-up-right-purple.svg";
 import labModeOff from "../../assets/lab-icon-off.svg";
 import labModeOn from "../../assets/lab-icon-on.svg";
-import phLogo from "../../assets/purple-hats-logo.svg";
+import phLogo from "../../assets/purple-a11y-logo.svg";
 import { handleClickLink, versionComparator } from "../../common/constants";
 import { useEffect, useState } from "react";
 import Button from "../../common/components/Button";
@@ -90,7 +90,7 @@ const ExternalLink = ({ url, children, linkClass }) => {
 };
 
 const AppDescription = ({ version, versionLabel }) => {
-  const releaseNotesUrl = `https://github.com/GovTechSG/purple-hats-desktop/releases/tag/${version}`;
+  const releaseNotesUrl = `https://github.com/GovTechSG/purple-a11y-desktop/releases/tag/${version}`;
   const a11yWebsiteUrl = "https://go.gov.sg/a11y";
   const privacyPolicyUrl = "https://www.tech.gov.sg/privacy/";
 

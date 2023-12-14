@@ -1,5 +1,5 @@
-$PHbackendUrl = "https://github.com/GovTechSG/purple-hats/releases/latest/download/purple-a11y-portable-windows.zip"
-$PHfrontendUrl = "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-a11y-desktop-windows-prod.zip"
+$PHbackendUrl = "https://github.com/GovTechSG/purple-a11y/releases/latest/download/purple-a11y-portable-windows.zip"
+$PHfrontendUrl = "https://github.com/GovTechSG/purple-a11y-desktop/releases/latest/download/purple-a11y-desktop-windows-prod.zip"
 $BEdestinationPath = "$env:APPDATA\PHLatest.zip"
 $BEextractPath = "$env:APPDATA\Purple A11y Backend"
 $FEdestinationPath = "$env:APPDATA\Purple A11y-win32-x64.zip"

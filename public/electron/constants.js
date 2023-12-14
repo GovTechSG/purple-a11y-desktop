@@ -16,14 +16,14 @@ const appPath =
       );
 
 const releaseUrl =
-  "https://api.github.com/repos/GovTechSG/purple-hats/releases/latest";
+  "https://api.github.com/repos/GovTechSG/purple-a11y/releases/latest";
 
-const allReleasesUrl = "https://api.github.com/repos/GovTechSG/purple-hats/releases";
+const allReleasesUrl = "https://api.github.com/repos/GovTechSG/purple-a11y/releases";
 
 const frontendReleaseUrl =
   os.platform() === "win32"
-    ? "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-a11y-desktop-windows.zip"
-    : "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-a11y-desktop-macos.zip";
+    ? "https://github.com/GovTechSG/purple-a11y-desktop/releases/latest/download/purple-a11y-desktop-windows.zip"
+    : "https://github.com/GovTechSG/purple-a11y-desktop/releases/latest/download/purple-a11y-desktop-macos.zip";
 
 const backendPath = path.join(appPath, "Purple A11y Backend");
 const frontendPath = path.join(appPath, "Purple A11y Frontend");
@@ -59,7 +59,7 @@ const installerExePath = path.join(
   "Purple-A11y-setup.exe"
 );
 
-const enginePath = path.join(backendPath, "purple-hats");
+const enginePath = path.join(backendPath, "purple-a11y");
 
 const getEngineVersion = () => {
   const enginePackageFile = fs.readFileSync(path.join(enginePath, "package.json"), 'utf8');
@@ -100,7 +100,7 @@ const getPathVariable = () => {
   if (os.platform() === "win32") {
     const directories = [
       "nodejs-win",
-      "purple-hats\\node_modules\\.bin",
+      "purple-a11y\\node_modules\\.bin",
       "jre\\bin",
       "verapdf",
     ];
@@ -110,7 +110,7 @@ const getPathVariable = () => {
   } else {
     const directories = [
       `${os.arch() === "arm64" ? "nodejs-mac-arm64" : "nodejs-mac-x64"}/bin`,
-      "purple-hats/node_modules/.bin",
+      "purple-a11y/node_modules/.bin",
       "jre/bin",
       "verapdf"
     ];
@@ -531,7 +531,7 @@ const proxy = getProxy();
 const createPlaywrightContext = async (browser, screenSize, nonHeadless) => {
   const playwrightPath = path.join(
     backendPath,
-    "purple-hats",
+    "purple-a11y",
     "node_modules",
     "playwright",
     "index.js"

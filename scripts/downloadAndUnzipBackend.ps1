@@ -2,8 +2,8 @@ $backendTag = $args[0];
 
 $purpleA11yDirectory = 'C:\Program Files\Purple A11y Desktop';
 $purpleA11yBackendDirectory = 'C:\Program Files\Purple A11y Desktop\Purple A11y Backend';
-$purpleA11yBackendPHDirectory = 'C:\Program Files\Purple A11y Desktop\Purple A11y Backend\purple-hats';
-$backendReleaseUrl = "https://github.com/GovTechSG/purple-hats/releases/download/$backendTag/purple-a11y-portable-windows.zip";
+$purpleA11yBackendPHDirectory = 'C:\Program Files\Purple A11y Desktop\Purple A11y Backend\purple-a11y';
+$backendReleaseUrl = "https://github.com/GovTechSG/purple-a11y/releases/download/$backendTag/purple-a11y-portable-windows.zip";
 $backendZipPath = 'C:\Program Files\Purple A11y Desktop\purple-a11y-portable-windows.zip';
 $backendUnzipPath = 'C:\Program Files\Purple A11y Desktop\Purple A11y Backend';
 

@@ -83,7 +83,7 @@ const hashPrepackage = async (prepackagePath) => {
 const unzipBackendAndCleanUp = async (zipPath=phZipPath) => {
   let unzipCommand = `mkdir -p '${backendPath}' && tar -xf '${zipPath}' -C '${backendPath}' &&
     cd '${backendPath}' &&
-    './hats_shell.sh' echo "Initialise"
+    './a11y_shell.sh' echo "Initialise"
     `;
 
   return async () => {
@@ -118,7 +118,7 @@ const getLatestFrontendVersion = async (latestRelease, latestPreRelease) => {
  */
 const downloadAndUnzipFrontendWindows = async (tag=undefined) => {
   const downloadUrl = tag 
-    ? `https://github.com/GovTechSG/purple-hats-desktop/releases/download/${tag}/purple-a11y-desktop-windows.zip`
+    ? `https://github.com/GovTechSG/purple-a11y-desktop/releases/download/${tag}/purple-a11y-desktop-windows.zip`
     : frontendReleaseUrl;
   const shellScript = `
   $webClient = New-Object System.Net.WebClient
@@ -171,7 +171,7 @@ const downloadAndUnzipFrontendWindows = async (tag=undefined) => {
  */
 const downloadAndUnzipFrontendMac = async (tag=undefined) => {
   const downloadUrl = tag 
-    ? `https://github.com/GovTechSG/purple-hats-desktop/releases/download/${tag}/purple-a11y-desktop-macos.zip`
+    ? `https://github.com/GovTechSG/purple-a11y-desktop/releases/download/${tag}/purple-a11y-desktop-macos.zip`
     : frontendReleaseUrl;
   const command = `
   curl -L '${downloadUrl}' -o '${resultsPath}/purple-a11y-desktop-mac.zip' &&
@@ -271,7 +271,7 @@ const downloadAndUnzipBackendWindows = async (tag=undefined) => {
 };
 
 const downloadBackend = async (tag=undefined) => {
-  const downloadUrl = `https://github.com/GovTechSG/purple-hats/releases/download/${tag}/purple-a11y-portable-mac.zip`;
+  const downloadUrl = `https://github.com/GovTechSG/purple-a11y/releases/download/${tag}/purple-a11y-portable-mac.zip`;
   const command = `curl '${downloadUrl}' -o '${phZipPath}' -L && rm -rf '${backendPath}' && mkdir '${backendPath}'`;
 
   return async () => await execCommand(command);

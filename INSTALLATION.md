@@ -20,7 +20,7 @@ Purple A11y is a customisable, automated accessibility testing tool that allows 
 
 ### Download Purple A11y Desktop Windows
 
-* Download [purple-a11y-desktop-windows.zip](https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-a11y-desktop-windows.zip)
+* Download [purple-a11y-desktop-windows.zip](https://github.com/GovTechSG/purple-a11y-desktop/releases/latest/download/purple-a11y-desktop-windows.zip)
 * Double-click the downloaded zip file. Extract the contents of the zip file with a right-click and choosing “Extract All” in the context menu.
 
 ### Run Purple A11y Desktop Windows
@@ -28,7 +28,7 @@ Purple A11y is a customisable, automated accessibility testing tool that allows 
 * Double-click the extracted Purple-A11y-Setup.exe file.
 * If you see "Windows protected your PC" prompt as shown below, click "More info" and "Run anyway".
     
-    <img width="787" alt="Windows protected your PC prompt" src="https://github.com/GovTechSG/purple-hats-desktop/assets/2021525/6ec34301-26ce-41a5-9648-53d36e9198af">
+    <img width="787" alt="Windows protected your PC prompt" src="https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/6ec34301-26ce-41a5-9648-53d36e9198af">
 
 * Follow the on-screen instructions to complete the setup process.
 * Run Purple A11y Desktop from the Windows start menu.
@@ -43,7 +43,7 @@ Purple A11y is a customisable, automated accessibility testing tool that allows 
 
 ### Download Purple A11y desktop MacOS
 
-* Download [purple-a11y-desktop-macos.zip](https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-a11y-desktop-macos.zip).
+* Download [purple-a11y-desktop-macos.zip](https://github.com/GovTechSG/purple-a11y-desktop/releases/latest/download/purple-a11y-desktop-macos.zip).
 * If Purple A11y app does not appear in your Downloads folder, double-click the downloaded purple-a11y-desktop-macos.zip file.
 
 > Tip: To extract files in Mac, double-click on `purple-a11y-portable-mac.zip` file, usually located at your Downloads folder. A new folder with the name purple-a11y-mac will appear in Finder.
