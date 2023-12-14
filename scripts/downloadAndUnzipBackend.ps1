@@ -1,24 +1,24 @@
 $backendTag = $args[0];
 
-$purpleHatsDirectory = 'C:\Program Files\Purple HATS Desktop';
-$purpleHatsBackendDirectory = 'C:\Program Files\Purple HATS Desktop\Purple HATS Backend';
-$purpleHatsBackendPHDirectory = 'C:\Program Files\Purple HATS Desktop\Purple HATS Backend\purple-hats';
-$backendReleaseUrl = "https://github.com/GovTechSG/purple-hats/releases/download/$backendTag/purple-hats-portable-windows.zip";
-$backendZipPath = 'C:\Program Files\Purple HATS Desktop\purple-hats-portable-windows.zip';
-$backendUnzipPath = 'C:\Program Files\Purple HATS Desktop\Purple HATS Backend';
+$purpleA11yDirectory = 'C:\Program Files\Purple A11y Desktop';
+$purpleA11yBackendDirectory = 'C:\Program Files\Purple A11y Desktop\Purple A11y Backend';
+$purpleA11yBackendPHDirectory = 'C:\Program Files\Purple A11y Desktop\Purple A11y Backend\purple-a11y';
+$backendReleaseUrl = "https://github.com/GovTechSG/purple-a11y/releases/download/$backendTag/purple-a11y-portable-windows.zip";
+$backendZipPath = 'C:\Program Files\Purple A11y Desktop\purple-a11y-portable-windows.zip';
+$backendUnzipPath = 'C:\Program Files\Purple A11y Desktop\Purple A11y Backend';
 
 $command = 
 @" 
-if (-not (Test-Path -Path '$purpleHatsDirectory' -PathType Container)) {
-    New-Item -ItemType Directory -Path '$purpleHatsDirectory' | Out-Null
+if (-not (Test-Path -Path '$purpleA11yDirectory' -PathType Container)) {
+    New-Item -ItemType Directory -Path '$purpleA11yDirectory' | Out-Null
 }
 
-if (-not (Test-Path -Path '$purpleHatsBackendDirectory' -PathType Container)) {
-    New-Item -ItemType Directory -Path '$purpleHatsBackendDirectory' | Out-Null
+if (-not (Test-Path -Path '$purpleA11yBackendDirectory' -PathType Container)) {
+    New-Item -ItemType Directory -Path '$purpleA11yBackendDirectory' | Out-Null
 }
 
-if (-not (Test-Path -Path '$purpleHatsBackendPHDirectory' -PathType Container)) {
-    New-Item -ItemType Directory -Path '$purpleHatsBackendPHDirectory' | Out-Null
+if (-not (Test-Path -Path '$purpleA11yBackendPHDirectory' -PathType Container)) {
+    New-Item -ItemType Directory -Path '$purpleA11yBackendPHDirectory' | Out-Null
 }
 
 Write-Host 'Downloading zip file to $backendZipPath'

@@ -7,26 +7,26 @@ const { execSync } = require("child_process");
 
 const appPath =
   os.platform() === "win32"
-    ? path.join(process.env.PROGRAMFILES, "Purple HATS Desktop")
+    ? path.join(process.env.PROGRAMFILES, "Purple A11y Desktop")
     : path.join(
         os.homedir(),
         "Library",
         "Application Support",
-        "Purple HATS"
+        "Purple A11y"
       );
 
 const releaseUrl =
-  "https://api.github.com/repos/GovTechSG/purple-hats/releases/latest";
+  "https://api.github.com/repos/GovTechSG/purple-a11y/releases/latest";
 
-const allReleasesUrl = "https://api.github.com/repos/GovTechSG/purple-hats/releases";
+const allReleasesUrl = "https://api.github.com/repos/GovTechSG/purple-a11y/releases";
 
 const frontendReleaseUrl =
   os.platform() === "win32"
-    ? "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-hats-desktop-windows.zip"
-    : "https://github.com/GovTechSG/purple-hats-desktop/releases/latest/download/purple-hats-desktop-macos.zip";
+    ? "https://github.com/GovTechSG/purple-a11y-desktop/releases/latest/download/purple-a11y-desktop-windows.zip"
+    : "https://github.com/GovTechSG/purple-a11y-desktop/releases/latest/download/purple-a11y-desktop-macos.zip";
 
-const backendPath = path.join(appPath, "Purple HATS Backend");
-const frontendPath = path.join(appPath, "Purple HATS Frontend");
+const backendPath = path.join(appPath, "Purple A11y Backend");
+const frontendPath = path.join(appPath, "Purple A11y Frontend");
 
 const getMacOSExecutablePath = () => {
   let executablePath = require("path").dirname(
@@ -45,21 +45,21 @@ const getMacOSExecutablePath = () => {
 };
 const macOSExecutablePath = getMacOSExecutablePath();
 
-// const macOSPrepackageBackend = path.join(macOSExecutablePath, "Contents", "Resources", "purple-hats-portable-mac.zip");
-const macOSPrepackageBackend = path.join(process.resourcesPath, "purple-hats-portable-mac.zip");
+// const macOSPrepackageBackend = path.join(macOSExecutablePath, "Contents", "Resources", "purple-a11y-portable-mac.zip");
+const macOSPrepackageBackend = path.join(process.resourcesPath, "purple-a11y-portable-mac.zip");
 
 const resultsPath =
   os.platform() === "win32"
-    ? path.join(process.env.APPDATA, "Purple HATS")
+    ? path.join(process.env.APPDATA, "Purple A11y")
     : appPath;
 
 const installerExePath = path.join(
   resultsPath,
-  "purple-hats-desktop-windows",
-  "Purple-Hats-Setup.exe"
+  "purple-a11y-desktop-windows",
+  "Purple-A11y-setup.exe"
 );
 
-const enginePath = path.join(backendPath, "purple-hats");
+const enginePath = path.join(backendPath, "purple-a11y");
 
 const getEngineVersion = () => {
   const enginePackageFile = fs.readFileSync(path.join(enginePath, "package.json"), 'utf8');
@@ -90,7 +90,7 @@ const appVersion = require(path.join(
 
 const preloadPath = path.join(__dirname, "preload.js");
 
-const defaultExportDir = path.join(os.homedir(), "Documents", "Purple HATS");
+const defaultExportDir = path.join(os.homedir(), "Documents", "Purple A11y");
 
 const indexPath = path.join(__dirname, "..", "..", "build", "index.html");
 
@@ -100,7 +100,7 @@ const getPathVariable = () => {
   if (os.platform() === "win32") {
     const directories = [
       "nodejs-win",
-      "purple-hats\\node_modules\\.bin",
+      "purple-a11y\\node_modules\\.bin",
       "jre\\bin",
       "verapdf",
     ];
@@ -110,7 +110,7 @@ const getPathVariable = () => {
   } else {
     const directories = [
       `${os.arch() === "arm64" ? "nodejs-mac-arm64" : "nodejs-mac-x64"}/bin`,
-      "purple-hats/node_modules/.bin",
+      "purple-a11y/node_modules/.bin",
       "jre/bin",
       "verapdf"
     ];
@@ -138,7 +138,7 @@ const userDataFilePath =
 
 const phZipPath = path.join(appPath, "PHLatest.zip");
 
-const artifactInstallerPath = path.join(appPath, "Purple-Hats-setup.exe");
+const artifactInstallerPath = path.join(appPath, "Purple-A11y-setup.exe");
 
 const browserTypes = {
   chrome: "chrome",
@@ -216,14 +216,14 @@ const cloneChromeProfileCookieFiles = (options, destDir) => {
   if (os.platform() === "win32") {
     profileCookiesDir = globSync("**/Network/Cookies", {
       ...options,
-      ignore: ["Purple-HATS/**"],
+      ignore: ["Purple-A11y/**"],
     });
     profileNamesRegex = /User Data\\(.*?)\\Network/;
   } else if (os.platform() === "darwin") {
-    // maxDepth 2 to avoid copying cookies from the Purple-HATS directory if it exists
+    // maxDepth 2 to avoid copying cookies from the Purple-A11y directory if it exists
     profileCookiesDir = globSync("**/Cookies", {
       ...options,
-      ignore: "Purple-HATS/**",
+      ignore: "Purple-A11y/**",
     });
     profileNamesRegex = /Chrome\/(.*?)\/Cookies/;
   }
@@ -270,18 +270,18 @@ const cloneEdgeProfileCookieFiles = (options, destDir) => {
   // Cookies file per profile is located in .../User Data/<profile name>/Network/Cookies for windows
   // and ../Chrome/<profile name>/Cookies for mac
   let profileNamesRegex;
-  // Ignores the cloned Purple-HATS directory if exists
+  // Ignores the cloned Purple-A11y directory if exists
   if (os.platform() === "win32") {
     profileCookiesDir = globSync("**/Network/Cookies", {
       ...options,
-      ignore: "Purple-HATS/**",
+      ignore: "Purple-A11y/**",
     });
     profileNamesRegex = /User Data\\(.*?)\\Network/;
   } else if (os.platform() === "darwin") {
-    // Ignores copying cookies from the Purple-HATS directory if it exists
+    // Ignores copying cookies from the Purple-A11y directory if it exists
     profileCookiesDir = globSync("**/Cookies", {
       ...options,
-      ignore: "Purple-HATS/**",
+      ignore: "Purple-A11y/**",
     });
     profileNamesRegex = /Microsoft Edge\/(.*?)\/Cookies/;
   }
@@ -350,7 +350,7 @@ const cloneChromeProfiles = () => {
     return;
   }
 
-  const destDir = path.join(baseDir, "Purple-HATS");
+  const destDir = path.join(baseDir, "Purple-A11y");
 
   if (fs.existsSync(destDir)) {
     deleteClonedChromeProfiles();
@@ -385,7 +385,7 @@ const cloneEdgeProfiles = () => {
     return;
   }
 
-  const destDir = path.join(baseDir, "Purple-HATS");
+  const destDir = path.join(baseDir, "Purple-A11y");
 
   if (fs.existsSync(destDir)) {
     deleteClonedEdgeProfiles();
@@ -421,8 +421,8 @@ const deleteClonedChromeProfiles = () => {
     return;
   }
 
-  // Find all the Purple-HATS directories in the Chrome data directory
-  const destDir = globSync("**/Purple-HATS*", {
+  // Find all the Purple-A11y directories in the Chrome data directory
+  const destDir = globSync("**/Purple-A11y*", {
     cwd: baseDir,
     recursive: true,
     absolute: true,
@@ -444,7 +444,7 @@ const deleteClonedChromeProfiles = () => {
   }
 
   silentLogger.warn(
-    "Unable to find Purple-HATS directory in the Chrome data directory."
+    "Unable to find Purple-A11y directory in the Chrome data directory."
   );
 };
 
@@ -456,8 +456,8 @@ const deleteClonedEdgeProfiles = () => {
     return;
   }
 
-  // Find all the Purple-HATS directories in the Chrome data directory
-  const destDir = globSync("**/Purple-HATS*", {
+  // Find all the Purple-A11y directories in the Chrome data directory
+  const destDir = globSync("**/Purple-A11y*", {
     cwd: baseDir,
     recursive: true,
     absolute: true,
@@ -479,7 +479,7 @@ const deleteClonedEdgeProfiles = () => {
   }
 
   silentLogger.warn(
-    "Unable to find Purple-HATS directory in the Edge data directory."
+    "Unable to find Purple-A11y directory in the Edge data directory."
   );
 };
 
@@ -531,7 +531,7 @@ const proxy = getProxy();
 const createPlaywrightContext = async (browser, screenSize, nonHeadless) => {
   const playwrightPath = path.join(
     backendPath,
-    "purple-hats",
+    "purple-a11y",
     "node_modules",
     "playwright",
     "index.js"

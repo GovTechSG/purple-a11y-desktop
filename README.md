@@ -1,8 +1,8 @@
-# Purple HATS Desktop
+# Purple A11y Desktop
 
-Purple hats Desktop is a desktop frontend for [Purple HATS](https://github.com/GovTechSG/purple-hats) accessibility site scanner - a customisable, automated web accessibility testing tool that allows software development teams to find and fix accessibility problems to improve persons with disabilities (PWDs) access to digital services.
+Purple A11y Desktop is a desktop frontend for [Purple A11y](https://github.com/GovTechSG/purple-a11y) accessibility site scanner - a customisable, automated web accessibility testing tool that allows software development teams to find and fix accessibility problems to improve persons with disabilities (PWDs) access to digital services.
 
-<img alt="Purple HATS Desktop main screen" src="https://github.com/GovTechSG/purple-hats-desktop/assets/2021525/8eb8268e-80dd-4aff-b004-a4e7b8949ebc">
+<img alt="Purple A11y Desktop main screen" src="https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/8eb8268e-80dd-4aff-b004-a4e7b8949ebc">
 
 ## Technology Stack
 
@@ -11,13 +11,13 @@ Purple hats Desktop is a desktop frontend for [Purple HATS](https://github.com/G
 
 ## Prerequisites and Installations
 
-### Download Purple HATS Desktop
+### Download Purple A11y Desktop
 
-Purple HATS Desktop is available as a download for Windows and MacOS. Refer to [Installation Guide](/INSTALLATION.md) for step-by-step instructions.
+Purple A11y Desktop is available as a download for Windows and MacOS. Refer to [Installation Guide](/INSTALLATION.md) for step-by-step instructions.
 
 #### Facing issues?
 
-Open an [issue ticket](https://github.com/GovTechSG/purple-hats-desktop/issues) for assistance.
+Open an [issue ticket](https://github.com/GovTechSG/purple-a11y-desktop/issues) for assistance.
 
 ---
 
@@ -25,35 +25,35 @@ Open an [issue ticket](https://github.com/GovTechSG/purple-hats-desktop/issues) 
 
 Enter a valid URL to scan in the textbox and press the "Scan" button.  The default settings will crawl your website and scan 100 pages for accessibility issues.
 
-![Purple HATS Desktop main page](https://github.com/GovTechSG/purple-hats-desktop/assets/2021525/7d114637-6337-4f68-a8a4-a7673c4601ef)
+![Purple A11y Desktop main page](https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/7d114637-6337-4f68-a8a4-a7673c4601ef)
 
 ## Limit number of pages scanned
 
 If you find a scan takes too long to complete due to large website, or there are too many pages in a sitemap to scan, you may choose to limit number of pages scanned. Click on the drop down and enter the desired number of pages to scan.
 
-![Limit Scan Pages](https://github.com/GovTechSG/purple-hats-desktop/assets/2021525/4bfb1125-138e-4720-9db0-a046a4b1f495)
+![Limit Scan Pages](https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/4bfb1125-138e-4720-9db0-a046a4b1f495)
 
 ## Advanced scan options
 
 Click on the "Advanced scan options" button to configure the scan options.
 
-![Advanced Scan Options](https://github.com/GovTechSG/purple-hats-desktop/assets/2021525/caf2c1a6-1acf-433d-9843-3482666ac377)
+![Advanced Scan Options](https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/caf2c1a6-1acf-433d-9843-3482666ac377)
 
 ### Scan Type Selection
 
 #### Website Crawl
 
-The default scan option for Purple HATS desktop. Purple HATS Desktop will crawl and scan all the links (up to page limit) within the domain in the provided URL.
+The default scan option for Purple A11y desktop. Purple A11y Desktop will crawl and scan all the links (up to page limit) within the domain in the provided URL.
 
 #### Sitemap Crawl
 
-With sitemap crawl, provide a URL to a sitemap file (e.g. `https.domain.com/sitemap.xml`) and Purple HATS Desktop will crawl and scan all the links (up to page limit) within the domain in the provided URL.
+With sitemap crawl, provide a URL to a sitemap file (e.g. `https.domain.com/sitemap.xml`) and Purple A11y Desktop will crawl and scan all the links (up to page limit) within the domain in the provided URL.
 
 #### Custom Flow
 
 Custom flow is used to scan Single-Page Applications (SPAs) or websites that require user authentication. 2 pop-up windows will appear after running the scan. The browser pop-up window will be used to record your actions, proceed with your actions as you would normally do on the website and close the browser window when you are done. The second window is used to log the actions in code (**do not close the second window** until the scan is completed).
 
-![Custom Flow Browser](https://github.com/GovTechSG/purple-hats-desktop/assets/2021525/c5962e1d-80c4-430d-853f-37009302c19d)
+![Custom Flow Browser](https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/c5962e1d-80c4-430d-853f-37009302c19d)
 
 ### Viewport Options
 
@@ -193,10 +193,10 @@ Defaults to the screen size of iPhone 11.
 Enter a custom width in pixels. Minimum width is 320px and maximum width is 1080px.
 
 ## Accessibility Scan Results
-For details on which accessibility scan results trigger "Must Fix" / "Good to Fix" findings, you may refer to [Scan Issue Details](https://github.com/GovTechSG/purple-hats/blob/master/DETAILS.md).
+For details on which accessibility scan results trigger "Must Fix" / "Good to Fix" findings, you may refer to [Scan Issue Details](https://github.com/GovTechSG/purple-a11y/blob/master/DETAILS.md).
 
 ## Additional Information on Data
 
-Purple HATS Desktop uses third-party open-source tools that may be downloaded over the Internet during the installation process of Purple HATS. Users should be aware of the libraries used by examining `package.json`.
+Purple A11y Desktop uses third-party open-source tools that may be downloaded over the Internet during the installation process of Purple A11y. Users should be aware of the libraries used by examining `package.json`.
 
-Purple HATS Desktop may send information to the website or URL where the user chooses to initiate a Purple HATS scan. Limited user information such as e-mail address, name, and basic analytics is collected for the purpose of knowing our usage patterns better.
+Purple A11y Desktop may send information to the website or URL where the user chooses to initiate a Purple A11y scan. Limited user information such as e-mail address, name, and basic analytics is collected for the purpose of knowing our usage patterns better.

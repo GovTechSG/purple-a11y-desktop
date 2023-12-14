@@ -4,7 +4,7 @@ import arrowRepeat from "../../assets/arrow-repeat-white.svg";
 import boxRightArrow from "../../assets/box-arrow-up-right-purple.svg";
 import labModeOff from "../../assets/lab-icon-off.svg";
 import labModeOn from "../../assets/lab-icon-on.svg";
-import phLogo from "../../assets/purple-hats-logo.svg";
+import phLogo from "../../assets/purple-a11y-logo.svg";
 import { handleClickLink, versionComparator } from "../../common/constants";
 import { useEffect, useState } from "react";
 import Button from "../../common/components/Button";
@@ -18,13 +18,13 @@ const UpdateAlert = ({ latestVer, isPrerelease }) => {
     <Alert alertClassName="alert-primary mb-5 gap-5">
       <div className="flex-grow-1">
         <h4>Update available ({latestVer} - latest {isPrerelease ? 'pre-release' : 'stable build'})</h4>
-        <p className="mb-0">To update, restart Purple HATS.</p>
+        <p className="mb-0">To update, restart Purple A11y.</p>
       </div>
       <Button
         type="btn-primary"
         className="align-self-center"
         onClick={handleRestartApp}
-        aria-label="Restart Purple HATS"
+        aria-label="Restart Purple A11y"
       >
         <img src={arrowRepeat} alt="" />
         Restart
@@ -90,16 +90,16 @@ const ExternalLink = ({ url, children, linkClass }) => {
 };
 
 const AppDescription = ({ version, versionLabel }) => {
-  const releaseNotesUrl = `https://github.com/GovTechSG/purple-hats-desktop/releases/tag/${version}`;
+  const releaseNotesUrl = `https://github.com/GovTechSG/purple-a11y-desktop/releases/tag/${version}`;
   const a11yWebsiteUrl = "https://go.gov.sg/a11y";
   const privacyPolicyUrl = "https://www.tech.gov.sg/privacy/";
 
   return (
     <div className="mb-5">
       <div className="d-flex gap-3">
-        <img src={phLogo} alt="Purple HATS logo" />
+        <img src={phLogo} alt="Purple A11y logo" />
         <div>
-          <p className="m-0 bold-text">Purple HATS</p>
+          <p className="m-0 bold-text">Purple A11y</p>
           <p className="m-0 d-inline-block me-3">
             Version {version} {versionLabel && `(${versionLabel})`}
           </p>
@@ -165,7 +165,7 @@ const AboutModal = ({
         </>
       }
       modalSizeClass="modal-lg modal-dialog-centered"
-      modalTitle="About Purple HATS"
+      modalTitle="About Purple A11y"
       setShowModal={setShowModal}
     />
   );
