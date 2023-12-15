@@ -47,7 +47,7 @@ jobs:
       - name: Download Purple HATS Backend
         shell: pwsh
         run: |
-          $PHbackendUrl = "https://github.com/GovTechSG/purple-hats/releases/download/${{ vars.BE_TAG }}/purple-hats-portable-windows.zip"
+          $PHbackendUrl = "https://github.com/GovTechSG/purple-hats/releases/download/0.9.36/purple-hats-portable-windows.zip"
           $BEdestinationPath = "${{github.workspace}}\PHLatest.zip"
           $BEextractPath = "D:\a\Purple HATS Backend"
           Invoke-WebRequest -Uri $PHbackendUrl -OutFile $BEdestinationPath
@@ -128,7 +128,7 @@ jobs:
           npm run make-mac
         env:
           CI: ""
-          BE_TAG: "${{ vars.BE_TAG }}"
+          BE_TAG: "0.9.36"
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
