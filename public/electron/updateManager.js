@@ -174,6 +174,25 @@ const downloadAndUnzipFrontendWindows = async (tag=undefined) => {
 };
 
 /**
+ * Spawns a Shell Command process to make Purple A11y directory and copy over userData.txt
+ */
+const createNewAppDir = async (appDirPath) => {
+  const oldUserDataPath = path.join(
+    os.homedir(),
+    "Library",
+    "Application Support",
+    "Purple HATS",
+    "userData.txt",
+  );
+  const command = `
+    mkdir -p '${appDirPath}' && 
+    [ -f '${oldUserDataPath}' ] && mv '${oldUserDataPath}' '${appDirPath}'
+  `
+
+  await execCommand(command);
+};
+
+/**
  * Spawns a Shell Command process to download and unzip the frontend
  */
 const downloadAndUnzipFrontendMac = async (tag=undefined) => {
@@ -186,8 +205,10 @@ const downloadAndUnzipFrontendMac = async (tag=undefined) => {
     "Application Support",
     "Purple A11y"
   )
+
+  await createNewAppDir(tempResultsPath);
+
   const command = `
-  mkdir -p '${tempResultsPath}' &&
   curl -L '${downloadUrl}' -o '${tempResultsPath}/purple-a11y-desktop-mac.zip' &&
   ditto -xk '${tempResultsPath}/purple-a11y-desktop-mac.zip' '${path.join(
     macOSExecutablePath,
