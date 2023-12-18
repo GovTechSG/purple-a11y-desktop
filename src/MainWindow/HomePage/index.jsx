@@ -250,6 +250,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
     const scanDetails = JSON.parse(window.localStorage.getItem("scanDetails"));
     const splitUrl = scanDetails.scanUrl.split("://");
     scanDetails.scanUrl = `${splitUrl[0]}://${username}:${password}@${splitUrl[1]}`;
+    setScanButtonIsClicked(true);
     startScan(scanDetails);
     setShowBasicAuthModal(false);
     return;
