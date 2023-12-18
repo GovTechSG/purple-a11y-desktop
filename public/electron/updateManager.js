@@ -187,18 +187,16 @@ const downloadAndUnzipFrontendMac = async (tag=undefined) => {
     "Purple A11y"
   )
   const command = `
+  mkdir -p '${tempResultsPath}' &&
   curl -L '${downloadUrl}' -o '${tempResultsPath}/purple-a11y-desktop-mac.zip' &&
-  mv '${macOSExecutablePath}' '${path.join(
-    macOSExecutablePath,
-    ".."
-  )}/Purple Hats Old.app' &&
   ditto -xk '${tempResultsPath}/purple-a11y-desktop-mac.zip' '${path.join(
     macOSExecutablePath,
     ".."
   )}' &&
   rm '${tempResultsPath}/purple-a11y-desktop-mac.zip' &&
-  rm -rf '${path.join(macOSExecutablePath, "..")}/Purple Hats Old.app' &&
-  xattr -rd com.apple.quarantine '${path.join(macOSExecutablePath, "..")}/Purple A11y.app' `;
+  xattr -rd com.apple.quarantine '${path.join(macOSExecutablePath, "..")}/Purple A11y.app' && 
+  open '${path.join(macOSExecutablePath, "..")}/Purple A11y.app' &&
+  rm -rf '${path.join(macOSExecutablePath, "..")}/Purple Hats.app'`;
 
   await execCommand(command);
 
@@ -390,29 +388,16 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
 
       if (proceedUpdate) {
         updaterEventEmitter.emit("updatingFrontend");
-
         // Relaunch the app with new binaries if the frontend update is successful
         // If unsuccessful, the app will be launched with existing frontend
         try {
+          // downloads and opens the new frontend
           await downloadAndUnzipFrontendMac(toUpdateFrontendVer);
+
           currentChildProcess = null;
 
-          if (await validateZipFile(macOSPrepackageBackend)) {
-            processesToRun.push(hashAndSaveZip(macOSPrepackageBackend));
-            processesToRun.push(await unzipBackendAndCleanUp(macOSPrepackageBackend));
-          } else {
-            // TODO: should not enter here
-            console.log("Should not be invalid, double check impl of validateZipFile")
-            processesToRun.push(
-              await downloadBackend(toUpdateFrontendVer),
-              hashAndSaveZip(phZipPath),
-              await unzipBackendAndCleanUp()
-            );
-          }
-
-          // TODO: Should not need this, basically fresh install because userData.txt should not exist
-          // writeUserDetailsToFile({ firstLaunchOnUpdate: true });
-          processesToRun.push(() => updaterEventEmitter.emit("restartTriggered"));
+          // exit the old (current) app
+          processesToRun.push(() => updaterEventEmitter.emit("installerLaunched"));
         } catch (e) {
           silentLogger.error(e.toString());
         }
