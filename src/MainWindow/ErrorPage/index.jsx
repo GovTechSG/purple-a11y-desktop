@@ -55,21 +55,24 @@ const ErrorPage = () => {
         svgIcon={<ExclamationCircleIcon />}
       />
       {errorMessageToDisplay()}
+      <div class='btn-container'>
       {errorState === errorStates.customScanError
-      ? (
-        <>
-        <button role="link" id='back-to-home-btn' onClick={handleBackToHome}>
-          <img src={returnIcon}></img>
-          &nbsp;Back To Home
-        </button>
-        <Button id="replay-btn" type="btn-primary" onClick={replayCustomFlow}>
-          Replay
-        </Button>
-        </>
-      )
-      : <Button role="link" type="btn-primary" onClick={handleBackToHome}>
-          Try Again
-        </Button>}
+        ? (
+          <>
+          <button role="link" id='back-to-home-btn' onClick={handleBackToHome}>
+            <img src={returnIcon}></img>
+            &nbsp;Back To Home
+          </button>
+          <Button id="replay-btn" type="btn-primary" onClick={replayCustomFlow}>
+            Replay
+          </Button>
+          </>
+        )
+        : <Button role="link" type="btn-primary" onClick={handleBackToHome}>
+            Try Again
+          </Button>
+        }
+     </div>
     </div>
   );
 };
