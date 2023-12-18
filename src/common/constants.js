@@ -104,6 +104,12 @@ export const cliErrorTypes = {
   browserError: 17,
 };
 
+export const errorStates = {
+  browserError: 'browserError',
+  customScanError: 'customScanError', 
+  noPagesScannedError: 'noPagesScannedError'
+}
+
 export const userDataFormDetails = {
   // production form
   // formUrl: "https://form.gov.sg/6453387735eb0c00128becdc",

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { cliErrorCodes, cliErrorTypes } from "../../common/constants";
+import { cliErrorCodes, cliErrorTypes, errorStates } from "../../common/constants";
 import services from "../../services";
 import './CustomFlow.scss';
 import arrowLeft from "../../assets/arrow-left-purple.svg";
@@ -195,7 +195,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
           return;         
       }
 
-      navigate("/error", {state: { isCustomScan: true }});
+      navigate("/error", {state: { errorState: errorStates.customScanError }});
       return;
     } 
 
