@@ -85,11 +85,11 @@ const unzipBackendAndCleanUp = async (zipPath=phZipPath) => {
     os.homedir(),
     "Library",
     "Application Support",
-    "Purple A11y",
-    "Purple A11y Backend");
+    "Purple HATS",
+    "Purple HATS Backend");
   let unzipCommand = `mkdir -p '${tempBackendPath}' && tar -xf '${zipPath}' -C '${tempBackendPath}' &&
     cd '${tempBackendPath}' &&
-    './a11y_shell.sh' echo "Initialise"
+    './hats_shell.sh' echo "Initialise"
     `;
 
   return async () => {
@@ -420,7 +420,9 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
           silentLogger.error(e.toString());
         }
       } 
-    } else if (!backendExists) {
+    } 
+    
+    if (!backendExists) {
       updaterEventEmitter.emit('settingUp');
       if (await validateZipFile(macOSPrepackageBackend)) {
         // Trigger an unzip from Resources folder if backend does not exist or backend is older
