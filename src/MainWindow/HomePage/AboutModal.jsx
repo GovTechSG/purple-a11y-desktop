@@ -130,7 +130,23 @@ const AboutModal = ({
     latestVer,
     latestVerForLab,
   } = appVersionInfo;
-  const toUpdateVer = "0.9.40";
+  const [toUpdateVer, setToUpdateVer] = useState(undefined);
+
+  useEffect(() => {
+    if (!latestVer || !latestVerForLab) {
+      // if unable to fetch release info, dont show update alert
+      return setToUpdateVer(undefined);
+    }
+
+    const toCompare = isLabMode ? latestVerForLab : latestVer;
+    const isNeedUpdate = versionComparator(appVersion, toCompare) === -1;
+
+    if (isNeedUpdate) {
+      setToUpdateVer(toCompare);
+    } else {
+      setToUpdateVer(undefined);
+    }
+  }, [isLabMode]);
 
   return (
     <Modal
@@ -140,7 +156,7 @@ const AboutModal = ({
       modalBodyClassName="pt-1"
       modalBody={
         <>
-          {toUpdateVer && <UpdateAlert latestVer={toUpdateVer} isPrerelease={false} />}
+          {toUpdateVer && <UpdateAlert latestVer={toUpdateVer} isPrerelease={toUpdateVer !== latestVer} />}
           <AppDescription version={appVersion} versionLabel={appVersionLabel} />
           <LabModeDescription
             isLabMode={isLabMode}
