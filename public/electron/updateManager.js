@@ -186,7 +186,7 @@ const createNewAppDir = async (appDirPath) => {
   );
   const command = `
     mkdir -p '${appDirPath}' && 
-    [ -f '${oldUserDataPath}' ] && mv '${oldUserDataPath}' '${appDirPath}'
+    [ -f '${oldUserDataPath}' ] && cp '${oldUserDataPath}' '${appDirPath}'
   `
 
   await execCommand(command);
