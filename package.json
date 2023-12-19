@@ -1,7 +1,7 @@
 {
   "name": "purplehatsdesktop",
   "productName": "Purple HATS",
-  "version": "0.9.36",
+  "version": "0.9.39",
   "private": true,
   "dependencies": {
     "axios": "^1.6.0",
