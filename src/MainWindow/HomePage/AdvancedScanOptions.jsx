@@ -226,42 +226,58 @@ const AdvancedScanOptions = ({
               </label>
           </div>
           {advancedOptions.scanType !== scanTypeOptions[3] && (
-            <div id="max-concurrency-toggle-group" class="advanced-options-toggle-group">
-              <input
-                type="checkbox"
-                id="max-concurrency-toggle"
-                class="advanced-options-toggle"
-                aria-describedby="max-concurrency-tooltip"
-                checked={advancedOptions.maxConcurrency}
-                onFocus={() => handleMaxConcurrencyOnFocus()}
-                onBlur={() => setShowMaxConcurrencyTooltip(false)}
-                onMouseEnter={() => handleMaxConcurrencyOnMouseEnter()}
-                onMouseLeave={() => setIsMaxConcurrencyMouseEvent(false)}
-                onChange={handleSetAdvancedOption(
-                  "maxConcurrency",
-                  (e) => e.target.checked
-                )}
-              />
-
-              <label htmlFor="max-concurrency-toggle">Slow Scan Mode</label>
-              <div className="custom-tooltip-container">
-                <ToolTip
-                  description={
-                    "Scan 1 page at a time instead of multiple pages concurrently."
-                  }
-                  id="max-concurrency-tooltip"
-                  showToolTip={showMaxConcurrencyTooltip}
-                />
-                <img
-                  className="tooltip-img"
-                  src={questionMarkIcon}
+            <>
+              <div id="max-concurrency-toggle-group" class="advanced-options-toggle-group">
+                <input
+                  type="checkbox"
+                  id="max-concurrency-toggle"
+                  class="advanced-options-toggle"
                   aria-describedby="max-concurrency-tooltip"
-                  onMouseEnter={() => setShowMaxConcurrencyTooltip(true)}
-                  onMouseLeave={() => setShowMaxConcurrencyTooltip(false)}
-                  alt="tooltip icon for slow scan mode"
+                  checked={advancedOptions.maxConcurrency}
+                  onFocus={() => handleMaxConcurrencyOnFocus()}
+                  onBlur={() => setShowMaxConcurrencyTooltip(false)}
+                  onMouseEnter={() => handleMaxConcurrencyOnMouseEnter()}
+                  onMouseLeave={() => setIsMaxConcurrencyMouseEvent(false)}
+                  onChange={handleSetAdvancedOption(
+                    "maxConcurrency",
+                    (e) => e.target.checked
+                )}
                 />
+                <label htmlFor="max-concurrency-toggle">Slow Scan Mode</label>
+                <div className="custom-tooltip-container">
+                  <ToolTip
+                    description={
+                      "Scan 1 page at a time instead of multiple pages concurrently."
+                    }
+                    id="max-concurrency-tooltip"
+                    showToolTip={showMaxConcurrencyTooltip}
+                  />
+                  <img
+                    className="tooltip-img"
+                    src={questionMarkIcon}
+                    aria-describedby="max-concurrency-tooltip"
+                    onMouseEnter={() => setShowMaxConcurrencyTooltip(true)}
+                    onMouseLeave={() => setShowMaxConcurrencyTooltip(false)}
+                    alt="tooltip icon for slow scan mode"
+                  />
+                </div>
               </div>
-            </div>
+              <div id='follow-robots-toggle-group' class="advanced-options-toggle-group">
+                  <input 
+                    type="checkbox"
+                    id="follow-robots-toggle" 
+                    class="advanced-options-toggle"
+                    checked={advancedOptions.followRobots}
+                    onChange={handleSetAdvancedOption(
+                      "followRobots", 
+                      (e) => e.target.checked
+                    )} 
+                  /> 
+                  <label htmlFor="follow-robots-toggle">
+                    Follow robots.txt rules
+                  </label>
+              </div>
+            </>
           )}
           <hr />
           <div className="user-input-group">

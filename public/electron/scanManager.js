@@ -58,6 +58,7 @@ const getScanOptions = (details) => {
     falsePositive,
     includeScreenshots,
     includeSubdomains,
+    followRobots,
     metadata,
   } = details;
   const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`, "-i", fileTypes];
@@ -106,6 +107,10 @@ const getScanOptions = (details) => {
 
   if (falsePositive) {
     options.push("-f", "true");
+  }
+
+  if (followRobots) {
+    options.push("-r", "yes");
   }
 
   if (metadata) {
