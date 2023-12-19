@@ -217,7 +217,7 @@ const downloadAndUnzipFrontendMac = async (tag=undefined) => {
   rm '${tempResultsPath}/purple-a11y-desktop-mac.zip' &&
   xattr -rd com.apple.quarantine '${path.join(macOSExecutablePath, "..")}/Purple A11y.app' && 
   open '${path.join(macOSExecutablePath, "..")}/Purple A11y.app' &&
-  rm -rf '${path.join(macOSExecutablePath, "..")}/Purple Hats.app'`;
+  rm -rf '${path.join(macOSExecutablePath, "..")}/Purple HATS.app'`;
 
   await execCommand(command);
 
