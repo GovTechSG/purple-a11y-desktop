@@ -141,7 +141,9 @@ const AboutModal = ({
     const toCompare = isLabMode ? latestVerForLab : latestVer;
     const isNeedUpdate = versionComparator(appVersion, toCompare) === -1;
 
-    if (isNeedUpdate) {
+    if (toCompare === "0.9.40" && appVersion === "0.9.40-transition") {
+      setToUpdateVer(toCompare);
+    } else if (isNeedUpdate) {
       setToUpdateVer(toCompare);
     } else {
       setToUpdateVer(undefined);

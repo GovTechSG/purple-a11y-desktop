@@ -97,7 +97,7 @@ const unzipBackendAndCleanUp = async (zipPath=phZipPath) => {
   }
 };
 
-const getLatestFrontendVersion = async (latestRelease, latestPreRelease) => {
+const getLatestFrontendVersion = (latestRelease, latestPreRelease) => {
   try {
     let verToCompare;
     if (isLabMode) {
@@ -108,10 +108,7 @@ const getLatestFrontendVersion = async (latestRelease, latestPreRelease) => {
     } else {
       verToCompare = latestRelease;
     }
-    if (versionComparator(appFrontendVer, verToCompare) === -1) {
-      return verToCompare;
-    }
-    return undefined; // no need for update
+    return verToCompare;
   } catch (e) {
     console.log(`Unable to check latest frontend version, skipping\n${e.toString()}`);
     return undefined;
@@ -345,8 +342,8 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
 
   const backendExists = fs.existsSync(backendPath);
   const phZipExists = fs.existsSync(phZipPath);
-  // TODO: Hardcoded version
-  const toUpdateFrontendVer = "0.9.40";
+
+  const toUpdateFrontendVer = getLatestFrontendVersion(latestRelease, latestPreRelease);
 
   // Auto updates via installer is only applicable for Windows
   // Auto updates for backend on Windows will be done via a powershell script due to %ProgramFiles% permission
