@@ -274,7 +274,7 @@ const AdvancedScanOptions = ({
                     )} 
                   /> 
                   <label htmlFor="follow-robots-toggle">
-                    Follow robots.txt rules
+                    Adhere to robots.txt
                   </label>
               </div>
             </>
