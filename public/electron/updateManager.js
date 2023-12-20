@@ -400,64 +400,19 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
     }
   } else {
     // user is on mac
-    if (toUpdateFrontendVer) {
-      const userResponse = new Promise((resolve) => {
-        updaterEventEmitter.emit("promptFrontendUpdate", resolve);
-      });
+    updaterEventEmitter.emit("updatingFrontend");
+    // Relaunch the app with new binaries if the frontend update is successful
+    // If unsuccessful, the app will be launched with existing frontend
+    try {
+      // downloads and opens the new frontend
+      await downloadAndUnzipFrontendMac(toUpdateFrontendVer);
 
-      const proceedUpdate = await userResponse;
+      currentChildProcess = null;
 
-      if (proceedUpdate) {
-        updaterEventEmitter.emit("updatingFrontend");
-        // Relaunch the app with new binaries if the frontend update is successful
-        // If unsuccessful, the app will be launched with existing frontend
-        try {
-          // downloads and opens the new frontend
-          await downloadAndUnzipFrontendMac(toUpdateFrontendVer);
-
-          currentChildProcess = null;
-
-          // exit the old (current) app
-          processesToRun.push(() => updaterEventEmitter.emit("installerLaunched"));
-        } catch (e) {
-          silentLogger.error(e.toString());
-        }
-      } 
-    } 
-    
-    if (!backendExists) {
-      updaterEventEmitter.emit('settingUp');
-      if (await validateZipFile(macOSPrepackageBackend)) {
-        // Trigger an unzip from Resources folder if backend does not exist or backend is older
-        processesToRun.push(
-          await unzipBackendAndCleanUp(macOSPrepackageBackend),
-          hashAndSaveZip(macOSPrepackageBackend)
-        );
-      } else {
-        processesToRun.push(
-          await downloadBackend(appFrontendVer),
-          hashAndSaveZip(phZipPath),
-          await unzipBackendAndCleanUp()
-        );
-      }
-    } else if (backendExists && await validateZipFile(macOSPrepackageBackend)) {
-      // compare zip file hash to determine whether to unzip
-      // current hash of prepackage
-      const currHash = await hashPrepackage(macOSPrepackageBackend);
-      if (fs.existsSync(hashPath)) {
-        // check if match 
-        const hash = fs.readFileSync(hashPath, "utf-8"); // stored hash
-        // compare 
-        if (hash === currHash) {
-          // dont unzip
-          return;
-        } 
-      }
-      processesToRun.push(() => updaterEventEmitter.emit('settingUp'));
-      // unzip
-      processesToRun.push(await unzipBackendAndCleanUp(macOSPrepackageBackend));
-      // write hash
-      processesToRun.push(() => fs.writeFileSync(hashPath, currHash));
+      // exit the old (current) app
+      processesToRun.push(() => updaterEventEmitter.emit("installerLaunched"));
+    } catch (e) {
+      silentLogger.error(e.toString());
     }
 
     for (const proc of processesToRun) {
