@@ -127,6 +127,9 @@ const downloadAndUnzipFrontendWindows = async (tag=undefined) => {
   const shellScript = `
   $webClient = New-Object System.Net.WebClient
   try {
+    If (!(Test-Path -Path "${tempResultsPath}")) {
+	New-Item -ItemType Directory -Path "${tempResultsPath}"
+    }
     $webClient.DownloadFile("${downloadUrl}", "${tempResultsPath}\\purple-a11y-desktop-windows.zip")
   } catch {
     Write-Host "Error: Unable to download frontend"
@@ -147,7 +150,7 @@ const downloadAndUnzipFrontendWindows = async (tag=undefined) => {
     currentChildProcess = ps;
 
     ps.stdout.on("data", (data) => {
-      silentLogger.log(data.toString());
+      silentLogger.debug(data.toString());
     });
 
     // Log any errors from the PowerShell script
