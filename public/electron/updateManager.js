@@ -7,7 +7,6 @@ const {
   getFrontendVersion,
   appPath,
   backendPath,
-  phZipPath,
   resultsPath,
   frontendReleaseUrl,
   installerExePath,
@@ -80,9 +79,7 @@ const unzipBackendAndCleanUp = async (zipPath) => {
     './a11y_shell.sh' echo "Initialise"
     `;
 
-  return async () => {
-    await execCommand(unzipCommand);
-  };
+  return execCommand(unzipCommand);
 };
 
 const getLatestFrontendVersion = (latestRelease, latestPreRelease) => {
@@ -272,11 +269,11 @@ const downloadAndUnzipBackendWindows = async (tag = undefined) => {
   });
 };
 
-const downloadBackend = async (tag = undefined) => {
+const downloadBackend = async (tag, zipPath) => {
   const downloadUrl = `https://github.com/GovTechSG/purple-a11y/releases/download/${tag}/purple-a11y-portable-mac.zip`;
-  const command = `curl '${downloadUrl}' -o '${phZipPath}' -L && rm -rf '${backendPath}' && mkdir '${backendPath}'`;
+  const command = `curl '${downloadUrl}' -o '${zipPath}' -L && rm -rf '${backendPath}' && mkdir '${backendPath}'`;
 
-  return async () => await execCommand(command);
+  return execCommand(command);
 };
 
 // MacOS only
@@ -295,11 +292,9 @@ const validateZipFile = async (zipPath) => {
   return fs.existsSync(zipPath) && (await isZipValid(zipPath));
 };
 
-const hashAndSaveZip = (zipPath) => {
-  return async () => {
-    const currHash = await hashPrepackage(zipPath);
-    fs.writeFileSync(hashPath, currHash);
-  };
+const hashAndSaveZip = async (zipPath) => {
+  const currHash = await hashPrepackage(zipPath);
+  fs.writeFileSync(hashPath, currHash);
 };
 
 const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
@@ -370,7 +365,6 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
       await downloadAndUnzipBackendWindows(getFrontendVersion());
     }
   } else {
-    const processesToRun = [];
     let restartRequired = false;
     consoleLogger.info("mac detected");
     // user is on mac
@@ -410,32 +404,24 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
 
       if (!skipUnzip) {
         // expected to reach here when restart triggered on update
-        processesToRun.push(
-          () => consoleLogger.info("proceeding to unzip backend prepackage"),
-          () => updaterEventEmitter.emit("settingUp"),
-          await unzipBackendAndCleanUp(macOSPrepackageBackend),
-          hashAndSaveZip(macOSPrepackageBackend)
-        );
+        consoleLogger.info("proceeding to unzip backend prepackage");
+        updaterEventEmitter.emit("settingUp");
+        await unzipBackendAndCleanUp(macOSPrepackageBackend);
+        await hashAndSaveZip(macOSPrepackageBackend);
       }
     } else {
       // unlikely scenario
-      processesToRun.push(
-        () =>
-          consoleLogger.info(
-            "prepackage zip is invalid. proceed to download from backend. check the prepackage manually."
-          ),
-        await downloadBackend(getFrontendVersion()),
-        await unzipBackendAndCleanUp(phZipPath),
-        hashAndSaveZip(phZipPath)
+      consoleLogger.info(
+        "prepackage zip is invalid. proceed to download from backend."
       );
+      await downloadBackend(getFrontendVersion(), macOSPrepackageBackend);
+      await unzipBackendAndCleanUp(macOSPrepackageBackend);
+      await hashAndSaveZip(macOSPrepackageBackend);
     }
 
     if (restartRequired) {
-      processesToRun.push(() => updaterEventEmitter.emit("restartTriggered"));
-    }
-
-    for (const proc of processesToRun) {
-      await proc();
+      consoleLogger.info("restarting app...");
+      updaterEventEmitter.emit("restartTriggered");
     }
   }
 };
