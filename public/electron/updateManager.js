@@ -4,11 +4,9 @@ const fs = require("fs");
 const crypto = require("crypto");
 const { exec, spawn } = require("child_process");
 const {
-  getEngineVersion,
   getFrontendVersion,
   appPath,
   backendPath,
-  phZipPath,
   resultsPath,
   frontendReleaseUrl,
   installerExePath,
@@ -17,18 +15,14 @@ const {
   macOSPrepackageBackend,
   hashPath,
 } = require("./constants");
-const { silentLogger } = require("./logs");
-const { writeUserDetailsToFile, readUserDataFromFile } = require("./userDataManager");
+const { silentLogger, consoleLogger } = require("./logs");
+const {
+  writeUserDetailsToFile,
+  readUserDataFromFile,
+} = require("./userDataManager");
 
 let currentChildProcess;
-
-let engineVersion;
 let isLabMode = false;
-
-try {
-  engineVersion = getEngineVersion();
-} catch (e) {
-}
 
 try {
   // to get isLabMode flag from userData.txt to determine version to update to
@@ -37,8 +31,6 @@ try {
 } catch (e) {
   // unable to read user data, leave isLabMode as false
 }
-
-const appFrontendVer = getFrontendVersion();
 
 const killChildProcess = () => {
   if (currentChildProcess) {
@@ -52,7 +44,8 @@ const execCommand = async (command) => {
   const execution = new Promise((resolve) => {
     const process = exec(command, options, (err, stdout, stderr) => {
       if (err) {
-        console.log("error with running command:", command);
+        consoleLogger.info("error with running command:", command);
+        consoleLogger.info("error", err);
         silentLogger.error(stderr.toString());
       }
       currentChildProcess = null;
@@ -76,53 +69,57 @@ const hashPrepackage = async (prepackagePath) => {
       const computedHash = hash.digest("hex");
       resolve(computedHash);
     });
-  })
+  });
 };
 
 // unzip backend zip for mac
-const unzipBackendAndCleanUp = async (zipPath=phZipPath) => {
+const unzipBackendAndCleanUp = async (zipPath) => {
   let unzipCommand = `mkdir -p '${backendPath}' && tar -xf '${zipPath}' -C '${backendPath}' &&
     cd '${backendPath}' &&
     './a11y_shell.sh' echo "Initialise"
     `;
 
-  return async () => {
-    await execCommand(unzipCommand);
-  }
+  return execCommand(unzipCommand);
 };
 
-const getLatestFrontendVersion = async (latestRelease, latestPreRelease) => {
+const getLatestFrontendVersion = (latestRelease, latestPreRelease) => {
   try {
     let verToCompare;
     if (isLabMode) {
       // handle case where latest release ver > latest prerelease version
-      verToCompare = versionComparator(latestRelease, latestPreRelease) === 1
-        ? latestRelease
-        : latestPreRelease;
+      verToCompare =
+        versionComparator(latestRelease, latestPreRelease) === 1
+          ? latestRelease
+          : latestPreRelease;
     } else {
       verToCompare = latestRelease;
     }
-    if (versionComparator(appFrontendVer, verToCompare) === -1) {
+    if (versionComparator(getFrontendVersion(), verToCompare) === -1) {
       return verToCompare;
     }
     return undefined; // no need for update
   } catch (e) {
-    console.log(`Unable to check latest frontend version, skipping\n${e.toString()}`);
+    console.log(
+      `Unable to check latest frontend version, skipping\n${e.toString()}`
+    );
     return undefined;
   }
 };
 
 /**
  * Spawns a PowerShell process to download and unzip the frontend
- * @returns {Promise<boolean>} true if the frontend was downloaded and unzipped successfully, false otherwise
+ * @returns {Promise<void>} void if the frontend was downloaded and unzipped successfully
  */
-const downloadAndUnzipFrontendWindows = async (tag=undefined) => {
-  const downloadUrl = tag 
+const downloadAndUnzipFrontendWindows = async (tag = undefined) => {
+  const downloadUrl = tag
     ? `https://github.com/GovTechSG/purple-a11y-desktop/releases/download/${tag}/purple-a11y-desktop-windows.zip`
     : frontendReleaseUrl;
   const shellScript = `
   $webClient = New-Object System.Net.WebClient
   try {
+    If (!(Test-Path -Path "${resultsPath}")) {
+      New-Item -ItemType Directory -Path "${resultsPath}"
+    }
     $webClient.DownloadFile("${downloadUrl}", "${resultsPath}\\purple-a11y-desktop-windows.zip")
   } catch {
     Write-Host "Error: Unable to download frontend"
@@ -143,7 +140,7 @@ const downloadAndUnzipFrontendWindows = async (tag=undefined) => {
     currentChildProcess = ps;
 
     ps.stdout.on("data", (data) => {
-      silentLogger.log(data.toString());
+      silentLogger.debug(data.toString());
     });
 
     // Log any errors from the PowerShell script
@@ -151,16 +148,14 @@ const downloadAndUnzipFrontendWindows = async (tag=undefined) => {
       silentLogger.error(data.toString());
       currentChildProcess = null;
       reject(new Error(data.toString()));
-      resolve(false);
     });
 
     ps.on("exit", (code) => {
       currentChildProcess = null;
       if (code === 0) {
-        resolve(true);
+        resolve();
       } else {
         reject(new Error(code.toString()));
-        resolve(false);
       }
     });
   });
@@ -169,11 +164,13 @@ const downloadAndUnzipFrontendWindows = async (tag=undefined) => {
 /**
  * Spawns a Shell Command process to download and unzip the frontend
  */
-const downloadAndUnzipFrontendMac = async (tag=undefined) => {
-  const downloadUrl = tag 
+const downloadAndUnzipFrontendMac = async (tag = undefined) => {
+  const downloadUrl = tag
     ? `https://github.com/GovTechSG/purple-a11y-desktop/releases/download/${tag}/purple-a11y-desktop-macos.zip`
     : frontendReleaseUrl;
+
   const command = `
+  mkdir -p '${resultsPath}' &&
   curl -L '${downloadUrl}' -o '${resultsPath}/purple-a11y-desktop-mac.zip' &&
   mv '${macOSExecutablePath}' '${path.join(
     macOSExecutablePath,
@@ -185,10 +182,12 @@ const downloadAndUnzipFrontendMac = async (tag=undefined) => {
   )}' &&
   rm '${resultsPath}/purple-a11y-desktop-mac.zip' &&
   rm -rf '${path.join(macOSExecutablePath, "..")}/Purple A11y Old.app' &&
-  xattr -rd com.apple.quarantine '${path.join(macOSExecutablePath, "..")}/Purple A11y.app' `;
+  xattr -rd com.apple.quarantine '${path.join(
+    macOSExecutablePath,
+    ".."
+  )}/Purple A11y.app' `;
 
   await execCommand(command);
-
 };
 
 /**
@@ -227,7 +226,7 @@ const spawnScriptToLaunchInstaller = () => {
  * Spawns a powershell child_process which then runs a powershell script with admin priviledges
  * This will cause a pop-up on the user's ends
  */
-const downloadAndUnzipBackendWindows = async (tag=undefined) => {
+const downloadAndUnzipBackendWindows = async (tag = undefined) => {
   const scriptPath = path.join(
     __dirname,
     "..",
@@ -247,13 +246,13 @@ const downloadAndUnzipBackendWindows = async (tag=undefined) => {
     currentChildProcess = ps;
 
     ps.stdout.on("data", (data) => {
-      silentLogger.log(data.toString());
+      silentLogger.debug(data.toString());
       console.log(data.toString());
     });
 
     // Log any errors from the PowerShell script
     ps.stderr.on("data", (data) => {
-      silentLogger.log(data.toString());
+      silentLogger.debug(data.toString());
       console.error(data.toString());
       currentChildProcess = null;
       resolve(false);
@@ -270,11 +269,11 @@ const downloadAndUnzipBackendWindows = async (tag=undefined) => {
   });
 };
 
-const downloadBackend = async (tag=undefined) => {
+const downloadBackend = async (tag, zipPath) => {
   const downloadUrl = `https://github.com/GovTechSG/purple-a11y/releases/download/${tag}/purple-a11y-portable-mac.zip`;
-  const command = `curl '${downloadUrl}' -o '${phZipPath}' -L && rm -rf '${backendPath}' && mkdir '${backendPath}'`;
+  const command = `curl '${downloadUrl}' -o '${zipPath}' -L && rm -rf '${backendPath}' && mkdir '${backendPath}'`;
 
-  return async () => await execCommand(command);
+  return execCommand(command);
 };
 
 // MacOS only
@@ -288,145 +287,141 @@ const validateZipFile = async (zipPath) => {
       fi
     `;
     const result = await execCommand(command);
-    return result.trim() === 'true';
-  }
-  return fs.existsSync(zipPath) && await isZipValid(zipPath);
+    return result.trim() === "true";
+  };
+  return fs.existsSync(zipPath) && (await isZipValid(zipPath));
 };
 
-const hashAndSaveZip = (zipPath) => {
-  return async () => {
-    const currHash = await hashPrepackage(zipPath);
-    fs.writeFileSync(hashPath, currHash);
-  }
-}
+const hashAndSaveZip = async (zipPath) => {
+  const currHash = await hashPrepackage(zipPath);
+  fs.writeFileSync(hashPath, currHash);
+};
 
 const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
-  const processesToRun = [];
+  consoleLogger.info(
+    `[updateManager] run - latestRelease: ${latestRelease}; latestPreRelease: ${latestPreRelease}`
+  );
 
   updaterEventEmitter.emit("checking");
 
-  const backendExists = fs.existsSync(backendPath);
-  const phZipExists = fs.existsSync(phZipPath);
-  const toUpdateFrontendVer = await getLatestFrontendVersion(latestRelease, latestPreRelease);
+  const getBackendExists = () => fs.existsSync(backendPath);
+
+  const toUpdateFrontendVer = getLatestFrontendVersion(
+    latestRelease,
+    latestPreRelease
+  );
+
+  let proceedUpdate = false;
+
+  if (toUpdateFrontendVer) {
+    consoleLogger.info(`update prompted for version: ${toUpdateFrontendVer}`);
+    const userResponse = new Promise((resolve) => {
+      updaterEventEmitter.emit("promptFrontendUpdate", resolve);
+    });
+
+    proceedUpdate = await userResponse;
+    consoleLogger.info(
+      `user ${proceedUpdate ? "accepted" : "postponed"} update`
+    );
+  }
 
   // Auto updates via installer is only applicable for Windows
   // Auto updates for backend on Windows will be done via a powershell script due to %ProgramFiles% permission
   if (os.platform() === "win32") {
+    consoleLogger.info("windows detected");
     // Frontend update via Installer for Windows
     // Will also update backend as it is packaged in the installer
-    if (toUpdateFrontendVer) {
-      const userResponse = new Promise((resolve) => {
-        updaterEventEmitter.emit("promptFrontendUpdate", resolve);
-      });
+    if (proceedUpdate) {
+      updaterEventEmitter.emit("updatingFrontend");
+      try {
+        consoleLogger.info("downloading frontend");
+        await downloadAndUnzipFrontendWindows(toUpdateFrontendVer);
+        consoleLogger.info("successfully downloaded and unzipped frontend");
 
-      const proceedUpdate = await userResponse;
+        const launchInstallerPrompt = new Promise((resolve) => {
+          updaterEventEmitter.emit("frontendDownloadComplete", resolve);
+        });
 
-      if (proceedUpdate) {
-        updaterEventEmitter.emit("updatingFrontend");
-        let isDownloadFrontendSuccess = null;
+        const proceedInstall = await launchInstallerPrompt;
 
-        try {
-          isDownloadFrontendSuccess = await downloadAndUnzipFrontendWindows(toUpdateFrontendVer);
-        } catch (e) {
-          silentLogger.error(e.toString());
-        }
-
-        if (isDownloadFrontendSuccess) {
-          const launchInstallerPrompt = new Promise((resolve) => {
-            updaterEventEmitter.emit("frontendDownloadComplete", resolve);
-          });
-
-          const proceedInstall = await launchInstallerPrompt;
-
-          if (proceedInstall) {
-            const isInstallerScriptLaunched =
-              await spawnScriptToLaunchInstaller();
-            if (isInstallerScriptLaunched) {
-              writeUserDetailsToFile({ firstLaunchOnUpdate: true });
-              updaterEventEmitter.emit("installerLaunched");
-            }
+        if (proceedInstall) {
+          const isInstallerScriptLaunched =
+            await spawnScriptToLaunchInstaller();
+          if (isInstallerScriptLaunched) {
+            writeUserDetailsToFile({ firstLaunchOnUpdate: true });
+            updaterEventEmitter.emit("installerLaunched");
           }
-        } else {
-          updaterEventEmitter.emit("frontendDownloadFailed");
         }
+      } catch (e) {
+        consoleLogger.error(e);
+        updaterEventEmitter.emit("frontendDownloadFailed");
       }
-    } else if (!backendExists) {
-      updaterEventEmitter.emit('settingUp');
+    }
+
+    // unlikely scenario
+    if (!getBackendExists()) {
+      updaterEventEmitter.emit("settingUp");
       // Trigger download for backend via Github if backend does not exist
-      await downloadAndUnzipBackendWindows(appFrontendVer);
+      await downloadAndUnzipBackendWindows(getFrontendVersion());
     }
   } else {
+    let restartRequired = false;
+    consoleLogger.info("mac detected");
     // user is on mac
-    if (toUpdateFrontendVer) {
-      const userResponse = new Promise((resolve) => {
-        updaterEventEmitter.emit("promptFrontendUpdate", resolve);
-      });
+    if (proceedUpdate) {
+      updaterEventEmitter.emit("updatingFrontend");
 
-      const proceedUpdate = await userResponse;
+      // Relaunch the app with new binaries if the frontend update is successful
+      // If unsuccessful, the app will be launched with existing frontend
+      try {
+        consoleLogger.info("downloading frontend");
+        await downloadAndUnzipFrontendMac(toUpdateFrontendVer);
+        consoleLogger.info("successfully downloaded and unzipped frontend");
 
-      if (proceedUpdate) {
-        updaterEventEmitter.emit("updatingFrontend");
-
-        // Relaunch the app with new binaries if the frontend update is successful
-        // If unsuccessful, the app will be launched with existing frontend
-        try {
-          await downloadAndUnzipFrontendMac(toUpdateFrontendVer);
-          currentChildProcess = null;
-
-          if (await validateZipFile(macOSPrepackageBackend)) {
-            processesToRun.push(hashAndSaveZip(macOSPrepackageBackend));
-            processesToRun.push(await unzipBackendAndCleanUp(macOSPrepackageBackend));
-          } else {
-            processesToRun.push(
-              await downloadBackend(toUpdateFrontendVer),
-              hashAndSaveZip(phZipPath),
-              await unzipBackendAndCleanUp()
-            );
-          }
-
-          writeUserDetailsToFile({ firstLaunchOnUpdate: true });
-          processesToRun.push(() => updaterEventEmitter.emit("restartTriggered"));
-        } catch (e) {
-          silentLogger.error(e.toString());
-        }
-      } 
-    } else if (!backendExists) {
-      updaterEventEmitter.emit('settingUp');
-      if (await validateZipFile(macOSPrepackageBackend)) {
-        // Trigger an unzip from Resources folder if backend does not exist or backend is older
-        processesToRun.push(
-          await unzipBackendAndCleanUp(macOSPrepackageBackend),
-          hashAndSaveZip(macOSPrepackageBackend)
-        );
-      } else {
-        processesToRun.push(
-          await downloadBackend(appFrontendVer),
-          hashAndSaveZip(phZipPath),
-          await unzipBackendAndCleanUp()
-        );
+        writeUserDetailsToFile({ firstLaunchOnUpdate: true });
+        restartRequired = true;
+      } catch (e) {
+        consoleLogger.error(e);
+        updaterEventEmitter.emit("frontendDownloadFailed");
       }
-    } else if (backendExists && await validateZipFile(macOSPrepackageBackend)) {
-      // compare zip file hash to determine whether to unzip
-      // current hash of prepackage
-      const currHash = await hashPrepackage(macOSPrepackageBackend);
-      if (fs.existsSync(hashPath)) {
-        // check if match 
-        const hash = fs.readFileSync(hashPath, "utf-8"); // stored hash
-        // compare 
-        if (hash === currHash) {
-          // dont unzip
-          return;
-        } 
-      }
-      processesToRun.push(() => updaterEventEmitter.emit('settingUp'));
-      // unzip
-      processesToRun.push(await unzipBackendAndCleanUp(macOSPrepackageBackend));
-      // write hash
-      processesToRun.push(() => fs.writeFileSync(hashPath, currHash));
     }
 
-    for (const proc of processesToRun) {
-      await proc();
+    const isPrepackageValid = await validateZipFile(macOSPrepackageBackend);
+    if (isPrepackageValid) {
+      let skipUnzip = false;
+      if (getBackendExists() && fs.existsSync(hashPath)) {
+        consoleLogger.info("backend and hash path exists");
+        // compare zip file hash to determine whether to unzip
+        const currHash = await hashPrepackage(macOSPrepackageBackend);
+        const hash = fs.readFileSync(hashPath, "utf-8"); // stored hash
+
+        // compare
+        if (hash === currHash) {
+          consoleLogger.info("hash of prepackage and hash path is the same");
+          skipUnzip = true;
+        }
+      }
+
+      if (!skipUnzip) {
+        // expected to reach here when restart triggered on update
+        consoleLogger.info("proceeding to unzip backend prepackage");
+        updaterEventEmitter.emit("settingUp");
+        await unzipBackendAndCleanUp(macOSPrepackageBackend);
+        await hashAndSaveZip(macOSPrepackageBackend);
+      }
+    } else {
+      // unlikely scenario
+      consoleLogger.info(
+        "prepackage zip is invalid. proceed to download from backend."
+      );
+      await downloadBackend(getFrontendVersion(), macOSPrepackageBackend);
+      await unzipBackendAndCleanUp(macOSPrepackageBackend);
+      await hashAndSaveZip(macOSPrepackageBackend);
+    }
+
+    if (restartRequired) {
+      consoleLogger.info("restarting app...");
+      updaterEventEmitter.emit("restartTriggered");
     }
   }
 };

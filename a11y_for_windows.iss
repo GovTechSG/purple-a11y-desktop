@@ -3,7 +3,7 @@
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 [SETUP]
-AppId={{10A741B8-E330-4DC5-A86C-7F7B8DE775A9}
+AppId={{75a53a2c-a9e1-4d9b-be27-f8c96f9315c5}
 AppName=Purple A11y Desktop
 AppVersion=0.9.0
 AppVerName=Purple A11y Desktop
