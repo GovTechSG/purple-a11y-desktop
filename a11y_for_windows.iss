@@ -21,6 +21,7 @@ DisableProgramGroupPage=yes
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+UninstallBeforeInstall={10A741B8-E330-4DC5-A86C-7F7B8DE775A9}_is1
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
