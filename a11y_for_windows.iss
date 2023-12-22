@@ -39,7 +39,7 @@ Name: "{autodesktop}\Purple A11y Desktop"; Filename: "{app}\Purple A11y Frontend
 
 ; [Run]
 ; Filename: "{app}\Purple A11y Frontend\Purple A11y.exe"; Description: "{cm:LaunchProgram,Purple A11y Desktop}"; Flags: nowait postinstall skipifsilent
-Filename: "C:\Program Files\Purple HATS Desktop\unins000.exe"; Parameters: "/SILENT"; Flags: runhidden; Check: FileExists("C:\Program Files\Purple HATS Desktop\unins000.exe")
+Filename: "C:\Program Files\Purple HATS Desktop\unins000.exe"; Parameters: "/SILENT"; Flags: runhidden; Check: FileExists('C:\Program Files\Purple HATS Desktop\unins000.exe')
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\Purple A11y Frontend"
