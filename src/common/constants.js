@@ -88,7 +88,8 @@ export const getDefaultAdvancedOptions = (isProxy) => {
     maxConcurrency: false, 
     falsePositive: false,
     includeScreenshots: true,
-    includeSubdomains: true
+    includeSubdomains: true,
+    followRobots: false,
   }
 };
 
@@ -103,6 +104,12 @@ export const cliErrorTypes = {
   unauthorisedBasicAuth: 16,
   browserError: 17,
 };
+
+export const errorStates = {
+  browserError: 'browserError',
+  customScanError: 'customScanError', 
+  noPagesScannedError: 'noPagesScannedError'
+}
 
 export const userDataFormDetails = {
   // production form

@@ -5,21 +5,15 @@ import returnIcon from "../../assets/return-purple.svg";
 import { useNavigate, useLocation } from "react-router";
 import { ReactComponent as ExclamationCircleIcon } from "../../assets/exclamation-circle.svg";
 import { useState, useEffect } from "react";
+import { errorStates } from "../../common/constants";
 
 const ErrorPage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const [isCustomScan, setIsCustomScan] = useState(false);
-  const [isBrowserError, setIsBrowserError] = useState(false);
+  const [ errorState, setErrorState ] = useState('');
 
   useEffect(() => {
-    if (state?.isCustomScan) {
-      setIsCustomScan(state.isCustomScan);
-    }
-
-    if (state?.isBrowserError) {
-      setIsBrowserError(state.isBrowserError);
-    }
+    if (state?.errorState) setErrorState(state.errorState);
   }, []);
 
   const replayCustomFlow = async () => {
@@ -28,7 +22,7 @@ const ErrorPage = () => {
   };
 
   const handleBackToHome = () => {
-    if (isCustomScan) {
+    if (errorState === errorStates.customScanError) {
       window.services.cleanUpCustomFlowScripts();
       window.localStorage.removeItem("latestCustomFlowGeneratedScript");
       window.localStorage.removeItem("latestCustomFlowScanDetails");
@@ -37,35 +31,47 @@ const ErrorPage = () => {
     return;
   }
 
+  const errorMessageToDisplay = () => {
+    switch (errorState) {
+      case errorStates.browserError:
+        return (
+          <>
+            <h1>Unable to use browser to scan</h1>
+            <p>Please close either Google Chrome or Microsoft Edge browser.</p>
+          </>
+        )
+      case errorStates.noPagesScannedError:
+        return (<><h1>No pages were scanned.</h1></>)
+      default:
+        return (<><h1>Something went wrong! Please try again.</h1></>)
+    }
+
+  }
+
   return (
     <div id="error-page">
       <ButtonSvgIcon
         className={`exclamation-circle-icon`}
         svgIcon={<ExclamationCircleIcon />}
       />
-      {isBrowserError
-        ? <>
-            <h1>Unable to use browser to scan</h1>
-            <p>Please close either Google Chrome or Microsoft Edge browser.</p>
-          </>
-        : <h1>Something went wrong! Please try again.</h1>
-      }
-      <div class="actions">
-        {isCustomScan
-        ? (
-          <>
-          <button role="link" id='back-to-home-btn' onClick={handleBackToHome}>
-            <img src={returnIcon}></img>
-            &nbsp;Back To Home
-          </button>
-          <Button id="replay-btn" type="btn-primary" onClick={replayCustomFlow}>
-            Replay
-          </Button>
-          </>
-        )
-        : <Button role="link" type="btn-primary" onClick={handleBackToHome}>
-            Try Again
-          </Button>}
+      {errorMessageToDisplay()}
+      <div class='btn-container'>
+        {errorState === errorStates.customScanError
+          ? (
+            <>
+            <button role="link" id='back-to-home-btn' onClick={handleBackToHome}>
+              <img src={returnIcon}></img>
+              &nbsp;Back To Home
+            </button>
+            <Button id="replay-btn" type="btn-primary" onClick={replayCustomFlow}>
+              Replay
+            </Button>
+            </>
+          )
+          : <Button role="link" type="btn-primary" onClick={handleBackToHome}>
+              Try Again
+            </Button>
+        }
       </div>
     </div>
   );

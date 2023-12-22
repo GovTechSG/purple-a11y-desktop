@@ -68,6 +68,7 @@ const startScan = async (scanDetails) => {
     falsePositive,
     includeScreenshots,
     includeSubdomains,
+    followRobots,
     scanMetadata,
   } = scanDetails;
 
@@ -85,6 +86,7 @@ const startScan = async (scanDetails) => {
     fileTypes: fileTypes[selectedFileTypes],
     includeScreenshots,
     includeSubdomains,
+    followRobots,
     metadata: JSON.stringify(scanMetadata),
   };
 

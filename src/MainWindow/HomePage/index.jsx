@@ -8,7 +8,7 @@ import labModeOn from "../../assets/lab-icon-on.svg";
 import InitScanForm from "./InitScanForm";
 import "./HomePage.scss";
 import services from "../../services";
-import { cliErrorCodes, cliErrorTypes, versionComparator } from "../../common/constants";
+import { cliErrorCodes, cliErrorTypes, errorStates, versionComparator } from "../../common/constants";
 import Modal from "../../common/components/Modal";
 import { BasicAuthForm, BasicAuthFormFooter } from "./BasicAuthForm";
 import EditUserDetailsModal from "./EditUserDetailsModal";
@@ -195,7 +195,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           } else {
             /* When no pages were scanned (e.g. out of domain upon redirects when valid URL was entered),
                 redirects user to error page to going to result page with empty result */
-            navigate("/error");
+            navigate("/error", { state: { errorState: errorStates.noPagesScannedError }});
             return; 
           }   
         }
@@ -223,7 +223,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
             errorMessageToShow = "Invalid sitemap.";
             break;
           case cliErrorTypes.browserError:
-            navigate('/error', { state: { isBrowserError: true }});
+            navigate('/error', { state: { errorState: errorStates.browserError }});
             return;
           case cliErrorTypes.systemError:
           default:
@@ -250,6 +250,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
     const scanDetails = JSON.parse(window.localStorage.getItem("scanDetails"));
     const splitUrl = scanDetails.scanUrl.split("://");
     scanDetails.scanUrl = `${splitUrl[0]}://${username}:${password}@${splitUrl[1]}`;
+    setScanButtonIsClicked(true);
     startScan(scanDetails);
     setShowBasicAuthModal(false);
     return;
