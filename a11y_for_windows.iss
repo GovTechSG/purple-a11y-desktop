@@ -21,7 +21,6 @@ DisableProgramGroupPage=yes
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
-UninstallBeforeInstall={{10A741B8-E330-4DC5-A86C-7F7B8DE775A9}
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -40,6 +39,7 @@ Name: "{autodesktop}\Purple A11y Desktop"; Filename: "{app}\Purple A11y Frontend
 
 ; [Run]
 ; Filename: "{app}\Purple A11y Frontend\Purple A11y.exe"; Description: "{cm:LaunchProgram,Purple A11y Desktop}"; Flags: nowait postinstall skipifsilent
+Filename: "C:\Program Files\Purple HATS Desktop\unins000.exe"; Parameters: "/SILENT"; Flags: runhidden; Check: FileExists("C:\Program Files\Purple HATS Desktop\unins000.exe")
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\Purple A11y Frontend"
