@@ -644,6 +644,8 @@ const init = (scanEvent) => {
       for (const entry of entries){
         const jsonEntry = JSON.parse(entry);
         const timeOfEntry = new Date(jsonEntry['timestamp']).getTime(); 
+        console.log("this is it");
+        console.log(timeOfScan.getTime());
         if (timeOfEntry >= timeOfScan.getTime() && timeOfEntry <= timeOfError.getTime()){
           allErrors = allErrors.concat(entry,"\n")
         }

@@ -12,16 +12,11 @@ const ErrorPage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const [ errorState, setErrorState ] = useState('');
-  //todo: check commenting out here is correct
-//   const [isCustomScan, setIsCustomScan] = useState(false);
-//   const [isBrowserError, setIsBrowserError] = useState(false);
   const [errorLog, setErrorLog] = useState(null);
 
   useEffect(() => {
     if (state?.errorState) setErrorState(state.errorState);
     const getErrorLog = async () => {
-      const timeOfScan = state?.timeOfScan;
-      const timeOfError = new Date();
       const log = await services.getErrorLog(timeOfScan, timeOfError);
       setErrorLog(log);
     }

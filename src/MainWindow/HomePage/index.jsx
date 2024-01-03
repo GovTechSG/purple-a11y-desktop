@@ -195,7 +195,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           } else {
             /* When no pages were scanned (e.g. out of domain upon redirects when valid URL was entered),
                 redirects user to error page to going to result page with empty result */
-            navigate("/error", { state: { errorState: errorStates.noPagesScannedError }});
+            navigate("/error", { state: { errorState: errorStates.noPagesScannedError,timeOfScan }});
             return;
           }
         }
@@ -223,7 +223,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
             errorMessageToShow = "Invalid sitemap.";
             break;
           case cliErrorTypes.browserError:
-            navigate('/error', { state: { errorState: errorStates.browserError }});
+            navigate('/error', { state: { errorState: errorStates.browserError,timeOfScan }});
             return;
           case cliErrorTypes.systemError:
           default:
