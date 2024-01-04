@@ -146,6 +146,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
 
   const startScan = async (scanDetails) => {
     scanDetails.browser = isProxy ? "edge" : browser;
+    const timeOfScan = new Date();
 
     if (scanDetails.scanUrl.length === 0) {
       setScanButtonIsClicked(false);
@@ -174,7 +175,6 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
     window.localStorage.setItem("scanDetails", JSON.stringify(scanDetails));
 
     const checkUrlResponse = await services.validateUrlConnectivity(scanDetails);
-
     if (checkUrlResponse.success) {
        if (scanDetails.scanType === 'Custom flow') {
           navigate('/custom_flow', { state: { scanDetails }});
@@ -182,7 +182,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
         } else {
           navigate('/scanning', { state: { url: scanDetails.scanUrl } });
           const scanResponse = await services.startScan(scanDetails);
-          
+
           if (scanResponse.failedToCreateExportDir) {
             setPrevUrlErrorMessage('Unable to create download directory');
             return;
@@ -195,9 +195,9 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           } else {
             /* When no pages were scanned (e.g. out of domain upon redirects when valid URL was entered),
                 redirects user to error page to going to result page with empty result */
-            navigate("/error", { state: { errorState: errorStates.noPagesScannedError }});
-            return; 
-          }   
+            navigate("/error", { state: { errorState: errorStates.noPagesScannedError,timeOfScan }});
+            return;
+          }
         }
     } else {
       setScanButtonIsClicked(false);
@@ -223,7 +223,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
             errorMessageToShow = "Invalid sitemap.";
             break;
           case cliErrorTypes.browserError:
-            navigate('/error', { state: { errorState: errorStates.browserError }});
+            navigate('/error', { state: { errorState: errorStates.browserError,timeOfScan }});
             return;
           case cliErrorTypes.systemError:
           default:
@@ -237,7 +237,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           `unexpected status error: (code ${checkUrlResponse.statusCode})`,
           checkUrlResponse.message
         );
-      }  
+      }
     }
   };
 

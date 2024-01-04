@@ -11,6 +11,7 @@ const {
 } = require("crypto");
 const {
   enginePath,
+  appPath,
   getPathVariable,
   customFlowGeneratedScriptsPath,
   playwrightBrowsersPath,
@@ -31,6 +32,8 @@ const {
 const { env, report } = require("process");
 const { readUserDataFromFile, createExportDir } = require("./userDataManager");
 const { escape } = require("querystring");
+const { json } = require("react-router-dom");
+const { time } = require("console");
 const scanHistory = {};
 
 let currentChildProcess;
@@ -611,6 +614,46 @@ const init = (scanEvent) => {
       fs.mkdirSync(uploadFolderPath);
     }
     return uploadFolderPath;
+  })
+
+  ipcMain.handle("getErrorLog", async (event, timeOfScan, timeOfError) => {
+      const errorLogPath = path.join(appPath, 'errors.txt');
+      const errorLog = fs.readFileSync(errorLogPath, 'utf-8');  
+      const regex = /{.*?}/gs; 
+      const entries = errorLog.match(regex);
+      let allErrors = "";
+
+      const exists =fs.existsSync(errorLogPath);
+      if (!exists) {
+        allErrors="Log file (errors.txt) does not exist"
+        console.log(!exists)
+        return allErrors;
+      }
+
+      try{
+      fs.accessSync(errorLogPath, fs.constants.R_OK);
+    } catch (err) { 
+      console.error('No Read access', errorLogPath); 
+      allErrors="Log file (errors.txt) cannot be read"
+      return allErrors;
+    } 
+
+    if (entries==null){
+      allErrors = "Log file (errors.txt) is empty"
+    } else {
+      for (const entry of entries){
+        const jsonEntry = JSON.parse(entry);
+        const timeOfEntry = new Date(jsonEntry['timestamp']).getTime(); 
+        if (timeOfEntry >= timeOfScan.getTime() && timeOfEntry <= timeOfError.getTime()){
+          allErrors = allErrors.concat(entry,"\n")
+        }
+      }
+      if (allErrors===""){
+        allErrors ="Log file (errors.txt) has no new entries after scan"
+      }
+    }
+
+    return allErrors;
   })
 
   ipcMain.on("cleanUpCustomFlowScripts", async () => {

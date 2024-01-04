@@ -130,6 +130,11 @@ const getUserData = async () => {
   return userData;
 };
 
+const getErrorLog = async (timeOfScan, timeOfError) => {
+  const errorLog = await window.services.getErrorLog(timeOfScan, timeOfError);
+  return errorLog;
+};
+
 const getDataForForm = async () => {
   const userData = await getUserData();
   const email = userData["email"];
@@ -227,6 +232,7 @@ const services = {
   isValidName,
   isValidCustomFlowLabel,
   validateUrlConnectivity,
+  getErrorLog,
 };
 
 export default services;
