@@ -42,15 +42,21 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
       allReleaseTags,
       allPreReleaseTags
     } = appVersionInfo;
-    if (latestVer === version) return 'latest stable build';
-    if (latestVerForLab === version) return 'latest pre-release';
 
-    if (allReleaseTags.includes(version)) {
-      return 'stable build';
-    } else if (allPreReleaseTags.includes(version)) {
-      return 'pre-release';
+    try {
+      if (latestVer === version) return 'latest stable build';
+      if (latestVerForLab === version) return 'latest pre-release';
+
+      if (allReleaseTags.includes(version)) {
+        return 'stable build';
+      } else if (allPreReleaseTags.includes(version)) {
+        return 'pre-release';
+      }
+    } catch (error) {
+        console.log("Unable to show version label");
     }
-    return undefined; // if cannot be determined, this should not happen
+    
+    return  undefined; // if cannot be determined, this should not happen
   }, [appVersionInfo]);
 
   const isLatest = () => {
