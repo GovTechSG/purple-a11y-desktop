@@ -387,7 +387,12 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
     }
 
     const isPrepackageValid = await validateZipFile(macOSPrepackageBackend);
-    if (isPrepackageValid) {
+    const isDev = process.env.NODE_ENV === "dev";
+    if (isDev) {
+      consoleLogger.info(
+        "detected running from dev environment, will not validate/download prepackage"
+      );
+    } else if (isPrepackageValid) {
       let skipUnzip = false;
       if (getBackendExists() && fs.existsSync(hashPath)) {
         consoleLogger.info("backend and hash path exists");
