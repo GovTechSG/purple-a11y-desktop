@@ -20,7 +20,7 @@
   "homepage": ".",
   "scripts": {
     "dev": "react-scripts start",
-    "start": "electron-forge start",
+    "start": "NODE_ENV=dev electron-forge start",
     "build": "react-scripts build",
     "test:update-screenshot": "npx playwright test --update-snapshots",
     "eject": "react-scripts eject",
