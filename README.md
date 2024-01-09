@@ -1,8 +1,6 @@
 # Purple A11y Desktop
 
-Purple A11y Desktop is a desktop frontend for [Purple A11y](https://github.com/GovTechSG/purple-a11y) accessibility site scanner - a customisable, automated web accessibility testing tool that allows software development teams to find and fix accessibility problems to improve persons with disabilities (PWDs) access to digital services.
-
-Please note that it's recommended to download the software from the official source at [https://go.gov.sg/get-purplea11y](https://go.gov.sg/get-purplea11y). Using other sources may pose risks or lead to compromised versions.
+Purple A11y Desktop is a desktop frontend for [Purple A11y](https://github.com/GovTechSG/purple-a11y) accessibility site scanner - a customisable, automated web accessibility testing tool that allows software development teams to find and fix accessibility problems to improve persons with disabilities (PWDs) access to digital services. The official application can only be downloaded at [https://go.gov.sg/get-purplea11y](https://go.gov.sg/get-purplea11y). We recommend that you download the software only from the official link, as other sources and/or third party links may pose risks and/or compromise your system.
 
 <img alt="Purple A11y Desktop main screen" src="https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/8eb8268e-80dd-4aff-b004-a4e7b8949ebc">
 
