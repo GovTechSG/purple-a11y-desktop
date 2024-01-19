@@ -51,6 +51,7 @@ function createMainWindow() {
 // TODO set ipcMain messages
 app.on("ready", async () => {
   const axiosInstance = axios.create({
+    timeout: 5000,
     httpsAgent: new https.Agent({
       rejectUnauthorized: false,
       headers: {
