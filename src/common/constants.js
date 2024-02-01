@@ -86,7 +86,6 @@ export const getDefaultAdvancedOptions = (isProxy) => {
     device: deviceOptions[0],
     viewportWidth: "320",
     maxConcurrency: false, 
-    falsePositive: false,
     includeScreenshots: true,
     includeSubdomains: true,
     followRobots: false,

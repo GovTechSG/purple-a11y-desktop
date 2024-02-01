@@ -58,7 +58,6 @@ const getScanOptions = (details) => {
     name,
     exportDir,
     maxConcurrency,
-    falsePositive,
     includeScreenshots,
     includeSubdomains,
     followRobots,
@@ -108,9 +107,9 @@ const getScanOptions = (details) => {
     options.push("-t", 1);
   }
 
-  if (falsePositive) {
-    options.push("-f", "true");
-  }
+  //false positive true by default
+  options.push("-f", "true");
+  
 
   if (followRobots) {
     options.push("-r", "yes");

@@ -209,22 +209,7 @@ const AdvancedScanOptions = ({
               </label>
             </div>
           }
-          <div id='false-positive-toggle-group' class="advanced-options-toggle-group">
-              <input 
-                type="checkbox"
-                id="false-positive-toggle" 
-                class="advanced-options-toggle"
-                aria-describedby="false-positive-tooltip"
-                checked={advancedOptions.falsePositive}
-                onChange={handleSetAdvancedOption(
-                  "falsePositive", 
-                  (e) => e.target.checked
-                )} 
-              /> 
-              <label htmlFor="false-positive-toggle">
-                Show potential false positive issues
-              </label>
-          </div>
+
           {advancedOptions.scanType !== scanTypeOptions[3] && (
             <>
               <div id="max-concurrency-toggle-group" class="advanced-options-toggle-group">
