@@ -107,10 +107,6 @@ const getScanOptions = (details) => {
     options.push("-t", 1);
   }
 
-  //false positive true by default
-  options.push("-f", "true");
-  
-
   if (followRobots) {
     options.push("-r", "yes");
   }
