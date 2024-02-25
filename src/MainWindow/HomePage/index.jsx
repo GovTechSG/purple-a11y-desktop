@@ -196,7 +196,11 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
 
           if (scanResponse.success) {
             setCompletedScanId(scanResponse.scanId);
+            if (scanDetails.scanType === 'Custom flow 2.0') {
+              navigate('/custom_flow', { state: { scanDetails }})
+            } else {
             navigate("/result");
+            }
             return;
           } else {
             /* When no pages were scanned (e.g. out of domain upon redirects when valid URL was entered),
