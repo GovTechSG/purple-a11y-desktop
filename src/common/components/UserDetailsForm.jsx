@@ -20,7 +20,7 @@ const UserDetailsForm = ({
   const validateName = () => {
     if (!services.isValidName(name)) {
       setNameInputErrorMessage(
-        "Only letters (a-z), commas (,), hyphens (-) are allowed."
+        "Only printable characters excluding <>'\"\\/;|&!$*{}()[\\]\\r\\n\\$ are allowed"
       );
       return false;
     }

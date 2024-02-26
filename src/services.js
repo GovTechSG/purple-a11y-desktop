@@ -163,7 +163,7 @@ const getFeedbackFormUrl = async () => {
 
 const isValidEmail = (email) => {
   const emailRegex = new RegExp(
-    /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+    /^.+@.+\..+$/,
     "gm"
   );
 
@@ -211,9 +211,28 @@ const mailReport = async (formDetails, scanId) => {
 const getIsWindows = async () => window.services.getIsWindows();
 
 const isValidName = (name) => {
-  const nameRegex = /^(?=.{1,50}$)[A-Za-z-,\s]+$/;
+  // Allow only printable characters from any language
+  const regex = /^[\p{L}\p{N}\s'".,()\[\]{}!?:؛،؟…]+$/u;
 
-  return nameRegex.test(name);
+  // Check if the length is between 2 and 32000 characters
+  if (name.length < 2 || name.length > 32000) {
+    // Handle invalid name length
+    return false;
+  }
+
+  if (!regex.test(name)) {
+    // Handle invalid name format
+    return false;
+  }
+
+  // Include a check for specific characters to sanitize injection patterns
+  const preventInjectionRegex = /[<>'"\\/;|&!$*{}()\[\]\r\n\t]/;
+  if (preventInjectionRegex.test(name)) {
+    // Handle potential injection attempts
+    return false;
+  }
+
+  return true;
 };
 
 const services = {
