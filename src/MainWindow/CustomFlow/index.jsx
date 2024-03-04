@@ -146,6 +146,10 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
           setScanDetails(scanDetails);
           setStep(3);
         }
+
+        if (state.scanDetails.scanType=='Custom flow 2.0'){
+          setStep(4);
+          }
     }, [])
 
     useEffect(() => {
@@ -221,7 +225,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
         window.services.generateReport(customFlowLabel.trim(), completedScanId); 
         window.localStorage.setItem("latestCustomFlowGeneratedScript", generatedScript); 
         window.localStorage.setItem("latestCustomFlowScanDetails", JSON.stringify(scanDetails));
-        navigate("/result", {state: { isCustomScan: true, customFlowLabel: customFlowLabel }});  
+        navigate("/result", {state: { isCustomScan: state.scanDetails.scanType !== 'Custom flow 2.0', customFlowLabel: customFlowLabel }});  
       }
       return;
     }
@@ -285,6 +289,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
                   title={"Label"}
                   url={scanDetails.scanUrl}
                   description={"Assign a recognisable label to this custom flow for convenient reference in the report."}
+                  scanType={state.scanDetails.scanType}
                 />
                 <label className="custom-label-form-label" for="custom-label-input">Custom Flow Label</label>
                 <form id="custom-label-form" onSubmit={(e) => {generateReport(e)}}>
@@ -305,10 +310,12 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
         }
     }
 
+
     return (
       <div id="custom-flow">
         { scanDetails && 
           <>
+          { state.scanDetails.scanType != 'Custom flow 2.0' &&
             <div>
               {/* <div class="mb-2">
                 <Link to="/" className="text-decoration-none">
@@ -318,6 +325,7 @@ const CustomFlowPage = ({ completedScanId, setCompletedScanId }) => {
               </div> */}
               <ProgressStepComponent step={step}></ProgressStepComponent>
             </div>
+          }
             <div className="custom-flow-content">{currentDisplay()}</div>
           </>
         }
