@@ -44,9 +44,9 @@ Purple A11y is a customisable, automated accessibility testing tool that allows 
 ### Download Purple A11y desktop MacOS
 
 * Download [purple-a11y-desktop-macos.zip](https://github.com/GovTechSG/purple-a11y-desktop/releases/latest/download/purple-a11y-desktop-macos.zip).
-* If Purple A11y app does not appear in your Downloads folder, double-click the downloaded purple-a11y-desktop-macos.zip file.
+* If Purple A11y app does not appear in your Downloads folder, double-click the Purple A11y file.
 
-> Tip: To extract files in Mac, double-click on `purple-a11y-portable-mac.zip` file, usually located at your Downloads folder. A new folder with the name purple-a11y-mac will appear in Finder.
+> Tip: To extract files in Mac, double-click on `purple-a11y-desktop-macos.zip` file, which is usually saved to your Downloads folder. A new app `Purple A11y` with the a11y icon will appear.  Drag or move `Purple A11y` app to your Applications folder for easy access.
 
 ### Run Purple A11y Desktop MacOS
 
