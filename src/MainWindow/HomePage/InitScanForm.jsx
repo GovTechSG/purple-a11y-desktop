@@ -22,10 +22,6 @@ const InitScanForm = ({
 }) => {
   const [openPageLimitAdjuster, setOpenPageLimitAdjuster] = useState(false);
   const pageLimitAdjuster = useRef();
-
-  const [scanUrl, setScanUrl] = useState("https://");
-  const [pageLimit, setPageLimit] = useState("100");
-
   const scanTypeOptions = Object.keys(scanTypes);
   const fileTypesOptions = Object.keys(fileTypes);
 
@@ -36,9 +32,21 @@ const InitScanForm = ({
   const viewportOptions = viewportTypes;
   const deviceOptions = isProxy ? [] : Object.keys(devices);
 
-  const [advancedOptions, setAdvancedOptions] = useState(
-    getDefaultAdvancedOptions(isProxy)
-  );
+  const cachedPageLimit = sessionStorage.getItem('pageLimit');
+  const cachedAdvancedOptions = sessionStorage.getItem('advancedOptions');
+  const cachedScanUrl = sessionStorage.getItem('scanUrl');
+
+  const [pageLimit, setPageLimit] = useState(() => {
+    return cachedPageLimit? JSON.parse(cachedPageLimit) : "100"
+  });
+
+  const [advancedOptions, setAdvancedOptions] = useState(() => {
+    return cachedAdvancedOptions? JSON.parse(cachedAdvancedOptions) : getDefaultAdvancedOptions(isProxy)
+  });
+
+  const [scanUrl, setScanUrl] = useState(() => {
+    return cachedScanUrl? JSON.parse(cachedScanUrl) : "https://"
+  });
 
   useEffect(() => {
     const urlBarElem = document.getElementById("url-bar");
@@ -68,6 +76,9 @@ const InitScanForm = ({
     }
 
     setScanButtonIsClicked(true);
+    sessionStorage.setItem('pageLimit', JSON.stringify(pageLimit));
+    sessionStorage.setItem('advancedOptions', JSON.stringify(advancedOptions));
+    sessionStorage.setItem('scanUrl', JSON.stringify(scanUrl));
     startScan({ scanUrl: scanUrl.trim(), pageLimit, ...advancedOptions });
   };
 
