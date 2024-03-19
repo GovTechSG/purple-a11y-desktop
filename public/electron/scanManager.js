@@ -198,6 +198,7 @@ const startScan = async (scanDetails, scanEvent) => {
   }
 
   const response = await new Promise(async (resolve) => {
+    let intermediateFolderName;
     const scan = spawn(
       "node",
       [path.join(enginePath, "cli.js"), ...getScanOptions(scanDetails)],
@@ -209,9 +210,21 @@ const startScan = async (scanDetails, scanEvent) => {
           PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
           PATH: getPathVariable(),
         },
+        stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
       }
     );
 
+    scan.on('message', (message) => {
+      let parsedMessage = JSON.parse(message)
+      let messageFromBackend = parsedMessage.payload;
+
+      if (parsedMessage.type === 'randomToken') {
+        console.log('messageFromBackend :',messageFromBackend);
+        intermediateFolderName = messageFromBackend;
+      }
+    })
+
+    console.log('B');
     currentChildProcess = scan;
 
     scan.stderr.setEncoding("utf8");
@@ -225,7 +238,9 @@ const startScan = async (scanDetails, scanEvent) => {
         scan.kill("SIGKILL");
         currentChildProcess = null;
         killChildProcessSignal = false;
-        await cleanUpIntermediateFolders("");
+        if (intermediateFolderName){
+          await cleanUpIntermediateFolders(intermediateFolderName)
+        }
         resolve({ cancelled: true });
         return;
       }
@@ -256,7 +271,6 @@ const startScan = async (scanDetails, scanEvent) => {
           .split("/")
           .pop()
           .split(" ")[0];
-        console.log(resultsPath);
         const scanId = randomUUID();
         scanHistory[scanId] = resultsPath;
         scan.kill("SIGKILL");
@@ -551,10 +565,8 @@ Accessibility Enabling Team"
 
 const cleanUpIntermediateFolders = async (folderName, setDefaultFolders = false) => {
   const pathToDelete = path.join(resultsPath, folderName);
-  console.log('joshpathToDelete :',pathToDelete);
   await fs.pathExists(pathToDelete).then(exists => {
     if (exists) {
-      console.log('joshdeleting here');
       fs.removeSync(pathToDelete);
     }
   });
