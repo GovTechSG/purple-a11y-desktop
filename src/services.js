@@ -53,6 +53,10 @@ const validateUrlConnectivity = async (scanDetails) => {
   return response;
 };
 
+const cancelScan = async () => {
+  await window.services.cancelScan()
+};
+
 const startScan = async (scanDetails) => {
   const {
     scanType: selectedScanType,
@@ -236,6 +240,7 @@ const isValidName = (name) => {
 };
 
 const services = {
+  cancelScan,
   startScan,
   openReport,
   getResultsFolderPath,

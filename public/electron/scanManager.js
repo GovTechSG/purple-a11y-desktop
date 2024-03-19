@@ -37,6 +37,11 @@ const { time } = require("console");
 const scanHistory = {};
 
 let currentChildProcess;
+let killChildProcessSignal = false;
+
+let setKillChildProcessSignal = () => {
+  killChildProcessSignal = true;
+}
 
 const killChildProcess = () => {
   if (currentChildProcess) {
@@ -216,6 +221,14 @@ const startScan = async (scanDetails, scanEvent) => {
 
     scan.stdout.setEncoding("utf8");
     scan.stdout.on("data", async (data) => {
+      if (killChildProcessSignal) {
+        scan.kill("SIGKILL");
+        currentChildProcess = null;
+        killChildProcessSignal = false;
+        await cleanUpIntermediateFolders("");
+        resolve({ cancelled: true });
+        return;
+      }
       /** Code 0 handled indirectly here (i.e. successful process run),
       as unable to get stdout on close event after changing to spawn from fork */
 
@@ -538,8 +551,10 @@ Accessibility Enabling Team"
 
 const cleanUpIntermediateFolders = async (folderName, setDefaultFolders = false) => {
   const pathToDelete = path.join(resultsPath, folderName);
+  console.log('joshpathToDelete :',pathToDelete);
   await fs.pathExists(pathToDelete).then(exists => {
     if (exists) {
+      console.log('joshdeleting here');
       fs.removeSync(pathToDelete);
     }
   });
@@ -581,6 +596,10 @@ const init = (scanEvent) => {
 
   ipcMain.handle("startScan", async (_event, scanDetails) => {
     return await startScan(scanDetails, scanEvent);
+  });
+
+  ipcMain.handle("cancelScan", async (_event) => {
+    setKillChildProcessSignal();
   });
 
   ipcMain.handle("startReplay", async (_event, generatedScript, scanDetails, isReplay) => {
