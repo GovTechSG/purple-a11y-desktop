@@ -2,40 +2,100 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import "./ScanningPage.scss";
 import ScanningComponent from "../../common/components/ScanningComponent";
-import pagesSvg from "../../assets/first-timer-3.svg"; 
+import pagesSvg from "../../assets/first-timer-3.svg";
 import { useLocation } from "react-router-dom";
 import Button from "../../common/components/Button";
+import ToolTip from "../../common/components/ToolTip";
+import Modal from "../../common/components/Modal";
+import startingUrlIcon from "../../assets/starting-url.svg";
 
 const ScanningPage = () => {
   const navigate = useNavigate();
-  const { state } = useLocation(); 
-  const [ url, setUrl ] = useState(null); 
+  const { state } = useLocation();
+  const [url, setUrl] = useState(null);
+  const [showCancelScanTooltip, setShowCancelScanTooltip] = useState(false);
+  const [showCancelScanModal, setShowCancelScanModal] = useState(false);
 
   useEffect(() => {
-    setUrl(state.url); 
-  }, []); 
+    setUrl(state.url);
+  }, []);
 
   const handleCancelScan = () => {
-    navigate('/');
+    navigate("/");
+    window.services.cancelScan();
+  };
 
-    window.services.cancelScan()
-
-
-    //remove localStorage scanItems
+  const handleCancelScanModalNo = () => {
+    setShowCancelScanModal(false);
   };
 
   return (
     <div id="scanning-page">
-        {url && 
-          <>
+      {url && (
+        <>
           <div className="scanning-page-header">
-            <img src={pagesSvg}></img>
-            <span><b>URL: </b>{url}</span>
+            <img className="scanning-page-header-img" src={pagesSvg}></img>
+            <div className="starting-url-outer-box">
+              <div className="starting-url-inner-box">
+                <img src={startingUrlIcon} aria-hidden="true"></img>
+                <span className="starting-url">{url}</span>
+              </div>
+              <div className="cancel-tooltip-container">
+                <ToolTip
+                  description="Abort scan"
+                  id="cancel-scan-tooltip"
+                  showToolTip={showCancelScanTooltip}
+                />
+                <button
+                  type="button"
+                  className="btn-close"
+                  aria-label="Cancel scan"
+                  onMouseEnter={() => setShowCancelScanTooltip(true)}
+                  onMouseLeave={() => setShowCancelScanTooltip(false)}
+                  onClick={() => setShowCancelScanModal(true)}
+                />
+              </div>
+            </div>
           </div>
-          <div className="scanning-page-divider"></div>
-          <ScanningComponent scanningMessage={"Preparing Scan..."}></ScanningComponent>
-          <Button onClick={handleCancelScan}>Cancel</Button>
-          </>}
+          <ScanningComponent
+            scanningMessage={"Preparing Scan..."}
+          ></ScanningComponent>
+          <Modal
+            id="cancelScanModal"
+            showModal={showCancelScanModal}
+            setShowModal={setShowCancelScanModal}
+            showHeader={true}
+            modalTitle={"Are you sure?"}
+            modalSizeClass="modal-dialog-centered"
+            modalBody={
+              <>
+                <p>
+                  Aborting the scan will lose any progress and return back to
+                  the home screen.
+                </p>
+              </>
+            }
+            modalFooter={
+              <div className="d-flex">
+                <Button
+                  type="btn-secondary"
+                  className="cancel-modal-left-button"
+                  onClick={handleCancelScan}
+                >
+                  Yes
+                </Button>
+                <Button
+                  type="btn-primary"
+                  className="cancel-modal-right-button"
+                  onClick={handleCancelScanModalNo}
+                >
+                  No
+                </Button>
+              </div>
+            }
+          />
+        </>
+      )}
     </div>
   );
 };

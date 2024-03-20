@@ -219,12 +219,10 @@ const startScan = async (scanDetails, scanEvent) => {
       let messageFromBackend = parsedMessage.payload;
 
       if (parsedMessage.type === 'randomToken') {
-        console.log('messageFromBackend :',messageFromBackend);
         intermediateFolderName = messageFromBackend;
       }
     })
 
-    console.log('B');
     currentChildProcess = scan;
 
     scan.stderr.setEncoding("utf8");
