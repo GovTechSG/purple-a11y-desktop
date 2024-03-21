@@ -40,7 +40,7 @@ const ScanningPage = () => {
                 <img src={startingUrlIcon} aria-hidden="true"></img>
                 <span className="starting-url">{url}</span>
               </div>
-              <div className="cancel-tooltip-container">
+              <div className="cancel-scan-tooltip-container">
                 <ToolTip
                   description="Abort scan"
                   id="cancel-scan-tooltip"
@@ -62,6 +62,7 @@ const ScanningPage = () => {
           ></ScanningComponent>
           <Modal
             id="cancelScanModal"
+            isConfirm={true}
             showModal={showCancelScanModal}
             setShowModal={setShowCancelScanModal}
             showHeader={true}
@@ -76,22 +77,22 @@ const ScanningPage = () => {
               </>
             }
             modalFooter={
-              <div className="d-flex">
+              <>
                 <Button
                   type="btn-secondary"
-                  className="cancel-modal-left-button"
+                  className="modal-left-button"
                   onClick={handleCancelScan}
                 >
                   Yes
                 </Button>
                 <Button
                   type="btn-primary"
-                  className="cancel-modal-right-button"
+                  className="modal-right-button"
                   onClick={handleCancelScanModalNo}
                 >
                   No
                 </Button>
-              </div>
+              </>
             }
           />
         </>

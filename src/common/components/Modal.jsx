@@ -11,8 +11,9 @@ const Modal = ({
   modalFooter,
   setShowModal,
   modalSizeClass = "",
+  isConfirm,
 }) => {
-  const modalClassName = getModalClassName(showModal, isOnboarding);
+  const modalClassName = getModalClassName(showModal, isOnboarding, isConfirm);
   const modalHeaderClassName = showHeader
     ? "modal-header show"
     : "modal-header hide";
@@ -109,12 +110,15 @@ const Modal = ({
   );
 };
 
-const getModalClassName = (showModal, isOnboarding) => {
+const getModalClassName = (showModal, isOnboarding, isConfirm) => {
   let modalClassName;
   if (showModal) {
     modalClassName = "modal fade show";
     if (isOnboarding) {
       modalClassName = "onboarding-modal " + modalClassName;
+    }
+    else if (isConfirm){
+      modalClassName = "confirm-modal " +modalClassName
     }
   } else {
     modalClassName = "modal d-none";

@@ -44,7 +44,15 @@
     margin-left: 16px;
     overflow-x: hidden;
   }
-  .custom-tooltip-description {
+  
+  .cancel-scan-tooltip-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cancel-scan-tooltip-container .custom-tooltip-description {
     background-color: #333;
     border-radius: 4px;
     color: #fff;
@@ -53,38 +61,6 @@
     padding: 5px;
     width: 96px;
     text-align: center;
-  }
-  .cancel-modal-left-button {
-    margin-right: 8px;
-    width: 83px;
-  }
-  .cancel-modal-right-button {
-    margin-left: 8px;
-    width: 83px;
-  }
-
-  .modal-header {
-    border: none;
-    padding: 32px;
-    gap: 16px;
-    align-items: start;
-  }
-
-  .modal-body {
-    flex: 1 1 auto;
-    padding: 0px 32px;
-    position: relative;
-  }
-
-  .modal-footer {
-    padding: 8px 32px 32px 32px; /* top: 8px, right: 32px, bottom: 32px, left: 32px */
-  }
-
-  .cancel-tooltip-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
 
 }
