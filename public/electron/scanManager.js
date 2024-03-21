@@ -608,7 +608,7 @@ const init = (scanEvent) => {
     return await startScan(scanDetails, scanEvent);
   });
 
-  ipcMain.handle("cancelScan", async (_event) => {
+  ipcMain.handle("abortScan", async (_event) => {
     setKillChildProcessSignal();
   });
 

@@ -13,20 +13,20 @@ const ScanningPage = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [url, setUrl] = useState(null);
-  const [showCancelScanTooltip, setShowCancelScanTooltip] = useState(false);
-  const [showCancelScanModal, setShowCancelScanModal] = useState(false);
+  const [showAbortScanTooltip, setShowAbortScanTooltip] = useState(false);
+  const [showAbortScanModal, setShowAbortScanModal] = useState(false);
 
   useEffect(() => {
     setUrl(state.url);
   }, []);
 
-  const handleCancelScan = () => {
+  const handleAbortScan = () => {
     navigate("/");
-    window.services.cancelScan();
+    window.services.abortScan();
   };
 
-  const handleCancelScanModalNo = () => {
-    setShowCancelScanModal(false);
+  const handleAbortScanModalNo = () => {
+    setShowAbortScanModal(false);
   };
 
   return (
@@ -40,19 +40,20 @@ const ScanningPage = () => {
                 <img src={startingUrlIcon} aria-hidden="true"></img>
                 <span className="starting-url">{url}</span>
               </div>
-              <div className="cancel-scan-tooltip-container">
+              <div className="abort-scan-tooltip-container">
                 <ToolTip
                   description="Abort scan"
-                  id="cancel-scan-tooltip"
-                  showToolTip={showCancelScanTooltip}
+                  id="abort-scan-tooltip"
+                  showToolTip={showAbortScanTooltip}
                 />
                 <button
                   type="button"
                   className="btn-close"
-                  aria-label="Cancel scan"
-                  onMouseEnter={() => setShowCancelScanTooltip(true)}
-                  onMouseLeave={() => setShowCancelScanTooltip(false)}
-                  onClick={() => setShowCancelScanModal(true)}
+                  aria-label="Abort scan"
+                  onMouseEnter={() => setShowAbortScanTooltip(true)}
+                  onMouseLeave={() => setShowAbortScanTooltip(false)}
+                  onClick={() => setShowAbortScanModal(true)}
+                  tabIndex={0}
                 />
               </div>
             </div>
@@ -61,16 +62,17 @@ const ScanningPage = () => {
             scanningMessage={"Preparing Scan..."}
           ></ScanningComponent>
           <Modal
-            id="cancelScanModal"
+            id="abortScanModal"
             isConfirm={true}
-            showModal={showCancelScanModal}
-            setShowModal={setShowCancelScanModal}
+            showModal={showAbortScanModal}
+            setShowModal={setShowAbortScanModal}
             showHeader={true}
             modalTitle={"Are you sure?"}
             modalSizeClass="modal-dialog-centered"
+            hideCloseButton={true}
             modalBody={
               <>
-                <p>
+                <p className="mb-0">
                   Aborting the scan will lose any progress and return back to
                   the home screen.
                 </p>
@@ -80,15 +82,15 @@ const ScanningPage = () => {
               <>
                 <Button
                   type="btn-secondary"
-                  className="modal-left-button"
-                  onClick={handleCancelScan}
+                  className="abort-modal-left-button"
+                  onClick={handleAbortScan}
                 >
                   Yes
                 </Button>
                 <Button
                   type="btn-primary"
-                  className="modal-right-button"
-                  onClick={handleCancelScanModalNo}
+                  className="abort-modal-right-button"
+                  onClick={handleAbortScanModalNo}
                 >
                   No
                 </Button>

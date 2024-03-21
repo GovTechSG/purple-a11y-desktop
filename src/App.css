@@ -44,7 +44,8 @@ h3 {
   background-color: #5b3bed;
 }
 
-.btn-primary:active {
+.btn-primary:active,
+.btn-primary:focus {
   background-color: #472bc4;
 }
 
@@ -72,7 +73,8 @@ h3 {
   color: #5b3bed;
 }
 
-.btn-secondary:active {
+.btn-secondary:active,
+.btn-secondary:focus {
   background-color: #c0b4f8;
   color: #472bc4;
 }
@@ -150,34 +152,6 @@ a:hover {
   100% {
     transform: rotate(360deg);
   }
-}
-
-.confirm-modal .modal-header {
-  border: none;
-  padding: 32px;
-  gap: 16px;
-  align-items: start;
-}
-
-.confirm-modal .modal-body {
-  flex: 1 1 auto;
-  padding: 0px 32px;
-  position: relative;
-}
-
-.confirm-modal .modal-footer {
-  display: flex;
-  padding: 8px 32px 32px 32px; /* top: 8px, right: 32px, bottom: 32px, left: 32px */
-}
-
-.confirm-modal .modal-right-button {
-  margin-left: 8px;
-  width: 83px;
-}
-
-.confirm-modal .modal-left-button {
-  margin-right: 8px;
-  width: 83px;
 }
 
 .onboarding-modal .modal-content {

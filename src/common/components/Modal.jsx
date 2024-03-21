@@ -11,9 +11,9 @@ const Modal = ({
   modalFooter,
   setShowModal,
   modalSizeClass = "",
-  isConfirm,
+  hideCloseButton,
 }) => {
-  const modalClassName = getModalClassName(showModal, isOnboarding, isConfirm);
+  const modalClassName = getModalClassName(showModal, isOnboarding);
   const modalHeaderClassName = showHeader
     ? "modal-header show"
     : "modal-header hide";
@@ -33,6 +33,9 @@ const Modal = ({
   }, [isOnboarding]);
 
   useEffect(() => {
+    if (!showModal) {
+      return () => {};
+    }
     const modalElement = document.querySelector(`#${id}`);
 
     const handleTabKey = (event) => {
@@ -82,7 +85,7 @@ const Modal = ({
       document.removeEventListener("keydown", handleTabKey);
       document.removeEventListener("keydown", handleEscapeKey);
     };
-  }, [setShowModal, showHeader, id]);
+  }, [setShowModal, showHeader, id, showModal]);
 
   return (
     <div className={modalClassName} id={id}>
@@ -92,13 +95,15 @@ const Modal = ({
             <h3 className="modal-title" defaultValue={"modalTitle"}>
               {modalTitle}
             </h3>
-            <button
-              type="button"
-              className="btn-close"
-              onClick={() => setShowModal(false)}
-              aria-label="Close"
-              aria-controls={id}
-            />
+            {!hideCloseButton && (
+              <button
+                type="button"
+                className="btn-close"
+                onClick={() => setShowModal(false)}
+                aria-label="Close"
+                aria-controls={id}
+              />
+            )}
           </div>
           <div className={modalBodyClassName} key={key}>
             {modalBody}
@@ -110,15 +115,12 @@ const Modal = ({
   );
 };
 
-const getModalClassName = (showModal, isOnboarding, isConfirm) => {
+const getModalClassName = (showModal, isOnboarding) => {
   let modalClassName;
   if (showModal) {
     modalClassName = "modal fade show";
     if (isOnboarding) {
       modalClassName = "onboarding-modal " + modalClassName;
-    }
-    else if (isConfirm){
-      modalClassName = "confirm-modal " +modalClassName
     }
   } else {
     modalClassName = "modal d-none";
