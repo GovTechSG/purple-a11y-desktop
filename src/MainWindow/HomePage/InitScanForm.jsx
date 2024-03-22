@@ -21,6 +21,7 @@ const InitScanForm = ({
   setScanButtonIsClicked,
 }) => {
   const [openPageLimitAdjuster, setOpenPageLimitAdjuster] = useState(false);
+  const [pageWord, setPageWord] = useState("pages");
   const pageLimitAdjuster = useRef();
   const scanTypeOptions = Object.keys(scanTypes);
   const fileTypesOptions = Object.keys(fileTypes);
@@ -39,7 +40,7 @@ const InitScanForm = ({
   const [pageLimit, setPageLimit] = useState(() => {
     return cachedPageLimit? JSON.parse(cachedPageLimit) : "100"
   });
-
+  console.log(' :',);
   const [advancedOptions, setAdvancedOptions] = useState(() => {
     return cachedAdvancedOptions? JSON.parse(cachedAdvancedOptions) : getDefaultAdvancedOptions(isProxy)
   });
@@ -54,6 +55,10 @@ const InitScanForm = ({
     urlBarInputList.forEach((elem) => (elem.disabled = scanButtonIsClicked));
     setOpenPageLimitAdjuster(false);
   }, [scanButtonIsClicked, prevUrlErrorMessage]);
+
+  useEffect(() => {
+    setPageWord(pageLimit === "1" ? 'page' : 'pages')
+  }, [pageLimit]);
 
   const togglePageLimitAdjuster = (e) => {
     if (!e.currentTarget.disabled) {
@@ -106,7 +111,7 @@ const InitScanForm = ({
                 >
                   capped at{" "}
                   <span className="purple-text">
-                    {pageLimit} pages{" "}
+                    {pageLimit} {pageWord}{" "}
                     {openPageLimitAdjuster ? (
                       <ButtonSvgIcon
                         className={`chevron-up-icon`}
@@ -137,7 +142,7 @@ const InitScanForm = ({
                         }
                       }}
                     />
-                    <label htmlFor="page-limit-input">pages</label>
+                    <label htmlFor="page-limit-input">{pageWord}</label>
                   </div>
                 )}
               </div>

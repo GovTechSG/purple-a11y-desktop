@@ -12,6 +12,7 @@ const ScanningComponent = ({scanningMessage}) => {
   const [pagesScanned, setPagesScanned] = useState(0);
   const [displayPageNum, setDisplayPageNum] = useState(0);
   const [scanCompleted, setScanCompleted] = useState(false);
+  const [displayPageWord, setDisplayPageWord] = useState("page");
 
   useEffect(() => {
       if (!scanCompleted) {
@@ -42,6 +43,10 @@ const ScanningComponent = ({scanningMessage}) => {
         })
       }
   })
+
+  useEffect(() => {
+    setDisplayPageWord(displayPageNum === 1 ? 'page' : 'pages')
+  }, [displayPageNum]);
 
   const UrlItemComponent = ({index, urlItem, scanCompleted}) => {
     const isMostRecent = index === 0; 
@@ -75,7 +80,7 @@ const ScanningComponent = ({scanningMessage}) => {
       { urlItems.length > 0 
         ?
         <>
-          <h1 className="scanning-url-title">Scanned: {displayPageNum} pages</h1>
+          <h1 className="scanning-url-title">Scanned: {displayPageNum} {displayPageWord}</h1>
           <div className="scanning-url-list-container">
             <ul className="scanning-url-list">{urlItemComponents}</ul> 
             <div className="blurred-overlay"></div>
