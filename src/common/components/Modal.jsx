@@ -11,6 +11,7 @@ const Modal = ({
   modalFooter,
   setShowModal,
   modalSizeClass = "",
+  hideCloseButton,
 }) => {
   const modalClassName = getModalClassName(showModal, isOnboarding);
   const modalHeaderClassName = showHeader
@@ -32,6 +33,9 @@ const Modal = ({
   }, [isOnboarding]);
 
   useEffect(() => {
+    if (!showModal) {
+      return () => {};
+    }
     const modalElement = document.querySelector(`#${id}`);
 
     const handleTabKey = (event) => {
@@ -81,7 +85,7 @@ const Modal = ({
       document.removeEventListener("keydown", handleTabKey);
       document.removeEventListener("keydown", handleEscapeKey);
     };
-  }, [setShowModal, showHeader, id]);
+  }, [setShowModal, showHeader, id, showModal]);
 
   return (
     <div className={modalClassName} id={id}>
@@ -91,13 +95,15 @@ const Modal = ({
             <h3 className="modal-title" defaultValue={"modalTitle"}>
               {modalTitle}
             </h3>
-            <button
-              type="button"
-              className="btn-close"
-              onClick={() => setShowModal(false)}
-              aria-label="Close"
-              aria-controls={id}
-            />
+            {!hideCloseButton && (
+              <button
+                type="button"
+                className="btn-close"
+                onClick={() => setShowModal(false)}
+                aria-label="Close"
+                aria-controls={id}
+              />
+            )}
           </div>
           <div className={modalBodyClassName} key={key}>
             {modalBody}

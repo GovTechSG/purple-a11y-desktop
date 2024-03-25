@@ -189,6 +189,10 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           navigate('/scanning', { state: { url: scanDetails.scanUrl } });
           const scanResponse = await services.startScan(scanDetails);
 
+          if (scanResponse.cancelled){
+            return;
+          }
+
           if (scanResponse.failedToCreateExportDir) {
             setPrevUrlErrorMessage('Unable to create download directory');
             return;
