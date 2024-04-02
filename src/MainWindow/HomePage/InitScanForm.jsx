@@ -21,11 +21,8 @@ const InitScanForm = ({
   setScanButtonIsClicked,
 }) => {
   const [openPageLimitAdjuster, setOpenPageLimitAdjuster] = useState(false);
+  const [pageWord, setPageWord] = useState("pages");
   const pageLimitAdjuster = useRef();
-
-  const [scanUrl, setScanUrl] = useState("https://");
-  const [pageLimit, setPageLimit] = useState("100");
-
   const scanTypeOptions = Object.keys(scanTypes);
   const fileTypesOptions = Object.keys(fileTypes);
 
@@ -36,9 +33,21 @@ const InitScanForm = ({
   const viewportOptions = viewportTypes;
   const deviceOptions = isProxy ? [] : Object.keys(devices);
 
-  const [advancedOptions, setAdvancedOptions] = useState(
-    getDefaultAdvancedOptions(isProxy)
-  );
+  const cachedPageLimit = sessionStorage.getItem('pageLimit');
+  const cachedAdvancedOptions = sessionStorage.getItem('advancedOptions');
+  const cachedScanUrl = sessionStorage.getItem('scanUrl');
+
+  const [pageLimit, setPageLimit] = useState(() => {
+    return cachedPageLimit? JSON.parse(cachedPageLimit) : "100"
+  });
+  console.log(' :',);
+  const [advancedOptions, setAdvancedOptions] = useState(() => {
+    return cachedAdvancedOptions? JSON.parse(cachedAdvancedOptions) : getDefaultAdvancedOptions(isProxy)
+  });
+
+  const [scanUrl, setScanUrl] = useState(() => {
+    return cachedScanUrl? JSON.parse(cachedScanUrl) : "https://"
+  });
 
   useEffect(() => {
     const urlBarElem = document.getElementById("url-bar");
@@ -46,6 +55,10 @@ const InitScanForm = ({
     urlBarInputList.forEach((elem) => (elem.disabled = scanButtonIsClicked));
     setOpenPageLimitAdjuster(false);
   }, [scanButtonIsClicked, prevUrlErrorMessage]);
+
+  useEffect(() => {
+    setPageWord(pageLimit === "1" ? 'page' : 'pages')
+  }, [pageLimit]);
 
   const togglePageLimitAdjuster = (e) => {
     if (!e.currentTarget.disabled) {
@@ -68,6 +81,9 @@ const InitScanForm = ({
     }
 
     setScanButtonIsClicked(true);
+    sessionStorage.setItem('pageLimit', JSON.stringify(pageLimit));
+    sessionStorage.setItem('advancedOptions', JSON.stringify(advancedOptions));
+    sessionStorage.setItem('scanUrl', JSON.stringify(scanUrl));
     startScan({ scanUrl: scanUrl.trim(), pageLimit, ...advancedOptions });
   };
 
@@ -95,7 +111,7 @@ const InitScanForm = ({
                 >
                   capped at{" "}
                   <span className="purple-text">
-                    {pageLimit} pages{" "}
+                    {pageLimit} {pageWord}{" "}
                     {openPageLimitAdjuster ? (
                       <ButtonSvgIcon
                         className={`chevron-up-icon`}
@@ -126,7 +142,7 @@ const InitScanForm = ({
                         }
                       }}
                     />
-                    <label htmlFor="page-limit-input">pages</label>
+                    <label htmlFor="page-limit-input">{pageWord}</label>
                   </div>
                 )}
               </div>
