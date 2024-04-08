@@ -278,7 +278,7 @@ const startScan = async (scanDetails, scanEvent) => {
       }
 
       // Handle live crawling output
-      if (data.includes("Electron crawling")) {
+      if (data.includes("crawling::")) {
         const urlScannedNum = parseInt(data.split("::")[1].trim());
         const status = data.split("::")[2].trim();
         const url = data.split("::")[3].trim();
@@ -351,7 +351,7 @@ const startReplay = async (generatedScript, scanDetails, scanEvent, isReplay) =>
       }
 
       // Handle live crawling output
-      if (data.includes("Electron crawling:")) {
+      if (data.includes("crawling::")) {
         const urlScannedNum = parseInt(data.split("::")[1].trim());
         const status = data.split("::")[2].trim();
         const url = data.split("::")[3].trim();
