@@ -1,6 +1,6 @@
 # Purple A11y Desktop
 
-Purple A11y Desktop is a desktop frontend for [Purple A11y](https://github.com/GovTechSG/purple-a11y) accessibility site scanner - a customisable, automated web accessibility testing tool that allows software development teams to find and fix accessibility problems to improve persons with disabilities (PWDs) access to digital services. The official application can only be downloaded at [https://go.gov.sg/get-purplea11y](https://go.gov.sg/get-purplea11y). We recommend that you download the software only from the official link, as other sources and/or third party links may pose risks and/or compromise your system.
+Purple A11y Desktop is a desktop frontend for [Purple A11y](https://github.com/GovTechSG/purple-a11y) an accessibility site scanner - a customisable, automated web accessibility testing tool that allows software development teams to find and fix accessibility problems to improve persons with disabilities (PWDs) access to digital services. The official application can only be downloaded at [https://go.gov.sg/get-purplea11y](https://go.gov.sg/get-purplea11y). We recommend that you download the software only from the official link, as other sources and/or third party links may pose risks and/or compromise your system.
 
 <img alt="Purple A11y Desktop main screen" src="https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/8eb8268e-80dd-4aff-b004-a4e7b8949ebc">
 
@@ -9,11 +9,49 @@ Purple A11y Desktop is a desktop frontend for [Purple A11y](https://github.com/G
 1. [Electron](https://www.electronjs.org/)
 2. [React](https://react.dev/)
 
-## Prerequisites and Installations
+## Installations
 
 ### Download Purple A11y Desktop
 
 Purple A11y Desktop is available as a download for Windows and MacOS. Refer to [Installation Guide](/INSTALLATION.md) for step-by-step instructions.
+
+### Engine Version Setting
+
+First open terminal and navigate to the location of clone respository of Purple A11y Desktop.
+
+Then export BE_TAG to set version.
+
+```shell
+export BE_TAG=0.9.48<version number>
+```
+
+For Mac
+
+```shell
+npm run make-mac
+```
+For Windows
+
+```shell
+npm run make-win
+```
+
+This will create a folder in your repository in the *out* folder.
+Enter and run the Purple Ally.app in the newly created folder in ../out.
+
+Enter the code below to build Purple A11y Desktop.
+
+```shell
+npm run build
+```
+
+Finally to start Purple A11y Desktop enter the code below.
+
+```shell
+npm run start
+```
+
+An application window should be open with the inserted version. 
 
 #### Facing issues?
 
@@ -21,13 +59,14 @@ Open an [issue ticket](https://github.com/GovTechSG/purple-a11y-desktop/issues) 
 
 ---
 
-## Basic usage
+
+## Basic Usage
 
 Enter a valid URL to scan in the textbox and press the "Scan" button.  The default settings will crawl your website and scan 100 pages for accessibility issues.
 
 ![Purple A11y Desktop main page](https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/7d114637-6337-4f68-a8a4-a7673c4601ef)
 
-## Limit number of pages scanned
+## Limiting pages scanned
 
 If you find a scan takes too long to complete due to large website, or there are too many pages in a sitemap to scan, you may choose to limit number of pages scanned. Click on the drop down and enter the desired number of pages to scan.
 
@@ -61,11 +100,11 @@ Customise the viewport options to render your websites for desktop and mobile de
 
 #### Desktop
 
-Defaults to 1280x720.
+Defaults to screen size of 1280x720.
 
 #### Mobile
 
-Defaults to the screen size of iPhone 11.
+Defaults to screen size of iPhone 11.
 
 #### Specific device
 
@@ -190,7 +229,16 @@ Defaults to the screen size of iPhone 11.
 
 ### Custom Width
 
-Enter a custom width in pixels. Minimum width is 320px and maximum width is 1080px.
+Enter a custom width in pixels. Minimum width is 320px and Maximum width is 1080px.
+
+## Report
+Once a scan of the site is completed. 
+
+A report will be downloaded into the ../Documents folder.
+
+An Address link to report is provided. Click on the link to access the location of the report. 
+
+You can also click on the view report button to see the Accessibility Scan Results.
 
 ## Accessibility Scan Results
 For details on which accessibility scan results trigger "Must Fix" / "Good to Fix" findings, you may refer to [Scan Issue Details](https://github.com/GovTechSG/purple-a11y/blob/master/DETAILS.md).
