@@ -15,16 +15,17 @@ Purple A11y Desktop is a desktop frontend for [Purple A11y](https://github.com/G
 
 Purple A11y Desktop is available as a download for Windows and MacOS. Refer to [Installation Guide](/INSTALLATION.md) for step-by-step instructions.
 
-### Engine Version Setting
+### Development and Testing
 
+#### Set Engine Version
 First open terminal and navigate to the location of clone respository of Purple A11y Desktop.
 
-Then export BE_TAG to set version.
+Then export BE_TAG to set version of Purple A11y (engine).
 
 ```shell
 export BE_TAG=0.9.48<version number>
 ```
-
+#### Build Standalone App
 For Mac
 
 ```shell
@@ -39,6 +40,7 @@ npm run make-win
 This will create a folder in your repository in the *out* folder.
 Enter and run the Purple Ally.app in the newly created folder in ../out.
 
+#### Run and Debug
 Enter the code below to build Purple A11y Desktop.
 
 ```shell
@@ -51,7 +53,7 @@ Finally to start Purple A11y Desktop enter the code below.
 npm run start
 ```
 
-An application window should be open with the inserted version. 
+An application window should be open with the inserted version. You mahy debug the app through Terminal / PowerShell window.
 
 #### Facing issues?
 
