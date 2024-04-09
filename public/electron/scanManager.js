@@ -290,7 +290,7 @@ const startScan = async (scanDetails, scanEvent) => {
         console.log(data);
       }
 
-      if (data.includes("Electron scan completed")) {
+      if (data.includes("Scan completed")) {
         console.log(data);
         scanEvent.emit("scanningCompleted");
       }
@@ -359,7 +359,7 @@ const startReplay = async (generatedScript, scanDetails, scanEvent, isReplay) =>
         scanEvent.emit("scanningUrl", {status, url, urlScannedNum});
       }
 
-      if (data.includes("Electron scan completed")) {
+      if (data.includes("Scan completed")) {
         scanEvent.emit("scanningCompleted");
       }
 
