@@ -84,6 +84,11 @@ h3 {
   color: #4A6168; 
 }
 
+.blacklisted-patterns-dropdown-btn:disabled {
+  background-color: #E7ECEE;
+  color: #4A6168; 
+}
+
 button:disabled, input:disabled, select:disabled {
   cursor: not-allowed;
 }
@@ -320,6 +325,14 @@ a:hover {
   display: flex;
 }
 
+.blacklisted-patterns-dropdown-btn {
+  box-sizing: border-box;
+  border: 1px solid #B5C5CA;
+  border-radius: 4px;
+  width: 100%;
+  display: flex;
+}
+
 #dir-info {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -328,7 +341,25 @@ a:hover {
   white-space: nowrap;
 }
 
+#blacklisted-patterns-info{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  direction: rtl;
+  padding: 0 0.25rem;
+  white-space: nowrap;
+
+}
+
 .dir-info-button {
+  background-color: white;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.blacklisted-patterns-info-button {
   background-color: white;
   align-items: center;
   justify-content: space-between;
@@ -342,11 +373,24 @@ a:hover {
   padding: 4px 0 4px 8px;
 }
 
+.change-blacklisted-patterns-btn {
+  border-left: 1px solid #b5c5ca;
+  padding: 4px 0 4px 8px;
+}
+
 .change-download-btn img {
   padding-bottom: 0.25rem;
 }
 
+.change-blacklisted-patterns-btn img {
+  padding-bottom: 0.25rem;
+}
+
 .download-path {
+  max-width: 90%;
+}
+
+.blacklisted-patterns-path {
   max-width: 90%;
 }
 
@@ -363,6 +407,11 @@ a:hover {
 }
 
 .dir-info {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.blacklisted-patterns-info {
   overflow-x: auto;
   white-space: nowrap;
 }

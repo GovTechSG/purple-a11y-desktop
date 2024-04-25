@@ -4,6 +4,7 @@ const {
   ipcMain,
   shell,
   session,
+  dialog,
 } = require("electron");
 const { getDefaultChromeDataDir } = require("./constants")
 const os = require("os");
@@ -253,6 +254,17 @@ app.on("ready", async () => {
   });
 
   await userDataManager.setData(userDataEvent);
+
+  ipcMain.handle('selectFile', async () => {
+    const { filePaths } = await dialog.showOpenDialog({
+      properties: ['openFile'],
+      filters: [
+        { name: 'Text Files', extensions: ['txt'] }
+      ]
+    });
+  
+    return filePaths[0] || null;  // Return the selected file path or null if canceled
+  });
 
   if (constants.proxy) {
     session.defaultSession.enableNetworkEmulation({

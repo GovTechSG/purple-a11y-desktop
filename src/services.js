@@ -25,6 +25,7 @@ const validateUrlConnectivity = async (scanDetails) => {
     viewportWidth,
     browser,
     fileTypes: selectedFileTypes,
+    blacklistedPatternsFilename
   } = scanDetails;
 
   currentScanUrl = scanUrl;
@@ -35,6 +36,7 @@ const validateUrlConnectivity = async (scanDetails) => {
     url: scanUrl,
     browser: browser,
     fileTypes: fileTypes[selectedFileTypes],
+    blacklistedPatternsFilename: scanDetails.blacklistedPatternsFilename || "",
   };
 
   if (viewport === viewportTypes.mobile) {
@@ -73,6 +75,8 @@ const startScan = async (scanDetails) => {
     includeSubdomains,
     followRobots,
     scanMetadata,
+    safeMode,
+    blacklistedPatternsFilename,
   } = scanDetails;
 
   currentScanUrl = scanUrl;
@@ -90,6 +94,8 @@ const startScan = async (scanDetails) => {
     includeSubdomains,
     followRobots,
     metadata: JSON.stringify(scanMetadata),
+    safeMode,
+    blacklistedPatternsFilename,
   };
 
   if (

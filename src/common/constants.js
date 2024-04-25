@@ -89,6 +89,8 @@ export const getDefaultAdvancedOptions = (isProxy) => {
     includeScreenshots: true,
     includeSubdomains: true,
     followRobots: false,
+    safeMode:false,
+    blacklistedPatternsFilename: "exclusion.txt",
   }
 };
 

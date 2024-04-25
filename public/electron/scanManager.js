@@ -67,6 +67,8 @@ const getScanOptions = (details) => {
     includeSubdomains,
     followRobots,
     metadata,
+    safeMode,
+    blacklistedPatternsFilename,
   } = details;
   const options = ["-c", scanType, "-u", url, "-k", `${name}:${email}`, "-i", fileTypes];
 
@@ -116,6 +118,10 @@ const getScanOptions = (details) => {
     options.push("-r", "yes");
   }
 
+  if (safeMode) {
+    options.push("-f", safeMode? "yes" : "no");
+  }
+  
   if (metadata) {
     options.push("-q", metadata);
   }

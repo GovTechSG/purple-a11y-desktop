@@ -10,6 +10,7 @@ import ToolTip from "../../common/components/ToolTip";
 import { getDefaultAdvancedOptions } from "../../common/constants";
 import purpleEditIcon from "../../assets/edit-pencil-purple.svg";
 import greyEditIcon from "../../assets/edit-pencil-grey.svg";
+import BlacklistedPatternsFilenameDropdown from "../../common/components/BlacklistedPatternsFilenameDropdown";
 
 const AdvancedScanOptions = ({
   isProxy,
@@ -262,9 +263,30 @@ const AdvancedScanOptions = ({
                     Adhere to robots.txt
                   </label>
               </div>
+              <div id='safe-mode-toggle-group' class="advanced-options-toggle-group">
+                  <input 
+                    type="checkbox"
+                    id="safe-mode-toggle" 
+                    class="advanced-options-toggle"
+                    checked={advancedOptions.safeMode}
+                    onChange={handleSetAdvancedOption(
+                      "safeMode", 
+                      (e) => e.target.checked
+                    )} 
+                  /> 
+                  <label htmlFor="safe-mode-toggle">
+                    Safe Mode {advancedOptions.safeMode ? " (Enabled)" : ""}
+                  </label>
+              </div>
             </>
           )}
           <hr />
+          <div className="user-input-group">
+            <label id="download-folder-label" className="bold-text">
+              Exclusion:
+            </label>
+            <BlacklistedPatternsFilenameDropdown></BlacklistedPatternsFilenameDropdown>
+          </div>
           <div className="user-input-group">
             <label id="download-folder-label" className="bold-text">
               Download:

@@ -68,6 +68,10 @@ contextBridge.exposeInMainWorld("services", {
     const data = await ipcRenderer.invoke("getUserData");
     return data;
   },
+  selectFile: async () => {
+    const filePath = await ipcRenderer.invoke('selectFile');
+    return filePath;
+  },    
   getErrorLog: async (timeOfScan, timeOfError) => {
     const errorLog = await ipcRenderer.invoke("getErrorLog", timeOfScan, timeOfError);
     return errorLog;
