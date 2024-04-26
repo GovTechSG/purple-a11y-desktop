@@ -69,10 +69,8 @@ const AdvancedScanOptions = ({
   };
 
   const handleSafeModeOnMouseEnter = () => {
-    if (!setIsSafeModeMouseEvent) {
       setShowSafeModeTooltip(false);
       setIsSafeModeMouseEvent(true);
-    }
   };
 
 
@@ -301,8 +299,8 @@ const AdvancedScanOptions = ({
                     aria-describedby="safe-mode-tooltip"
                     onFocus={() => handleSafeModeOnFocus()}
                     onBlur={() => setShowSafeModeTooltip(false)}
-                    onMouseEnter={() => handleSafeModeOnMouseEnter()}
-                    onMouseLeave={() => setIsSafeModeMouseEvent(false)}
+                    onMouseEnter={() => setShowSafeModeTooltip(true)}
+                    onMouseLeave={() => setShowSafeModeTooltip(false)}
                     alt="tooltip icon for safe scan mode"
                   />
                 </div>
