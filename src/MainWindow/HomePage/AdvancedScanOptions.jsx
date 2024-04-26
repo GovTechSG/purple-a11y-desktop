@@ -23,10 +23,11 @@ const AdvancedScanOptions = ({
 }) => {
   const [openAdvancedOptionsMenu, setOpenAdvancedOptionsMenu] = useState(false);
   const [advancedOptionsDirty, setAdvancedOptionsDirty] = useState(false);
-  const [isMaxConcurrencyMouseEvent, setIsMaxConcurrencyMouseEvent] =
-    useState(false);
-  const [showMaxConcurrencyTooltip, setShowMaxConcurrencyTooltip] =
-    useState(false);
+  const [isMaxConcurrencyMouseEvent, setIsMaxConcurrencyMouseEvent] = useState(false);
+  const [showMaxConcurrencyTooltip, setShowMaxConcurrencyTooltip] =  useState(false);
+  const [isSafeModeMouseEvent, setIsSafeModeMouseEvent] = useState(false);
+  const [showSafeModeTooltip, setShowSafeModeTooltip] = useState(false);
+
   const menu = useRef();
 
   useEffect(() => {
@@ -59,6 +60,22 @@ const AdvancedScanOptions = ({
     setShowMaxConcurrencyTooltip(false);
     setIsMaxConcurrencyMouseEvent(true);
   };
+
+  
+  const handleSafeModeOnFocus = () => {
+    if (!isSafeModeMouseEvent) {
+      setShowSafeModeTooltip(true);
+    }
+  };
+
+  const handleSafeModeOnMouseEnter = () => {
+    if (!setIsSafeModeMouseEvent) {
+      setShowSafeModeTooltip(false);
+      setIsSafeModeMouseEvent(true);
+    }
+  };
+
+
 
   /*
   by default, new value of the selected option will be set to event.target.value
@@ -241,9 +258,52 @@ const AdvancedScanOptions = ({
                     className="tooltip-img"
                     src={questionMarkIcon}
                     aria-describedby="max-concurrency-tooltip"
+                    checked={advancedOptions.maxConcurrency}
+                    onFocus={() => handleMaxConcurrencyOnFocus()}
+                    onBlur={() => setShowMaxConcurrencyTooltip(false)}
                     onMouseEnter={() => setShowMaxConcurrencyTooltip(true)}
                     onMouseLeave={() => setShowMaxConcurrencyTooltip(false)}
                     alt="tooltip icon for slow scan mode"
+                  />
+                </div>
+              </div>
+              <div id='safe-mode-toggle-group' class="advanced-options-toggle-group">
+                  <input 
+                    type="checkbox"
+                    id="safe-mode-toggle" 
+                    class="advanced-options-toggle"
+                    onFocus={() => handleSafeModeOnFocus()}
+                    onBlur={() => setShowSafeModeTooltip(false)}
+                    onMouseEnter={() => handleSafeModeOnMouseEnter()}
+                    onMouseLeave={() => setIsSafeModeMouseEvent(false)}
+                    aria-describedby="safe-mode-tooltip"
+                    checked={advancedOptions.safeMode}
+                    onChange={handleSetAdvancedOption(
+                      "safeMode", 
+                      (e) => e.target.checked
+                    )} 
+                  /> 
+                  <label htmlFor="safe-mode-toggle">
+                    Safe Scan Mode 
+                  </label>
+                  <div className="custom-tooltip-container">
+                  <ToolTip
+                    description={
+                      "Disable dynamically clicking of page buttons and links to find links, which resolve issues on some websites."
+                    }
+                    id="safe-mode-tooltip"
+                    showToolTip={showSafeModeTooltip}
+                  />
+                  <img
+                    className="tooltip-img"
+                    src={questionMarkIcon}
+                    checked={advancedOptions.safeMode}
+                    aria-describedby="safe-mode-tooltip"
+                    onFocus={() => handleSafeModeOnFocus()}
+                    onBlur={() => setShowSafeModeTooltip(false)}
+                    onMouseEnter={() => handleSafeModeOnMouseEnter()}
+                    onMouseLeave={() => setIsSafeModeMouseEvent(false)}
+                    alt="tooltip icon for safe scan mode"
                   />
                 </div>
               </div>
@@ -252,6 +312,8 @@ const AdvancedScanOptions = ({
                     type="checkbox"
                     id="follow-robots-toggle" 
                     class="advanced-options-toggle"
+                    
+                    aria-describedby="follow-robots-tooltip"
                     checked={advancedOptions.followRobots}
                     onChange={handleSetAdvancedOption(
                       "followRobots", 

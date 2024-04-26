@@ -72,6 +72,7 @@ const startScan = async (scanDetails) => {
     includeScreenshots,
     includeSubdomains,
     followRobots,
+    safeMode,
     scanMetadata,
   } = scanDetails;
 
@@ -89,6 +90,7 @@ const startScan = async (scanDetails) => {
     includeScreenshots,
     includeSubdomains,
     followRobots,
+    safeMode,
     metadata: JSON.stringify(scanMetadata),
   };
 
