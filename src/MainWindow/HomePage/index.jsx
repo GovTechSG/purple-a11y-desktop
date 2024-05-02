@@ -34,6 +34,18 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const [url, setUrl] = useState('');
   const [scanButtonIsClicked, setScanButtonIsClicked] = useState(false);
 
+  const location = useLocation();
+  // Handle disabling of scan button when scan is aborting
+  useEffect(() => {
+    if (location.state && location.state.abortingScan) {
+      setScanButtonIsClicked(true);
+    }
+
+    window.services.killScan(() => {
+      setScanButtonIsClicked(false);
+    });
+  }, []);
+
   // function that determines whether version is a prerelease/stable build
   const getVersionLabel = useCallback((version) => {
     const {

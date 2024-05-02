@@ -40,7 +40,6 @@ const InitScanForm = ({
   const [pageLimit, setPageLimit] = useState(() => {
     return cachedPageLimit? JSON.parse(cachedPageLimit) : "100"
   });
-  console.log(' :',);
   const [advancedOptions, setAdvancedOptions] = useState(() => {
     return cachedAdvancedOptions? JSON.parse(cachedAdvancedOptions) : getDefaultAdvancedOptions(isProxy)
   });

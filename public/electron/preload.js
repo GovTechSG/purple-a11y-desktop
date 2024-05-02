@@ -98,6 +98,11 @@ contextBridge.exposeInMainWorld("services", {
       callback();
     });
   },
+  killScan: (callback) => {
+    ipcRenderer.on("killScan", () => {
+      callback();
+    })
+  },
   userDataExists: (callback) => {
     ipcRenderer.on("userDataExists", (event, data) => {
       callback(data);
