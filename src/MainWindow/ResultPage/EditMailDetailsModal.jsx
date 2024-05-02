@@ -72,15 +72,22 @@ const EditMailDetailsModal = ({
               <label className="user-form-label" for="email">
                 Email(s)
               </label>
-              <input
-                className="user-form-input"
-                type="text"
-                id="email"
-                value={editedEmail}
-                onChange={(e) => onHandleEmailChange(e)}
-                onBlur={(e) => onHandleEmailBlur(e)}
-                aria-describedby="invalid-email-error"
-              />
+              <div className="d-flex flex-column">
+                <input
+                  className="user-form-input"
+                  type="text"
+                  id="email"
+                  value={editedEmail}
+                  onChange={(e) => onHandleEmailChange(e)}
+                  onBlur={(e) => onHandleEmailBlur(e)}
+                  aria-describedby="invalid-email-error"
+                />
+                <span className="small">
+                  For multiple emails, separate using a comma. eg:
+                  "alex@gmail.com, john@yahoo.com"
+                </span>
+              </div>
+              
             </div>
             <div
               className="user-form-error error-text"
