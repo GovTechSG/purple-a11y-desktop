@@ -33,16 +33,17 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const [showAboutPhModal, setShowAboutPhModal] = useState(false);
   const [url, setUrl] = useState('');
   const [scanButtonIsClicked, setScanButtonIsClicked] = useState(false);
+  const [isKillingScan, setIsKillingScan] = useState(false);
 
   const location = useLocation();
   // Handle disabling of scan button when scan is aborting
   useEffect(() => {
     if (location.state && location.state.abortingScan) {
-      setScanButtonIsClicked(true);
+      setIsKillingScan(true);
     }
 
     window.services.killScan(() => {
-      setScanButtonIsClicked(false);
+      setIsKillingScan(false);
     });
   }, []);
 
@@ -306,6 +307,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           prevUrlErrorMessage={prevUrlErrorMessage}
           scanButtonIsClicked={scanButtonIsClicked}
           setScanButtonIsClicked={setScanButtonIsClicked}
+          isKillingScan={isKillingScan}
         />
       </div>
       {showBasicAuthModal && (
