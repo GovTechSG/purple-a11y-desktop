@@ -42,7 +42,7 @@ const EditMailDetailsModal = ({
       .some((v) => !v);
     if (containsInvalidEmail) {
       setUserInputErrorMessage(
-        "Please enter valid email(s) separated by commas"
+        "Please enter valid email address(es)"
       );
       emailInput.setAttribute("aria-invalid", "true");
       return;
@@ -83,8 +83,7 @@ const EditMailDetailsModal = ({
                   aria-describedby="invalid-email-error"
                 />
                 <span className="small">
-                  For multiple emails, separate using a comma. eg:
-                  "alex@gmail.com, john@yahoo.com"
+                  For multiple addresses, separate each with a comma (,) or semicolon (;)
                 </span>
               </div>
               
