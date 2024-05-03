@@ -19,7 +19,7 @@ const InitScanForm = ({
   prevUrlErrorMessage,
   scanButtonIsClicked,
   setScanButtonIsClicked,
-  isKillingScan
+  isAbortingScan
 }) => {
   const [openPageLimitAdjuster, setOpenPageLimitAdjuster] = useState(false);
   const [pageWord, setPageWord] = useState("pages");
@@ -151,9 +151,9 @@ const InitScanForm = ({
             type="btn-primary"
             className="scan-btn"
             onClick={handleScanButtonClicked}
-            disabled={scanButtonIsClicked || isKillingScan}
+            disabled={scanButtonIsClicked || isAbortingScan}
           >
-            {scanButtonIsClicked || isKillingScan ? <LoadingSpinner></LoadingSpinner> : "Scan"}
+            {scanButtonIsClicked || isAbortingScan ? <LoadingSpinner></LoadingSpinner> : "Scan"}
           </Button>
         </div>
         {prevUrlErrorMessage && (
