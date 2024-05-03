@@ -245,6 +245,7 @@ const startScan = async (scanDetails, scanEvent) => {
           await cleanUpIntermediateFolders(intermediateFolderName)
         }
         resolve({ cancelled: true });
+        scanEvent.emit("killScan")
         return;
       }
       /** Code 0 handled indirectly here (i.e. successful process run),

@@ -33,6 +33,19 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   const [showAboutPhModal, setShowAboutPhModal] = useState(false);
   const [url, setUrl] = useState('');
   const [scanButtonIsClicked, setScanButtonIsClicked] = useState(false);
+  const [isAbortingScan, setIsAbortingScan] = useState(false);
+
+  const location = useLocation();
+  // Handle disabling of scan button when scan is aborting
+  useEffect(() => {
+    if (location.state && location.state.abortingScan) {
+      setIsAbortingScan(true);
+    }
+
+    window.services.killScan(() => {
+      setIsAbortingScan(false);
+    });
+  }, []);
 
   // function that determines whether version is a prerelease/stable build
   const getVersionLabel = useCallback((version) => {
@@ -294,6 +307,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           prevUrlErrorMessage={prevUrlErrorMessage}
           scanButtonIsClicked={scanButtonIsClicked}
           setScanButtonIsClicked={setScanButtonIsClicked}
+          isAbortingScan={isAbortingScan}
         />
       </div>
       {showBasicAuthModal && (

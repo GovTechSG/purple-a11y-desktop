@@ -21,7 +21,7 @@ const ScanningPage = () => {
   }, []);
 
   const handleAbortScan = () => {
-    navigate("/");
+    navigate("/", { state: {abortingScan: true } }); 
     window.services.abortScan();
   };
 

@@ -19,6 +19,7 @@ const InitScanForm = ({
   prevUrlErrorMessage,
   scanButtonIsClicked,
   setScanButtonIsClicked,
+  isAbortingScan
 }) => {
   const [openPageLimitAdjuster, setOpenPageLimitAdjuster] = useState(false);
   const [pageWord, setPageWord] = useState("pages");
@@ -40,7 +41,6 @@ const InitScanForm = ({
   const [pageLimit, setPageLimit] = useState(() => {
     return cachedPageLimit? JSON.parse(cachedPageLimit) : "100"
   });
-  console.log(' :',);
   const [advancedOptions, setAdvancedOptions] = useState(() => {
     return cachedAdvancedOptions? JSON.parse(cachedAdvancedOptions) : getDefaultAdvancedOptions(isProxy)
   });
@@ -151,9 +151,9 @@ const InitScanForm = ({
             type="btn-primary"
             className="scan-btn"
             onClick={handleScanButtonClicked}
-            disabled={scanButtonIsClicked}
+            disabled={scanButtonIsClicked || isAbortingScan}
           >
-            {scanButtonIsClicked ? <LoadingSpinner></LoadingSpinner> : "Scan"}
+            {scanButtonIsClicked || isAbortingScan ? <LoadingSpinner></LoadingSpinner> : "Scan"}
           </Button>
         </div>
         {prevUrlErrorMessage && (
