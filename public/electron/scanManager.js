@@ -646,7 +646,7 @@ const init = (scanEvent) => {
     return uploadFolderPath;
   })
 
-  ipcMain.handle("getErrorLog", async (event, timeOfScan, timeOfError) => {
+  ipcMain.handle("getErrorLog", async (event, timeOfScanString, timeOfError) => {
       const errorLogPath = path.join(appPath, 'errors.txt');
       const errorLog = fs.readFileSync(errorLogPath, 'utf-8');  
       const regex = /{.*?}/gs; 
@@ -674,6 +674,7 @@ const init = (scanEvent) => {
       for (const entry of entries){
         const jsonEntry = JSON.parse(entry);
         const timeOfEntry = new Date(jsonEntry['timestamp']).getTime(); 
+        const timeOfScan = new Date(timeOfScanString);
         if (timeOfEntry >= timeOfScan.getTime() && timeOfEntry <= timeOfError.getTime()){
           allErrors = allErrors.concat(entry,"\n")
         }
