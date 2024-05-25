@@ -287,9 +287,9 @@ const startScan = async (scanDetails, scanEvent) => {
       if (data.includes("crawling::")) {
         const urlScannedNum = parseInt(data.split("::")[1].trim());
         const status = data.split("::")[2].trim();
-        const url = data.split("::")[3].trim();
+        const url = new URL(data.split("::")[3].trim()).origin; // Use URL class to remove basic auth
         console.log(urlScannedNum, ": ", status, ": ", url);
-        scanEvent.emit("scanningUrl", {status, url, urlScannedNum});
+        scanEvent.emit("scanningUrl", { status, url, urlScannedNum });
       }
 
       if (data.includes("Starting scan")) {

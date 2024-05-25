@@ -199,7 +199,8 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           navigate('/custom_flow', { state: { scanDetails }});
           return;
         } else {
-          navigate('/scanning', { state: { url: scanDetails.scanUrl } });
+
+          navigate('/scanning', { state: { url: new URL(scanDetails.scanUrl).origin } });
           const scanResponse = await services.startScan(scanDetails);
 
           if (scanResponse.cancelled){
@@ -272,8 +273,8 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
 
   const handleBasicAuthSubmit = (e) => {
     e.preventDefault();
-    const username = e.target.username.value;
-    const password = e.target.password.value;
+    const username = encodeURIComponent(e.target.username.value);
+    const password = encodeURIComponent(e.target.password.value);
     const scanDetails = JSON.parse(window.localStorage.getItem("scanDetails"));
     const splitUrl = scanDetails.scanUrl.split("://");
     scanDetails.scanUrl = `${splitUrl[0]}://${username}:${password}@${splitUrl[1]}`;
