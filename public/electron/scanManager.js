@@ -181,8 +181,6 @@ const validateUrlConnectivity = async (scanDetails) => {
 }
 
 const startScan = async (scanDetails, scanEvent) => {
-  const { scanType, url } = scanDetails;
-  console.log(`Starting new ${scanType} scan at ${url}.`);
 
   const userData = readUserDataFromFile();
 
@@ -287,7 +285,7 @@ const startScan = async (scanDetails, scanEvent) => {
       if (data.includes("crawling::")) {
         const urlScannedNum = parseInt(data.split("::")[1].trim());
         const status = data.split("::")[2].trim();
-        const url = new URL(data.split("::")[3].trim()).origin; // Use URL class to remove basic auth
+        const url = data.split("::")[3].trim();
         console.log(urlScannedNum, ": ", status, ": ", url);
         scanEvent.emit("scanningUrl", { status, url, urlScannedNum });
       }

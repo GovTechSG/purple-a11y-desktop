@@ -179,3 +179,10 @@ export const versionComparator = (ver1, ver2) => {
 
   return 1;
 };
+
+export const urlWithoutAuth = (url) => {
+  const parsedUrl = new URL(url);
+  parsedUrl.username = '';
+  parsedUrl.password = '';
+  return parsedUrl;
+};
