@@ -8,7 +8,7 @@ import labModeOn from "../../assets/lab-icon-on.svg";
 import InitScanForm from "./InitScanForm";
 import "./HomePage.scss";
 import services from "../../services";
-import { cliErrorCodes, cliErrorTypes, errorStates, versionComparator } from "../../common/constants";
+import { cliErrorCodes, cliErrorTypes, errorStates, versionComparator, urlWithoutAuth } from "../../common/constants";
 import Modal from "../../common/components/Modal";
 import { BasicAuthForm, BasicAuthFormFooter } from "./BasicAuthForm";
 import EditUserDetailsModal from "./EditUserDetailsModal";
@@ -199,8 +199,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           navigate('/custom_flow', { state: { scanDetails }});
           return;
         } else {
-
-          navigate('/scanning', { state: { url: new URL(scanDetails.scanUrl).origin } });
+          navigate('/scanning', { state: { url: urlWithoutAuth(scanDetails.scanUrl).toString() } });
           const scanResponse = await services.startScan(scanDetails);
 
           if (scanResponse.cancelled){
@@ -273,11 +272,11 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
 
   const handleBasicAuthSubmit = (e) => {
     e.preventDefault();
-    const username = encodeURIComponent(e.target.username.value);
-    const password = encodeURIComponent(e.target.password.value);
     const scanDetails = JSON.parse(window.localStorage.getItem("scanDetails"));
-    const splitUrl = scanDetails.scanUrl.split("://");
-    scanDetails.scanUrl = `${splitUrl[0]}://${username}:${password}@${splitUrl[1]}`;
+    const urlWithAuth = new URL(scanDetails.scanUrl);
+    urlWithAuth.username = e.target.username.value;
+    urlWithAuth.password = e.target.password.value;
+    scanDetails.scanUrl = urlWithAuth.toString();
     setScanButtonIsClicked(true);
     startScan(scanDetails);
     setShowBasicAuthModal(false);
