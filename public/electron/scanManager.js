@@ -13,15 +13,9 @@ const {
   enginePath,
   appPath,
   getPathVariable,
-  customFlowGeneratedScriptsPath,
   playwrightBrowsersPath,
   resultsPath,
   scanResultsPath,
-  forbiddenCharactersInDirPath,
-  createPlaywrightContext,
-  deleteClonedProfiles,
-  backendPath,
-  isWindows,
 } = require("./constants");
 const {
   browserTypes,
@@ -29,11 +23,7 @@ const {
   getDefaultEdgeDataDir,
   uploadFolderName,
 } = require("./constants");
-const { env, report } = require("process");
 const { readUserDataFromFile, createExportDir } = require("./userDataManager");
-const { escape } = require("querystring");
-const { json } = require("react-router-dom");
-const { time } = require("console");
 const scanHistory = {};
 
 let currentChildProcess;
@@ -258,13 +248,6 @@ const startScan = async (scanDetails, scanEvent) => {
         resolve({ success: false });
       }
 
-      if (scanDetails.scanType === 'custom' && data.includes('generatedScript')) {
-        const generatedScriptName = data.trim();
-        console.log('generated script: ', generatedScriptName);
-        const generatedScript = path.join(customFlowGeneratedScriptsPath, generatedScriptName);
-        resolve({ success: true, generatedScript: generatedScript});
-      }
-
       // The true success where the process ran and pages were scanned
       if (data.includes("Results directory is at")) {
         console.log(data);
@@ -307,87 +290,6 @@ const startScan = async (scanDetails, scanEvent) => {
         resolve({ success: false, statusCode: code });
       }
       currentChildProcess = null;
-    });
-  });
-
-  return response;
-};
-
-const startReplay = async (generatedScript, scanDetails, scanEvent, isReplay) => {
-  let useChromium = false;
-  if (
-    scanDetails.browser === browserTypes.chromium ||
-    (!getDefaultChromeDataDir() && !getDefaultEdgeDataDir())
-  ) {
-    useChromium = true;
-  }
-
-  if (isReplay && scanDetails.encryptionParams) {
-    decryptGeneratedScript(generatedScript, scanDetails.encryptionParams);
-  }
-
-  const response = await new Promise((resolve, reject) => {
-    const replay = spawn(
-      "node",
-      [path.join(enginePath, "runCustomFlowFromGUI.js"), generatedScript], {
-      cwd: resultsPath,
-      env: {
-        ...process.env,
-        RUNNING_FROM_PH_GUI: true,
-        PLAYWRIGHT_BROWSERS_PATH: `${playwrightBrowsersPath}`,
-        PATH: getPathVariable(),
-      },
-    });
-
-    currentChildProcess = replay;
-
-    replay.stderr.setEncoding("utf8");
-    replay.stderr.on("data", function (data) {
-      console.log("stderr: " + data);
-    });
-
-    replay.stdout.setEncoding("utf8");
-    replay.stdout.on("data", async (data) => {
-      if (data.includes("An error has occurred when running the custom flow scan.")) {
-        replay.kill("SIGKILL");
-        currentChildProcess = null;
-        resolve({ success: false });
-      }
-
-      // Handle live crawling output
-      if (data.includes("crawling::")) {
-        const urlScannedNum = parseInt(data.split("::")[1].trim());
-        const status = data.split("::")[2].trim();
-        const url = data.split("::")[3].trim();
-        console.log(urlScannedNum, ":", status, ":", url);
-        scanEvent.emit("scanningUrl", {status, url, urlScannedNum});
-      }
-
-      if (data.includes("Scan completed")) {
-        scanEvent.emit("scanningCompleted");
-      }
-
-      if (data.includes("results/")) {
-        console.log(data);
-        const resultsFolderName = data.split(" ").slice(-2)[0].split("/").pop();
-        console.log(resultsFolderName);
-
-        const scanId = randomUUID();
-        scanHistory[scanId] = resultsFolderName;
-
-        const encryptionParams = encryptGeneratedScript(generatedScript);
-        moveCustomFlowResultsToExportDir(scanId, resultsFolderName, isReplay);
-        replay.kill("SIGKILL");
-        currentChildProcess = null;
-        await cleanUpIntermediateFolders(resultsFolderName);
-        resolve({ success: true, scanId, encryptionParams });
-      }
-    });
-
-    replay.on("close", (code) => {
-      if (code !== 0) {
-        resolve({ success: false, statusCode: code });
-      }
     });
   });
 
@@ -574,18 +476,6 @@ const cleanUpIntermediateFolders = async (folderName, setDefaultFolders = false)
   });
 };
 
-const cleanUpCustomFlowGeneratedScripts = () => {
-  if (fs.existsSync(customFlowGeneratedScriptsPath)) {
-    fs.rm(customFlowGeneratedScriptsPath, { recursive: true }, (err) => {
-      if (err) {
-        console.error(
-          `Error while deleting ${customFlowGeneratedScriptsPath}.`
-        );
-      }
-    });
-  }
-}
-
 const moveCustomFlowResultsToExportDir = (scanId, resultsFolderName, isReplay) => {
   const currentResultsPath = path.join(scanResultsPath, resultsFolderName);
   let newResultsPath;
@@ -615,10 +505,6 @@ const init = (scanEvent) => {
   ipcMain.handle("abortScan", async (_event) => {
     setKillChildProcessSignal();
   });
-
-  ipcMain.handle("startReplay", async (_event, generatedScript, scanDetails, isReplay) => {
-    return await startReplay(generatedScript, scanDetails, scanEvent, isReplay);
-  })
 
   ipcMain.on("generateReport", (_event, customFlowLabel, scanId) => {
     return generateReport(customFlowLabel, scanId);
@@ -683,10 +569,6 @@ const init = (scanEvent) => {
     }
 
     return allErrors;
-  })
-
-  ipcMain.on("cleanUpCustomFlowScripts", async () => {
-    cleanUpCustomFlowGeneratedScripts();
   })
 
   ipcMain.handle("mailReport", (_event, formDetails, scanId) => {

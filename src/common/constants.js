@@ -4,7 +4,6 @@ export const scanTypes = {
   "Website crawl": "website",
   "Sitemap crawl": "sitemap",
   "Custom flow": "custom",
-  "Custom flow 2.0": "custom2",
 };
 
 export const viewportTypes = {
@@ -107,7 +106,6 @@ export const cliErrorTypes = {
 
 export const errorStates = {
   browserError: 'browserError',
-  customScanError: 'customScanError', 
   noPagesScannedError: 'noPagesScannedError'
 }
 

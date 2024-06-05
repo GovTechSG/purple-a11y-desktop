@@ -1,7 +1,6 @@
 import Button from "../../common/components/Button";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import "./ErrorPage.scss";
-import returnIcon from "../../assets/return-purple.svg";
 import { useNavigate, useLocation } from "react-router";
 import { ReactComponent as ExclamationCircleIcon } from "../../assets/exclamation-circle.svg";
 import { useState, useEffect } from "react";
@@ -25,17 +24,7 @@ const ErrorPage = () => {
     getErrorLog();
   }, []);
 
-  const replayCustomFlow = async () => {
-    navigate("/custom_flow", { state: { isReplay: true } });
-    return;
-  };
-
   const handleBackToHome = () => {
-    if (errorState === errorStates.customScanError) {
-      window.services.cleanUpCustomFlowScripts();
-      window.localStorage.removeItem("latestCustomFlowGeneratedScript");
-      window.localStorage.removeItem("latestCustomFlowScanDetails");
-    }
     navigate("/");
     return;
   }
@@ -71,22 +60,10 @@ const ErrorPage = () => {
       />
       {errorMessageToDisplay()}
       <div class='btn-container'>
-        {errorState === errorStates.customScanError
-          ? (
-            <>
-            <button role="link" id='back-to-home-btn' onClick={handleBackToHome}>
-              <img src={returnIcon}></img>
-              &nbsp;Back To Home
-            </button>
-            <Button id="replay-btn" type="btn-primary" onClick={replayCustomFlow}>
-              Replay
-            </Button>
-            </>
-          )
-          : <Button role="link" type="btn-primary" onClick={handleBackToHome}>
-              Try Again
-            </Button>}
-          {errorLog&&<Button type="btn-secondary" onClick={copyErrorLog}>Copy Error Log</Button>}
+        <Button role="link" type="btn-primary" onClick={handleBackToHome}>
+          Try Again
+        </Button>
+        {errorLog && <Button type="btn-secondary" onClick={copyErrorLog}>Copy Error Log</Button>}
 
       </div>
     </div>

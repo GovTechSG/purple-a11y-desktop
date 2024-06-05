@@ -183,8 +183,7 @@ const AdvancedScanOptions = ({
               />
             </div>
           )}
-          {advancedOptions.scanType !== scanTypeOptions[2] &&
-            advancedOptions.scanType !== scanTypeOptions[3] && (
+          {advancedOptions.scanType !== scanTypeOptions[2] && (
               <SelectField
                 id="file-type-dropdown"
                 label="File Type:"
@@ -225,7 +224,7 @@ const AdvancedScanOptions = ({
             </div>
           }
 
-          {advancedOptions.scanType !== scanTypeOptions[3] && (
+          {advancedOptions.scanType !== scanTypeOptions[2] && (
             <>
               <div id="max-concurrency-toggle-group" class="advanced-options-toggle-group">
                 <input

@@ -144,8 +144,7 @@ const OnboardingComponent = ({ setDataExistStatus }) => {
             </div>
             <h3 className="modal-title fade-in-left">Custom Flow Scan</h3>
             <p className="modal-desc fade-in-left">
-              This scan type allows you to specify a user journey of choice by
-              recording a series of actions on the browser and replaying them.
+              This scan type allows you to specify a user journey by enabling you to click the scan button on each desired webpage on a browser to initiate scan.
             </p>
             <PageIndicator page={3}></PageIndicator>
           </>

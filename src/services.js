@@ -82,8 +82,7 @@ const startScan = async (scanDetails) => {
     scanType: scanTypes[selectedScanType],
     url: scanUrl,
     headlessMode:
-      scanTypes[selectedScanType] !== "custom" &&
-      scanTypes[selectedScanType] !== "custom2",
+      scanTypes[selectedScanType] !== "custom",
     browser: browser,
     maxConcurrency: maxConcurrency,
     fileTypes: fileTypes[selectedFileTypes],
@@ -95,8 +94,7 @@ const startScan = async (scanDetails) => {
   };
 
   if (
-    scanTypes[selectedScanType] !== "custom" &&
-    scanTypes[selectedScanType] !== "custom2"
+    scanTypes[selectedScanType] !== "custom"
   ) {
     scanArgs.maxPages = pageLimit;
   }

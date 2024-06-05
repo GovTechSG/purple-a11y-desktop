@@ -124,8 +124,6 @@ const getPathVariable = () => {
 
 const scanResultsPath = path.join(resultsPath, "results");
 
-const customFlowGeneratedScriptsPath = path.join(resultsPath, "custom_flow_scripts");
-
 const updateBackupsFolder = path.join(
   appPath,
   "30789f0f-73f5-43bc-93a6-e499e4a20f7a"
@@ -644,7 +642,6 @@ module.exports = {
   playwrightBrowsersPath,
   getPathVariable,
   scanResultsPath,
-  customFlowGeneratedScriptsPath,
   updateBackupsFolder,
   phZipPath,
   resultsPath,
