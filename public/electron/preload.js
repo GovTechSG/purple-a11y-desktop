@@ -26,7 +26,7 @@ contextBridge.exposeInMainWorld("services", {
     const results = await ipcRenderer.invoke("startScan", scanDetails);
     return results;
   },
-  abortScan: async (scanDetails) => {
+  abortScan: async () => {
     await ipcRenderer.invoke("abortScan");
   },
 

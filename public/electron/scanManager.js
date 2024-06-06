@@ -132,8 +132,8 @@ const validateUrlConnectivity = async (scanDetails) => {
 
   const response = await new Promise(async (resolve) => {
     const check = spawn(
-      "npm",
-      ["-C", enginePath, "run", "cli", "--", ...getScanOptions(scanDetails)],
+      "node",
+      [`${enginePath}/dist/cli.js`, ...getScanOptions(scanDetails)],
       {
         cwd: resultsPath,
         env: {
@@ -193,8 +193,8 @@ const startScan = async (scanDetails, scanEvent) => {
   const response = await new Promise(async (resolve) => {
     let intermediateFolderName;
     const scan = spawn(
-      "npm",
-      ["-C", enginePath, "run", "cli", "--", ...getScanOptions(scanDetails)],
+      "node",
+      [`${enginePath}/dist/cli.js`, ...getScanOptions(scanDetails)],
       {
         cwd: resultsPath,
         env: {
