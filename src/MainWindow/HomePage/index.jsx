@@ -195,10 +195,6 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
 
     const checkUrlResponse = await services.validateUrlConnectivity(scanDetails);
     if (checkUrlResponse.success) {
-       if (scanDetails.scanType === 'Custom flow') {
-          navigate('/custom_flow', { state: { scanDetails }});
-          return;
-        } else {
           navigate('/scanning', { state: { url: urlWithoutAuth(scanDetails.scanUrl).toString() } });
           const scanResponse = await services.startScan(scanDetails);
 
@@ -213,7 +209,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
 
           if (scanResponse.success) {
             setCompletedScanId(scanResponse.scanId);
-            if (scanDetails.scanType === 'Custom flow 2.0') {
+            if (scanDetails.scanType === 'Custom flow') {
               navigate('/custom_flow', { state: { scanDetails }})
             } else {
             navigate("/result");
@@ -225,7 +221,6 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
             navigate("/error", { state: { errorState: errorStates.noPagesScannedError,timeOfScan }});
             return;
           }
-        }
     } else {
       setScanButtonIsClicked(false);
       if (checkUrlResponse.failedToCreateExportDir) {

@@ -53,10 +53,6 @@ const validateUrlConnectivity = async (scanDetails) => {
   return response;
 };
 
-const abortScan = async () => {
-  await window.services.abortScan()
-};
-
 const startScan = async (scanDetails) => {
   const {
     scanType: selectedScanType,
@@ -82,8 +78,7 @@ const startScan = async (scanDetails) => {
     scanType: scanTypes[selectedScanType],
     url: scanUrl,
     headlessMode:
-      scanTypes[selectedScanType] !== "custom" &&
-      scanTypes[selectedScanType] !== "custom2",
+      scanTypes[selectedScanType] !== "custom",
     browser: browser,
     maxConcurrency: maxConcurrency,
     fileTypes: fileTypes[selectedFileTypes],
@@ -95,8 +90,7 @@ const startScan = async (scanDetails) => {
   };
 
   if (
-    scanTypes[selectedScanType] !== "custom" &&
-    scanTypes[selectedScanType] !== "custom2"
+    scanTypes[selectedScanType] !== "custom"
   ) {
     scanArgs.maxPages = pageLimit;
   }
@@ -242,7 +236,6 @@ const isValidName = (name) => {
 };
 
 const services = {
-  abortScan,
   startScan,
   openReport,
   getResultsFolderPath,

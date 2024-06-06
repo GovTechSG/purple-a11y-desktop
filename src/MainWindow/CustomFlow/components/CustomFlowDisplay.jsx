@@ -1,10 +1,8 @@
 const CustomFlowDisplay = ({
   icon, 
-  step, 
   title, 
   url, 
   description, 
-  scanType //optional
 }) => {
   return (
     <>
@@ -12,7 +10,7 @@ const CustomFlowDisplay = ({
         <div className="custom-flow-header-content">
           <img className="custom-flow-header-img" src={icon} alt=""></img>
           <div className="custom-flow-header-title-container">
-          <p className="custom-flow-header-step">{(scanType == 'Custom flow 2.0')? 'FINAL STEP' : `STEP ${step} of 4`}</p>
+          <p className="custom-flow-header-step">FINAL STEP</p>
             <h3 className="custom-flow-header-title">{title}</h3>
           </div>
         </div>

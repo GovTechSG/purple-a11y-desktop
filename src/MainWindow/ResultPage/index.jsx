@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Button from "../../common/components/Button";
 import "./ResultPage.scss";
 import services from "../../services";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { handleClickLink } from "../../common/constants";
 import ButtonSvgIcon from "../../common/components/ButtonSvgIcon";
 import { ReactComponent as MailIcon } from "../../assets/mail-purple.svg";
@@ -14,27 +14,16 @@ import boxArrowUpRightIcon from "../../assets/box-arrow-up-right-white.svg";
 import EditMailDetailsModal from "./EditMailDetailsModal";
 
 const ResultPage = ({ completedScanId: scanId }) => {
-  const { state } = useLocation();
   const navigate = useNavigate();
   const [scanType, setScanType] = useState(null);
   const [email, setEmail] = useState("");
   const [isEvent, setIsEvent] = useState(false);
   const [resultsPath, setResultsPath] = useState(null);
-  const [showCustomFlowReplayButton, setShowCustomFlowReplayButton] =
-    useState(false);
-  const [customFlowLabel, setCustomFlowLabel] = useState("");
   const [feedbackFormUrl, setFeedbackFormUrl] = useState(null);
   const [isWindows, setIsWindows] = useState(false);
   const [mailStatus, setMailStatus] = useState("send");
   const [showEditMailDetailsModal, setShowEditMailDetailsModal] =
     useState(false);
-
-  useEffect(() => {
-    if (state?.isCustomScan) {
-      setShowCustomFlowReplayButton(state.isCustomScan);
-      setCustomFlowLabel(state.customFlowLabel);
-    }
-  }, []);
 
   useEffect(() => {
     const getDataForForm = async () => {
@@ -85,8 +74,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
   };
 
   const handleScanAgain = () => {
-    window.services.cleanUpCustomFlowScripts();
-    window.sessionStorage.removeItem("latestCustomFlowGeneratedScript");
     window.sessionStorage.removeItem("latestCustomFlowScanDetails");
     window.sessionStorage.removeItem("latestCustomFlowEncryptionParams");
     navigate("/");
@@ -97,11 +84,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
     e.preventDefault();
 
     window.services.openResultsFolder(resultsPath);
-  };
-
-  const replayCustomFlow = async () => {
-    navigate("/custom_flow", { state: { isReplay: true } });
-    return;
   };
 
   const handleSubmitMail = async (finalEmails, finalSubject) => {
@@ -185,14 +167,6 @@ const ResultPage = ({ completedScanId: scanId }) => {
                   Help us improve
                 </a>
               </li>
-              {showCustomFlowReplayButton && (
-                <li>
-                  <Link to="/custom_flow" state={{ isReplay: true }}>
-                    <img alt="" src={arrowRepeatIcon}></img>
-                    Rerun custom flow {`(${customFlowLabel})`}
-                  </Link>
-                </li>
-              )}
               <li>
                 <hr />
                 <Link to="/" onClick={handleScanAgain}>

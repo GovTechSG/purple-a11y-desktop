@@ -26,13 +26,10 @@ contextBridge.exposeInMainWorld("services", {
     const results = await ipcRenderer.invoke("startScan", scanDetails);
     return results;
   },
-  abortScan: async (scanDetails) => {
+  abortScan: async () => {
     await ipcRenderer.invoke("abortScan");
   },
-  startReplay: async (generatedScript, scanDetails, isReplay) => {
-    const results = await ipcRenderer.invoke("startReplay", generatedScript, scanDetails, isReplay); 
-    return results;
-  },
+
   generateReport: (customFormLabel, scanId) => {
     ipcRenderer.send("generateReport", customFormLabel, scanId);
   },
@@ -45,9 +42,6 @@ contextBridge.exposeInMainWorld("services", {
   openUploadFolder: () => {
     ipcRenderer.send("openUploadFolder");
   },
-  cleanUpCustomFlowScripts: (() => {
-    ipcRenderer.send("cleanUpCustomFlowScripts");
-  }),
   getEngineVersion: async () => {
     const phEngineVersion = await ipcRenderer.invoke('getEngineVersion'); 
     return phEngineVersion;
