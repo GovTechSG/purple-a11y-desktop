@@ -357,7 +357,6 @@ const getReportPath = (scanId) => {
   if (scanHistory[scanId]) {
     return path.join(
       resultsFolderPath,
-      "reports",
       "report.html"
     );
   }
