@@ -4,6 +4,7 @@ const {
   ipcMain,
   shell,
   session,
+  dialog,
 } = require("electron");
 const { getDefaultChromeDataDir } = require("./constants")
 const os = require("os");
@@ -200,6 +201,22 @@ app.on("ready", async () => {
   })
 
   ipcMain.handle("isWindows", (_event) => constants.isWindows);
+
+  ipcMain.handle('selectFile', async () => {
+    const result = await dialog.showOpenDialog(mainWindow, {
+      properties: ['openFile'],
+      filters: [
+        { name: 'XML Files', extensions: ['xml'] },
+        { name: 'All Files', extensions: ['*'] }
+      ]
+    });
+  
+    if (!result.canceled && result.filePaths.length > 0) {
+      return result.filePaths[0];
+    } else {
+      return null;
+    }
+  });
 
   await mainReady;
 

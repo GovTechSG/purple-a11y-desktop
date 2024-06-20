@@ -19,13 +19,15 @@ const InitScanForm = ({
   prevUrlErrorMessage,
   scanButtonIsClicked,
   setScanButtonIsClicked,
-  isAbortingScan
+  isAbortingScan,
 }) => {
   const [openPageLimitAdjuster, setOpenPageLimitAdjuster] = useState(false);
   const [pageWord, setPageWord] = useState("pages");
   const pageLimitAdjuster = useRef();
   const scanTypeOptions = Object.keys(scanTypes);
   const fileTypesOptions = Object.keys(fileTypes);
+  const [selectedFile, setSelectedFile] = useState(null); // State for selected file
+  const [fileUrl, setFileUrl] = useState(""); // State for the file URL
 
   if (isProxy) {
     delete viewportTypes.specific;
@@ -34,19 +36,21 @@ const InitScanForm = ({
   const viewportOptions = viewportTypes;
   const deviceOptions = isProxy ? [] : Object.keys(devices);
 
-  const cachedPageLimit = sessionStorage.getItem('pageLimit');
-  const cachedAdvancedOptions = sessionStorage.getItem('advancedOptions');
-  const cachedScanUrl = sessionStorage.getItem('scanUrl');
+  const cachedPageLimit = sessionStorage.getItem("pageLimit");
+  const cachedAdvancedOptions = sessionStorage.getItem("advancedOptions");
+  const cachedScanUrl = sessionStorage.getItem("scanUrl");
 
   const [pageLimit, setPageLimit] = useState(() => {
-    return cachedPageLimit? JSON.parse(cachedPageLimit) : "100"
+    return cachedPageLimit ? JSON.parse(cachedPageLimit) : "100";
   });
   const [advancedOptions, setAdvancedOptions] = useState(() => {
-    return cachedAdvancedOptions? JSON.parse(cachedAdvancedOptions) : getDefaultAdvancedOptions(isProxy)
+    return cachedAdvancedOptions
+      ? JSON.parse(cachedAdvancedOptions)
+      : getDefaultAdvancedOptions(isProxy);
   });
 
   const [scanUrl, setScanUrl] = useState(() => {
-    return cachedScanUrl? JSON.parse(cachedScanUrl) : "https://"
+    return cachedScanUrl ? JSON.parse(cachedScanUrl) : "https://";
   });
 
   useEffect(() => {
@@ -57,7 +61,7 @@ const InitScanForm = ({
   }, [scanButtonIsClicked, prevUrlErrorMessage]);
 
   useEffect(() => {
-    setPageWord(pageLimit === "1" ? 'page' : 'pages')
+    setPageWord(pageLimit === "1" ? "page" : "pages");
   }, [pageLimit]);
 
   const togglePageLimitAdjuster = (e) => {
@@ -72,19 +76,20 @@ const InitScanForm = ({
   };
 
   const handleScanButtonClicked = () => {
-    // If chosen device is Mobile in proxy environment, we override the default "Mobile"
-    // sent to cli.js with iPhone's width 414px
-    // Prevents the user-agent from triggering in cli.js
     if (isProxy && advancedOptions.viewport === viewportTypes.mobile) {
       advancedOptions.viewport = viewportTypes.custom;
       advancedOptions.viewportWidth = 414;
     }
 
     setScanButtonIsClicked(true);
-    sessionStorage.setItem('pageLimit', JSON.stringify(pageLimit));
-    sessionStorage.setItem('advancedOptions', JSON.stringify(advancedOptions));
-    sessionStorage.setItem('scanUrl', JSON.stringify(scanUrl));
-    startScan({ scanUrl: scanUrl.trim(), pageLimit, ...advancedOptions });
+    sessionStorage.setItem("pageLimit", JSON.stringify(pageLimit));
+    sessionStorage.setItem("advancedOptions", JSON.stringify(advancedOptions));
+    sessionStorage.setItem("scanUrl", JSON.stringify(scanUrl));
+    if (advancedOptions.scanType === scanTypeOptions[3] && selectedFile) {
+      startScan({ file: selectedFile, scanUrl, pageLimit, ...advancedOptions });
+    } else {
+      startScan({ scanUrl: scanUrl.trim(), pageLimit, ...advancedOptions });
+    }
   };
 
   // styles are in HomePage.scss
@@ -100,7 +105,33 @@ const InitScanForm = ({
             type="text"
             value={scanUrl}
             onChange={(e) => setScanUrl(e.target.value)}
+            style={{
+              display:
+                advancedOptions.scanType === scanTypeOptions[3]
+                  ? "none"
+                  : "block",
+            }} // Hide URL input for file scan
           />
+          {advancedOptions.scanType === scanTypeOptions[3] && (
+            <div id="file-input-container">
+              <input
+                type="file"
+                id="file-input"
+                accept=".xml"
+                style={{ display: "none" }}
+                onChange={async (e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    setScanUrl("file://" + file.path);
+                  }
+                }}
+              />
+              <label htmlFor="file-input" id="file-input-label">
+                {scanUrl ? scanUrl.replace("file://", "") : "Choose file"}
+              </label>
+            </div>
+          )}
+
           {advancedOptions.scanType !== scanTypeOptions[2] &&
             advancedOptions.scanType !== scanTypeOptions[3] && (
               <div>
@@ -153,7 +184,11 @@ const InitScanForm = ({
             onClick={handleScanButtonClicked}
             disabled={scanButtonIsClicked || isAbortingScan}
           >
-            {scanButtonIsClicked || isAbortingScan ? <LoadingSpinner></LoadingSpinner> : "Scan"}
+            {scanButtonIsClicked || isAbortingScan ? (
+              <LoadingSpinner></LoadingSpinner>
+            ) : (
+              "Scan"
+            )}
           </Button>
         </div>
         {prevUrlErrorMessage && (
