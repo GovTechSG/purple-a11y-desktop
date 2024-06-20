@@ -49,9 +49,18 @@ const InitScanForm = ({
       : getDefaultAdvancedOptions(isProxy);
   });
 
-  const [scanUrl, setScanUrl] = useState(() => {
-    return cachedScanUrl ? JSON.parse(cachedScanUrl) : "https://";
-  });
+  const [scanUrl, setScanUrl] = useState("") ;
+
+  useEffect(() => {
+      const cachedScanUrl = sessionStorage.getItem("scanUrl");
+      if (cachedScanUrl) {
+        setScanUrl(JSON.parse(cachedScanUrl));
+      } else if (advancedOptions.scanType === scanTypeOptions[3]) {
+        setScanUrl("file:///");
+      } else {
+        setScanUrl("https://");
+      }
+    }, [advancedOptions.scanType]);
 
   useEffect(() => {
     const urlBarElem = document.getElementById("url-bar");
@@ -127,7 +136,7 @@ const InitScanForm = ({
                 }}
               />
               <label htmlFor="file-input" id="file-input-label">
-                {scanUrl ? scanUrl.replace("file://", "") : "Choose file"}
+                {scanUrl ? scanUrl : "Choose file"}
               </label>
             </div>
           )}
