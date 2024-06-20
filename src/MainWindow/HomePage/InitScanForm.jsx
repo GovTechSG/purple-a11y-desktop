@@ -13,6 +13,13 @@ import { ReactComponent as ChevronUpIcon } from "../../assets/chevron-up-purple.
 import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down-white.svg";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 
+function convertToReadablePath(path) {
+  let readable = path.replace(/\\/g, '/');
+  readable = readable.replace(/^[a-zA-Z]:/, '');
+  readable = readable.replace(/^\/+/, '/');
+  return `file://${readable}`;
+}
+
 const InitScanForm = ({
   isProxy,
   startScan,
@@ -26,8 +33,8 @@ const InitScanForm = ({
   const pageLimitAdjuster = useRef();
   const scanTypeOptions = Object.keys(scanTypes);
   const fileTypesOptions = Object.keys(fileTypes);
-  const [selectedFile, setSelectedFile] = useState(null); // State for selected file
-  const [fileUrl, setFileUrl] = useState(""); // State for the file URL
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [fileUrl, setFileUrl] = useState("");
 
   if (isProxy) {
     delete viewportTypes.specific;
@@ -52,15 +59,15 @@ const InitScanForm = ({
   const [scanUrl, setScanUrl] = useState("") ;
 
   useEffect(() => {
-      const cachedScanUrl = sessionStorage.getItem("scanUrl");
-      if (cachedScanUrl) {
-        setScanUrl(JSON.parse(cachedScanUrl));
-      } else if (advancedOptions.scanType === scanTypeOptions[3]) {
-        setScanUrl("file:///");
-      } else {
-        setScanUrl("https://");
-      }
-    }, [advancedOptions.scanType]);
+    const cachedScanUrl = sessionStorage.getItem("scanUrl");
+    if (cachedScanUrl) {
+      setScanUrl(JSON.parse(cachedScanUrl));
+    } else if (advancedOptions.scanType === scanTypeOptions[3]) {
+      setScanUrl("file:///");
+    } else {
+      setScanUrl("https://");
+    }
+  }, [advancedOptions.scanType]);
 
   useEffect(() => {
     const urlBarElem = document.getElementById("url-bar");
@@ -101,7 +108,15 @@ const InitScanForm = ({
     }
   };
 
-  // styles are in HomePage.scss
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const readablePath = convertToReadablePath(file.path);
+      setScanUrl(readablePath);
+      setSelectedFile(file);
+    }
+  };
+
   return (
     <div id="init-scan-form">
       <label htmlFor="url-input" id="url-bar-label">
@@ -119,7 +134,7 @@ const InitScanForm = ({
                 advancedOptions.scanType === scanTypeOptions[3]
                   ? "none"
                   : "block",
-            }} // Hide URL input for file scan
+            }}
           />
           {advancedOptions.scanType === scanTypeOptions[3] && (
             <div id="file-input-container">
@@ -128,12 +143,7 @@ const InitScanForm = ({
                 id="file-input"
                 accept=".xml"
                 style={{ display: "none" }}
-                onChange={async (e) => {
-                  const file = e.target.files[0];
-                  if (file) {
-                    setScanUrl("file://" + file.path);
-                  }
-                }}
+                onChange={handleFileChange}
               />
               <label htmlFor="file-input" id="file-input-label">
                 {scanUrl ? scanUrl : "Choose file"}
@@ -158,12 +168,10 @@ const InitScanForm = ({
                         svgIcon={<ChevronUpIcon />}
                       />
                     ) : (
-                      // <i className="bi bi-chevron-up" />
                       <ButtonSvgIcon
                         className={`chevron-down-icon`}
                         svgIcon={<ChevronDownIcon />}
                       />
-                      // <i className="bi bi-chevron-down" />
                     )}
                   </span>
                 </Button>
