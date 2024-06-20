@@ -4,6 +4,7 @@ export const scanTypes = {
   "Website crawl": "website",
   "Sitemap crawl": "sitemap",
   "Custom flow": "custom",
+  "Local file": "localfile",
 };
 
 export const viewportTypes = {

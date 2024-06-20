@@ -128,5 +128,9 @@ contextBridge.exposeInMainWorld("services", {
     );
     return response;
   },
+  selectFile: async () => {
+    const filePath = await ipcRenderer.invoke('selectFile');
+    return filePath;
+  },
   getIsWindows: async () => ipcRenderer.invoke("isWindows"),
 });
