@@ -206,7 +206,7 @@ app.on("ready", async () => {
     const result = await dialog.showOpenDialog(mainWindow, {
       properties: ['openFile'],
       filters: [
-        { name: 'XML Files', extensions: ['xml'] },
+        { name: 'Supported files', extensions: ['dhtml','html','htm','txt','shtml','xml', 'xhtml'] },
         { name: 'All Files', extensions: ['*'] }
       ]
     });
