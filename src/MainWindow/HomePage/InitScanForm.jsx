@@ -14,10 +14,14 @@ import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down-whi
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 
 function convertToReadablePath(path) {
+  // Normalize the path to use forward slashes
   let readable = path.replace(/\\/g, '/');
-  readable = readable.replace(/^[a-zA-Z]:/, '');
-  readable = readable.replace(/^\/+/, '/');
-  return `file://${readable}`;
+  // Handle Windows drive letters
+  if (/^[a-zA-Z]:/.test(readable)) {
+    readable = readable.replace(/^([a-zA-Z]):/, '/$1:');
+  }
+  // Ensure there are exactly three slashes after 'file:'
+  return `file:///${readable.replace(/^\/+/, '')}`;
 }
 
 const InitScanForm = ({
