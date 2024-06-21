@@ -344,12 +344,32 @@ const escapeHTMLEntitiesInLabel = (customFlowLabel) => {
 }
 const generateReport = (customFlowLabel, scanId) => {
   injectLabelIntoFolderName(customFlowLabel, scanId);
-  
   const reportPath = getReportPath(scanId);
-  const data = fs.readFileSync(reportPath, { encoding: "utf-8" });
   const escapedCustomFlowLabel = escapeHTMLEntitiesInLabel(customFlowLabel);
-  const result = data.replaceAll(/Custom Flow/g, escapedCustomFlowLabel);
+
+  // edit custom flow label in the base 64 encoded scanData in report
+  const data = fs.readFileSync(reportPath, { encoding: "utf-8" });
+  const scanDataEncoded = data.match(/scanData\s*=\s*base64Decode\('([^']+)'\)/)[1];
+  const scanDataDecodedJson = base64Decode(scanDataEncoded);
+  scanDataDecodedJson.customFlowLabel = escapedCustomFlowLabel;
+  const scanDataEncodedWithNewLabel = base64Encode(scanDataDecodedJson);
+  const result = data.replaceAll(scanDataEncoded, scanDataEncodedWithNewLabel); // find the encoded part, decode it and change the label then put back
   fs.writeFileSync(reportPath, result, {encoding: 'utf-8'});
+};
+
+const base64Decode = (data) => {
+  const compressedBytes = Uint8Array.from(atob(data), c => c.charCodeAt(0));
+  const jsonString = new TextDecoder().decode(compressedBytes);
+  return JSON.parse(jsonString);
+};
+
+const base64Encode = data => {
+  try {
+    return Buffer.from(JSON.stringify(data)).toString('base64');
+  } catch (error) {
+    console.error('Error encoding data to base64:', error);
+    throw error;
+  }
 };
 
 const getReportPath = (scanId) => {
@@ -357,6 +377,7 @@ const getReportPath = (scanId) => {
   if (scanHistory[scanId]) {
     return path.join(
       resultsFolderPath,
+      "reports",
       "report.html"
     );
   }
