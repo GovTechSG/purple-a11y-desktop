@@ -265,6 +265,9 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           case cliErrorTypes.notASitemap:
             errorMessageToShow = "Invalid sitemap.";
             break;
+          case cliErrorTypes.notALocalFile:
+            errorMessageToShow = "File is not a local html or sitemap file.";
+            break;
           case cliErrorTypes.browserError:
             navigate("/error", {
               state: { errorState: errorStates.browserError, timeOfScan },
