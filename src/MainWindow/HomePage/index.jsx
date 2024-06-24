@@ -191,7 +191,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
     } else if (scanDetails.scanType === "Local file") {
       if (!isValidFilepath(scanDetails.scanUrl)) {
         setScanButtonIsClicked(false);
-        setPrevUrlErrorMessage("Invalid FilePath. Please type in file:/// format.");
+        setPrevUrlErrorMessage("File is not a local html or sitemap file.");
         return;
       }
     } else if (!isValidHttpUrl(scanDetails.scanUrl)) {
