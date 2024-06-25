@@ -94,7 +94,7 @@ export const getDefaultAdvancedOptions = (isProxy) => {
 };
 
 // exit codes returned by Purple A11y cli when there is an error with the URL provided
-export const cliErrorCodes = new Set([11, 12, 13, 14, 15, 16, 17]);
+export const cliErrorCodes = new Set([11, 12, 13, 14, 15, 16, 17, 19]);
 export const cliErrorTypes = {
   invalidUrl: 11,
   cannotBeResolved: 12,
@@ -103,6 +103,7 @@ export const cliErrorTypes = {
   notASitemap: 15,
   unauthorisedBasicAuth: 16,
   browserError: 17,
+  notALocalFile: 19, 
 };
 
 export const errorStates = {

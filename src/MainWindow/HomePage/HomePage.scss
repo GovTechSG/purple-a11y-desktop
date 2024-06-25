@@ -51,6 +51,26 @@
     margin-right: 0.5rem;
   }
 
+  #file-input-container {
+    flex-grow: 1;
+    margin: 1rem 0;
+  }
+  
+  #file-input-label {
+    display: block;
+    width: 100%;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    color: #333333;
+  }
+  
+  #file-input {
+    display: none;
+  }
+
   #url-input:disabled {
     color: #6A8A95;
     background-color: transparent;
