@@ -15,13 +15,13 @@ import LoadingSpinner from "../../common/components/LoadingSpinner";
 
 function convertToReadablePath(path) {
   // Normalize the path to use forward slashes
-  let readable = path.replace(/\\/g, '/');
+  let readable = path.replace(/\\/g, "/");
   // Handle Windows drive letters
   if (/^[a-zA-Z]:/.test(readable)) {
-    readable = readable.replace(/^([a-zA-Z]):/, '/$1:');
+    readable = readable.replace(/^([a-zA-Z]):/, "/$1:");
   }
   // Ensure there are exactly three slashes after 'file:'
-  return `file:///${readable.replace(/^\/+/, '')}`;
+  return `file:///${readable.replace(/^\/+/, "")}`;
 }
 
 const InitScanForm = ({
@@ -60,7 +60,7 @@ const InitScanForm = ({
       : getDefaultAdvancedOptions(isProxy);
   });
 
-  const [scanUrl, setScanUrl] = useState("") ;
+  const [scanUrl, setScanUrl] = useState("");
 
   useEffect(() => {
     const cachedScanUrl = sessionStorage.getItem("scanUrl");
@@ -112,12 +112,30 @@ const InitScanForm = ({
     }
   };
 
-  const handleFileChange = async (e) => {
+  const handleFileChange =(e) => {
     const file = e.target.files[0];
     if (file) {
-      const readablePath = convertToReadablePath(file.path);
-      setScanUrl(readablePath);
-      setSelectedFile(file);
+      const fileExtension = file.name.split(".").pop().toLowerCase();
+      //Additional validation as alot of different files are regarded as txt files
+      const allowedExtensions = [
+        "dhtml",
+        "html",
+        "htm",
+        "txt",
+        "shtml",
+        "xml",
+        "xhtml",
+        "pdf",
+      ];
+
+      if (allowedExtensions.includes(fileExtension)) {
+        const readablePath = convertToReadablePath(file.path);
+        setScanUrl(readablePath);
+        setSelectedFile(file);
+      } else {
+        alert("Invalid file format. Please choose a valid file.");
+        e.target.value = ""; // Reset the input
+      }
     }
   };
 
@@ -145,7 +163,8 @@ const InitScanForm = ({
               <input
                 type="file"
                 id="file-input"
-                accept=".xml"
+                //Alot of file extensions are treated as .txt so we need to handle it after the file is selected
+                accept=".dhtml,.html,.htm,.shtml,.xml,.xhtml,.pdf,text/plain"
                 style={{ display: "none" }}
                 onChange={handleFileChange}
               />

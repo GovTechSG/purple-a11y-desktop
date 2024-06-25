@@ -202,14 +202,9 @@ app.on("ready", async () => {
 
   ipcMain.handle("isWindows", (_event) => constants.isWindows);
 
-  ipcMain.handle('selectFile', async () => {
-    const result = await dialog.showOpenDialog(mainWindow, {
-      properties: ['openFile'],
-      filters: [
-        { name: 'Supported files', extensions: ['dhtml','html','htm','txt','shtml','xml', 'xhtml'] },
-        { name: 'All Files', extensions: ['*'] }
-      ]
-    });
+  ipcMain.handle('selectFile', async (event, options = {}) => {
+
+    const result = await dialog.showOpenDialog(mainWindow, options);
   
     if (!result.canceled && result.filePaths.length > 0) {
       return result.filePaths[0];
