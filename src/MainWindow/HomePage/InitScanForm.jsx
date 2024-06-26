@@ -39,6 +39,7 @@ const InitScanForm = ({
   const fileTypesOptions = Object.keys(fileTypes);
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileUrl, setFileUrl] = useState("");
+  const [isCustomOptionChecked, setIsCustomOptionChecked] = useState(false);
 
   if (isProxy) {
     delete viewportTypes.specific;
@@ -61,17 +62,22 @@ const InitScanForm = ({
   });
 
   const [scanUrl, setScanUrl] = useState("");
-
   useEffect(() => {
     const cachedScanUrl = sessionStorage.getItem("scanUrl");
+    const cacheScanUrlJson = cachedScanUrl ? JSON.parse(cachedScanUrl) : null;
     if (cachedScanUrl) {
       setScanUrl(JSON.parse(cachedScanUrl));
-    } else if (advancedOptions.scanType === scanTypeOptions[3]) {
+    } else if (isCustomOptionChecked) {
       setScanUrl("file:///");
     } else {
       setScanUrl("https://");
     }
-  }, [advancedOptions.scanType]);
+
+    setAdvancedOptions((prevOptions) => ({
+      ...prevOptions,
+      scanType: isCustomOptionChecked ? scanTypeOptions[3] : scanTypeOptions[0],
+    }));
+  }, [isCustomOptionChecked]);
 
   useEffect(() => {
     const urlBarElem = document.getElementById("url-bar");
@@ -105,14 +111,18 @@ const InitScanForm = ({
     sessionStorage.setItem("pageLimit", JSON.stringify(pageLimit));
     sessionStorage.setItem("advancedOptions", JSON.stringify(advancedOptions));
     sessionStorage.setItem("scanUrl", JSON.stringify(scanUrl));
-    if (advancedOptions.scanType === scanTypeOptions[3] && selectedFile) {
-      startScan({ file: selectedFile, scanUrl, pageLimit, ...advancedOptions });
+    if (
+      advancedOptions.scanType === scanTypeOptions[3] &&
+      isCustomOptionChecked &&
+      selectedFile
+    ) {
+      startScan({ file: selectedFile, scanUrl, ...advancedOptions });
     } else {
       startScan({ scanUrl: scanUrl.trim(), pageLimit, ...advancedOptions });
     }
   };
 
-  const handleFileChange =(e) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const fileExtension = file.name.split(".").pop().toLowerCase();
@@ -146,19 +156,41 @@ const InitScanForm = ({
       </label>
       <div id="url-bar-group">
         <div id="url-bar">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginRight: "10px",
+            }}
+          >
+            <input
+              type="checkbox"
+              id="custom-checkbox"
+              style={{ marginRight: "5px" }}
+              checked={isCustomOptionChecked}
+              onChange={(e) => {
+                const newCheckedState = e.target.checked;
+                setIsCustomOptionChecked(newCheckedState);
+                setAdvancedOptions((prevOptions) => ({
+                  ...prevOptions,
+                  scanType: newCheckedState
+                    ? scanTypeOptions[3]
+                    : scanTypeOptions[0],
+                }));
+              }}
+            />
+            <label htmlFor="custom-checkbox">File</label>
+          </div>
           <input
             id="url-input"
             type="text"
             value={scanUrl}
             onChange={(e) => setScanUrl(e.target.value)}
             style={{
-              display:
-                advancedOptions.scanType === scanTypeOptions[3]
-                  ? "none"
-                  : "block",
+              display: isCustomOptionChecked ? "none" : "block",
             }}
           />
-          {advancedOptions.scanType === scanTypeOptions[3] && (
+          {isCustomOptionChecked && (
             <div id="file-input-container">
               <input
                 type="file"
@@ -175,7 +207,8 @@ const InitScanForm = ({
           )}
 
           {advancedOptions.scanType !== scanTypeOptions[2] &&
-            advancedOptions.scanType !== scanTypeOptions[3] && (
+            advancedOptions.scanType !== scanTypeOptions[3] &&
+            !isCustomOptionChecked && (
               <div>
                 <Button
                   type="btn-link"
