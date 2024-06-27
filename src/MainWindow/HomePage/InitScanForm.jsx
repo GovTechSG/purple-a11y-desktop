@@ -39,6 +39,7 @@ const InitScanForm = ({
   const [staticHttpUrl, setStaticHttpUrl] = useState("https://");
   const [staticFilePath, setStaticFilePath] = useState("file:///");
   const [cachedNonFileScanType, setCachedNonFileScanType] = useState(scanTypeOptions[0]);
+  const [displayScanType, setDisplayScanType] = useState(scanTypeOptions[0]);
 
   if (isProxy) {
     delete viewportTypes.specific;
@@ -75,6 +76,7 @@ const InitScanForm = ({
       setScanUrl(newScanUrl);
       setStaticFilePath(newScanUrl);
       setStaticHttpUrl("https://");
+      setDisplayScanType(cachedNonFileScanType);
     } else {
       setIsCustomOptionChecked(false);
       const newScanUrl = cachedScanUrl ? JSON.parse(cachedScanUrl) : "https://";
@@ -82,6 +84,7 @@ const InitScanForm = ({
       setStaticHttpUrl(newScanUrl);
       setStaticFilePath("file:///");
       setCachedNonFileScanType(cachedScanType || scanTypeOptions[0]);
+      setDisplayScanType(cachedScanType || scanTypeOptions[0]);
     }
 
     setAdvancedOptions((prevOptions) => ({
@@ -145,7 +148,7 @@ const InitScanForm = ({
     }
 
     if (isCustomOptionChecked) {
-      startScan({ file: selectedFile, scanUrl, ...advancedOptions });
+      startScan({ file: selectedFile, scanUrl, ...advancedOptions, scanType: scanTypeOptions[3] });
     } else {
       startScan({ scanUrl: scanUrl.trim(), pageLimit, ...advancedOptions });
     }
@@ -205,6 +208,7 @@ const InitScanForm = ({
                     ...prevOptions,
                     scanType: cachedNonFileScanType,
                   }));
+                  setDisplayScanType(cachedNonFileScanType);
                 }
               }}
             />
@@ -305,8 +309,16 @@ const InitScanForm = ({
         fileTypesOptions={fileTypesOptions}
         viewportOptions={viewportOptions}
         deviceOptions={deviceOptions}
-        advancedOptions={advancedOptions}
-        setAdvancedOptions={setAdvancedOptions}
+        advancedOptions={{...advancedOptions, scanType: isCustomOptionChecked ? displayScanType : advancedOptions.scanType}}
+        setAdvancedOptions={(newOptions) => {
+          if (!isCustomOptionChecked) {
+            setAdvancedOptions(newOptions);
+            setDisplayScanType(newOptions.scanType);
+          } else {
+            setDisplayScanType(newOptions.scanType);
+            setCachedNonFileScanType(newOptions.scanType);
+          }
+        }}
         scanButtonIsClicked={scanButtonIsClicked}
       />
     </div>
