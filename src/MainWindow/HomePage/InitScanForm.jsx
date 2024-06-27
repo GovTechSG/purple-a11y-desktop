@@ -14,13 +14,10 @@ import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down-whi
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 
 function convertToReadablePath(path) {
-  // Normalize the path to use forward slashes
   let readable = path.replace(/\\/g, "/");
-  // Handle Windows drive letters
   if (/^[a-zA-Z]:/.test(readable)) {
     readable = readable.replace(/^([a-zA-Z]):/, "/$1:");
   }
-  // Ensure there are exactly three slashes after 'file:'
   return `file:///${readable.replace(/^\/+/, "")}`;
 }
 
@@ -38,7 +35,7 @@ const InitScanForm = ({
   const scanTypeOptions = Object.keys(scanTypes);
   const fileTypesOptions = Object.keys(fileTypes);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [fileUrl, setFileUrl] = useState("");
+  const [scanUrl, setScanUrl] = useState("");
   const [staticHttpUrl, setStaticHttpUrl] = useState("https://");
   const [staticFilePath, setStaticFilePath] = useState("file:///");
 
@@ -51,7 +48,6 @@ const InitScanForm = ({
 
   const cachedPageLimit = sessionStorage.getItem("pageLimit");
   const cachedAdvancedOptions = sessionStorage.getItem("advancedOptions");
-  const cachedScanUrl = sessionStorage.getItem("scanUrl");
 
   const [pageLimit, setPageLimit] = useState(() => {
     return cachedPageLimit ? JSON.parse(cachedPageLimit) : "100";
@@ -61,8 +57,6 @@ const InitScanForm = ({
       ? JSON.parse(cachedAdvancedOptions)
       : getDefaultAdvancedOptions(isProxy);
   });
-
-  const [scanUrl, setScanUrl] = useState("");
 
   const [isCustomOptionChecked, setIsCustomOptionChecked] = useState(() => {
     const cachedCheckboxState = sessionStorage.getItem("isCustomOptionChecked");
@@ -79,16 +73,18 @@ const InitScanForm = ({
       const newScanUrl = cachedScanUrl ? JSON.parse(cachedScanUrl) : "file:///";
       setScanUrl(newScanUrl);
       setStaticFilePath(newScanUrl);
+      setStaticHttpUrl("https://");
     } else {
       setIsCustomOptionChecked(false);
       const newScanUrl = cachedScanUrl ? JSON.parse(cachedScanUrl) : "https://";
       setScanUrl(newScanUrl);
       setStaticHttpUrl(newScanUrl);
+      setStaticFilePath("file:///");
     }
 
     setAdvancedOptions((prevOptions) => ({
       ...prevOptions,
-      scanType: wasLocalFileScan ? scanTypeOptions[3] : scanTypeOptions[0],
+      scanType: cachedScanType || prevOptions.scanType,
     }));
   }, []);
 
@@ -99,21 +95,13 @@ const InitScanForm = ({
       setStaticHttpUrl(scanUrl);
     }
 
-    setAdvancedOptions((prevOptions) => ({
-      ...prevOptions,
-      scanType: isCustomOptionChecked ? scanTypeOptions[3] : scanTypeOptions[0],
-    }));
-
     sessionStorage.setItem(
       "isCustomOptionChecked",
       JSON.stringify(isCustomOptionChecked)
     );
-    sessionStorage.setItem(
-      "scanType",
-      isCustomOptionChecked ? scanTypeOptions[3] : scanTypeOptions[0]
-    );
+    sessionStorage.setItem("scanType", advancedOptions.scanType);
     sessionStorage.setItem("scanUrl", JSON.stringify(scanUrl));
-  }, [isCustomOptionChecked, scanUrl]);
+  }, [isCustomOptionChecked, scanUrl, advancedOptions.scanType]);
 
   useEffect(() => {
     const urlBarElem = document.getElementById("url-bar");
@@ -154,7 +142,6 @@ const InitScanForm = ({
       setStaticHttpUrl(scanUrl);
     }
 
-    // No need more check cause file input has been handled
     if (isCustomOptionChecked) {
       startScan({ file: selectedFile, scanUrl, ...advancedOptions });
     } else {
@@ -166,16 +153,8 @@ const InitScanForm = ({
     const file = e.target.files[0];
     if (file) {
       const fileExtension = file.name.split(".").pop().toLowerCase();
-      //Additional validation as alot of different files are regarded as txt files
       const allowedExtensions = [
-        "dhtml",
-        "html",
-        "htm",
-        "txt",
-        "shtml",
-        "xml",
-        "xhtml",
-        "pdf",
+        "dhtml", "html", "htm", "txt", "shtml", "xml", "xhtml", "pdf",
       ];
 
       if (allowedExtensions.includes(fileExtension)) {
@@ -185,7 +164,7 @@ const InitScanForm = ({
         setSelectedFile(file);
       } else {
         alert("Invalid file format. Please choose a valid file.");
-        e.target.value = ""; // Reset the input
+        e.target.value = "";
       }
     }
   };
@@ -213,12 +192,20 @@ const InitScanForm = ({
                 const newCheckedState = e.target.checked;
                 setIsCustomOptionChecked(newCheckedState);
                 setScanUrl(newCheckedState ? staticFilePath : staticHttpUrl);
-                setAdvancedOptions((prevOptions) => ({
-                  ...prevOptions,
-                  scanType: newCheckedState
-                    ? scanTypeOptions[3]
-                    : scanTypeOptions[0],
-                }));
+                if (newCheckedState) {
+                  setAdvancedOptions((prevOptions) => ({
+                    ...prevOptions,
+                    scanType: scanTypeOptions[3],
+                  }));
+                } else {
+                  // Revert to the previous non-file scan type or default to website crawl
+                  setAdvancedOptions((prevOptions) => ({
+                    ...prevOptions,
+                    scanType: prevOptions.scanType === scanTypeOptions[3] 
+                      ? scanTypeOptions[0] 
+                      : prevOptions.scanType,
+                  }));
+                }
               }}
             />
             <label htmlFor="custom-checkbox">File</label>
@@ -237,7 +224,6 @@ const InitScanForm = ({
               <input
                 type="file"
                 id="file-input"
-                //Alot of file extensions are treated as .txt so we need to handle it after the file is selected
                 accept=".dhtml,.html,.htm,.shtml,.xml,.xhtml,.pdf,text/plain"
                 style={{ display: "none" }}
                 onChange={handleFileChange}
