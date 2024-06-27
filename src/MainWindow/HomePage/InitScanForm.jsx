@@ -73,7 +73,7 @@ const InitScanForm = ({
     const cachedScanUrl = sessionStorage.getItem("scanUrl");
     const cachedScanType = sessionStorage.getItem("scanType");
     const wasLocalFileScan = cachedScanType === scanTypeOptions[3];
-  
+
     if (wasLocalFileScan) {
       setIsCustomOptionChecked(true);
       const newScanUrl = cachedScanUrl ? JSON.parse(cachedScanUrl) : "file:///";
@@ -85,7 +85,7 @@ const InitScanForm = ({
       setScanUrl(newScanUrl);
       setStaticHttpUrl(newScanUrl);
     }
-  
+
     setAdvancedOptions((prevOptions) => ({
       ...prevOptions,
       scanType: wasLocalFileScan ? scanTypeOptions[3] : scanTypeOptions[0],
@@ -94,20 +94,24 @@ const InitScanForm = ({
 
   useEffect(() => {
     if (isCustomOptionChecked) {
-      setScanUrl(prevScanUrl => prevScanUrl.startsWith("file:///") ? prevScanUrl : "file:///");
-      setStaticFilePath(prevPath => prevPath.startsWith("file:///") ? prevPath : "file:///");
+      setStaticFilePath(scanUrl);
     } else {
-      setScanUrl(prevScanUrl => prevScanUrl.startsWith("https://") ? prevScanUrl : "https://");
-      setStaticHttpUrl(prevUrl => prevUrl.startsWith("https://") ? prevUrl : "https://");
+      setStaticHttpUrl(scanUrl);
     }
-  
+
     setAdvancedOptions((prevOptions) => ({
       ...prevOptions,
       scanType: isCustomOptionChecked ? scanTypeOptions[3] : scanTypeOptions[0],
     }));
-  
-    sessionStorage.setItem("isCustomOptionChecked", JSON.stringify(isCustomOptionChecked));
-    sessionStorage.setItem("scanType", isCustomOptionChecked ? scanTypeOptions[3] : scanTypeOptions[0]);
+
+    sessionStorage.setItem(
+      "isCustomOptionChecked",
+      JSON.stringify(isCustomOptionChecked)
+    );
+    sessionStorage.setItem(
+      "scanType",
+      isCustomOptionChecked ? scanTypeOptions[3] : scanTypeOptions[0]
+    );
     sessionStorage.setItem("scanUrl", JSON.stringify(scanUrl));
   }, [isCustomOptionChecked, scanUrl]);
 
@@ -133,32 +137,6 @@ const InitScanForm = ({
     }
   };
 
-  const CachedValuesDisplay = ({ 
-    pageLimit, 
-    advancedOptions, 
-    scanUrl, 
-    isCustomOptionChecked 
-  }) => {
-    return (
-      <div className="cached-values-display" style={{ 
-        fontSize: '12px', 
-        marginBottom: '10px', 
-        padding: '10px', 
-        border: '1px solid #ccc', 
-        borderRadius: '5px' 
-      }}>
-        <h4>Cached Values:</h4>
-        <p>Page Limit: {pageLimit}</p>
-        <p>Scan URL: {scanUrl}</p>
-        <p>Is Custom Option Checked: {isCustomOptionChecked.toString()}</p>
-        <details>
-          <summary>Advanced Options</summary>
-          <pre>{JSON.stringify(advancedOptions, null, 2)}</pre>
-        </details>
-      </div>
-    );
-  };
-
   const handleScanButtonClicked = () => {
     if (isProxy && advancedOptions.viewport === viewportTypes.mobile) {
       advancedOptions.viewport = viewportTypes.custom;
@@ -169,6 +147,7 @@ const InitScanForm = ({
     sessionStorage.setItem("pageLimit", JSON.stringify(pageLimit));
     sessionStorage.setItem("advancedOptions", JSON.stringify(advancedOptions));
     sessionStorage.setItem("scanUrl", JSON.stringify(scanUrl));
+
     if (isCustomOptionChecked) {
       setStaticFilePath(scanUrl);
     } else {
@@ -233,6 +212,7 @@ const InitScanForm = ({
               onChange={(e) => {
                 const newCheckedState = e.target.checked;
                 setIsCustomOptionChecked(newCheckedState);
+                setScanUrl(newCheckedState ? staticFilePath : staticHttpUrl);
                 setAdvancedOptions((prevOptions) => ({
                   ...prevOptions,
                   scanType: newCheckedState
@@ -332,12 +312,6 @@ const InitScanForm = ({
           </span>
         )}
       </div>
-      <CachedValuesDisplay
-      pageLimit={pageLimit}
-      advancedOptions={advancedOptions}
-      scanUrl={scanUrl}
-      isCustomOptionChecked={isCustomOptionChecked}
-    />
 
       <AdvancedScanOptions
         isProxy={isProxy}
