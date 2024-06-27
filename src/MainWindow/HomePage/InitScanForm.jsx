@@ -181,39 +181,41 @@ const InitScanForm = ({
       </label>
       <div id="url-bar-group">
         <div id="url-bar">
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginRight: "10px",
-            }}
-          >
-            <input
-              type="checkbox"
-              id="custom-checkbox"
-              style={{ marginRight: "5px" }}
-              checked={isCustomOptionChecked}
-              onChange={(e) => {
-                const newCheckedState = e.target.checked;
-                setIsCustomOptionChecked(newCheckedState);
-                setScanUrl(newCheckedState ? staticFilePath : staticHttpUrl);
-                if (newCheckedState) {
-                  setCachedNonFileScanType(advancedOptions.scanType);
-                  setAdvancedOptions((prevOptions) => ({
-                    ...prevOptions,
-                    scanType: scanTypeOptions[3],
-                  }));
-                } else {
-                  setAdvancedOptions((prevOptions) => ({
-                    ...prevOptions,
-                    scanType: cachedNonFileScanType,
-                  }));
-                  setDisplayScanType(cachedNonFileScanType);
-                }
+          {advancedOptions.scanType !== scanTypeOptions[2] && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginRight: "10px",
               }}
-            />
-            <label htmlFor="custom-checkbox">File</label>
-          </div>
+            >
+              <input
+                type="checkbox"
+                id="custom-checkbox"
+                style={{ marginRight: "5px" }}
+                checked={isCustomOptionChecked}
+                onChange={(e) => {
+                  const newCheckedState = e.target.checked;
+                  setIsCustomOptionChecked(newCheckedState);
+                  setScanUrl(newCheckedState ? staticFilePath : staticHttpUrl);
+                  if (newCheckedState) {
+                    setCachedNonFileScanType(advancedOptions.scanType);
+                    setAdvancedOptions((prevOptions) => ({
+                      ...prevOptions,
+                      scanType: scanTypeOptions[3],
+                    }));
+                  } else {
+                    setAdvancedOptions((prevOptions) => ({
+                      ...prevOptions,
+                      scanType: cachedNonFileScanType,
+                    }));
+                    setDisplayScanType(cachedNonFileScanType);
+                  }
+                }}
+              />
+              <label htmlFor="custom-checkbox">File</label>
+            </div>
+          )}
           <input
             id="url-input"
             type="text"
@@ -305,7 +307,7 @@ const InitScanForm = ({
 
       <AdvancedScanOptions
         isProxy={isProxy}
-        scanTypeOptions={scanTypeOptions}
+        scanTypeOptions={isCustomOptionChecked ? scanTypeOptions.filter(option => option !== scanTypeOptions[2] && option !== scanTypeOptions[3]) : scanTypeOptions.filter(option => option !== scanTypeOptions[3])}
         fileTypesOptions={fileTypesOptions}
         viewportOptions={viewportOptions}
         deviceOptions={deviceOptions}
