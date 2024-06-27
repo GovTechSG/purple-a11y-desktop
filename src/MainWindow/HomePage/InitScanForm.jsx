@@ -38,6 +38,7 @@ const InitScanForm = ({
   const [scanUrl, setScanUrl] = useState("");
   const [staticHttpUrl, setStaticHttpUrl] = useState("https://");
   const [staticFilePath, setStaticFilePath] = useState("file:///");
+  const [cachedNonFileScanType, setCachedNonFileScanType] = useState(scanTypeOptions[0]);
 
   if (isProxy) {
     delete viewportTypes.specific;
@@ -80,6 +81,7 @@ const InitScanForm = ({
       setScanUrl(newScanUrl);
       setStaticHttpUrl(newScanUrl);
       setStaticFilePath("file:///");
+      setCachedNonFileScanType(cachedScanType || scanTypeOptions[0]);
     }
 
     setAdvancedOptions((prevOptions) => ({
@@ -193,17 +195,15 @@ const InitScanForm = ({
                 setIsCustomOptionChecked(newCheckedState);
                 setScanUrl(newCheckedState ? staticFilePath : staticHttpUrl);
                 if (newCheckedState) {
+                  setCachedNonFileScanType(advancedOptions.scanType);
                   setAdvancedOptions((prevOptions) => ({
                     ...prevOptions,
                     scanType: scanTypeOptions[3],
                   }));
                 } else {
-                  // Revert to the previous non-file scan type or default to website crawl
                   setAdvancedOptions((prevOptions) => ({
                     ...prevOptions,
-                    scanType: prevOptions.scanType === scanTypeOptions[3] 
-                      ? scanTypeOptions[0] 
-                      : prevOptions.scanType,
+                    scanType: cachedNonFileScanType,
                   }));
                 }
               }}
