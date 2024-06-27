@@ -136,7 +136,7 @@ const AdvancedScanOptions = ({
             id="scan-type-dropdown"
             label="Scan Type:"
             initialValue={advancedOptions.scanType}
-            options={scanTypeOptions}
+            options={scanTypeOptions.filter((_, index) => index !== 3)}
             onChange={handleSetAdvancedOption("scanType")}
           />
           <SelectField

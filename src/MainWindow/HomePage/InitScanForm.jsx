@@ -65,20 +65,23 @@ const InitScanForm = ({
   useEffect(() => {
     const cachedScanUrl = sessionStorage.getItem("scanUrl");
     const cacheScanUrlJson = cachedScanUrl ? JSON.parse(cachedScanUrl) : null;
-    if (cachedScanUrl) {
-      setScanUrl(JSON.parse(cachedScanUrl));
-    } else if (isCustomOptionChecked) {
+    const cachedScanType = sessionStorage.getItem("scanType");
+    const wasLocalFileScan = cachedScanType === scanTypeOptions[3];
+  
+    if (isCustomOptionChecked) {
       setScanUrl("file:///");
+    } else if (cachedScanUrl && !wasLocalFileScan) {
+      setScanUrl(JSON.parse(cachedScanUrl));
     } else {
       setScanUrl("https://");
     }
-
+  
     setAdvancedOptions((prevOptions) => ({
       ...prevOptions,
       scanType: isCustomOptionChecked ? scanTypeOptions[3] : scanTypeOptions[0],
     }));
+    sessionStorage.setItem("scanType", isCustomOptionChecked ? scanTypeOptions[3] : scanTypeOptions[0]);
   }, [isCustomOptionChecked]);
-
   useEffect(() => {
     const urlBarElem = document.getElementById("url-bar");
     const urlBarInputList = urlBarElem.querySelectorAll("input, button");
@@ -111,8 +114,7 @@ const InitScanForm = ({
     sessionStorage.setItem("pageLimit", JSON.stringify(pageLimit));
     sessionStorage.setItem("advancedOptions", JSON.stringify(advancedOptions));
     sessionStorage.setItem("scanUrl", JSON.stringify(scanUrl));
-    if (
-      advancedOptions.scanType === scanTypeOptions[3] &&
+    if ( 
       isCustomOptionChecked &&
       selectedFile
     ) {
