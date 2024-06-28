@@ -147,6 +147,14 @@ const InitScanForm = ({
   };
 
   const handleScanButtonClicked = () => {
+    if (isCustomOptionChecked) {
+      const fileExtension = '.' + scanUrl.split('.').pop().toLowerCase();
+      if (!allowedFileTypes.includes(fileExtension)) {
+        alert(`Invalid file format. Please choose a file with one of these extensions: ${allowedFileTypes.join(", ")}`);
+        return;
+      }
+    }
+
     if (isProxy && advancedOptions.viewport === viewportTypes.mobile) {
       advancedOptions.viewport = viewportTypes.custom;
       advancedOptions.viewportWidth = 414;
