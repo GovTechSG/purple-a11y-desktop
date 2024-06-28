@@ -68,6 +68,15 @@ const InitScanForm = ({
     return cachedCheckboxState ? JSON.parse(cachedCheckboxState) : false;
   });
 
+  const getAllowedFileTypes = (scanType) => {
+    if (scanType === scanTypeOptions[0]) {
+      return [".dhtml", ".html", ".htm", ".shtml", ".xhtml", ".pdf"];
+    } else if (scanType === scanTypeOptions[1]) {
+      return [".xml", ".txt"];
+    }
+    return [];
+  };
+
   useEffect(() => {
     const cachedScanUrl = sessionStorage.getItem("scanUrl");
     const cachedScanType = sessionStorage.getItem("scanType");
@@ -106,10 +115,10 @@ const InitScanForm = ({
     }
 
     sessionStorage.setItem("isCustomOptionChecked", JSON.stringify(isCustomOptionChecked));
-    sessionStorage.setItem("scanType", advancedOptions.scanType);
+    sessionStorage.setItem("scanType", isCustomOptionChecked ? scanTypeOptions[3] : displayScanType);
     sessionStorage.setItem("scanUrl", JSON.stringify(scanUrl));
     sessionStorage.setItem("cachedNonFileScanType", cachedNonFileScanType);
-  }, [isCustomOptionChecked, scanUrl, advancedOptions.scanType, cachedNonFileScanType]);
+  }, [isCustomOptionChecked, scanUrl, displayScanType, cachedNonFileScanType]);
 
   useEffect(() => {
     const urlBarElem = document.getElementById("url-bar");
@@ -122,14 +131,9 @@ const InitScanForm = ({
     setPageWord(pageLimit === "1" ? "page" : "pages");
   }, [pageLimit]);
 
-  const getAllowedFileTypes = (scanType) => {
-    if (scanType === scanTypeOptions[0]) {
-      return [".dhtml", ".html", ".htm", ".shtml", ".xhtml", ".pdf"];
-    } else if (scanType === scanTypeOptions[1]) {
-      return [".xml", ".txt"];
-    }
-    return [];
-  };
+  useEffect(() => {
+    setAllowedFileTypes(getAllowedFileTypes(displayScanType));
+  }, [displayScanType]);
 
   const togglePageLimitAdjuster = (e) => {
     if (!e.currentTarget.disabled) {
@@ -203,12 +207,11 @@ const InitScanForm = ({
                   setIsCustomOptionChecked(newCheckedState);
                   setScanUrl(newCheckedState ? staticFilePath : staticHttpUrl);
                   if (newCheckedState) {
-                    setCachedNonFileScanType(advancedOptions.scanType);
+                    setCachedNonFileScanType(displayScanType);
                     setAdvancedOptions((prevOptions) => ({
                       ...prevOptions,
                       scanType: scanTypeOptions[3],
                     }));
-                    setAllowedFileTypes(getAllowedFileTypes(advancedOptions.scanType));
                   } else {
                     setAdvancedOptions((prevOptions) => ({
                       ...prevOptions,
@@ -326,6 +329,7 @@ const InitScanForm = ({
             setDisplayScanType(newOptions.scanType);
             setCachedNonFileScanType(newOptions.scanType);
           }
+          setAllowedFileTypes(getAllowedFileTypes(newOptions.scanType));
         }}
         scanButtonIsClicked={scanButtonIsClicked}
       />
