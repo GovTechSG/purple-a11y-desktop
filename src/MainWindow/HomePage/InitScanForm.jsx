@@ -38,8 +38,11 @@ const InitScanForm = ({
   const [scanUrl, setScanUrl] = useState("");
   const [staticHttpUrl, setStaticHttpUrl] = useState("https://");
   const [staticFilePath, setStaticFilePath] = useState("file:///");
-  const [cachedNonFileScanType, setCachedNonFileScanType] = useState(scanTypeOptions[0]);
+  const [cachedNonFileScanType, setCachedNonFileScanType] = useState(() => {
+    return sessionStorage.getItem("cachedNonFileScanType") || scanTypeOptions[0];
+  });
   const [displayScanType, setDisplayScanType] = useState(scanTypeOptions[0]);
+  const [allowedFileTypes, setAllowedFileTypes] = useState([]);
 
   if (isProxy) {
     delete viewportTypes.specific;
@@ -89,8 +92,10 @@ const InitScanForm = ({
 
     setAdvancedOptions((prevOptions) => ({
       ...prevOptions,
-      scanType: cachedScanType || prevOptions.scanType,
+      scanType: wasLocalFileScan ? cachedNonFileScanType : (cachedScanType || prevOptions.scanType),
     }));
+
+    setAllowedFileTypes(getAllowedFileTypes(cachedScanType || scanTypeOptions[0]));
   }, []);
 
   useEffect(() => {
@@ -100,13 +105,11 @@ const InitScanForm = ({
       setStaticHttpUrl(scanUrl);
     }
 
-    sessionStorage.setItem(
-      "isCustomOptionChecked",
-      JSON.stringify(isCustomOptionChecked)
-    );
+    sessionStorage.setItem("isCustomOptionChecked", JSON.stringify(isCustomOptionChecked));
     sessionStorage.setItem("scanType", advancedOptions.scanType);
     sessionStorage.setItem("scanUrl", JSON.stringify(scanUrl));
-  }, [isCustomOptionChecked, scanUrl, advancedOptions.scanType]);
+    sessionStorage.setItem("cachedNonFileScanType", cachedNonFileScanType);
+  }, [isCustomOptionChecked, scanUrl, advancedOptions.scanType, cachedNonFileScanType]);
 
   useEffect(() => {
     const urlBarElem = document.getElementById("url-bar");
@@ -118,6 +121,15 @@ const InitScanForm = ({
   useEffect(() => {
     setPageWord(pageLimit === "1" ? "page" : "pages");
   }, [pageLimit]);
+
+  const getAllowedFileTypes = (scanType) => {
+    if (scanType === scanTypeOptions[0]) {
+      return [".dhtml", ".html", ".htm", ".shtml", ".xhtml", ".pdf"];
+    } else if (scanType === scanTypeOptions[1]) {
+      return [".xml", ".txt"];
+    }
+    return [];
+  };
 
   const togglePageLimitAdjuster = (e) => {
     if (!e.currentTarget.disabled) {
@@ -143,13 +155,9 @@ const InitScanForm = ({
 
     if (isCustomOptionChecked) {
       setStaticFilePath(scanUrl);
-    } else {
-      setStaticHttpUrl(scanUrl);
-    }
-
-    if (isCustomOptionChecked) {
       startScan({ file: selectedFile, scanUrl, ...advancedOptions, scanType: scanTypeOptions[3] });
     } else {
+      setStaticHttpUrl(scanUrl);
       startScan({ scanUrl: scanUrl.trim(), pageLimit, ...advancedOptions });
     }
   };
@@ -157,18 +165,14 @@ const InitScanForm = ({
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const fileExtension = file.name.split(".").pop().toLowerCase();
-      const allowedExtensions = [
-        "dhtml", "html", "htm", "txt", "shtml", "xml", "xhtml", "pdf",
-      ];
-
-      if (allowedExtensions.includes(fileExtension)) {
+      const fileExtension = '.' + file.name.split(".").pop().toLowerCase();
+      if (allowedFileTypes.includes(fileExtension) || (fileExtension === '.txt' && allowedFileTypes.includes('.txt'))) {
         const readablePath = convertToReadablePath(file.path);
         setScanUrl(readablePath);
         setStaticFilePath(readablePath);
         setSelectedFile(file);
       } else {
-        alert("Invalid file format. Please choose a valid file.");
+        alert(`Invalid file format. Please choose a file with one of these extensions: ${allowedFileTypes.join(", ")}`);
         e.target.value = "";
       }
     }
@@ -204,6 +208,7 @@ const InitScanForm = ({
                       ...prevOptions,
                       scanType: scanTypeOptions[3],
                     }));
+                    setAllowedFileTypes(getAllowedFileTypes(advancedOptions.scanType));
                   } else {
                     setAdvancedOptions((prevOptions) => ({
                       ...prevOptions,
@@ -230,7 +235,7 @@ const InitScanForm = ({
               <input
                 type="file"
                 id="file-input"
-                accept=".dhtml,.html,.htm,.shtml,.xml,.xhtml,.pdf,text/plain"
+                accept={allowedFileTypes.join(",")}
                 style={{ display: "none" }}
                 onChange={handleFileChange}
               />
@@ -316,6 +321,7 @@ const InitScanForm = ({
           if (!isCustomOptionChecked) {
             setAdvancedOptions(newOptions);
             setDisplayScanType(newOptions.scanType);
+            setCachedNonFileScanType(newOptions.scanType);
           } else {
             setDisplayScanType(newOptions.scanType);
             setCachedNonFileScanType(newOptions.scanType);
