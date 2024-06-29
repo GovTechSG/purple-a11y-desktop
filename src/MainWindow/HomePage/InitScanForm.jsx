@@ -39,7 +39,9 @@ const InitScanForm = ({
   const [staticHttpUrl, setStaticHttpUrl] = useState("https://");
   const [staticFilePath, setStaticFilePath] = useState("file:///");
   const [cachedNonFileScanType, setCachedNonFileScanType] = useState(() => {
-    return sessionStorage.getItem("cachedNonFileScanType") || scanTypeOptions[0];
+    return (
+      sessionStorage.getItem("cachedNonFileScanType") || scanTypeOptions[0]
+    );
   });
   const [displayScanType, setDisplayScanType] = useState(scanTypeOptions[0]);
   const [allowedFileTypes, setAllowedFileTypes] = useState([]);
@@ -101,10 +103,14 @@ const InitScanForm = ({
 
     setAdvancedOptions((prevOptions) => ({
       ...prevOptions,
-      scanType: wasLocalFileScan ? cachedNonFileScanType : (cachedScanType || prevOptions.scanType),
+      scanType: wasLocalFileScan
+        ? cachedNonFileScanType
+        : cachedScanType || prevOptions.scanType,
     }));
 
-    setAllowedFileTypes(getAllowedFileTypes(cachedScanType || scanTypeOptions[0]));
+    setAllowedFileTypes(
+      getAllowedFileTypes(cachedScanType || scanTypeOptions[0])
+    );
   }, []);
 
   useEffect(() => {
@@ -114,8 +120,14 @@ const InitScanForm = ({
       setStaticHttpUrl(scanUrl);
     }
 
-    sessionStorage.setItem("isCustomOptionChecked", JSON.stringify(isCustomOptionChecked));
-    sessionStorage.setItem("scanType", isCustomOptionChecked ? scanTypeOptions[3] : displayScanType);
+    sessionStorage.setItem(
+      "isCustomOptionChecked",
+      JSON.stringify(isCustomOptionChecked)
+    );
+    sessionStorage.setItem(
+      "scanType",
+      isCustomOptionChecked ? scanTypeOptions[3] : displayScanType
+    );
     sessionStorage.setItem("scanUrl", JSON.stringify(scanUrl));
     sessionStorage.setItem("cachedNonFileScanType", cachedNonFileScanType);
   }, [isCustomOptionChecked, scanUrl, displayScanType, cachedNonFileScanType]);
@@ -148,9 +160,13 @@ const InitScanForm = ({
 
   const handleScanButtonClicked = () => {
     if (isCustomOptionChecked) {
-      const fileExtension = '.' + scanUrl.split('.').pop().toLowerCase();
+      const fileExtension = "." + scanUrl.split(".").pop().toLowerCase();
       if (!allowedFileTypes.includes(fileExtension)) {
-        alert(`Invalid file format. Please choose a file with one of these extensions: ${allowedFileTypes.join(", ")}`);
+        alert(
+          `Invalid file format. Please choose a file with one of these extensions: ${allowedFileTypes.join(
+            ", "
+          )}`
+        );
         return;
       }
     }
@@ -167,7 +183,12 @@ const InitScanForm = ({
 
     if (isCustomOptionChecked) {
       setStaticFilePath(scanUrl);
-      startScan({ file: selectedFile, scanUrl, ...advancedOptions, scanType: scanTypeOptions[3] });
+      startScan({
+        file: selectedFile,
+        scanUrl,
+        ...advancedOptions,
+        scanType: scanTypeOptions[3],
+      });
     } else {
       setStaticHttpUrl(scanUrl);
       startScan({ scanUrl: scanUrl.trim(), pageLimit, ...advancedOptions });
@@ -177,14 +198,21 @@ const InitScanForm = ({
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const fileExtension = '.' + file.name.split(".").pop().toLowerCase();
-      if (allowedFileTypes.includes(fileExtension) || (fileExtension === '.txt' && allowedFileTypes.includes('.txt'))) {
+      const fileExtension = "." + file.name.split(".").pop().toLowerCase();
+      if (
+        allowedFileTypes.includes(fileExtension) ||
+        (fileExtension === ".txt" && allowedFileTypes.includes(".txt"))
+      ) {
         const readablePath = convertToReadablePath(file.path);
         setScanUrl(readablePath);
         setStaticFilePath(readablePath);
         setSelectedFile(file);
       } else {
-        alert(`Invalid file format. Please choose a file with one of these extensions: ${allowedFileTypes.join(", ")}`);
+        alert(
+          `Invalid file format. Please choose a file with one of these extensions: ${allowedFileTypes.join(
+            ", "
+          )}`
+        );
         e.target.value = "";
       }
     }
@@ -323,11 +351,23 @@ const InitScanForm = ({
 
       <AdvancedScanOptions
         isProxy={isProxy}
-        scanTypeOptions={isCustomOptionChecked ? scanTypeOptions.filter(option => option !== scanTypeOptions[2] && option !== scanTypeOptions[3]) : scanTypeOptions.filter(option => option !== scanTypeOptions[3])}
+        scanTypeOptions={
+          isCustomOptionChecked
+            ? scanTypeOptions.filter(
+                (option) =>
+                  option !== scanTypeOptions[2] && option !== scanTypeOptions[3]
+              )
+            : scanTypeOptions.filter((option) => option !== scanTypeOptions[3])
+        }
         fileTypesOptions={fileTypesOptions}
         viewportOptions={viewportOptions}
         deviceOptions={deviceOptions}
-        advancedOptions={{...advancedOptions, scanType: isCustomOptionChecked ? displayScanType : advancedOptions.scanType}}
+        advancedOptions={{
+          ...advancedOptions,
+          scanType: isCustomOptionChecked
+            ? displayScanType
+            : advancedOptions.scanType,
+        }}
         setAdvancedOptions={(newOptions) => {
           if (!isCustomOptionChecked) {
             setAdvancedOptions(newOptions);
@@ -336,10 +376,16 @@ const InitScanForm = ({
           } else {
             setDisplayScanType(newOptions.scanType);
             setCachedNonFileScanType(newOptions.scanType);
+            setAdvancedOptions({
+              ...advancedOptions,
+              ...newOptions,
+              scanType: scanTypeOptions[3],
+            });
           }
           setAllowedFileTypes(getAllowedFileTypes(newOptions.scanType));
         }}
         scanButtonIsClicked={scanButtonIsClicked}
+        isCustomOptionChecked={isCustomOptionChecked}
       />
     </div>
   );
