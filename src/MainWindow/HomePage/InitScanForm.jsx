@@ -25,6 +25,7 @@ const InitScanForm = ({
   isProxy,
   startScan,
   prevUrlErrorMessage,
+  setPrevUrlErrorMessage,
   scanButtonIsClicked,
   setScanButtonIsClicked,
   isAbortingScan,
@@ -159,14 +160,12 @@ const InitScanForm = ({
   };
 
   const handleScanButtonClicked = () => {
+    setPrevUrlErrorMessage(""); // Clear any previous error messages
+
     if (isCustomOptionChecked) {
       const fileExtension = "." + scanUrl.split(".").pop().toLowerCase();
       if (!allowedFileTypes.includes(fileExtension)) {
-        alert(
-          `Invalid file format. Please choose a file with one of these extensions: ${allowedFileTypes.join(
-            ", "
-          )}`
-        );
+        setPrevUrlErrorMessage(`Invalid file format. Please choose a file with one of these extensions: ${allowedFileTypes.join(", ")}`);
         return;
       }
     }
@@ -207,12 +206,9 @@ const InitScanForm = ({
         setScanUrl(readablePath);
         setStaticFilePath(readablePath);
         setSelectedFile(file);
+        setPrevUrlErrorMessage(""); // Clear any previous error messages
       } else {
-        alert(
-          `Invalid file format. Please choose a file with one of these extensions: ${allowedFileTypes.join(
-            ", "
-          )}`
-        );
+        setPrevUrlErrorMessage(`Invalid file format. Please choose a file with one of these extensions: ${allowedFileTypes.join(", ")}`);
         e.target.value = "";
       }
     }
@@ -255,6 +251,7 @@ const InitScanForm = ({
                     }));
                     setDisplayScanType(cachedNonFileScanType);
                   }
+                  setPrevUrlErrorMessage(""); // Clear any previous error messages
                 }}
               />
               <label htmlFor="custom-checkbox">File</label>
@@ -264,7 +261,10 @@ const InitScanForm = ({
             id="url-input"
             type="text"
             value={scanUrl}
-            onChange={(e) => setScanUrl(e.target.value)}
+            onChange={(e) => {
+              setScanUrl(e.target.value);
+              setPrevUrlErrorMessage(""); // Clear any previous error messages
+            }}
             style={{
               display: isCustomOptionChecked ? "none" : "block",
             }}
@@ -383,6 +383,7 @@ const InitScanForm = ({
             });
           }
           setAllowedFileTypes(getAllowedFileTypes(newOptions.scanType));
+          setPrevUrlErrorMessage(""); // Clear any previous error messages
         }}
         scanButtonIsClicked={scanButtonIsClicked}
         isCustomOptionChecked={isCustomOptionChecked}

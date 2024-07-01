@@ -328,6 +328,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
           startScan={startScan}
           prevUrlErrorMessage={prevUrlErrorMessage}
           scanButtonIsClicked={scanButtonIsClicked}
+          setPrevUrlErrorMessage={setPrevUrlErrorMessage}
           setScanButtonIsClicked={setScanButtonIsClicked}
           isAbortingScan={isAbortingScan}
         />
