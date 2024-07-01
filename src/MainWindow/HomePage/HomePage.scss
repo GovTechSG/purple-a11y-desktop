@@ -250,6 +250,41 @@
     padding: 0.25rem 1.5rem 0.25rem 0.5rem;
   }
 
+  .radio-button-group {
+    display: inline-flex;
+    overflow: hidden;
+    border-radius: 20px;
+    border: 1px solid #785ef0;
+    margin-right: 9px;
+    margin-left: -22px;
+  }
+  
+  .hidden-radio {
+    position: absolute;
+    opacity: 0;
+  }
+  .radio-button {
+    padding: 5px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #fff;
+    color: #785ef0;
+  }
+
+  .hidden-radio:checked + .radio-button {
+    background-color: #785ef0;
+    color: white;
+  }
+  
+  .radio-button:hover {
+    background-color: #f0e6ff;
+  }
+  
+  .hidden-radio:checked + .radio-button:hover {
+    background-color: #6a4ed0;
+  }
+
   #edit-user-details {
     background-color: #E7ECEE;
     border: none;

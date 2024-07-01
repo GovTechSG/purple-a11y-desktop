@@ -218,6 +218,24 @@ const InitScanForm = ({
     }
   };
 
+  const handleRadioChange = (newCheckedState) => {
+    setIsCustomOptionChecked(newCheckedState);
+    setScanUrl(newCheckedState ? staticFilePath : staticHttpUrl);
+    if (newCheckedState) {
+      setCachedNonFileScanType(displayScanType);
+      setAdvancedOptions((prevOptions) => ({
+        ...prevOptions,
+        scanType: scanTypeOptions[3],
+      }));
+    } else {
+      setAdvancedOptions((prevOptions) => ({
+        ...prevOptions,
+        scanType: cachedNonFileScanType,
+      }));
+      setDisplayScanType(cachedNonFileScanType);
+    }
+  };
+
   return (
     <div id="init-scan-form">
       <label htmlFor="url-input" id="url-bar-label">
@@ -226,39 +244,31 @@ const InitScanForm = ({
       <div id="url-bar-group">
         <div id="url-bar">
           {advancedOptions.scanType !== scanTypeOptions[2] && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginRight: "10px",
-              }}
-            >
-              <input
-                type="checkbox"
-                id="custom-checkbox"
-                style={{ marginRight: "5px" }}
-                checked={isCustomOptionChecked}
-                onChange={(e) => {
-                  const newCheckedState = e.target.checked;
-                  setIsCustomOptionChecked(newCheckedState);
-                  setScanUrl(newCheckedState ? staticFilePath : staticHttpUrl);
-                  if (newCheckedState) {
-                    setCachedNonFileScanType(displayScanType);
-                    setAdvancedOptions((prevOptions) => ({
-                      ...prevOptions,
-                      scanType: scanTypeOptions[3],
-                    }));
-                  } else {
-                    setAdvancedOptions((prevOptions) => ({
-                      ...prevOptions,
-                      scanType: cachedNonFileScanType,
-                    }));
-                    setDisplayScanType(cachedNonFileScanType);
-                  }
-                }}
-              />
-              <label htmlFor="custom-checkbox">File</label>
-            </div>
+            <div className="radio-button-group" role="radiogroup" aria-label="Select scan type">
+            <input 
+              type="radio" 
+              id="url-radio" 
+              name="scan-type" 
+              value="url" 
+              checked={!isCustomOptionChecked}
+              onChange={() => handleRadioChange(false)}
+              className="hidden-radio"
+              aria-label="URL scan"
+            />
+            <label htmlFor="url-radio" className="radio-button">URL</label>
+            
+            <input 
+              type="radio" 
+              id="file-radio" 
+              name="scan-type" 
+              value="file" 
+              checked={isCustomOptionChecked}
+              onChange={() => handleRadioChange(true)}
+              className="hidden-radio"
+              aria-label="File scan"
+            />
+            <label htmlFor="file-radio" className="radio-button">File</label>
+          </div>
           )}
           <input
             id="url-input"
