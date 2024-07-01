@@ -20,12 +20,12 @@ const AdvancedScanOptions = ({
   advancedOptions,
   setAdvancedOptions,
   scanButtonIsClicked,
-  isCustomOptionChecked
+  isCustomOptionChecked,
 }) => {
   const [openAdvancedOptionsMenu, setOpenAdvancedOptionsMenu] = useState(false);
   const [advancedOptionsDirty, setAdvancedOptionsDirty] = useState(false);
   const [isMaxConcurrencyMouseEvent, setIsMaxConcurrencyMouseEvent] = useState(false);
-  const [showMaxConcurrencyTooltip, setShowMaxConcurrencyTooltip] = useState(false);
+  const [showMaxConcurrencyTooltip, setShowMaxConcurrencyTooltip] =  useState(false);
   const [isSafeModeMouseEvent, setIsSafeModeMouseEvent] = useState(false);
   const [showSafeModeTooltip, setShowSafeModeTooltip] = useState(false);
 
@@ -62,6 +62,7 @@ const AdvancedScanOptions = ({
     setIsMaxConcurrencyMouseEvent(true);
   };
 
+  
   const handleSafeModeOnFocus = () => {
     if (!isSafeModeMouseEvent) {
       setShowSafeModeTooltip(true);
@@ -69,34 +70,44 @@ const AdvancedScanOptions = ({
   };
 
   const handleSafeModeOnMouseEnter = () => {
-    setShowSafeModeTooltip(false);
-    setIsSafeModeMouseEvent(true);
+      setShowSafeModeTooltip(false);
+      setIsSafeModeMouseEvent(true);
   };
 
-  const handleSetAdvancedOption = (option, overrideVal = null) => (event) => {
-    let val;
-    if (overrideVal) {
-      val = overrideVal(event);
-    } else {
-      val = event.target.value;
-    }
 
-    const newOptions = { ...advancedOptions };
-    newOptions[option] = val;
-    setAdvancedOptions(newOptions);
 
-    const defaultAdvancedOptions = getDefaultAdvancedOptions(isProxy);
-    const isNewOptionsDefault = Object.keys(defaultAdvancedOptions).reduce(
-      (isDefaultSoFar, key) => {
-        return (
-          isDefaultSoFar && defaultAdvancedOptions[key] === newOptions[key]
-        );
-      },
-      true
-    );
+  /*
+  by default, new value of the selected option will be set to event.target.value
+  if the new value should be something else, provide a function to overrideVal that returns
+  the intended value. Function should be in the format (event) => {...; return valueToBeReturned;}
+  */
+  const handleSetAdvancedOption =
+    (option, overrideVal = null) =>
+    (event) => {
+      let val;
+      if (overrideVal) {
+        val = overrideVal(event);
+      } else {
+        val = event.target.value;
+      }
 
-    setAdvancedOptionsDirty(!isNewOptionsDefault);
-  };
+      const newOptions = { ...advancedOptions };
+      newOptions[option] = val;
+      setAdvancedOptions(newOptions);
+
+      // check if new options are the default
+      const defaultAdvancedOptions = getDefaultAdvancedOptions(isProxy);
+      const isNewOptionsDefault = Object.keys(defaultAdvancedOptions).reduce(
+        (isDefaultSoFar, key) => {
+          return (
+            isDefaultSoFar && defaultAdvancedOptions[key] === newOptions[key]
+          );
+        },
+        true
+      );
+
+      setAdvancedOptionsDirty(!isNewOptionsDefault);
+    };
 
   return (
     <div>
@@ -136,15 +147,16 @@ const AdvancedScanOptions = ({
             options={Object.values(viewportOptions)}
             onChange={handleSetAdvancedOption("viewport")}
           />
-          {advancedOptions.viewport === viewportOptions.specific && !isProxy && (
-            <SelectField
-              id="specific-device-dropdown"
-              label="Device:"
-              initialValue={advancedOptions.device}
-              options={deviceOptions}
-              onChange={handleSetAdvancedOption("device")}
-            />
-          )}
+          {advancedOptions.viewport === viewportOptions.specific &&
+            !isProxy && (
+              <SelectField
+                id="specific-device-dropdown"
+                label="Device:"
+                initialValue={advancedOptions.device}
+                options={deviceOptions}
+                onChange={handleSetAdvancedOption("device")}
+              />
+            )}
           {advancedOptions.viewport === viewportOptions.custom && (
             <div className="user-input-group">
               <label htmlFor="viewport-width-input" className="bold-text">
@@ -173,20 +185,34 @@ const AdvancedScanOptions = ({
             </div>
           )}
           {advancedOptions.scanType !== scanTypeOptions[2] && (
-            <SelectField
-              id="file-type-dropdown"
-              label="File Type:"
-              initialValue={advancedOptions.fileTypes}
-              options={fileTypesOptions}
-              onChange={handleSetAdvancedOption("fileTypes")}
+              <SelectField
+                id="file-type-dropdown"
+                label="File Type:"
+                initialValue={advancedOptions.fileTypes}
+                options={fileTypesOptions}
+                onChange={handleSetAdvancedOption("fileTypes")}
+              />
+            )}
+          <div id="screenshots-toggle-group" class="advanced-options-toggle-group">
+            <input
+              type="checkbox"
+              id="screenshots-toggle"
+              class="advanced-options-toggle"
+              aria-describedby="screenshots-tooltip"
+              checked={advancedOptions.includeScreenshots}
+              onChange={handleSetAdvancedOption(
+                "includeScreenshots",
+                (e) => e.target.checked
+              )}
             />
-          )}
-          {!isCustomOptionChecked && advancedOptions.scanType === scanTypeOptions[0] && (
-            <div id='subdomain-toggle-group' className="advanced-options-toggle-group">
+            <label htmlFor="screenshots-toggle">Include screenshots</label>
+          </div>
+          {!isCustomOptionChecked && advancedOptions.scanType === scanTypeOptions[0] && 
+            <div id='subdomain-toggle-group' class="advanced-options-toggle-group">
               <input 
                 type="checkbox"
                 id="subdomain-toggle"
-                className="advanced-options-toggle"
+                class="advanced-options-toggle"
                 checked={advancedOptions.includeSubdomains}
                 onChange={handleSetAdvancedOption(
                   "includeSubdomains", 
@@ -197,120 +223,106 @@ const AdvancedScanOptions = ({
                 Allow subdomains for scans
               </label>
             </div>
-          )}
-          <div id="screenshots-toggle-group" className="advanced-options-toggle-group">
-            <input
-              type="checkbox"
-              id="screenshots-toggle"
-              className="advanced-options-toggle"
-              aria-describedby="screenshots-tooltip"
-              checked={advancedOptions.includeScreenshots}
-              onChange={handleSetAdvancedOption(
-                "includeScreenshots",
-                (e) => e.target.checked
-              )}
-            />
-            <label htmlFor="screenshots-toggle">Include screenshots</label>
-          </div>
+          }
+
           {advancedOptions.scanType !== scanTypeOptions[2] && (
-          <div id="max-concurrency-toggle-group" className="advanced-options-toggle-group">
-            <input
-              type="checkbox"
-              id="max-concurrency-toggle"
-              className="advanced-options-toggle"
-              aria-describedby="max-concurrency-tooltip"
-              checked={advancedOptions.maxConcurrency}
-              onFocus={() => handleMaxConcurrencyOnFocus()}
-              onBlur={() => setShowMaxConcurrencyTooltip(false)}
-              onMouseEnter={() => handleMaxConcurrencyOnMouseEnter()}
-              onMouseLeave={() => setIsMaxConcurrencyMouseEvent(false)}
-              onChange={handleSetAdvancedOption(
-                "maxConcurrency",
-                (e) => e.target.checked
-              )}
-            />
-            <label htmlFor="max-concurrency-toggle">Slow Scan Mode</label>
-            <div className="custom-tooltip-container">
-              <ToolTip
-                description={
-                  "Scan 1 page at a time instead of multiple pages concurrently."
-                }
-                id="max-concurrency-tooltip"
-                showToolTip={showMaxConcurrencyTooltip}
-              />
-              <img
-                className="tooltip-img"
-                src={questionMarkIcon}
-                aria-describedby="max-concurrency-tooltip"
-                checked={advancedOptions.maxConcurrency}
-                onFocus={() => handleMaxConcurrencyOnFocus()}
-                onBlur={() => setShowMaxConcurrencyTooltip(false)}
-                onMouseEnter={() => setShowMaxConcurrencyTooltip(true)}
-                onMouseLeave={() => setShowMaxConcurrencyTooltip(false)}
-                alt="tooltip icon for slow scan mode"
-              />
-            </div>
-          </div>
-          )}
-          {advancedOptions.scanType !== scanTypeOptions[2] && (
-          <div id='safe-mode-toggle-group' className="advanced-options-toggle-group">
-            <input 
-              type="checkbox"
-              id="safe-mode-toggle" 
-              className="advanced-options-toggle"
-              onFocus={() => handleSafeModeOnFocus()}
-              onBlur={() => setShowSafeModeTooltip(false)}
-              onMouseEnter={() => handleSafeModeOnMouseEnter()}
-              onMouseLeave={() => setIsSafeModeMouseEvent(false)}
-              aria-describedby="safe-mode-tooltip"
-              checked={advancedOptions.safeMode}
-              onChange={handleSetAdvancedOption(
-                "safeMode", 
-                (e) => e.target.checked
-              )} 
-            /> 
-            <label htmlFor="safe-mode-toggle">
-              Safe Scan Mode 
-            </label>
-            <div className="custom-tooltip-container">
-              <ToolTip
-                description={
-                  "Disable dynamically clicking of page buttons and links to find links, which resolve issues on some websites."
-                }
-                id="safe-mode-tooltip"
-                showToolTip={showSafeModeTooltip}
-              />
-              <img
-                className="tooltip-img"
-                src={questionMarkIcon}
-                checked={advancedOptions.safeMode}
-                aria-describedby="safe-mode-tooltip"
-                onFocus={() => handleSafeModeOnFocus()}
-                onBlur={() => setShowSafeModeTooltip(false)}
-                onMouseEnter={() => setShowSafeModeTooltip(true)}
-                onMouseLeave={() => setShowSafeModeTooltip(false)}
-                alt="tooltip icon for safe scan mode"
-              />
-            </div>
-          </div>
-          )}
-          {advancedOptions.scanType !== scanTypeOptions[2] && (
-          <div id='follow-robots-toggle-group' className="advanced-options-toggle-group">
-            <input 
-              type="checkbox"
-              id="follow-robots-toggle" 
-              className="advanced-options-toggle"
-              aria-describedby="follow-robots-tooltip"
-              checked={advancedOptions.followRobots}
-              onChange={handleSetAdvancedOption(
-                "followRobots", 
-                (e) => e.target.checked
-              )} 
-            /> 
-            <label htmlFor="follow-robots-toggle">
-              Adhere to robots.txt
-            </label>
-          </div>
+            <>
+              <div id="max-concurrency-toggle-group" class="advanced-options-toggle-group">
+                <input
+                  type="checkbox"
+                  id="max-concurrency-toggle"
+                  class="advanced-options-toggle"
+                  aria-describedby="max-concurrency-tooltip"
+                  checked={advancedOptions.maxConcurrency}
+                  onFocus={() => handleMaxConcurrencyOnFocus()}
+                  onBlur={() => setShowMaxConcurrencyTooltip(false)}
+                  onMouseEnter={() => handleMaxConcurrencyOnMouseEnter()}
+                  onMouseLeave={() => setIsMaxConcurrencyMouseEvent(false)}
+                  onChange={handleSetAdvancedOption(
+                    "maxConcurrency",
+                    (e) => e.target.checked
+                )}
+                />
+                <label htmlFor="max-concurrency-toggle">Slow Scan Mode</label>
+                <div className="custom-tooltip-container">
+                  <ToolTip
+                    description={
+                      "Scan 1 page at a time instead of multiple pages concurrently."
+                    }
+                    id="max-concurrency-tooltip"
+                    showToolTip={showMaxConcurrencyTooltip}
+                  />
+                  <img
+                    className="tooltip-img"
+                    src={questionMarkIcon}
+                    aria-describedby="max-concurrency-tooltip"
+                    checked={advancedOptions.maxConcurrency}
+                    onFocus={() => handleMaxConcurrencyOnFocus()}
+                    onBlur={() => setShowMaxConcurrencyTooltip(false)}
+                    onMouseEnter={() => setShowMaxConcurrencyTooltip(true)}
+                    onMouseLeave={() => setShowMaxConcurrencyTooltip(false)}
+                    alt="tooltip icon for slow scan mode"
+                  />
+                </div>
+              </div>
+              <div id='safe-mode-toggle-group' class="advanced-options-toggle-group">
+                  <input 
+                    type="checkbox"
+                    id="safe-mode-toggle" 
+                    class="advanced-options-toggle"
+                    onFocus={() => handleSafeModeOnFocus()}
+                    onBlur={() => setShowSafeModeTooltip(false)}
+                    onMouseEnter={() => handleSafeModeOnMouseEnter()}
+                    onMouseLeave={() => setIsSafeModeMouseEvent(false)}
+                    aria-describedby="safe-mode-tooltip"
+                    checked={advancedOptions.safeMode}
+                    onChange={handleSetAdvancedOption(
+                      "safeMode", 
+                      (e) => e.target.checked
+                    )} 
+                  /> 
+                  <label htmlFor="safe-mode-toggle">
+                    Safe Scan Mode 
+                  </label>
+                  <div className="custom-tooltip-container">
+                  <ToolTip
+                    description={
+                      "Disable dynamically clicking of page buttons and links to find links, which resolve issues on some websites."
+                    }
+                    id="safe-mode-tooltip"
+                    showToolTip={showSafeModeTooltip}
+                  />
+                  <img
+                    className="tooltip-img"
+                    src={questionMarkIcon}
+                    checked={advancedOptions.safeMode}
+                    aria-describedby="safe-mode-tooltip"
+                    onFocus={() => handleSafeModeOnFocus()}
+                    onBlur={() => setShowSafeModeTooltip(false)}
+                    onMouseEnter={() => setShowSafeModeTooltip(true)}
+                    onMouseLeave={() => setShowSafeModeTooltip(false)}
+                    alt="tooltip icon for safe scan mode"
+                  />
+                </div>
+              </div>
+              <div id='follow-robots-toggle-group' class="advanced-options-toggle-group">
+                  <input 
+                    type="checkbox"
+                    id="follow-robots-toggle" 
+                    class="advanced-options-toggle"
+                    
+                    aria-describedby="follow-robots-tooltip"
+                    checked={advancedOptions.followRobots}
+                    onChange={handleSetAdvancedOption(
+                      "followRobots", 
+                      (e) => e.target.checked
+                    )} 
+                  /> 
+                  <label htmlFor="follow-robots-toggle">
+                    Adhere to robots.txt
+                  </label>
+              </div>
+            </>
           )}
           <hr />
           <div className="user-input-group">
@@ -319,6 +331,20 @@ const AdvancedScanOptions = ({
             </label>
             <DownloadFolderDropdown></DownloadFolderDropdown>
           </div>
+          {/* <div id="scan-in-background-toggle-group">
+            <input
+              type="checkbox"
+              id="scan-in-background-toggle"
+              checked={advancedOptions.scanInBackground}
+              onChange={handleSetAdvancedOption(
+                "scanInBackground",
+                (e) => e.target.checked
+              )}
+            />
+            <label htmlFor="scan-in-background-toggle">
+              Scan in background
+            </label>
+          </div> */}
         </div>
       )}
     </div>

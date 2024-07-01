@@ -72,7 +72,7 @@ const InitScanForm = ({
 
   const getAllowedFileTypes = (scanType) => {
     if (scanType === scanTypeOptions[0]) {
-      return [".dhtml", ".html", ".htm", ".shtml", ".xhtml", ".pdf"];
+      return [".html", ".htm", ".shtml", ".xhtml", ".pdf"];
     } else if (scanType === scanTypeOptions[1]) {
       return [".xml", ".txt"];
     }
