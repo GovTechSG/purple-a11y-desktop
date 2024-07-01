@@ -224,41 +224,124 @@ const InitScanForm = ({
         Enter your URL to get started
       </label>
       <div id="url-bar-group">
-        <div id="url-bar">
+       <div id="url-bar">
           {advancedOptions.scanType !== scanTypeOptions[2] && (
-            <div
+            <fieldset 
               style={{
-                display: "flex",
-                alignItems: "center",
-                marginRight: "10px",
+                border: 'none',
+                padding: 0,
+                margin: 0,
+                position: 'relative',
+                width: '70px',
+                height: '30px',
+                marginRight: '10px'
               }}
             >
-              <input
-                type="checkbox"
-                id="custom-checkbox"
-                style={{ marginRight: "5px" }}
-                checked={isCustomOptionChecked}
-                onChange={(e) => {
-                  const newCheckedState = e.target.checked;
-                  setIsCustomOptionChecked(newCheckedState);
-                  setScanUrl(newCheckedState ? staticFilePath : staticHttpUrl);
-                  if (newCheckedState) {
-                    setCachedNonFileScanType(displayScanType);
-                    setAdvancedOptions((prevOptions) => ({
-                      ...prevOptions,
-                      scanType: scanTypeOptions[3],
-                    }));
-                  } else {
+              <legend className="visually-hidden">Scan type selection</legend>
+              <div
+                role="radiogroup"
+                aria-label="Select scan type"
+                tabIndex="0"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const newCheckedState = !isCustomOptionChecked;
+                    setIsCustomOptionChecked(newCheckedState);
+                    setScanUrl(newCheckedState ? staticFilePath : staticHttpUrl);
+                    if (newCheckedState) {
+                      setCachedNonFileScanType(displayScanType);
+                      setAdvancedOptions((prevOptions) => ({
+                        ...prevOptions,
+                        scanType: scanTypeOptions[3],
+                      }));
+                    } else {
+                      setAdvancedOptions((prevOptions) => ({
+                        ...prevOptions,
+                        scanType: cachedNonFileScanType,
+                      }));
+                      setDisplayScanType(cachedNonFileScanType);
+                    }
+                    // Announce the new input type
+                    setTimeout(() => {
+                      const announcement = newCheckedState ? "File input type selected" : "URL input type selected";
+                      document.getElementById('announcement').textContent = announcement;
+                    }, 100);
+                  }
+                }}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: '15px',
+                  border: '1px solid #b5c5ca',
+                  backgroundColor: 'white',
+                  color: '#333',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                <input 
+                  type="radio"
+                  id="url-radio"
+                  name="scan-type"
+                  value="url"
+                  checked={!isCustomOptionChecked}
+                  onChange={() => {
+                    setIsCustomOptionChecked(false);
+                    setScanUrl(staticHttpUrl);
                     setAdvancedOptions((prevOptions) => ({
                       ...prevOptions,
                       scanType: cachedNonFileScanType,
                     }));
                     setDisplayScanType(cachedNonFileScanType);
-                  }
-                }}
-              />
-              <label htmlFor="custom-checkbox">File</label>
-            </div>
+                    // Announce the new input type
+                    setTimeout(() => {
+                      document.getElementById('announcement').textContent = "URL input type selected";
+                    }, 100);
+                  }}
+                  style={{ position: 'absolute', opacity: 0 }}
+                />
+                <input 
+                  type="radio"
+                  id="file-radio"
+                  name="scan-type"
+                  value="file"
+                  checked={isCustomOptionChecked}
+                  onChange={() => {
+                    setIsCustomOptionChecked(true);
+                    setScanUrl(staticFilePath);
+                    setCachedNonFileScanType(displayScanType);
+                    setAdvancedOptions((prevOptions) => ({
+                      ...prevOptions,
+                      scanType: scanTypeOptions[3],
+                    }));
+                    // Announce the new input type
+                    setTimeout(() => {
+                      document.getElementById('announcement').textContent = "File input type selected";
+                    }, 100);
+                  }}
+                  style={{ position: 'absolute', opacity: 0 }}
+                />
+                <label 
+                  htmlFor={isCustomOptionChecked ? "url-radio" : "file-radio"}
+                  style={{ cursor: 'pointer', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  {isCustomOptionChecked ? 'FILE' : 'URL'}
+                </label>
+              </div>
+              <div 
+                id="announcement" 
+                aria-live="polite" 
+                className="visually-hidden"
+              ></div>
+            </fieldset>
           )}
           <input
             id="url-input"
