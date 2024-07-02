@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Button from "../../common/components/Button";
 import AdvancedScanOptions from "./AdvancedScanOptions";
 import {
@@ -224,17 +224,18 @@ const InitScanForm = ({
         Enter your URL to get started
       </label>
       <div id="url-bar-group">
-       <div id="url-bar">
+        <div id="url-bar">
           {advancedOptions.scanType !== scanTypeOptions[2] && (
-            <fieldset 
+            <fieldset
               style={{
-                border: 'none',
                 padding: 0,
+                border:0,
                 margin: 0,
-                position: 'relative',
-                width: '70px',
-                height: '30px',
-                marginRight: '10px'
+                position: "relative",
+                width: "70px",
+                height: "45px",
+                marginRight: "10px",
+                marginLeft: "-20px",
               }}
             >
               <legend className="visually-hidden">Scan type selection</legend>
@@ -243,12 +244,12 @@ const InitScanForm = ({
                 aria-label="Select scan type"
                 tabIndex="0"
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
+                  if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    const newCheckedState = !isCustomOptionChecked;
-                    setIsCustomOptionChecked(newCheckedState);
-                    setScanUrl(newCheckedState ? staticFilePath : staticHttpUrl);
-                    if (newCheckedState) {
+                    const newState = !isCustomOptionChecked;
+                    setIsCustomOptionChecked(newState);
+                    setScanUrl(newState ? staticFilePath : staticHttpUrl);
+                    if (newState) {
                       setCachedNonFileScanType(displayScanType);
                       setAdvancedOptions((prevOptions) => ({
                         ...prevOptions,
@@ -261,33 +262,35 @@ const InitScanForm = ({
                       }));
                       setDisplayScanType(cachedNonFileScanType);
                     }
-                    // Announce the new input type
                     setTimeout(() => {
-                      const announcement = newCheckedState ? "File input type selected" : "URL input type selected";
-                      document.getElementById('announcement').textContent = announcement;
+                      const announcement = newState
+                        ? "File input type selected"
+                        : "URL input type selected";
+                      document.getElementById("announcement").textContent =
+                        announcement;
                     }, 100);
                   }
                 }}
                 style={{
-                  position: 'absolute',
+                  position: "absolute",
                   top: 0,
                   left: 0,
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: '15px',
-                  border: '1px solid #b5c5ca',
-                  backgroundColor: 'white',
-                  color: '#333',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                  transition: 'all 0.3s ease'
+                  width: "100%",
+                  height: "100%",
+                  //borderRadius: "15px",
+                  borderRight: "1px solid #b5c5ca",
+                  //backgroundColor: "transparent",
+                  //color: "#333",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  fontWeight: "bold",
+                  //boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                  //transition: "all 0.3s ease",
                 }}
               >
-                <input 
+                <input
                   type="radio"
                   id="url-radio"
                   name="scan-type"
@@ -301,14 +304,14 @@ const InitScanForm = ({
                       scanType: cachedNonFileScanType,
                     }));
                     setDisplayScanType(cachedNonFileScanType);
-                    // Announce the new input type
                     setTimeout(() => {
-                      document.getElementById('announcement').textContent = "URL input type selected";
+                      document.getElementById("announcement").textContent =
+                        "URL input type selected";
                     }, 100);
                   }}
-                  style={{ position: 'absolute', opacity: 0 }}
+                  style={{ position: "absolute", opacity: 0 }}
                 />
-                <input 
+                <input
                   type="radio"
                   id="file-radio"
                   name="scan-type"
@@ -322,27 +325,35 @@ const InitScanForm = ({
                       ...prevOptions,
                       scanType: scanTypeOptions[3],
                     }));
-                    // Announce the new input type
                     setTimeout(() => {
-                      document.getElementById('announcement').textContent = "File input type selected";
+                      document.getElementById("announcement").textContent =
+                        "File input type selected";
                     }, 100);
                   }}
-                  style={{ position: 'absolute', opacity: 0 }}
+                  style={{ position: "absolute", opacity: 0 }}
                 />
-                <label 
+                <label
                   htmlFor={isCustomOptionChecked ? "url-radio" : "file-radio"}
-                  style={{ cursor: 'pointer', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  style={{
+                    cursor: "pointer",
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
                 >
-                  {isCustomOptionChecked ? 'FILE' : 'URL'}
+                  {isCustomOptionChecked ? "FILE" : "URL"}
                 </label>
               </div>
-              <div 
-                id="announcement" 
-                aria-live="polite" 
+              <div
+                id="announcement"
+                aria-live="polite"
                 className="visually-hidden"
               ></div>
             </fieldset>
           )}
+
           <input
             id="url-input"
             type="text"
@@ -353,15 +364,38 @@ const InitScanForm = ({
             }}
           />
           {isCustomOptionChecked && (
-            <div id="file-input-container">
+            <div id="file-input-container" style={{ display: "flex", alignItems: "center" }}>
               <input
                 type="file"
                 id="file-input"
                 accept={allowedFileTypes.join(",")}
-                style={{ display: "none" }}
                 onChange={handleFileChange}
+                aria-label="Choose file"
+                tabIndex="0"
+                style={{
+                  position: "absolute",
+                  width: "1px",
+                  height: "1px",
+                  padding: "0",
+                  margin: "-1px",
+                  overflow: "hidden",
+                  clip: "rect(0,0,0,0)",
+                  whiteSpace: "nowrap",
+                  border: "0",
+                }}
               />
-              <label htmlFor="file-input" id="file-input-label">
+              <label
+                htmlFor="file-input"
+                id="file-input-label"
+                tabIndex="0"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    document.getElementById("file-input").click();
+                  }
+                }}
+                style={{ cursor: "pointer", display: "inline-block" }}
+              >
                 {scanUrl ? scanUrl : "Choose file"}
               </label>
             </div>
@@ -392,6 +426,7 @@ const InitScanForm = ({
                     )}
                   </span>
                 </Button>
+
                 {openPageLimitAdjuster && (
                   <div id="page-limit-adjuster" ref={pageLimitAdjuster}>
                     <input
@@ -407,11 +442,13 @@ const InitScanForm = ({
                         }
                       }}
                     />
+
                     <label htmlFor="page-limit-input">{pageWord}</label>
                   </div>
                 )}
               </div>
             )}
+
           <Button
             type="btn-primary"
             className="scan-btn"
@@ -425,6 +462,7 @@ const InitScanForm = ({
             )}
           </Button>
         </div>
+
         {prevUrlErrorMessage && (
           <span id="url-error-message" className="error-text">
             {prevUrlErrorMessage}
@@ -447,6 +485,7 @@ const InitScanForm = ({
         deviceOptions={deviceOptions}
         advancedOptions={{
           ...advancedOptions,
+
           scanType: isCustomOptionChecked
             ? displayScanType
             : advancedOptions.scanType,
@@ -454,17 +493,24 @@ const InitScanForm = ({
         setAdvancedOptions={(newOptions) => {
           if (!isCustomOptionChecked) {
             setAdvancedOptions(newOptions);
+
             setDisplayScanType(newOptions.scanType);
+
             setCachedNonFileScanType(newOptions.scanType);
           } else {
             setDisplayScanType(newOptions.scanType);
+
             setCachedNonFileScanType(newOptions.scanType);
+
             setAdvancedOptions({
               ...advancedOptions,
+
               ...newOptions,
+
               scanType: scanTypeOptions[3],
             });
           }
+
           setAllowedFileTypes(getAllowedFileTypes(newOptions.scanType));
         }}
         scanButtonIsClicked={scanButtonIsClicked}
