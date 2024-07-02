@@ -14,10 +14,13 @@ import { ReactComponent as ChevronDownIcon } from "../../assets/chevron-down-whi
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 
 function convertToReadablePath(path) {
+  // Normalize the path to use forward slashes
   let readable = path.replace(/\\/g, "/");
+  // Handle Windows drive letters
   if (/^[a-zA-Z]:/.test(readable)) {
     readable = readable.replace(/^([a-zA-Z]):/, "/$1:");
   }
+  // Ensure there are exactly three slashes after 'file:'
   return `file:///${readable.replace(/^\/+/, "")}`;
 }
 
@@ -226,17 +229,10 @@ const InitScanForm = ({
       <div id="url-bar-group">
         <div id="url-bar">
           {advancedOptions.scanType !== scanTypeOptions[2] && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginRight: "10px",
-              }}
-            >
+            <div className="custom-checkbox-container">
               <input
                 type="checkbox"
                 id="custom-checkbox"
-                style={{ marginRight: "5px" }}
                 checked={isCustomOptionChecked}
                 onChange={(e) => {
                   const newCheckedState = e.target.checked;
@@ -265,9 +261,7 @@ const InitScanForm = ({
             type="text"
             value={scanUrl}
             onChange={(e) => setScanUrl(e.target.value)}
-            style={{
-              display: isCustomOptionChecked ? "none" : "block",
-            }}
+            className={isCustomOptionChecked ? 'hidden' : ''}
           />
           {isCustomOptionChecked && (
             <div id="file-input-container">
@@ -275,7 +269,6 @@ const InitScanForm = ({
                 type="file"
                 id="file-input"
                 accept={allowedFileTypes.join(",")}
-                style={{ display: "none" }}
                 onChange={handleFileChange}
               />
               <label htmlFor="file-input" id="file-input-label">

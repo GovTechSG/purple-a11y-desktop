@@ -49,6 +49,11 @@
     color: #333333;
     flex-grow: 1;
     margin-right: 0.5rem;
+    display: block;
+
+    &.hidden {
+      display: none;
+    }
   }
 
   #file-input-container {
@@ -249,6 +254,17 @@
     background-size: 16px 12px;
     padding: 0.25rem 1.5rem 0.25rem 0.5rem;
   }
+
+  .custom-checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+  }
+
+  #custom-checkbox {
+    margin-right: 5px;
+  }
+
 
   #edit-user-details {
     background-color: #E7ECEE;
