@@ -261,8 +261,6 @@ const InitScanForm = ({
           </div>
           )}
 
-          <div id="announcement" aria-live="polite" className="visually-hidden"></div>
-
           <input
             id="url-input"
             type="text"
