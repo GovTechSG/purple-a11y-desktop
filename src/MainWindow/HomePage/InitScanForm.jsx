@@ -223,19 +223,22 @@ const InitScanForm = ({
   return (
     <div id="init-scan-form">
       <label htmlFor="url-input" id="url-bar-label">
-        Enter your {isCustomOptionChecked ? "local file": <strong>URL</strong>} to get started
+        Enter your {isCustomOptionChecked ? "local file": "URL"} to get started
       </label>
       <div id="url-bar-group">
         <div id="url-bar">
-          {advancedOptions.scanType !== scanTypeOptions[2] && (
-            <div className="toggle-url-file-tooltip-container"
+        {advancedOptions.scanType !== scanTypeOptions[2] && (
+          <div 
+            className="toggle-url-file-tooltip-container"
             onMouseEnter={() => setShowToggleUrlFileTooltip(true)}
             onMouseLeave={() => setShowToggleUrlFileTooltip(false)}
+            onFocus={() => setShowToggleUrlFileTooltip(true)}
+            onBlur={() => setShowToggleUrlFileTooltip(false)}
           >
             <button
               type="button"
               onClick={toggleScanType}
-              aria-describedby= "toggle-url-file-tooltip"
+              aria-describedby="toggle-url-file-tooltip-text"
               style={{
                 width: "60px",
                 height: "45px",
@@ -253,13 +256,16 @@ const InitScanForm = ({
             >
               {isCustomOptionChecked ? "FILE" : "URL"}
             </button>
+            <span id="toggle-url-file-tooltip-text" className="visually-hidden">
+              {`Switch to ${isCustomOptionChecked ? 'URL' : 'file'} input`}
+            </span>
             <ToolTip
               description={`Switch to ${isCustomOptionChecked ? 'URL' : 'file'} input`}
               id="toggle-url-file-tooltip"
               showToolTip={showToggleUrlFileTooltip}
             />
           </div>
-          )}
+        )}
 
           <input
             id="url-input"
