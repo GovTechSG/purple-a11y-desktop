@@ -287,7 +287,7 @@ const InitScanForm = ({
             className="visually-hidden"
             aria-live="polite"
           ></div>
-          
+
           <input
             id="url-input"
             className={isCustomOptionChecked ? "hidden" : ""}
@@ -318,7 +318,7 @@ const InitScanForm = ({
               >
                 {scanUrl ? scanUrl : "Choose file"}
               </label>
-              <span id="file-input-description" style={{ display: "none" }}>
+              <span id="file-input-description">
                 Enter your local file to get started
               </span>
             </div>
