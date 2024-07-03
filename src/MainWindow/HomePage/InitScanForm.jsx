@@ -228,10 +228,14 @@ const InitScanForm = ({
       <div id="url-bar-group">
         <div id="url-bar">
           {advancedOptions.scanType !== scanTypeOptions[2] && (
+            <div className="toggle-url-file-tooltip-container"
+            onMouseEnter={() => setShowToggleUrlFileTooltip(true)}
+            onMouseLeave={() => setShowToggleUrlFileTooltip(false)}
+          >
             <button
               type="button"
               onClick={toggleScanType}
-              aria-label={`Switch to ${isCustomOptionChecked ? 'URL' : 'file'} input`}
+              aria-describedby= "toggle-url-file-tooltip"
               style={{
                 width: "60px",
                 height: "45px",
@@ -249,6 +253,12 @@ const InitScanForm = ({
             >
               {isCustomOptionChecked ? "FILE" : "URL"}
             </button>
+            <ToolTip
+              description={`Switch to ${isCustomOptionChecked ? 'URL' : 'file'} input`}
+              id="toggle-url-file-tooltip"
+              showToolTip={showToggleUrlFileTooltip}
+            />
+          </div>
           )}
 
           <div id="announcement" aria-live="polite" className="visually-hidden"></div>
