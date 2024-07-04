@@ -276,6 +276,14 @@
 
   .toggle-url-file-tooltip-container {
     position: relative;
+    background-color: #F6F8F9;
+    border-top-left-radius: 50rem;
+    border-bottom-left-radius: 50rem;
+
+    &:hover {
+      background-color: #E7ECEE;
+    }
+
   }
 
   .toggle-url-file-tooltip-container .custom-tooltip-description {

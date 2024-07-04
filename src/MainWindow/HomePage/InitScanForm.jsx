@@ -89,7 +89,7 @@ const InitScanForm = ({
 
     if (wasLocalFileScan) {
       setIsCustomOptionChecked(true);
-      const newScanUrl = cachedScanUrl ? JSON.parse(cachedScanUrl) : "file:///";
+      const newScanUrl = cachedScanUrl ? JSON.parse(cachedScanUrl) : "Choose file...";
       setScanUrl(newScanUrl);
       setStaticFilePath(newScanUrl);
       setStaticHttpUrl("https://");
@@ -99,7 +99,7 @@ const InitScanForm = ({
       const newScanUrl = cachedScanUrl ? JSON.parse(cachedScanUrl) : "https://";
       setScanUrl(newScanUrl);
       setStaticHttpUrl(newScanUrl);
-      setStaticFilePath("file:///");
+      setStaticFilePath("Choose file...");
       setCachedNonFileScanType(cachedScanType || scanTypeOptions[0]);
       setDisplayScanType(cachedScanType || scanTypeOptions[0]);
     }
@@ -258,7 +258,8 @@ const InitScanForm = ({
   return (
     <div id="init-scan-form">
       <label htmlFor="url-input" id="url-bar-label">
-        Enter your{" "}
+        {isCustomOptionChecked ? "Select" : "Enter"} {" "}
+        your{" "}
         <strong>{isCustomOptionChecked ? "local file" : "URL"} </strong>
         to get started
       </label>
@@ -280,7 +281,7 @@ const InitScanForm = ({
                 {isCustomOptionChecked ? "FILE" : "URL"}
               </button>
               <ToolTip
-                description={`Switch to ${
+                description={`Toggle to ${
                   isCustomOptionChecked ? "URL" : "file"
                 } input`}
                 id="toggle-url-file-tooltip"
