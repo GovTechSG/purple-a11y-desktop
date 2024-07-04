@@ -198,26 +198,41 @@ const InitScanForm = ({
     }
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const fileExtension = "." + file.name.split(".").pop().toLowerCase();
-      if (
-        allowedFileTypes.includes(fileExtension) ||
-        (fileExtension === ".txt" && allowedFileTypes.includes(".txt"))
-      ) {
-        const readablePath = convertToReadablePath(file.path);
-        setScanUrl(readablePath);
-        setStaticFilePath(readablePath);
-        setSelectedFile(file);
-      } else {
-        alert(
-          `Invalid file format. Please choose a file with one of these extensions: ${allowedFileTypes.join(
-            ", "
-          )}`
-        );
-        e.target.value = "";
+  const handleFileSelect = async () => {
+    try {
+      const options = {
+        properties: ["openFile"],
+        filters: [
+          {
+            name: "Allowed Files",
+            extensions: allowedFileTypes.map((ext) => ext.slice(1)),
+          },
+        ],
+      };
+
+      const filePath = await window.services.selectFile(options);
+
+      if (filePath) {
+        const fileExtension = "." + filePath.split(".").pop().toLowerCase();
+
+        if (allowedFileTypes.includes(fileExtension)) {
+          const readablePath = convertToReadablePath(filePath);
+          setScanUrl(readablePath);
+          setStaticFilePath(readablePath);
+          setSelectedFile({
+            path: filePath,
+            name: filePath.split(/[\\/]/).pop(),
+          });
+        } else {
+          alert(
+            `Invalid file format. Please choose a file with one of these extensions: ${allowedFileTypes.join(
+              ", "
+            )}`
+          );
+        }
       }
+    } catch (error) {
+      console.error("Error selecting file:", error);
     }
   };
 
@@ -243,7 +258,8 @@ const InitScanForm = ({
   return (
     <div id="init-scan-form">
       <label htmlFor="url-input" id="url-bar-label">
-        Enter your <strong>{isCustomOptionChecked ? "local file" : "URL"}{" "}</strong>
+        Enter your{" "}
+        <strong>{isCustomOptionChecked ? "local file" : "URL"} </strong>
         to get started
       </label>
       <div id="url-bar-group">
@@ -278,41 +294,37 @@ const InitScanForm = ({
               />
             </div>
           )}
-          
 
-          <input
-            id="url-input"
-            className={isCustomOptionChecked ? "hidden" : ""}
-            type="text"
-            value={scanUrl}
-            onChange={(e) => setScanUrl(e.target.value)}
-          />
+          {!isCustomOptionChecked && (
+            <input
+              id="url-input"
+              type="text"
+              value={scanUrl}
+              onChange={(e) => setScanUrl(e.target.value)}
+            />
+          )}
+
           {isCustomOptionChecked && (
-            <div id="file-input-container">
-              <input
-                type="file"
-                id="file-input"
-                accept={allowedFileTypes.join(",")}
-                onChange={handleFileChange}
-                tabIndex="0"
-              />
-              <label
-                htmlFor="file-input"
-                id="file-input-label"
-                tabIndex="0"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    document.getElementById("file-input").click();
-                  }
+            <div style={{ display: "flex", width: "100%", overflow: "hidden" }}>
+              <button
+                id="file-select-button"
+                onClick={handleFileSelect}
+                disabled={scanButtonIsClicked}
+                aria-describedby="url-bar-label"
+                style={{
+                  margin: 0,
+                  display: "flex",
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                  marginLeft: "10px",
+                  backgroundColor: "white",
+                  whiteSpace: "nowrap",
+                  border: 0,
+                  width: "100%",
                 }}
-                aria-describedby="file-input-description"
               >
-                {scanUrl ? scanUrl : "Choose file"}
-              </label>
-              <span id="file-input-description">
-                Enter your local file to get started
-              </span>
+                <span>{scanUrl ? scanUrl : "Choose file"}</span>
+              </button>
             </div>
           )}
 
@@ -323,19 +335,20 @@ const InitScanForm = ({
                 <Button
                   type="btn-link"
                   id="page-limit-toggle-button"
-                  onClick={(e) => togglePageLimitAdjuster(e)}
+                  onClick={togglePageLimitAdjuster}
+                  disabled={scanButtonIsClicked}
                 >
                   capped at{" "}
                   <span className="purple-text">
                     {pageLimit} {pageWord}{" "}
                     {openPageLimitAdjuster ? (
                       <ButtonSvgIcon
-                        className={`chevron-up-icon`}
+                        className="chevron-up-icon"
                         svgIcon={<ChevronUpIcon />}
                       />
                     ) : (
                       <ButtonSvgIcon
-                        className={`chevron-down-icon`}
+                        className="chevron-down-icon"
                         svgIcon={<ChevronDownIcon />}
                       />
                     )}
@@ -343,7 +356,7 @@ const InitScanForm = ({
                 </Button>
 
                 {openPageLimitAdjuster && (
-                  <div id="page-limit-adjuster" ref={pageLimitAdjuster}>
+                  <div id="page-limit-adjuster">
                     <input
                       type="number"
                       id="page-limit-input"
