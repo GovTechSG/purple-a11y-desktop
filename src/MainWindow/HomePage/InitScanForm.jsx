@@ -299,23 +299,13 @@ const InitScanForm = ({
           )}
 
           {isCustomOptionChecked && (
-            <div style={{ display: "flex", width: "100%", overflow: "hidden" }}>
+            <div id="file-input-container">
               <button
                 id="file-select-button"
                 onClick={handleFileSelect}
                 disabled={scanButtonIsClicked}
                 aria-describedby="url-bar-label"
-                style={{
-                  margin: 0,
-                  display: "flex",
-                  textOverflow: "ellipsis",
-                  overflow: "hidden",
-                  marginLeft: "10px",
-                  backgroundColor: "white",
-                  whiteSpace: "nowrap",
-                  border: 0,
-                  width: "100%",
-                }}
+                className="file-select-button"
               >
                 {scanUrl ? scanUrl : "Choose file"}
               </button>

@@ -45,6 +45,24 @@
       }
     }
 
+    #file-input-container {
+      display: flex;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .file-select-button {
+      margin: 0;
+      display: flex;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      margin-left: 5px;
+      background-color: white;
+      white-space: nowrap;
+      border: 0;
+      width: 100%;
+    }
+
     #url-input {
       margin-left: 10px;
       display: block;
