@@ -275,16 +275,10 @@ const InitScanForm = ({
               <button
                 type="button"
                 onClick={toggleScanType}
-                aria-describedby="toggle-url-file-tooltip-text"
+                aria-describedby="toggle-url-file-tooltip"
               >
                 {isCustomOptionChecked ? "FILE" : "URL"}
               </button>
-              <span
-                id="toggle-url-file-tooltip-text"
-                className="visually-hidden"
-              >
-                {`Switch to ${isCustomOptionChecked ? "URL" : "file"} input`}
-              </span>
               <ToolTip
                 description={`Switch to ${
                   isCustomOptionChecked ? "URL" : "file"
@@ -323,7 +317,7 @@ const InitScanForm = ({
                   width: "100%",
                 }}
               >
-                <span>{scanUrl ? scanUrl : "Choose file"}</span>
+                {scanUrl ? scanUrl : "Choose file"}
               </button>
             </div>
           )}
@@ -335,20 +329,19 @@ const InitScanForm = ({
                 <Button
                   type="btn-link"
                   id="page-limit-toggle-button"
-                  onClick={togglePageLimitAdjuster}
-                  disabled={scanButtonIsClicked}
+                  onClick={(e) => togglePageLimitAdjuster(e)}	
                 >
                   capped at{" "}
                   <span className="purple-text">
                     {pageLimit} {pageWord}{" "}
                     {openPageLimitAdjuster ? (
                       <ButtonSvgIcon
-                        className="chevron-up-icon"
+                        className={`chevron-up-icon`}
                         svgIcon={<ChevronUpIcon />}
                       />
                     ) : (
                       <ButtonSvgIcon
-                        className="chevron-down-icon"
+                        className={`chevron-down-icon`}
                         svgIcon={<ChevronDownIcon />}
                       />
                     )}
@@ -356,7 +349,7 @@ const InitScanForm = ({
                 </Button>
 
                 {openPageLimitAdjuster && (
-                  <div id="page-limit-adjuster">
+                  <div id="page-limit-adjuster" ref={pageLimitAdjuster}>
                     <input
                       type="number"
                       id="page-limit-input"
