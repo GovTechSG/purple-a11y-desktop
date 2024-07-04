@@ -238,16 +238,12 @@ const InitScanForm = ({
       }));
       setDisplayScanType(cachedNonFileScanType);
     }
-    const announcement = newState
-      ? "File input type selected"
-      : "URL input type selected";
-    document.getElementById("announcement").textContent = announcement;
   };
 
   return (
     <div id="init-scan-form">
       <label htmlFor="url-input" id="url-bar-label">
-        Enter your {isCustomOptionChecked ? "local file" : <strong>URL</strong>}{" "}
+        Enter your <strong>{isCustomOptionChecked ? "local file" : "URL"}{" "}</strong>
         to get started
       </label>
       <div id="url-bar-group">
@@ -282,11 +278,7 @@ const InitScanForm = ({
               />
             </div>
           )}
-          <div
-            id="announcement"
-            className="visually-hidden"
-            aria-live="polite"
-          ></div>
+          
 
           <input
             id="url-input"

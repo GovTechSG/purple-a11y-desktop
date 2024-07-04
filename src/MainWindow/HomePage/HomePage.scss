@@ -26,13 +26,16 @@
     flex-direction: column;
 
     .toggle-url-file-tooltip-container {
+      margin-left: -2px; 
+
       button {
         width: 60px;
         height: 45px;
-        margin-right: 10px;
-        margin-left: -20px;
+        margin-left: 0;
         border: none;
         border-right: 1px solid #b5c5ca;
+        border-top-left-radius: 50rem; 
+        border-bottom-left-radius: 50rem;
         background: none;
         cursor: pointer;
         font-weight: bold;
@@ -43,6 +46,7 @@
     }
 
     #url-input {
+      margin-left: 10px;
       display: block;
       
       &.hidden {
@@ -51,6 +55,7 @@
     }
     
     #file-input-container {
+      margin-left: 10px;
       display: flex;
       align-items: center;
     }
@@ -90,7 +95,7 @@
     width: 600px;
     max-width: 600px;
     display: flex;
-    padding: 2px 2px 2px 24px;
+    padding: 2px; // Remove left padding
     align-items: center;
     justify-content: space-between;
   }
