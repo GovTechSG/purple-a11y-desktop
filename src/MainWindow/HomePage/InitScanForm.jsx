@@ -258,7 +258,7 @@ const InitScanForm = ({
   return (
     <div id="init-scan-form">
       <label htmlFor="url-input" id="url-bar-label">
-        {isCustomOptionChecked ? "Select" : "Enter"} {" "}
+        {isCustomOptionChecked ? "Select " : "Enter "} 
         your{" "}
         <strong>{isCustomOptionChecked ? "local file" : "URL"} </strong>
         to get started
