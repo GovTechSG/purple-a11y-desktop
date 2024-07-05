@@ -26,24 +26,26 @@
     flex-direction: column;
 
     .toggle-url-file-tooltip-container {
-      margin-left: -2px; 
+      height: 100%;
+      background-color: #F6F8F9;
+      border-right: 1px solid #b5c5ca;
 
       button {
-        width: 60px;
-        height: 45px;
-        margin-left: 0;
+        width: 54px;
+        height: 100%;
+        margin: 0;
         border: none;
-        border-right: 1px solid #b5c5ca;
-        border-top: 0.5px solid #b5c5ca;
-        border-bottom: 0.5px solid #b5c5ca;
-        border-top-left-radius: 50rem; 
-        border-bottom-left-radius: 50rem;
         background: none;
         cursor: pointer;
         font-weight: bold;
-        display: inline-block;
-        vertical-align: middle;
         font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      &:hover {
+        background-color: #E7ECEE;
       }
     }
 
@@ -66,7 +68,7 @@
     }
 
     #url-input {
-      margin-left: 10px;
+      margin-left: 9px;
       display: block;
       
       &.hidden {
@@ -88,16 +90,16 @@
     width: 600px;
     max-width: 600px;
     display: flex;
-    padding: 2px; // Remove left padding
+    padding: 0;
     align-items: center;
-    justify-content: space-between;
+    overflow: hidden;
   }
 
   #url-input {
     border: none;
     color: #333333;
     flex-grow: 1;
-    margin-right: 0.5rem;
+    margin: 0 0.5rem;
   }
 
   #url-input:disabled {
@@ -274,18 +276,6 @@
     background-repeat: no-repeat;
     background-size: 16px 12px;
     padding: 0.25rem 1.5rem 0.25rem 0.5rem;
-  }
-
-  .toggle-url-file-tooltip-container {
-    position: relative;
-    background-color: #F6F8F9;
-    border-top-left-radius: 50rem;
-    border-bottom-left-radius: 50rem;
-
-    &:hover {
-      background-color: #E7ECEE;
-    }
-
   }
 
   .toggle-url-file-tooltip-container .custom-tooltip-description {

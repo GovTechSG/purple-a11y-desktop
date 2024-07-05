@@ -101,6 +101,7 @@ button:disabled, input:disabled, select:disabled {
 .scan-btn {
   padding: 0.25rem 2rem!important;
   border-radius: 50rem !important;
+  margin-right: 2px;
   border: none;
   display: block;
 }
