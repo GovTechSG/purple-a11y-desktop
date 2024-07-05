@@ -68,8 +68,8 @@ const InitScanForm = ({
       : getDefaultAdvancedOptions(isProxy);
   });
 
-  const [isCustomOptionChecked, setIsCustomOptionChecked] = useState(() => {
-    const cachedCheckboxState = sessionStorage.getItem("isCustomOptionChecked");
+  const [isFileOptionChecked, setIsFileOptionChecked] = useState(() => {
+    const cachedCheckboxState = sessionStorage.getItem("isFileOptionChecked");
     return cachedCheckboxState ? JSON.parse(cachedCheckboxState) : false;
   });
 
@@ -88,14 +88,14 @@ const InitScanForm = ({
     const wasLocalFileScan = cachedScanType === scanTypeOptions[3];
 
     if (wasLocalFileScan) {
-      setIsCustomOptionChecked(true);
+      setIsFileOptionChecked(true);
       const newScanUrl = cachedScanUrl ? JSON.parse(cachedScanUrl) : "Choose file...";
       setScanUrl(newScanUrl);
       setStaticFilePath(newScanUrl);
       setStaticHttpUrl("https://");
       setDisplayScanType(cachedNonFileScanType);
     } else {
-      setIsCustomOptionChecked(false);
+      setIsFileOptionChecked(false);
       const newScanUrl = cachedScanUrl ? JSON.parse(cachedScanUrl) : "https://";
       setScanUrl(newScanUrl);
       setStaticHttpUrl(newScanUrl);
@@ -117,23 +117,23 @@ const InitScanForm = ({
   }, []);
 
   useEffect(() => {
-    if (isCustomOptionChecked) {
+    if (isFileOptionChecked) {
       setStaticFilePath(scanUrl);
     } else {
       setStaticHttpUrl(scanUrl);
     }
 
     sessionStorage.setItem(
-      "isCustomOptionChecked",
-      JSON.stringify(isCustomOptionChecked)
+      "isFileOptionChecked",
+      JSON.stringify(isFileOptionChecked)
     );
     sessionStorage.setItem(
       "scanType",
-      isCustomOptionChecked ? scanTypeOptions[3] : displayScanType
+      isFileOptionChecked ? scanTypeOptions[3] : displayScanType
     );
     sessionStorage.setItem("scanUrl", JSON.stringify(scanUrl));
     sessionStorage.setItem("cachedNonFileScanType", cachedNonFileScanType);
-  }, [isCustomOptionChecked, scanUrl, displayScanType, cachedNonFileScanType]);
+  }, [isFileOptionChecked, scanUrl, displayScanType, cachedNonFileScanType]);
 
   useEffect(() => {
     const urlBarElem = document.getElementById("url-bar");
@@ -162,7 +162,7 @@ const InitScanForm = ({
   };
 
   const handleScanButtonClicked = () => {
-    if (isCustomOptionChecked) {
+    if (isFileOptionChecked) {
       const fileExtension = "." + scanUrl.split(".").pop().toLowerCase();
       if (!allowedFileTypes.includes(fileExtension)) {
         alert(
@@ -184,7 +184,7 @@ const InitScanForm = ({
     sessionStorage.setItem("advancedOptions", JSON.stringify(advancedOptions));
     sessionStorage.setItem("scanUrl", JSON.stringify(scanUrl));
 
-    if (isCustomOptionChecked) {
+    if (isFileOptionChecked) {
       setStaticFilePath(scanUrl);
       startScan({
         file: selectedFile,
@@ -237,8 +237,8 @@ const InitScanForm = ({
   };
 
   const toggleScanType = () => {
-    const newState = !isCustomOptionChecked;
-    setIsCustomOptionChecked(newState);
+    const newState = !isFileOptionChecked;
+    setIsFileOptionChecked(newState);
     setScanUrl(newState ? staticFilePath : staticHttpUrl);
     if (newState) {
       setCachedNonFileScanType(displayScanType);
@@ -258,9 +258,9 @@ const InitScanForm = ({
   return (
     <div id="init-scan-form">
       <label htmlFor="url-input" id="url-bar-label">
-        {isCustomOptionChecked ? "Select " : "Enter "} 
+        {isFileOptionChecked ? "Select " : "Enter "} 
         your{" "}
-        <strong>{isCustomOptionChecked ? "local file" : "URL"} </strong>
+        <strong>{isFileOptionChecked ? "local file" : "URL"} </strong>
         to get started
       </label>
       <div id="url-bar-group">
@@ -278,11 +278,11 @@ const InitScanForm = ({
                 onClick={toggleScanType}
                 aria-describedby="toggle-url-file-tooltip"
               >
-                {isCustomOptionChecked ? "FILE" : "URL"}
+                {isFileOptionChecked ? "FILE" : "URL"}
               </button>
               <ToolTip
                 description={`Toggle to ${
-                  isCustomOptionChecked ? "URL" : "file"
+                  isFileOptionChecked ? "URL" : "file"
                 } input`}
                 id="toggle-url-file-tooltip"
                 showToolTip={showToggleUrlFileTooltip}
@@ -290,7 +290,7 @@ const InitScanForm = ({
             </div>
           )}
 
-          {!isCustomOptionChecked && (
+          {!isFileOptionChecked && (
             <input
               id="url-input"
               type="text"
@@ -299,7 +299,7 @@ const InitScanForm = ({
             />
           )}
 
-          {isCustomOptionChecked && (
+          {isFileOptionChecked && (
             <div id="file-input-container">
               <button
                 id="file-select-button"
@@ -315,7 +315,7 @@ const InitScanForm = ({
 
           {advancedOptions.scanType !== scanTypeOptions[2] &&
             advancedOptions.scanType !== scanTypeOptions[3] &&
-            !isCustomOptionChecked && (
+            !isFileOptionChecked && (
               <div>
                 <Button
                   type="btn-link"
@@ -384,7 +384,7 @@ const InitScanForm = ({
       <AdvancedScanOptions
         isProxy={isProxy}
         scanTypeOptions={
-          isCustomOptionChecked
+          isFileOptionChecked
             ? scanTypeOptions.filter(
                 (option) =>
                   option !== scanTypeOptions[2] && option !== scanTypeOptions[3]
@@ -396,12 +396,12 @@ const InitScanForm = ({
         deviceOptions={deviceOptions}
         advancedOptions={{
           ...advancedOptions,
-          scanType: isCustomOptionChecked
+          scanType: isFileOptionChecked
             ? displayScanType
             : advancedOptions.scanType,
         }}
         setAdvancedOptions={(newOptions) => {
-          if (!isCustomOptionChecked) {
+          if (!isFileOptionChecked) {
             setAdvancedOptions(newOptions);
             setDisplayScanType(newOptions.scanType);
             setCachedNonFileScanType(newOptions.scanType);
@@ -417,7 +417,7 @@ const InitScanForm = ({
           setAllowedFileTypes(getAllowedFileTypes(newOptions.scanType));
         }}
         scanButtonIsClicked={scanButtonIsClicked}
-        isCustomOptionChecked={isCustomOptionChecked}
+        isFileOptionChecked={isFileOptionChecked}
       />
     </div>
   );
