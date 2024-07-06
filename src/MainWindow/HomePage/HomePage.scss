@@ -27,6 +27,14 @@
 
     .toggle-url-file-tooltip-container {
       margin-left: -2px; 
+      position: relative;
+      background-color: #F6F8F9;
+      border-top-left-radius: 50rem;
+      border-bottom-left-radius: 50rem;
+
+      &:hover {
+        background-color: #E7ECEE;
+      }
 
       button {
         width: 60px;
@@ -44,6 +52,17 @@
         display: inline-block;
         vertical-align: middle;
         font-size: 14px;
+      }
+
+      .custom-tooltip-description {
+        background-color: #333;
+        border-radius: 4px;
+        color: #fff;
+        font-size: 14px;
+        opacity: 95%;
+        padding: 5px;
+        width: 150px;
+        text-align: center;
       }
     }
 
@@ -109,7 +128,6 @@
     outline: none !important;
     border-bottom: 1px solid #785ef0;
   }
-
   #page-limit-toggle-button {
     padding: 0;
     margin-right: 0.875rem;
@@ -274,29 +292,6 @@
     background-repeat: no-repeat;
     background-size: 16px 12px;
     padding: 0.25rem 1.5rem 0.25rem 0.5rem;
-  }
-
-  .toggle-url-file-tooltip-container {
-    position: relative;
-    background-color: #F6F8F9;
-    border-top-left-radius: 50rem;
-    border-bottom-left-radius: 50rem;
-
-    &:hover {
-      background-color: #E7ECEE;
-    }
-
-  }
-
-  .toggle-url-file-tooltip-container .custom-tooltip-description {
-    background-color: #333;
-    border-radius: 4px;
-    color: #fff;
-    font-size: 14px;
-    opacity: 95%;
-    padding: 5px;
-    width: 150px;
-    text-align: center;
   }
 
   #edit-user-details {
