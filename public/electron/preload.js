@@ -15,11 +15,14 @@ contextBridge.exposeInMainWorld("services", {
     ipcRenderer.send("restartApp");
   },
   checkChromeExistsOnMac: async () => {
-    const chromeExists = await ipcRenderer.invoke("checkChromeExistsOnMac"); 
+    const chromeExists = await ipcRenderer.invoke("checkChromeExistsOnMac");
     return chromeExists;
   },
   validateUrlConnectivity: async (scanDetails) => {
-    const results = await ipcRenderer.invoke('validateUrlConnectivity', scanDetails);
+    const results = await ipcRenderer.invoke(
+      "validateUrlConnectivity",
+      scanDetails
+    );
     return results;
   },
   startScan: async (scanDetails) => {
@@ -43,7 +46,7 @@ contextBridge.exposeInMainWorld("services", {
     ipcRenderer.send("openUploadFolder");
   },
   getEngineVersion: async () => {
-    const phEngineVersion = await ipcRenderer.invoke('getEngineVersion'); 
+    const phEngineVersion = await ipcRenderer.invoke("getEngineVersion");
     return phEngineVersion;
   },
   getResultsFolderPath: async (scanId) => {
@@ -63,7 +66,11 @@ contextBridge.exposeInMainWorld("services", {
     return data;
   },
   getErrorLog: async (timeOfScan, timeOfError) => {
-    const errorLog = await ipcRenderer.invoke("getErrorLog", timeOfScan, timeOfError);
+    const errorLog = await ipcRenderer.invoke(
+      "getErrorLog",
+      timeOfScan,
+      timeOfError
+    );
     return errorLog;
   },
   editUserData: async (userData) => {
@@ -85,7 +92,7 @@ contextBridge.exposeInMainWorld("services", {
   scanningUrl: (callback) => {
     ipcRenderer.on("scanningUrl", (event, data) => {
       callback(data);
-    })
+    });
   },
   scanningCompleted: (callback) => {
     ipcRenderer.on("scanningCompleted", () => {
@@ -95,7 +102,7 @@ contextBridge.exposeInMainWorld("services", {
   killScan: (callback) => {
     ipcRenderer.on("killScan", () => {
       callback();
-    })
+    });
   },
   userDataExists: (callback) => {
     ipcRenderer.on("userDataExists", (event, data) => {
@@ -128,9 +135,9 @@ contextBridge.exposeInMainWorld("services", {
     );
     return response;
   },
-  selectFile: async () => {
-    const filePath = await ipcRenderer.invoke('selectFile');
-    return filePath;
-  },
-  getIsWindows: async () => ipcRenderer.invoke("isWindows"),
-});
+    selectFile: async (options) => {
+      const filePath = await ipcRenderer.invoke("selectFile", options);
+      return filePath;
+    },
+    getIsWindows: async () => ipcRenderer.invoke("isWindows"),
+  });

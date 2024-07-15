@@ -19,7 +19,8 @@ const AdvancedScanOptions = ({
   deviceOptions,
   advancedOptions,
   setAdvancedOptions,
-  scanButtonIsClicked
+  scanButtonIsClicked,
+  isFileOptionChecked,
 }) => {
   const [openAdvancedOptionsMenu, setOpenAdvancedOptionsMenu] = useState(false);
   const [advancedOptionsDirty, setAdvancedOptionsDirty] = useState(false);
@@ -206,7 +207,7 @@ const AdvancedScanOptions = ({
             />
             <label htmlFor="screenshots-toggle">Include screenshots</label>
           </div>
-          { advancedOptions.scanType === scanTypeOptions[0] && 
+          {!isFileOptionChecked && advancedOptions.scanType === scanTypeOptions[0] && 
             <div id='subdomain-toggle-group' class="advanced-options-toggle-group">
               <input 
                 type="checkbox"

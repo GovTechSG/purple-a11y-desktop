@@ -191,7 +191,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
     } else if (scanDetails.scanType === "Local file") {
       if (!isValidFilepath(scanDetails.scanUrl)) {
         setScanButtonIsClicked(false);
-        setPrevUrlErrorMessage("Invalid FilePath. Please type in file:/// format.");
+        setPrevUrlErrorMessage("File is not a local html or sitemap file.");
         return;
       }
     } else if (!isValidHttpUrl(scanDetails.scanUrl)) {
@@ -264,6 +264,9 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
             break;
           case cliErrorTypes.notASitemap:
             errorMessageToShow = "Invalid sitemap.";
+            break;
+          case cliErrorTypes.notALocalFile:
+            errorMessageToShow = "File is not a local html or sitemap file.";
             break;
           case cliErrorTypes.browserError:
             navigate("/error", {
