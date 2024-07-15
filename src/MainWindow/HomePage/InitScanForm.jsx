@@ -48,6 +48,7 @@ const InitScanForm = ({
   const [allowedFileTypes, setAllowedFileTypes] = useState([]);
   const [showToggleUrlFileTooltip, setShowToggleUrlFileTooltip] =
     useState(false);
+  const toggleUrlFileRef = useRef(null);
 
   if (isProxy) {
     delete viewportTypes.specific;
@@ -253,6 +254,13 @@ const InitScanForm = ({
       }));
       setDisplayScanType(cachedNonFileScanType);
     }
+    // Have screenreader to focus and announce the button
+    if (toggleUrlFileRef.current) {
+      toggleUrlFileRef.current.blur();
+      setTimeout(() => {
+        toggleUrlFileRef.current.focus();
+      }, 10);
+    }
   };
 
   return (
@@ -267,26 +275,27 @@ const InitScanForm = ({
         <div id="url-bar">
           {advancedOptions.scanType !== scanTypeOptions[2] && (
             <div
-              className="toggle-url-file-tooltip-container"
-              onMouseEnter={() => setShowToggleUrlFileTooltip(true)}
-              onMouseLeave={() => setShowToggleUrlFileTooltip(false)}
-              onFocus={() => setShowToggleUrlFileTooltip(true)}
-              onBlur={() => setShowToggleUrlFileTooltip(false)}
-            >
+             className="toggle-url-file-tooltip-container"
+             onMouseEnter={() => setShowToggleUrlFileTooltip(true)}
+             onMouseLeave={() => setShowToggleUrlFileTooltip(false)}
+             onFocus={() => setShowToggleUrlFileTooltip(true)}
+             onBlur={() => setShowToggleUrlFileTooltip(false)}
+           >
               <button
-                type="button"
-                onClick={toggleScanType}
-                aria-describedby="toggle-url-file-tooltip"
+               type="button"
+               onClick={toggleScanType}
+               aria-describedby="toggle-url-file-tooltip"
+               ref={toggleUrlFileRef}
               >
-                {isFileOptionChecked ? "FILE" : "URL"}
+               {isFileOptionChecked ? "FILE" : "URL"}
               </button>
               <ToolTip
                 description={`Toggle to ${
-                  isFileOptionChecked ? "URL" : "file"
-                } input`}
+                 isFileOptionChecked ? "URL" : "file"
+               } input`}
                 id="toggle-url-file-tooltip"
                 showToolTip={showToggleUrlFileTooltip}
-              />
+             />
             </div>
           )}
 
