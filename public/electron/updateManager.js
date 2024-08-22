@@ -302,6 +302,9 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
     `[updateManager] run - latestRelease: ${latestRelease}; latestPreRelease: ${latestPreRelease}`
   );
 
+  // Start Oobee instead if exist
+  updaterEventEmitter.emit("restartA11yToOobee");
+  
   updaterEventEmitter.emit("checking");
 
   const getBackendExists = () => fs.existsSync(backendPath);

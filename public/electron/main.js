@@ -16,6 +16,8 @@ const scanManager = require("./scanManager");
 const updateManager = require("./updateManager");
 const userDataManager = require("./userDataManager.js");
 const showdown = require('showdown');
+const fs = require('fs');
+const path = require('path');
 
 const app = electronApp;
 
@@ -143,6 +145,32 @@ app.on("ready", async () => {
 
     updateEvent.on("installerLaunched", () => {
       app.exit();
+    });
+
+    // Check and launch Oobee
+    updateEvent.on("restartA11yToOobee", () => {
+      const oobeePath = process.platform === 'win32'
+      ? 'C:\\Program Files\\Oobee Desktop\\Oobee Frontend\\Oobee.exe'
+      : path.join(path.dirname(app.getPath('exe')), 'Oobee.app');
+    
+      const currentAppPath = app.getPath('exe');
+      
+      console.log("oobeePath ", oobeePath);
+      console.log("currentAppPath ",currentAppPath);
+
+      if (fs.existsSync(oobeePath) && !currentAppPath.includes('Oobee')) {
+        const { exec } = require('child_process');
+        const openCommand = process.platform === 'win32' ? `"${oobeePath}"` : `open "${oobeePath}"`;
+        
+        exec(openCommand, (error) => {
+          if (error) {
+            console.error(`Failed to open ${path.basename(oobeePath)}: ${error}`);
+          }
+          app.exit();
+        });
+      } else {
+        // do nothing
+      }
     });
 
     updateEvent.on("restartTriggered", () => {
