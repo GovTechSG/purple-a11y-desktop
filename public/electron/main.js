@@ -151,12 +151,9 @@ app.on("ready", async () => {
     updateEvent.on("restartA11yToOobee", () => {
       const oobeePath = process.platform === 'win32'
       ? 'C:\\Program Files\\Oobee Desktop\\Oobee Frontend\\Oobee.exe'
-      : path.join(path.dirname(app.getPath('exe')), 'Oobee.app');
-    
+      : path.join(path.dirname(app.getPath('exe')), '..', '..', '..', 'Oobee.app');
+
       const currentAppPath = app.getPath('exe');
-      
-      console.log("oobeePath ", oobeePath);
-      console.log("currentAppPath ",currentAppPath);
 
       if (fs.existsSync(oobeePath) && !currentAppPath.includes('Oobee')) {
         const { exec } = require('child_process');
@@ -166,8 +163,12 @@ app.on("ready", async () => {
           if (error) {
             console.error(`Failed to open ${path.basename(oobeePath)}: ${error}`);
           }
+          // Works for Mac
           app.exit();
         });
+
+        // Works for Windows
+        app.exit();
       } else {
         // do nothing
       }
