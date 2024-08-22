@@ -45,8 +45,8 @@ const getMacOSExecutablePath = () => {
 };
 const macOSExecutablePath = getMacOSExecutablePath();
 
-// const macOSPrepackageBackend = path.join(macOSExecutablePath, "Contents", "Resources", "purple-a11y-portable-mac.zip");
-const macOSPrepackageBackend = path.join(process.resourcesPath, "purple-a11y-portable-mac.zip");
+// const macOSPrepackageBackend = path.join(macOSExecutablePath, "Contents", "Resources", "oobee-portable-mac.zip");
+const macOSPrepackageBackend = path.join(process.resourcesPath, "oobee-portable-mac.zip");
 
 const resultsPath =
   os.platform() === "win32"

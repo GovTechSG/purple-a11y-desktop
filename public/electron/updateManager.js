@@ -270,7 +270,7 @@ const downloadAndUnzipBackendWindows = async (tag = undefined) => {
 };
 
 const downloadBackend = async (tag, zipPath) => {
-  const downloadUrl = `https://github.com/GovTechSG/purple-a11y/releases/download/${tag}/purple-a11y-portable-mac.zip`;
+  const downloadUrl = `https://github.com/GovTechSG/oobee/releases/download/${tag}/oobee-portable-mac.zip`;
   const command = `curl '${downloadUrl}' -o '${zipPath}' -L && rm -rf '${backendPath}' && mkdir '${backendPath}'`;
 
   return execCommand(command);
