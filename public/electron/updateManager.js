@@ -172,21 +172,21 @@ const downloadAndUnzipFrontendMac = async (tag = undefined) => {
 
   const command = `
   mkdir -p '${resultsPath}' &&
-  curl -L '${downloadUrl}' -o '${resultsPath}/purple-a11y-desktop-mac.zip' &&
+  curl -L '${downloadUrl}' -o '${resultsPath}/oobee-desktop-mac.zip' &&
   mv '${macOSExecutablePath}' '${path.join(
     macOSExecutablePath,
     ".."
-  )}/Purple A11y Old.app' &&
-  ditto -xk '${resultsPath}/purple-a11y-desktop-mac.zip' '${path.join(
+  )}/Oobee Old.app' &&
+  ditto -xk '${resultsPath}/oobee-desktop-mac.zip' '${path.join(
     macOSExecutablePath,
     ".."
   )}' &&
-  rm '${resultsPath}/purple-a11y-desktop-mac.zip' &&
-  rm -rf '${path.join(macOSExecutablePath, "..")}/Purple A11y Old.app' &&
+  rm '${resultsPath}/oobee-desktop-mac.zip' &&
+  rm -rf '${path.join(macOSExecutablePath, "..")}/Oobee Old.app' &&
   xattr -rd com.apple.quarantine '${path.join(
     macOSExecutablePath,
     ".."
-  )}/Purple A11y.app' `;
+  )}/Oobee.app' `;
 
   await execCommand(command);
 };
