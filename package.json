@@ -26,7 +26,7 @@
     "eject": "react-scripts eject",
     "package": "electron-forge package",
     "make": "react-scripts build && electron-forge make",
-    "make-mac": "rm -rf ./out && curl -L -o \"/tmp/oobee-portable-mac.zip\" https://github.com/GovTechSG/purple-a11y/releases/download/$BE_TAG/purple-a11y-portable-mac.zip && react-scripts build && electron-forge make --arch=universal --platform darwin",
+    "make-mac": "rm -rf ./out && curl -L -o \"/tmp/purple-a11y-portable-mac.zip\" https://github.com/GovTechSG/purple-a11y/releases/download/$BE_TAG/purple-a11y-portable-mac.zip && react-scripts build && electron-forge make --arch=universal --platform darwin",
     "make-win": "react-scripts build && electron-forge make --arch=x64 --platform win32"
   },
   "config": {
