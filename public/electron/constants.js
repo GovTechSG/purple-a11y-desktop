@@ -7,26 +7,26 @@ const { execSync } = require("child_process");
 
 const appPath =
   os.platform() === "win32"
-    ? path.join(process.env.PROGRAMFILES, "Purple A11y Desktop")
+    ? path.join(process.env.PROGRAMFILES, "Oobee Desktop")
     : path.join(
         os.homedir(),
         "Library",
         "Application Support",
-        "Purple A11y"
+        "Oobee"
       );
 
 const releaseUrl =
-  "https://api.github.com/repos/GovTechSG/purple-a11y/releases/latest";
+  "https://api.github.com/repos/GovTechSG/oobee/releases/latest";
 
-const allReleasesUrl = "https://api.github.com/repos/GovTechSG/purple-a11y/releases";
+const allReleasesUrl = "https://api.github.com/repos/GovTechSG/oobee/releases";
 
 const frontendReleaseUrl =
   os.platform() === "win32"
     ? "https://github.com/GovTechSG/oobee-desktop/releases/latest/download/oobee-desktop-windows.zip"
     : "https://github.com/GovTechSG/oobee-desktop/releases/latest/download/oobee-desktop-macos.zip";
 
-const backendPath = path.join(appPath, "Purple A11y Backend");
-const frontendPath = path.join(appPath, "Purple A11y Frontend");
+const backendPath = path.join(appPath, "Oobee Backend");
+const frontendPath = path.join(appPath, "Oobee Frontend");
 
 const getMacOSExecutablePath = () => {
   let executablePath = require("path").dirname(
@@ -50,16 +50,16 @@ const macOSPrepackageBackend = path.join(process.resourcesPath, "oobee-portable-
 
 const resultsPath =
   os.platform() === "win32"
-    ? path.join(process.env.APPDATA, "Purple A11y")
+    ? path.join(process.env.APPDATA, "Oobee")
     : appPath;
 
 const installerExePath = path.join(
   resultsPath,
   "oobee-desktop-windows",
-  "oobee-setup.exe"
+  "Oobee-setup.exe"
 );
 
-const enginePath = path.join(backendPath, "purple-a11y");
+const enginePath = path.join(backendPath, "oobee");
 
 const getEngineVersion = () => {
   const enginePackageFile = fs.readFileSync(path.join(enginePath, "package.json"), 'utf8');
@@ -90,7 +90,7 @@ const appVersion = require(path.join(
 
 const preloadPath = path.join(__dirname, "preload.js");
 
-const defaultExportDir = path.join(os.homedir(), "Documents", "Purple A11y");
+const defaultExportDir = path.join(os.homedir(), "Documents", "Oobee");
 
 const indexPath = path.join(__dirname, "..", "..", "build", "index.html");
 
@@ -100,7 +100,7 @@ const getPathVariable = () => {
   if (os.platform() === "win32") {
     const directories = [
       "nodejs-win",
-      "purple-a11y\\node_modules\\.bin",
+      "oobee\\node_modules\\.bin",
       "jre\\bin",
       "verapdf",
     ];
@@ -110,7 +110,7 @@ const getPathVariable = () => {
   } else {
     const directories = [
       `${os.arch() === "arm64" ? "nodejs-mac-arm64" : "nodejs-mac-x64"}/bin`,
-      "purple-a11y/node_modules/.bin",
+      "oobee/node_modules/.bin",
       "jre/bin",
       "verapdf"
     ];
@@ -136,7 +136,7 @@ const userDataFilePath =
 
 const phZipPath = path.join(appPath, "PHLatest.zip");
 
-const artifactInstallerPath = path.join(appPath, "Purple-A11y-setup.exe");
+const artifactInstallerPath = path.join(appPath, "Oobee-setup.exe");
 
 const browserTypes = {
   chrome: "chrome",
@@ -214,14 +214,14 @@ const cloneChromeProfileCookieFiles = (options, destDir) => {
   if (os.platform() === "win32") {
     profileCookiesDir = globSync("**/Network/Cookies", {
       ...options,
-      ignore: ["Purple-A11y/**"],
+      ignore: ["Oobee/**"],
     });
     profileNamesRegex = /User Data\\(.*?)\\Network/;
   } else if (os.platform() === "darwin") {
-    // maxDepth 2 to avoid copying cookies from the Purple-A11y directory if it exists
+    // maxDepth 2 to avoid copying cookies from the Oobee directory if it exists
     profileCookiesDir = globSync("**/Cookies", {
       ...options,
-      ignore: "Purple-A11y/**",
+      ignore: "Oobee/**",
     });
     profileNamesRegex = /Chrome\/(.*?)\/Cookies/;
   }
@@ -268,18 +268,18 @@ const cloneEdgeProfileCookieFiles = (options, destDir) => {
   // Cookies file per profile is located in .../User Data/<profile name>/Network/Cookies for windows
   // and ../Chrome/<profile name>/Cookies for mac
   let profileNamesRegex;
-  // Ignores the cloned Purple-A11y directory if exists
+  // Ignores the cloned Oobee directory if exists
   if (os.platform() === "win32") {
     profileCookiesDir = globSync("**/Network/Cookies", {
       ...options,
-      ignore: "Purple-A11y/**",
+      ignore: "Oobee/**",
     });
     profileNamesRegex = /User Data\\(.*?)\\Network/;
   } else if (os.platform() === "darwin") {
-    // Ignores copying cookies from the Purple-A11y directory if it exists
+    // Ignores copying cookies from the Oobee directory if it exists
     profileCookiesDir = globSync("**/Cookies", {
       ...options,
-      ignore: "Purple-A11y/**",
+      ignore: "Oobee/**",
     });
     profileNamesRegex = /Microsoft Edge\/(.*?)\/Cookies/;
   }
@@ -348,7 +348,7 @@ const cloneChromeProfiles = () => {
     return;
   }
 
-  const destDir = path.join(baseDir, "Purple-A11y");
+  const destDir = path.join(baseDir, "Oobee");
 
   if (fs.existsSync(destDir)) {
     deleteClonedChromeProfiles();
@@ -383,7 +383,7 @@ const cloneEdgeProfiles = () => {
     return;
   }
 
-  const destDir = path.join(baseDir, "Purple-A11y");
+  const destDir = path.join(baseDir, "Oobee");
 
   if (fs.existsSync(destDir)) {
     deleteClonedEdgeProfiles();
@@ -419,8 +419,8 @@ const deleteClonedChromeProfiles = () => {
     return;
   }
 
-  // Find all the Purple-A11y directories in the Chrome data directory
-  const destDir = globSync("**/Purple-A11y*", {
+  // Find all the Oobee directories in the Chrome data directory
+  const destDir = globSync("**/Oobee*", {
     cwd: baseDir,
     recursive: true,
     absolute: true,
@@ -442,7 +442,7 @@ const deleteClonedChromeProfiles = () => {
   }
 
   silentLogger.warn(
-    "Unable to find Purple-A11y directory in the Chrome data directory."
+    "Unable to find Oobee directory in the Chrome data directory."
   );
 };
 
@@ -454,8 +454,8 @@ const deleteClonedEdgeProfiles = () => {
     return;
   }
 
-  // Find all the Purple-A11y directories in the Chrome data directory
-  const destDir = globSync("**/Purple-A11y*", {
+  // Find all the Oobee directories in the Chrome data directory
+  const destDir = globSync("**/Oobee*", {
     cwd: baseDir,
     recursive: true,
     absolute: true,
@@ -477,7 +477,7 @@ const deleteClonedEdgeProfiles = () => {
   }
 
   silentLogger.warn(
-    "Unable to find Purple-A11y directory in the Edge data directory."
+    "Unable to find Oobee directory in the Edge data directory."
   );
 };
 
@@ -529,7 +529,7 @@ const proxy = getProxy();
 const createPlaywrightContext = async (browser, screenSize, nonHeadless) => {
   const playwrightPath = path.join(
     backendPath,
-    "purple-a11y",
+    "oobee",
     "node_modules",
     "playwright",
     "index.js"

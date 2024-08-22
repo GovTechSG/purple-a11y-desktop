@@ -96,7 +96,7 @@ const OnboardingComponent = ({ setDataExistStatus }) => {
             <h3 className="modal-title fade-in-left">Hi There!</h3>
             <p className="modal-desc fade-in-left">
               Making your website accessible is within reach. Let’s get started
-              by taking a quick look at how Purple A11y works.
+              by taking a quick look at how Oobee works.
             </p>
             <PageIndicator page={1}></PageIndicator>
           </>
@@ -119,7 +119,7 @@ const OnboardingComponent = ({ setDataExistStatus }) => {
             </div>
             <h3 className="modal-title fade-in-left">Get started</h3>
             <p className="modal-desc fade-in-left">
-              Enter your website or sitemap URL and Purple A11y will crawl
+              Enter your website or sitemap URL and Oobee will crawl
               through them to analyse and identify accessibility issues.
             </p>
             <PageIndicator page={2}></PageIndicator>
@@ -169,7 +169,7 @@ const OnboardingComponent = ({ setDataExistStatus }) => {
               isOnboarding={true}
             ></DownloadFolderDropdown>
             <p className="modal-desc fade-in-left">
-              All reports generated from Purple A11y will be auto-downloaded
+              All reports generated from Oobee will be auto-downloaded
               into this folder.
             </p>
             <PageIndicator page={4}></PageIndicator>

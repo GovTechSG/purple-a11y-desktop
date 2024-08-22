@@ -4,18 +4,18 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 [SETUP]
 AppId={{75a53a2c-a9e1-4d9b-be27-f8c96f9315c5}
-AppName=Purple A11y Desktop
-AppVersion=0.9.0
-AppVerName=Purple A11y Desktop
+AppName=Oobee Desktop
+AppVersion=0.10.0
+AppVerName=Oobee Desktop
 AppPublisher=GovTech
-AppPublisherURL=https://github.com/GovTechSG/purple-a11y-desktop
-AppSupportURL=https://github.com/GovTechSG/purple-a11y-desktop
-AppUpdatesURL=https://github.com/GovTechSG/purple-a11y-desktop
-DefaultDirName=C:\Program Files\Purple A11y Desktop
+AppPublisherURL=https://github.com/GovTechSG/oobee-desktop
+AppSupportURL=https://github.com/GovTechSG/oobee-desktop
+AppUpdatesURL=https://github.com/GovTechSG/oobee-desktop
+DefaultDirName=C:\Program Files\Oobee Desktop
 DisableDirPage=yes
 ChangesAssociations=yes
 DisableProgramGroupPage=yes
-; LicenseFile=Purple A11y-win32-x64\LICENSE
+; LicenseFile=Oobee-win32-x64\LICENSE
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 Compression=lzma
@@ -29,21 +29,21 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "Purple A11y-win32-x64\*"; DestDir: "\\?\{app}\Purple A11y Frontend"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\a\Purple A11y Backend\*"; DestDir: "\\?\{app}\Purple A11y Backend"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "Oobee-win32-x64\*"; DestDir: "\\?\{app}\Oobee Frontend"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\a\Oobee Backend\*"; DestDir: "\\?\{app}\Oobee Backend"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{autoprograms}\Purple A11y Desktop"; Filename: "{app}\Purple A11y Frontend\Purple A11y.exe"
-Name: "{autodesktop}\Purple A11y Desktop"; Filename: "{app}\Purple A11y Frontend\Purple A11y.exe"; Tasks: desktopicon
+Name: "{autoprograms}\Oobee Desktop"; Filename: "{app}\Oobee Frontend\Oobee.exe"
+Name: "{autodesktop}\Oobee Desktop"; Filename: "{app}\Oobee Frontend\Oobee.exe"; Tasks: desktopicon
 
 ; [Run]
-; Filename: "{app}\Purple A11y Frontend\Purple A11y.exe"; Description: "{cm:LaunchProgram,Purple A11y Desktop}"; Flags: nowait postinstall skipifsilent
+; Filename: "{app}\Oobee Frontend\Oobee.exe"; Description: "{cm:LaunchProgram,Oobee Desktop}"; Flags: nowait postinstall skipifsilent
 
 [UninstallDelete]
-Type: filesandordirs; Name: "{app}\Purple A11y Frontend"
-Type: filesandordirs; Name: "{app}\Purple A11y Backend"
+Type: filesandordirs; Name: "{app}\Oobee Frontend"
+Type: filesandordirs; Name: "{app}\Oobee Backend"
 
 [InstallDelete]
-Type: filesandordirs; Name: "{app}\Purple A11y Frontend"
-Type: filesandordirs; Name: "{app}\Purple A11y Backend"
+Type: filesandordirs; Name: "{app}\Oobee Frontend"
+Type: filesandordirs; Name: "{app}\Oobee Backend"
