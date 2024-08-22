@@ -112,15 +112,16 @@ const getLatestFrontendVersion = (latestRelease, latestPreRelease) => {
  */
 const downloadAndUnzipFrontendWindows = async (tag = undefined) => {
   const downloadUrl = tag
-    ? `https://github.com/GovTechSG/purple-a11y-desktop/releases/download/${tag}/purple-a11y-desktop-windows.zip`
+    ? `https://github.com/GovTechSG/oobee-desktop/releases/download/${tag}/oobee-desktop-windows.zip`
     : frontendReleaseUrl;
+
   const shellScript = `
   $webClient = New-Object System.Net.WebClient
   try {
     If (!(Test-Path -Path "${resultsPath}")) {
       New-Item -ItemType Directory -Path "${resultsPath}"
     }
-    $webClient.DownloadFile("${downloadUrl}", "${resultsPath}\\purple-a11y-desktop-windows.zip")
+    $webClient.DownloadFile("${downloadUrl}", "${resultsPath}\\oobee-desktop-windows.zip")
   } catch {
     Write-Host "Error: Unable to download frontend"
     throw "Unable to download frontend"
@@ -128,7 +129,7 @@ const downloadAndUnzipFrontendWindows = async (tag = undefined) => {
   }
 
   try {
-    Expand-Archive -Path "${resultsPath}\\purple-a11y-desktop-windows.zip" -DestinationPath "${resultsPath}\\purple-a11y-desktop-windows" -Force
+    Expand-Archive -Path "${resultsPath}\\oobee-desktop-windows.zip" -DestinationPath "${resultsPath}\\oobee-desktop-windows" -Force
   } catch {
     Write-Host "Error: Unable to unzip frontend"
     throw "Unable to unzip frontend"
@@ -166,7 +167,7 @@ const downloadAndUnzipFrontendWindows = async (tag = undefined) => {
  */
 const downloadAndUnzipFrontendMac = async (tag = undefined) => {
   const downloadUrl = tag
-    ? `https://github.com/GovTechSG/purple-a11y-desktop/releases/download/${tag}/purple-a11y-desktop-macos.zip`
+    ? `https://github.com/GovTechSG/oobee-desktop/releases/download/${tag}/oobee-desktop-macos.zip`
     : frontendReleaseUrl;
 
   const command = `

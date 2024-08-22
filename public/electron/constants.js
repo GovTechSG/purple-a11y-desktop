@@ -22,8 +22,8 @@ const allReleasesUrl = "https://api.github.com/repos/GovTechSG/purple-a11y/relea
 
 const frontendReleaseUrl =
   os.platform() === "win32"
-    ? "https://github.com/GovTechSG/purple-a11y-desktop/releases/latest/download/purple-a11y-desktop-windows.zip"
-    : "https://github.com/GovTechSG/purple-a11y-desktop/releases/latest/download/purple-a11y-desktop-macos.zip";
+    ? "https://github.com/GovTechSG/oobee-desktop/releases/latest/download/oobee-desktop-windows.zip"
+    : "https://github.com/GovTechSG/oobee-desktop/releases/latest/download/oobee-desktop-macos.zip";
 
 const backendPath = path.join(appPath, "Purple A11y Backend");
 const frontendPath = path.join(appPath, "Purple A11y Frontend");
@@ -55,8 +55,8 @@ const resultsPath =
 
 const installerExePath = path.join(
   resultsPath,
-  "purple-a11y-desktop-windows",
-  "Purple-A11y-setup.exe"
+  "oobee-desktop-windows",
+  "oobee-setup.exe"
 );
 
 const enginePath = path.join(backendPath, "purple-a11y");
