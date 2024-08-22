@@ -47,7 +47,7 @@ jobs:
       - name: Download Purple A11y Backend
         shell: pwsh
         run: |
-          $PHbackendUrl = "https://github.com/GovTechSG/oobee/releases/download/${{ vars.BE_TAG }}/oobee-portable-windows.zip"
+          $PHbackendUrl = "https://github.com/GovTechSG/purple-a11y/releases/download/${{ vars.BE_TAG }}/purple-a11y-portable-windows.zip"
           $BEdestinationPath = "${{github.workspace}}\PHLatest.zip"
           $BEextractPath = "D:\a\Purple A11y Backend"
           Invoke-WebRequest -Uri $PHbackendUrl -OutFile $BEdestinationPath
