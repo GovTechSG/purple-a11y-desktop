@@ -1,23 +1,26 @@
-import Alert from "../../common/components/Alert";
-import Modal from "../../common/components/Modal";
-import arrowRepeat from "../../assets/arrow-repeat-white.svg";
-import boxRightArrow from "../../assets/box-arrow-up-right-purple.svg";
-import labModeOff from "../../assets/lab-icon-off.svg";
-import labModeOn from "../../assets/lab-icon-on.svg";
-import phLogo from "../../assets/oobee-logo.svg";
-import { handleClickLink, versionComparator } from "../../common/constants";
-import { useEffect, useState } from "react";
-import Button from "../../common/components/Button";
+import Alert from '../../common/components/Alert'
+import Modal from '../../common/components/Modal'
+import arrowRepeat from '../../assets/arrow-repeat-white.svg'
+import boxRightArrow from '../../assets/box-arrow-up-right-purple.svg'
+import labModeOff from '../../assets/lab-icon-off.svg'
+import labModeOn from '../../assets/lab-icon-on.svg'
+import phLogo from '../../assets/oobee-logo.svg'
+import { handleClickLink, versionComparator } from '../../common/constants'
+import { useEffect, useState } from 'react'
+import Button from '../../common/components/Button'
 
 const UpdateAlert = ({ latestVer, isPrerelease }) => {
   const handleRestartApp = (e) => {
-    window.services.restartApp();
-  };
+    window.services.restartApp()
+  }
 
   return (
     <Alert alertClassName="alert-primary mb-5 gap-5">
       <div className="flex-grow-1">
-        <h4>Update available ({latestVer} - latest {isPrerelease ? 'pre-release' : 'stable build'})</h4>
+        <h4>
+          Update available ({latestVer} - latest{' '}
+          {isPrerelease ? 'pre-release' : 'stable build'})
+        </h4>
         <p className="mb-0">To update, restart Oobee.</p>
       </div>
       <Button
@@ -30,14 +33,14 @@ const UpdateAlert = ({ latestVer, isPrerelease }) => {
         Restart
       </Button>
     </Alert>
-  );
-};
+  )
+}
 
 const LabModeDescription = ({ isLabMode, setIsLabMode }) => {
   const handleToggleLabMode = (e) => {
-    const checked = e.target.checked;
-    setIsLabMode(checked);
-  };
+    const checked = e.target.checked
+    setIsLabMode(checked)
+  }
 
   return (
     <div className="card">
@@ -71,11 +74,11 @@ const LabModeDescription = ({ isLabMode, setIsLabMode }) => {
         </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const ExternalLink = ({ url, children, linkClass }) => {
-  const finalClass = `link ${linkClass ? linkClass : ""}`;
+  const finalClass = `link ${linkClass ? linkClass : ''}`
   return (
     <a
       role="link"
@@ -86,13 +89,13 @@ const ExternalLink = ({ url, children, linkClass }) => {
       {children}
       <img className="external-link" src={boxRightArrow} alt=""></img>
     </a>
-  );
-};
+  )
+}
 
 const AppDescription = ({ version, versionLabel }) => {
-  const releaseNotesUrl = `https://github.com/GovTechSG/oobee-desktop/releases/tag/${version}`;
-  const a11yWebsiteUrl = "https://go.gov.sg/a11y";
-  const privacyPolicyUrl = "https://www.tech.gov.sg/privacy/";
+  const releaseNotesUrl = `https://github.com/GovTechSG/oobee-desktop/releases/tag/${version}`
+  const a11yWebsiteUrl = 'https://go.gov.sg/a11y'
+  const privacyPolicyUrl = 'https://www.tech.gov.sg/privacy/'
 
   return (
     <div className="mb-5">
@@ -114,8 +117,8 @@ const AppDescription = ({ version, versionLabel }) => {
         <ExternalLink url={privacyPolicyUrl}>Privacy Policy</ExternalLink>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const AboutModal = ({
   showModal,
@@ -125,28 +128,24 @@ const AboutModal = ({
   isLabMode,
   setIsLabMode,
 }) => {
-  const {
-    appVersion,
-    latestVer,
-    latestVerForLab,
-  } = appVersionInfo;
-  const [toUpdateVer, setToUpdateVer] = useState(undefined);
+  const { appVersion, latestVer, latestVerForLab } = appVersionInfo
+  const [toUpdateVer, setToUpdateVer] = useState(undefined)
 
   useEffect(() => {
     if (!latestVer || !latestVerForLab) {
       // if unable to fetch release info, dont show update alert
-      return setToUpdateVer(undefined);
+      return setToUpdateVer(undefined)
     }
 
-    const toCompare = isLabMode ? latestVerForLab : latestVer;
-    const isNeedUpdate = versionComparator(appVersion, toCompare) === -1;
+    const toCompare = isLabMode ? latestVerForLab : latestVer
+    const isNeedUpdate = versionComparator(appVersion, toCompare) === -1
 
     if (isNeedUpdate) {
-      setToUpdateVer(toCompare);
+      setToUpdateVer(toCompare)
     } else {
-      setToUpdateVer(undefined);
+      setToUpdateVer(undefined)
     }
-  }, [isLabMode]);
+  }, [isLabMode])
 
   return (
     <Modal
@@ -156,7 +155,12 @@ const AboutModal = ({
       modalBodyClassName="pt-1"
       modalBody={
         <>
-          {toUpdateVer && <UpdateAlert latestVer={toUpdateVer} isPrerelease={toUpdateVer !== latestVer} />}
+          {toUpdateVer && (
+            <UpdateAlert
+              latestVer={toUpdateVer}
+              isPrerelease={toUpdateVer !== latestVer}
+            />
+          )}
           <AppDescription version={appVersion} versionLabel={appVersionLabel} />
           <LabModeDescription
             isLabMode={isLabMode}
@@ -168,7 +172,7 @@ const AboutModal = ({
       modalTitle="About Oobee"
       setShowModal={setShowModal}
     />
-  );
-};
+  )
+}
 
-export default AboutModal;
+export default AboutModal
