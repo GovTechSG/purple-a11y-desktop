@@ -1,3 +1,22 @@
+/*
+:root {
+  --a11y-purple: #9021a6;
+  --a11y-dark-purple: #642272;
+  --a11y-light-purple: #d055f2;
+  --a11y-black: #26241b;
+
+  --coral-red: #e55c39;
+  --leaf-green: #269956;
+  --sky-blue: #00a3d9;
+  --sunshine-yellow: #ffbf00;
+
+  --brick-red: #a53419;
+  --pine-green: #146635;
+  --ocean-blue: #006b8c;
+  --honey-yellow: #a56600;
+}
+*/
+
 body {
   background-color: #f6f8f9;
 }
