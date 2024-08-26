@@ -397,11 +397,10 @@ a:hover {
 
 .typewriter {
   position: absolute;
-  left: 0;
-  padding-left: 24px;
+  left: 30%;
   padding-bottom: 28px;
   z-index: 2;
-  color: #eb5d5e;
+  color: #e55c39;
   font-family: 'Open Sans';
   font-size: 16px;
   font-weight: 700;
