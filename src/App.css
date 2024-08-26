@@ -198,7 +198,7 @@ a:hover {
     0px 20px 24px -4px rgba(16, 24, 40, 0.1),
     0px 8px 8px -4px rgba(16, 24, 40, 0.04);
   background-color: #f6f8f9;
-  color: #333333;
+  color: #26241b;
 }
 
 .modal-header {
@@ -278,7 +278,7 @@ a:hover {
   flex-direction: column;
   width: 100%;
   margin-bottom: 1rem;
-  color: #333333;
+  color: #26241b;
 }
 
 .user-form-field {
@@ -432,7 +432,7 @@ a {
 
 .scanning-url {
   width: 500px;
-  color: #333333;
+  color: #26241b;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -555,7 +555,7 @@ a {
 }
 
 .custom-tooltip-description {
-  background-color: #333;
+  background-color: #26241b;
   color: #fff;
   padding: 5px;
   border-radius: 4px;
@@ -569,7 +569,7 @@ a {
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 10px solid #333333;
+  border-top: 10px solid #26241b;
   opacity: 95%;
 }
 
@@ -592,7 +592,7 @@ a {
 }
 
 .custom-tooltip-description {
-  background-color: #333;
+  background-color: #26241b;
   color: #fff;
   padding: 5px;
   border-radius: 4px;
@@ -606,7 +606,7 @@ a {
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 10px solid #333333;
+  border-top: 10px solid #26241b;
   opacity: 95%;
 }
 
