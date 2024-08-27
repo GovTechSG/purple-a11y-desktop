@@ -1,4 +1,3 @@
-/*
 :root {
   --a11y-purple: #9021a6;
   --a11y-dark-purple: #642272;
@@ -15,7 +14,6 @@
   --ocean-blue: #006b8c;
   --honey-yellow: #a56600;
 }
-*/
 
 body {
   background-color: #f6f8f9;
@@ -34,7 +32,7 @@ h3 {
 }
 
 .purple-text {
-  color: #785ef0;
+  color: var(--a11y-purple);
 }
 
 .error-text {
@@ -50,7 +48,7 @@ h3 {
   padding: 0.25rem 1rem;
   border: none;
   border-radius: 4px;
-  background-color: #785ef0;
+  background-color: var(--a11y-purple);
   color: white;
   transition: 0.1s background-color;
   display: flex;
@@ -77,10 +75,10 @@ h3 {
 
 .btn-secondary {
   padding: 0.25rem 1rem;
-  border: 1px solid #785ef0;
+  border: 1px solid var(--a11y-purple);
   background-color: #fff;
   border-radius: 4px;
-  color: #785ef0;
+  color: var(--a11y-purple);
   transition:
     0.1s background-color,
     0.1s color;
@@ -145,7 +143,7 @@ select:disabled {
 }
 
 a {
-  color: #785ef0;
+  color: var(--a11y-purple);
 }
 
 a:hover {
@@ -166,7 +164,7 @@ a:hover {
   margin: 0.5rem;
   border-radius: 50%;
   border: 6px solid rgba(120, 94, 240, 0.3);
-  border-top-color: #785ef0;
+  border-top-color: var(--a11y-purple);
   animation: loading-spinner 1.2s linear infinite;
 }
 @keyframes loading-spinner {
@@ -276,7 +274,7 @@ a:hover {
 }
 
 .current {
-  background-color: #785ef0;
+  background-color: var(--a11y-purple);
 }
 
 .hide {
@@ -376,7 +374,7 @@ a:hover {
 }
 
 .choose-dir-button:hover {
-  background-color: #785ef0;
+  background-color: var(--a11y-purple);
   color: white;
 }
 
@@ -442,7 +440,7 @@ a:hover {
 
 a {
   text-decoration: underline;
-  color: #785ef0;
+  color: var(--a11y-purple);
 }
 
 .external-link {
@@ -481,7 +479,7 @@ a {
 }
 
 .scanning-url-title {
-  color: #785ef0;
+  color: var(--a11y-purple);
   margin-bottom: 1em;
 }
 
@@ -523,7 +521,7 @@ a {
 }
 
 .scanning-status-label {
-  color: #785ef0;
+  color: var(--a11y-purple);
   display: inline-block;
   vertical-align: middle;
   padding-left: 0.5em;
@@ -644,13 +642,13 @@ hr {
 }
 
 .form-check-input:checked {
-  background-color: #785ef0;
-  border-color: #785ef0;
+  background-color: var(--a11y-purple);
+  border-color: var(--a11y-purple);
 }
 
 .alert-primary {
   background-color: #f7f6fe;
-  border-color: #785ef0;
+  border-color: var(--a11y-purple);
 }
 
 /* @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Roboto:ital,wght@0,100;1,100&display=swap");
