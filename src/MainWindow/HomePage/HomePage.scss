@@ -9,7 +9,7 @@
   #app-title {
     font-family: 'DM Serif Text';
     margin: 2rem 0 1.5rem 0;
-    color: var(--a11y-black);
+    color: var(--a11y-black-100);
     font-weight: 400;
   }
 
@@ -41,9 +41,9 @@
         height: 45px;
         margin-left: 0;
         border: none;
-        border-right: 1px solid #b5c5ca;
-        border-top: 0.5px solid #b5c5ca;
-        border-bottom: 0.5px solid #b5c5ca;
+        border-right: 1px solid var(--a11y-black-25);
+        border-top: 0.5px solid var(--a11y-black-25);
+        border-bottom: 0.5px solid var(--a11y-black-25);
         border-top-left-radius: 50rem;
         border-bottom-left-radius: 50rem;
         background: none;
@@ -127,7 +127,7 @@
 
   #url-input:focus {
     outline: none !important;
-    border-bottom: 1px solid var(--a11y-purple);
+    border-bottom: 1px solid var(--a11y-purple-100-light);
   }
   #page-limit-toggle-button {
     padding: 0;
@@ -149,11 +149,11 @@
     position: absolute;
     background-color: white;
     padding: 0.5rem;
-    border: 1px solid #b5c5ca;
+    border: 1px solid var(--a11y-black-25);
     border-radius: 0.25rem;
     animation: 0.2s button-fade-in;
     z-index: 10;
-    box-shadow: 0.25rem 0.25rem 0.5rem #b5c5ca;
+    box-shadow: 0.25rem 0.25rem 0.5rem var(--a11y-black-25);
     margin-top: 0.75rem;
     margin-left: 4rem;
   }
@@ -163,7 +163,7 @@
     margin-right: 0.5rem;
     padding-right: 0.5rem;
     text-align: end;
-    border: 1px solid #b5c5ca;
+    border: 1px solid var(--a11y-black-25);
     border-radius: 0.25rem;
   }
 
@@ -185,15 +185,15 @@
   #advanced-options-toggle-button button {
     margin-top: 1rem;
     border: 0;
-    border-bottom: 1px solid var(--a11y-purple);
+    border-bottom: 1px solid var(--a11y-purple-100-light);
     line-height: 1.5rem;
     background-color: transparent;
   }
 
   #advanced-options-menu {
     padding: 1rem 1.5rem;
-    background-color: #f6f8f9;
-    border: 1px solid #b5c5ca;
+    background-color: var(--a11y-black-5);
+    border: 1px solid var(--a11y-black-25);
     border-radius: 0.5rem;
     max-width: 480px;
     position: absolute;
@@ -237,11 +237,11 @@
 
   .advanced-options-toggle {
     appearance: none;
-    background-color: #fff;
+    background-color: var(--true-white);
     background-position: 50%;
     background-repeat: no-repeat;
     background-size: contain;
-    border: 1px solid #b5c5ca;
+    border: 1px solid var(--a11y-black-25);
     height: 1.5rem;
     margin-right: 0.5rem;
     vertical-align: top;
@@ -249,7 +249,7 @@
   }
 
   .advanced-options-toggle:checked {
-    background-color: #785ef0;
+    background-color: var(--a11y-purple-100-light);
   }
 
   .advanced-options-toggle:checked[type='checkbox'] {
@@ -257,7 +257,7 @@
   }
 
   .advanced-options-toggle:checked:disabled {
-    background-color: #b5c5ca;
+    background-color: var(--a11y-black-25);
   }
 
   .advanced-options-toggle:disabled {
@@ -274,7 +274,7 @@
 
   .input-field,
   .select-input {
-    border: 1px solid #b5c5ca;
+    border: 1px solid var(--a11y-black-25);
     border-radius: 0.3rem !important;
     display: block;
     font-size: 1rem;
@@ -289,7 +289,7 @@
   .select-input {
     -moz-padding-start: calc(1rem - 3px);
     appearance: none;
-    background-color: #fff;
+    background-color: var(--true-white);
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");
     background-position: right 0.5rem center;
     background-repeat: no-repeat;
@@ -328,7 +328,7 @@
   }
 
   #about-ph-modal .card {
-    border-color: #b5c5ca;
+    border-color: var(--a11y-black-25);
   }
 
   #about-ph-modal .form-check-input:not(:checked) {
