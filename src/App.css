@@ -2,7 +2,7 @@
   --a11y-purple: #9021a6;
   --a11y-dark-purple: #642272;
   --a11y-light-purple: #d055f2;
-  --a11y-black: #26241b;
+  --a11y-black: #26241b; /* a11y black 100*/
 
   --coral-red: #e55c39;
   --leaf-green: #269956;
@@ -13,10 +13,22 @@
   --pine-green: #146635;
   --ocean-blue: #006b8c;
   --honey-yellow: #a56600;
+
+  /* Neutral Colours */
+  --true-white: #ffffff;
+  --a11y-black-5: #f4f4f4;
+  --a11y-black-15: #dededd;
+  --a11y-black-25: #c9c8c6;
+  --a11y-black-50: #93928d;
+  --a11y-black-80: #525048;
+  --a11y-black-90: #3c3a32;
+
+  /* Fonts */
+  --a11y-regular-paragraph: 'PT Sans';
 }
 
 body {
-  background-color: #f6f8f9;
+  background-color: var(--a11y-black-5);
 }
 
 h3 {
@@ -28,7 +40,7 @@ h3 {
 #root {
   min-height: 100vh;
   width: 100vw;
-  font-family: 'Open Sans', 'Helvetica', sans-serif;
+  font-family: var(--a11y-regular-paragraph);
 }
 
 .purple-text {
@@ -114,6 +126,7 @@ select:disabled {
   background-color: transparent;
   border: none;
   text-decoration: none;
+  padding: 0;
 }
 
 .btn-link:hover {
@@ -997,4 +1010,31 @@ hr {
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
     U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
     U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Oobee fonts */
+@font-face {
+  font-family: 'DM Serif Text';
+  font-feature-settings:
+    'liga' off,
+    'clig' off;
+  src: url('./fonts/DMSerifText-Regular.woff2') format('woff2');
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  line-height: 48px; /* 120% */
+}
+
+@font-face {
+  font-family: 'DM Serif Text';
+  font-feature-settings:
+    'liga' off,
+    'clig' off;
+  src: url('./fonts/DMSerifText-Regular.woff2') format('woff2');
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  line-height: 48px; /* 120% */
 }
