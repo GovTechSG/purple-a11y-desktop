@@ -15,21 +15,21 @@ const UpdateAlert = ({ latestVer, isPrerelease }) => {
   }
 
   return (
-    <Alert alertClassName="alert-primary mb-5 gap-5">
-      <div className="flex-grow-1">
+    <Alert alertClassName='alert-primary mb-5 gap-5'>
+      <div className='flex-grow-1'>
         <h4>
           Update available ({latestVer} - latest{' '}
           {isPrerelease ? 'pre-release' : 'stable build'})
         </h4>
-        <p className="mb-0">To update, restart Oobee.</p>
+        <p className='mb-0'>To update, restart Oobee.</p>
       </div>
       <Button
-        type="btn-primary"
-        className="align-self-center"
+        type='btn-primary'
+        className='align-self-center'
         onClick={handleRestartApp}
-        aria-label="Restart Oobee"
+        aria-label='Restart Oobee'
       >
-        <img src={arrowRepeat} alt="" />
+        <img src={arrowRepeat} alt='' />
         Restart
       </Button>
     </Alert>
@@ -43,30 +43,30 @@ const LabModeDescription = ({ isLabMode, setIsLabMode }) => {
   }
 
   return (
-    <div className="card">
-      <div className="card-body p-3">
-        <div className="d-flex gap-2 align-items-center mb-2">
-          <p id="labmode-label" className="bold-text card-title mb-0 me-2">
+    <div className='card'>
+      <div className='card-body p-3'>
+        <div className='d-flex gap-2 align-items-center mb-2'>
+          <p id='labmode-label' className='bold-text card-title mb-0 me-2'>
             <img
-              className="me-2"
+              className='me-2'
               src={isLabMode ? labModeOn : labModeOff}
-              alt=""
+              alt=''
             />
             Lab mode
           </p>
           {/* custom toggle switch */}
-          <div class="form-switch form-check mb-2">
+          <div class='form-switch form-check mb-2'>
             <input
-              aria-labelledby="labmode-label"
-              id="labmode-toggle"
-              class="form-check-input"
-              type="checkbox"
+              aria-labelledby='labmode-label'
+              id='labmode-toggle'
+              class='form-check-input'
+              type='checkbox'
               onChange={handleToggleLabMode}
               checked={isLabMode}
             />
           </div>
         </div>
-        <p className="card-text">
+        <p className='card-text'>
           Lab mode grants early access to our pre-releases with existing feature
           improvements and experimental features. These features are not ready
           for public use and may <strong>change, break or disappear</strong> at
@@ -81,13 +81,13 @@ const ExternalLink = ({ url, children, linkClass }) => {
   const finalClass = `link ${linkClass ? linkClass : ''}`
   return (
     <a
-      role="link"
+      role='link'
       className={finalClass}
-      href="#"
+      href='#'
       onClick={(e) => handleClickLink(e, url)}
     >
       {children}
-      <img className="external-link" src={boxRightArrow} alt=""></img>
+      <img className='external-link' src={boxRightArrow} alt=''></img>
     </a>
   )
 }
@@ -98,21 +98,21 @@ const AppDescription = ({ version, versionLabel }) => {
   const privacyPolicyUrl = 'https://www.tech.gov.sg/privacy/'
 
   return (
-    <div className="mb-5">
-      <div className="d-flex gap-3">
-        <img src={phLogo} alt="Oobee logo" />
+    <div className='mb-5'>
+      <div className='d-flex gap-3'>
+        <img src={phLogo} alt='Oobee logo' />
         <div>
-          <p className="m-0 bold-text">Oobee</p>
-          <p className="m-0 d-inline-block me-3">
+          <p className='m-0 bold-text'>Oobee</p>
+          <p className='m-0 d-inline-block me-3'>
             Version {version} {versionLabel && `(${versionLabel})`}
           </p>
           <ExternalLink url={releaseNotesUrl}>See release notes</ExternalLink>
         </div>
       </div>
-      <p className="mt-3 mb-2">
+      <p className='mt-3 mb-2'>
         Built by GovTech Accessibility Enabling (A11y) Team.
       </p>
-      <div className="d-flex gap-3">
+      <div className='d-flex gap-3'>
         <ExternalLink url={a11yWebsiteUrl}>A11Y Website</ExternalLink>
         <ExternalLink url={privacyPolicyUrl}>Privacy Policy</ExternalLink>
       </div>
@@ -149,10 +149,10 @@ const AboutModal = ({
 
   return (
     <Modal
-      id="about-ph-modal"
+      id='about-ph-modal'
       showModal={showModal}
       showHeader={true}
-      modalBodyClassName="pt-1"
+      modalBodyClassName='pt-1'
       modalBody={
         <>
           {toUpdateVer && (
@@ -168,8 +168,8 @@ const AboutModal = ({
           />
         </>
       }
-      modalSizeClass="modal-lg modal-dialog-centered"
-      modalTitle="About Oobee"
+      modalSizeClass='modal-lg modal-dialog-centered'
+      modalTitle='About Oobee'
       setShowModal={setShowModal}
     />
   )
