@@ -2,6 +2,7 @@ import LoadingSpinner from '../common/components/LoadingSpinner'
 import Button from '../common/components/Button'
 import { useEffect, useState } from 'react'
 import './LaunchWindow.scss'
+import newUpdateImg from '../../src/assets/box-seam.svg'
 
 const Prompt = ({
   header,
@@ -13,6 +14,13 @@ const Prompt = ({
 }) => {
   return (
     <div id='launch-window'>
+      {header === 'New update available' ? (
+        <div className='my-5'>
+          <img src={newUpdateImg} alt='new update icon' />
+        </div>
+      ) : (
+        <div></div>
+      )}
       <div>
         <h1>{header}</h1>
         <p>{desc}</p>
