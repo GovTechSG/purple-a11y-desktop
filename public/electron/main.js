@@ -26,8 +26,8 @@ let mainWindow
 
 function createLaunchWindow() {
   launchWindow = new BrowserWindow({
-    width: 400,
-    height: 300,
+    width: 430,
+    height: 400,
     frame: false,
     webPreferences: {
       preload: constants.preloadPath,
