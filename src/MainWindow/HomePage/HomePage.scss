@@ -6,14 +6,11 @@
   align-items: center;
   justify-content: center;
 
-  #a11y-logo {
-    margin-top: 1.5rem;
-  }
-
   #app-title {
-    font-family: 'Viga', 'Helvetica', sans-serif;
-    margin: 3rem 0 1.5rem 0;
-    color: #785ef0;
+    font-family: 'DM Serif Text';
+    margin: 2rem 0 1.5rem 0;
+    color: var(--a11y-black);
+    font-weight: 400;
   }
 
   #home-page-main {
@@ -31,7 +28,7 @@
     .toggle-url-file-tooltip-container {
       margin-left: -2px;
       position: relative;
-      background-color: #f6f8f9;
+      background-color: var(--a11y-black-5);
       border-top-left-radius: 50rem;
       border-bottom-left-radius: 50rem;
 
@@ -104,9 +101,9 @@
 
   #url-bar {
     margin-top: 3rem;
-    border: 1px solid #b5c5ca;
+    border: 1px solid var(--a11y-black-25);
     border-radius: 50rem;
-    background-color: white;
+    background-color: var(--true-white);
     height: 46px;
     width: 600px;
     max-width: 600px;
@@ -130,7 +127,7 @@
 
   #url-input:focus {
     outline: none !important;
-    border-bottom: 1px solid #785ef0;
+    border-bottom: 1px solid var(--a11y-purple);
   }
   #page-limit-toggle-button {
     padding: 0;
@@ -188,7 +185,7 @@
   #advanced-options-toggle-button button {
     margin-top: 1rem;
     border: 0;
-    border-bottom: 1px solid #785ef0;
+    border-bottom: 1px solid var(--a11y-purple);
     line-height: 1.5rem;
     background-color: transparent;
   }
@@ -301,7 +298,7 @@
   }
 
   #edit-user-details {
-    background-color: #e7ecee;
+    background-color: var(--a11y-black-15);
     border: none;
     padding: 0.5rem 1rem 0.5rem 1rem;
   }
@@ -327,6 +324,7 @@
 
   #footer-text {
     font-size: 0.875rem;
+    font-family: 'Lato'; /* TODO: Check with design team */
   }
 
   #about-ph-modal .card {
