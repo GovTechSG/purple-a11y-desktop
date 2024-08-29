@@ -281,9 +281,7 @@
     font-weight: 400;
     line-height: 2;
     padding: 0.25rem 0.5rem;
-    transition:
-      border-color 0.15s ease-in-out,
-      box-shadow 0.15s ease-in-out;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
 
   .select-input {
@@ -332,8 +330,8 @@
   }
 
   #about-ph-modal .form-check-input:not(:checked) {
-    border-color: #d1dbde;
-    background-color: #e7ecee;
+    border-color: var(--a11y-black-25);
+    background-color: var(--a11y-black-15);
   }
 
   #about-ph-modal .form-switch .form-check-input {
@@ -347,7 +345,7 @@
     align-items: center;
   }
   #about-ph-modal .form-switch .form-check-input:not(:checked)::after {
-    color: #000;
+    color: var(--a11y-black-100);
     margin-left: 1rem;
     content: 'OFF';
   }
