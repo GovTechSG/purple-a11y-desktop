@@ -4,7 +4,7 @@ import arrowRepeat from '../../assets/arrow-repeat-white.svg'
 import boxRightArrow from '../../assets/box-arrow-up-right-purple.svg'
 import labModeOff from '../../assets/lab-icon-off.svg'
 import labModeOn from '../../assets/lab-icon-on.svg'
-import phLogo from '../../assets/logo-oobee-full-colour-inverse.svg'
+import phLogo from '../../assets/logo-oobee-emblem-full-colour.svg'
 import { handleClickLink, versionComparator } from '../../common/constants'
 import { useEffect, useState } from 'react'
 import Button from '../../common/components/Button'
@@ -102,7 +102,7 @@ const AppDescription = ({ version, versionLabel }) => {
       <div className='d-flex gap-3'>
         <img src={phLogo} alt='Oobee logo' />
         <div>
-          <p className='m-0 bold-text'>Oobee</p>
+          <p className='m-0 bold-text'>Oobee Desktop</p>
           <p className='m-0 d-inline-block me-3'>
             Version {version} {versionLabel && `(${versionLabel})`}
           </p>
@@ -169,7 +169,7 @@ const AboutModal = ({
         </>
       }
       modalSizeClass='modal-lg modal-dialog-centered'
-      modalTitle='About Oobee'
+      modalTitle='About Oobee Desktop'
       setShowModal={setShowModal}
     />
   )
