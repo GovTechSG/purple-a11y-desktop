@@ -76,7 +76,7 @@ const hashPrepackage = async (prepackagePath) => {
 const unzipBackendAndCleanUp = async (zipPath) => {
   let unzipCommand = `mkdir -p '${backendPath}' && tar -xf '${zipPath}' -C '${backendPath}' &&
     cd '${backendPath}' &&
-    './a11y_shell.sh' echo "Initialise"
+    './oobee_shell.sh' echo "Initialise"
     `
 
   return execCommand(unzipCommand)

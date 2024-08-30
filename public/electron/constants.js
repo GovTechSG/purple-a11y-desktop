@@ -45,7 +45,6 @@ const getMacOSExecutablePath = () => {
 };
 const macOSExecutablePath = getMacOSExecutablePath();
 
-// const macOSPrepackageBackend = path.join(macOSExecutablePath, "Contents", "Resources", "oobee-portable-mac.zip");
 const macOSPrepackageBackend = path.join(process.resourcesPath, "oobee-portable-mac.zip");
 
 const resultsPath =
@@ -133,8 +132,6 @@ const userDataFilePath =
   os.platform() === "win32"
     ? path.join(resultsPath, "userData.txt")
     : path.join(appPath, "userData.txt");
-
-const phZipPath = path.join(appPath, "PHLatest.zip");
 
 const artifactInstallerPath = path.join(appPath, "Oobee-setup.exe");
 
@@ -643,7 +640,6 @@ module.exports = {
   getPathVariable,
   scanResultsPath,
   updateBackupsFolder,
-  phZipPath,
   resultsPath,
   userDataFilePath,
   browserTypes,
