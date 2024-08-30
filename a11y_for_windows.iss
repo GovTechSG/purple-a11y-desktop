@@ -29,21 +29,21 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "Oobee-win32-x64\*"; DestDir: "\\?\{app}\Oobee Frontend"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\a\Oobee Backend\*"; DestDir: "\\?\{app}\Oobee Backend"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "Oobee-win32-x64\*"; DestDir: "\\?\C:\Program Files\Oobee\Oobee Frontend"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\a\Oobee Backend\*"; DestDir: "\\?C:\Program Files\Oobee\Oobee Backend"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{autoprograms}\Oobee Desktop"; Filename: "{app}\Oobee Frontend\Oobee.exe"
-Name: "{autodesktop}\Oobee Desktop"; Filename: "{app}\Oobee Frontend\Oobee.exe"; Tasks: desktopicon
+Name: "{autoprograms}\Oobee Desktop"; Filename: "C:\Program Files\Oobee\Oobee Frontend\Oobee.exe"
+Name: "{autodesktop}\Oobee Desktop"; Filename: "C:\Program Files\Oobee\Oobee Frontend\Oobee.exe"; Tasks: desktopicon
 
 ; [Run]
-; Filename: "{app}\Oobee Frontend\Oobee.exe"; Description: "{cm:LaunchProgram,Oobee Desktop}"; Flags: nowait postinstall skipifsilent
+; Filename: "C:\Program Files\Oobee\Oobee Frontend\Oobee.exe"; Description: "{cm:LaunchProgram,Oobee Desktop}"; Flags: nowait postinstall skipifsilent
 
 [UninstallDelete]
-Type: filesandordirs; Name: "{app}\Oobee Frontend"
-Type: filesandordirs; Name: "{app}\Oobee Backend"
+Type: filesandordirs; Name: "C:\Program Files\Oobee\Oobee Frontend"
+Type: filesandordirs; Name: "C:\Program Files\Oobee\Oobee Backend"
 
 [InstallDelete]
-Type: filesandordirs; Name: "{app}\Oobee Frontend"
-Type: filesandordirs; Name: "{app}\Oobee Backend"
+Type: filesandordirs; Name: "C:\Program Files\Oobee\Oobee Frontend"
+Type: filesandordirs; Name: "C:\Program Files\Oobee\Oobee Backend"
