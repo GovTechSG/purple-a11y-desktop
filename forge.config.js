@@ -31,7 +31,7 @@ module.exports = {
       'a11y_for_windows.iss',
       '.github'
     ],
-    ...(os.platform() === 'darwin' && { extraResource: ["/tmp/oobee-portable-mac.zip"]})
+    ...(os.platform() === 'darwin' && { extraResource: ["/tmp/purple-a11y-portable-mac.zip"]})
   },
   rebuildConfig: {},
   makers: [
