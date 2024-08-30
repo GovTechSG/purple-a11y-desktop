@@ -189,6 +189,7 @@ const downloadAndUnzipFrontendMac = async (tag = undefined) => {
   )}/Oobee.app' `;
 
   await execCommand(command);
+
 };
 
 /**
@@ -390,6 +391,14 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
       }
     }
 
+    if (restartRequired) {
+      consoleLogger.info("restarting app...");
+      updaterEventEmitter.emit("restartA11yToOobee");
+      setTimeout(() => {
+        // Wait for restart to be triggered
+      }, 10000);
+    }
+
     const isPrepackageValid = await validateZipFile(macOSPrepackageBackend);
     const isDev = process.env.NODE_ENV === "dev";
     if (isDev) {
@@ -428,10 +437,6 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
       await hashAndSaveZip(macOSPrepackageBackend);
     }
 
-    if (restartRequired) {
-      consoleLogger.info("restarting app...");
-      updaterEventEmitter.emit("restartTriggered");
-    }
   }
 };
 
