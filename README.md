@@ -38,7 +38,7 @@ npm run make-win
 ```
 
 This will create a folder in your repository in the *out* folder.
-Enter and run the Purple Ally.app in the newly created folder in ../out.
+Enter and run the Oobee.app in the newly created folder in ../out.
 
 #### Run and Debug
 Enter the code below to build Oobee Desktop.
