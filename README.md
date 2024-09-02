@@ -53,7 +53,7 @@ Finally to start Oobee Desktop enter the code below.
 npm run start
 ```
 
-An application window should be open with the inserted version. You mahy debug the app through Terminal / PowerShell window.
+An application window should be open with the inserted version. You may debug the app through Terminal / PowerShell window.
 
 #### Facing issues?
 
