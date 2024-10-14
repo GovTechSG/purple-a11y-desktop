@@ -413,7 +413,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
                   {getVersionLabel(appVersionInfo.appVersion) &&
                     `(${getVersionLabel(appVersionInfo.appVersion)})`}
                 </Button>{' '}
-                | Built by GovTech Accessibility Enabling Team
+                | Powered by GovTech's A11y
               </>
             }
           </span>
