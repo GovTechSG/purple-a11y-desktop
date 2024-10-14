@@ -55,9 +55,9 @@
       }
 
       .custom-tooltip-description {
-        background-color: #333;
+        background-color: var(--a11y-black-100);
         border-radius: 4px;
-        color: #fff;
+        color: var(--true-white);
         font-size: 14px;
         opacity: 95%;
         padding: 5px;
@@ -115,7 +115,7 @@
 
   #url-input {
     border: none;
-    color: #333333;
+    color: var(--a11y-black-100);
     flex-grow: 1;
     margin-right: 0.5rem;
   }
@@ -136,7 +136,7 @@
     background-color: transparent;
     font-size: 0.875rem;
     white-space: nowrap;
-    color: #333 !important;
+    color: var(--a11y-black-100) !important;
   }
 
   #page-limit-toggle-button:disabled span {
@@ -237,7 +237,7 @@
 
   .advanced-options-toggle {
     appearance: none;
-    background-color: #fff;
+    background-color: var(--true-white);
     background-position: 50%;
     background-repeat: no-repeat;
     background-size: contain;
@@ -287,7 +287,7 @@
   .select-input {
     -moz-padding-start: calc(1rem - 3px);
     appearance: none;
-    background-color: #fff;
+    background-color: var(--true-white);
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");
     background-position: right 0.5rem center;
     background-repeat: no-repeat;
@@ -349,7 +349,7 @@
     content: 'OFF';
   }
   #about-ph-modal .form-switch .form-check-input:checked::before {
-    color: #fff;
+    color: var(--true-white);
     content: 'ON';
     padding-left: 2px;
   }
