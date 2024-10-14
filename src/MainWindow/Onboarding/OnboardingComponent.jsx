@@ -93,10 +93,10 @@ const OnboardingComponent = ({ setDataExistStatus }) => {
                 alt='person saying hello'
               ></img>
             </div>
-            <h3 className='modal-title fade-in-left'>Hi There!</h3>
+            <h3 className='modal-title fade-in-left'>Hi there!</h3>
             <p className='modal-desc fade-in-left'>
               Making your website accessible is within reach. Let’s get started
-              by taking a quick look at how Purple A11y works.
+              by taking a quick look at how Oobee Desktop works.
             </p>
             <PageIndicator page={1}></PageIndicator>
           </>
