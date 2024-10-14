@@ -1,3 +1,44 @@
+:root {
+  /* Oobee Brand Colours and Fonts */
+  --a11y-purple-50: #f8d6ff;
+  --a11y-purple-70: #e5a6f2;
+  --a11y-purple-100-light: #9021a6; /* Primary Purple Light Mode */
+  --a11y-purple-100-dark: #d54dff; /* Primary Purple Dark Mode */
+  --a11y-purple-150: #642272;
+  --a11y-purple-highlight: #c000e5;
+
+  /* Accents - RGBY */
+  --coral-red-50: #ffb7a6;
+  --coral-red-70: #f27961;
+  --coral-red-100: #f26949;
+  --coral-red-150: #a53419;
+  --leaf-green-50: #ace5c3;
+  --leaf-green-70: #5cc487;
+  --leaf-green-100: #3aa566;
+  --leaf-green-150: #146635;
+  --sky-blue-50: #9ee0f2;
+  --sky-blue-70: #73d5e5;
+  --sky-blue-100: #2bafd8;
+  --sky-blue-150: #006b8c;
+  --sunshine-yellow-50: #ffdfa6;
+  --sunshine-yellow-70: #ffd066;
+  --sunshine-yellow-100: #ffb200;
+  --sunshine-yellow-150: #a56600;
+
+  /* Neutral Colours */
+  --true-white: #ffffff;
+  --a11y-black-5: #f4f4f4;
+  --a11y-black-15: #dededd;
+  --a11y-black-25: #c9c8c6;
+  --a11y-black-50: #93928d;
+  --a11y-black-80: #525048;
+  --a11y-black-90: #3c3a32;
+  --a11y-black-100: #26241b;
+
+  /* Fonts */
+  --a11y-regular-paragraph: 'PT Sans';
+}
+
 body {
   background-color: #f6f8f9;
 }
