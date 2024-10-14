@@ -100,7 +100,7 @@ h3 {
 .btn-secondary {
   padding: 0.25rem 1rem;
   border: 1px solid var(--a11y-purple-100-light);
-  background-color: var(--true-white);
+  background-color: transparent !important;
   border-radius: 4px;
   color: var(--a11y-purple-100-light);
   transition: 0.1s background-color, 0.1s color;
@@ -111,14 +111,15 @@ h3 {
 }
 
 .btn-secondary:hover {
-  background-color: #ebe8fd;
-  color: var(--a11y-purple-highlight);
+  background-color: var(--a11y-purple-50) !important;
+  color: var(--a11y-purple-100-light) !important;
+  border: 1px solid var(--a11y-purple-100-light) !important;
 }
 
 .btn-secondary:active,
 .btn-secondary:focus {
-  background-color: #c0b4f8;
-  color: var(--a11y-purple-150);
+  background-color: var(--a11y-purple-70) !important;
+  color: var(--a11y-purple-150) !important;
 }
 
 .download-dropdown-btn:disabled {
@@ -170,7 +171,7 @@ a {
 }
 
 a:hover {
-  color: #604bbf;
+  color: var(--a11y-purple-highlight);
 }
 
 .loading-spinner {
@@ -204,7 +205,8 @@ a:hover {
   min-height: 600px;
 }
 
-.onboarding-modal .modal-title {
+.onboarding-modal .modal-title,
+.onboarding-modal .download-dropdown {
   margin-bottom: 1rem;
 }
 
@@ -223,8 +225,9 @@ a:hover {
 
 .onboarding-modal .modal-img-container {
   height: 160px;
-  display: block;
-  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .modal {
@@ -261,7 +264,7 @@ a:hover {
 
 .modal-full-button {
   width: 100%;
-  border: 1px solid #785efd !important;
+  border: 1px solid var(--a11y-purple-100-light) !important;
   margin: 0;
 }
 
