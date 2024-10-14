@@ -187,7 +187,7 @@ a:hover {
   height: 4rem;
   margin: 0.5rem;
   border-radius: 50%;
-  border: 6px solid rgba(120, 94, 240, 0.3);
+  border: 6px solid rgba(144, 33, 166, 0.5);
   border-top-color: var(--a11y-purple-100-light);
   animation: loading-spinner 1.2s linear infinite;
 }
