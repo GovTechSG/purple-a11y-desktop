@@ -117,6 +117,8 @@ const AdvancedScanOptions = ({
   return (
     <div>
       <div id='advanced-options-toggle-button'>
+        {/* TODO: Fix toggle bold text for Advanced scan options
+        Add toggle close when clicking outside modal*/}
         <Button
           type='btn-link'
           className={'purple-text' + (advancedOptionsDirty ? ' bold-text' : '')}
