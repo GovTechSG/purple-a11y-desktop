@@ -329,7 +329,7 @@
   }
 
   #about-ph-modal .form-check-input:not(:checked) {
-    border-color: #d1dbde;
+    border-color: var(--a11y-black-15);
     background-color: var(--a11y-black-15);
   }
 
