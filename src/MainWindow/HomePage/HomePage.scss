@@ -1,5 +1,7 @@
 #home-page {
   padding: 1.5rem;
+  align-items: center;
+  justify-content: center;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -10,13 +12,14 @@
 
   #app-title {
     font-family: 'Viga', 'Helvetica', sans-serif;
-    margin-top: 2rem;
+    margin: 3rem 0 1.5rem 0;
     color: #785ef0;
   }
 
   #home-page-main {
     flex-grow: 1;
     text-align: center;
+    margin: 5rem 0 3rem 0rem;
   }
 
   #init-scan-form {

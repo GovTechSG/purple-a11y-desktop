@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
-import a11yLogo from '../../assets/logo-oobee-full-colour-PBGT.svg'
+import a11yLogo from '../../assets/logo-oobee-full-colour-FPA-110x40.svg'
 import appIllustration from '../../assets/app-illustration.svg'
 import editIcon from '../../assets/edit-pencil-purple.svg'
 import labModeOff from '../../assets/lab-icon-off.svg'
@@ -303,8 +303,8 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
   }
 
   return (
-    <div id='home-page'>
-      <div id='home-page-main'>
+    <>
+      <div id='home-page'>
         <div>
           <button
             id='edit-user-details'
@@ -314,110 +314,112 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
             <img src={editIcon} aria-label='Edit profile'></img>
           </button>
         </div>
-        <img
-          id='a11y-logo'
-          src={a11yLogo}
-          alt='Logo of the GovTech Accessibility Enabling Team'
-        />
-        <h1 id='app-title'>Accessibility Site Scanner</h1>
-        <InitScanForm
-          isProxy={isProxy}
-          startScan={startScan}
-          prevUrlErrorMessage={prevUrlErrorMessage}
-          scanButtonIsClicked={scanButtonIsClicked}
-          setScanButtonIsClicked={setScanButtonIsClicked}
-          isAbortingScan={isAbortingScan}
-        />
-      </div>
-      {showBasicAuthModal && (
-        <Modal
-          id='basic-auth-modal'
-          showHeader={true}
-          showModal={showBasicAuthModal}
-          setShowModal={setShowBasicAuthModal}
-          modalTitle={'Your website requires basic authentication'}
-          modalBody={
-            <>
-              <BasicAuthForm handleBasicAuthSubmit={handleBasicAuthSubmit} />
-              <p className='mb-0'>
-                Purple A11y will solely capture your credentials for this scan
-                and promptly remove them thereafter.
-              </p>
-            </>
-          }
-          modalFooter={
-            <BasicAuthFormFooter
-              setShowBasicAuthModal={setShowBasicAuthModal}
-            />
-          }
-        />
-      )}
-      {areUserDetailsSet && (
-        <>
-          <EditUserDetailsModal
-            id={'edit-details-modal'}
-            formID={'edit-details-form'}
-            showModal={showEditDataModal}
-            setShowEditDataModal={setShowEditDataModal}
-            initialName={name}
-            initialEmail={email}
-            setUserData={setUserData}
+        <div id='home-page-main'>
+          <img
+            id='a11y-logo'
+            src={a11yLogo}
+            alt='Logo of the GovTech Accessibility Enabling Team'
           />
-        </>
-      )}
-      {showNoChromeErrorModal && (
-        <NoChromeErrorModal
-          showModal={showNoChromeErrorModal}
-          setShowModal={setShowNoChromeErrorModal}
-        />
-      )}
-      {showWhatsNewModal && getReleaseNotesOnUpdate(appVersionInfo) && (
-        <WhatsNewModal
-          showModal={showWhatsNewModal}
-          setShowModal={setShowWhatsNewModal}
-          version={appVersionInfo.appVersion}
-          releaseNotes={getReleaseNotesOnUpdate(appVersionInfo)}
-        />
-      )}
-      {showAboutPhModal && (
-        <AboutModal
-          showModal={showAboutPhModal}
-          setShowModal={setShowAboutPhModal}
-          appVersionInfo={appVersionInfo}
-          appVersionLabel={getVersionLabel(appVersionInfo.appVersion)}
-          isLabMode={isLabMode}
-          setIsLabMode={(bool) => editUserData({ isLabMode: bool })}
-        />
-      )}
-      <div id='home-page-footer'>
-        <img
-          id='app-illustration'
-          src={appIllustration}
-          alt='Illustration showing people with sight, hearing, motor and cognitive disabilities'
-        />
-        <span id='footer-text'>
-          {
-            <>
-              <Button
-                type='btn-link'
-                className='purple-text'
-                onClick={() => setShowAboutPhModal(true)}
-              >
-                <img
-                  className='me-2'
-                  src={isLabMode ? labModeOn : labModeOff}
-                  alt=''
-                />
-                Version {appVersionInfo.appVersion}{' '}
-                {getVersionLabel(appVersionInfo.appVersion) &&
-                  `(${getVersionLabel(appVersionInfo.appVersion)})`}
-              </Button>{' '}
-              | Built by GovTech Accessibility Enabling Team
-            </>
-          }
-        </span>
+          <h1 id='app-title'>Accessibility Site Scanner</h1>
+          <InitScanForm
+            isProxy={isProxy}
+            startScan={startScan}
+            prevUrlErrorMessage={prevUrlErrorMessage}
+            scanButtonIsClicked={scanButtonIsClicked}
+            setScanButtonIsClicked={setScanButtonIsClicked}
+            isAbortingScan={isAbortingScan}
+          />
+        </div>
+        {showBasicAuthModal && (
+          <Modal
+            id='basic-auth-modal'
+            showHeader={true}
+            showModal={showBasicAuthModal}
+            setShowModal={setShowBasicAuthModal}
+            modalTitle={'Your website requires basic authentication'}
+            modalBody={
+              <>
+                <BasicAuthForm handleBasicAuthSubmit={handleBasicAuthSubmit} />
+                <p className='mb-0'>
+                  Oobee will solely capture your credentials for this scan and
+                  promptly remove them thereafter.
+                </p>
+              </>
+            }
+            modalFooter={
+              <BasicAuthFormFooter
+                setShowBasicAuthModal={setShowBasicAuthModal}
+              />
+            }
+          />
+        )}
+        {areUserDetailsSet && (
+          <>
+            <EditUserDetailsModal
+              id={'edit-details-modal'}
+              formID={'edit-details-form'}
+              showModal={showEditDataModal}
+              setShowEditDataModal={setShowEditDataModal}
+              initialName={name}
+              initialEmail={email}
+              setUserData={setUserData}
+            />
+          </>
+        )}
+        {showNoChromeErrorModal && (
+          <NoChromeErrorModal
+            showModal={showNoChromeErrorModal}
+            setShowModal={setShowNoChromeErrorModal}
+          />
+        )}
+        {showWhatsNewModal && getReleaseNotesOnUpdate(appVersionInfo) && (
+          <WhatsNewModal
+            showModal={showWhatsNewModal}
+            setShowModal={setShowWhatsNewModal}
+            version={appVersionInfo.appVersion}
+            releaseNotes={getReleaseNotesOnUpdate(appVersionInfo)}
+          />
+        )}
+        {showAboutPhModal && (
+          <AboutModal
+            showModal={showAboutPhModal}
+            setShowModal={setShowAboutPhModal}
+            appVersionInfo={appVersionInfo}
+            appVersionLabel={getVersionLabel(appVersionInfo.appVersion)}
+            isLabMode={isLabMode}
+            setIsLabMode={(bool) => editUserData({ isLabMode: bool })}
+          />
+        )}
+        <div id='home-page-footer'>
+          <img
+            id='app-illustration'
+            src={appIllustration}
+            alt='Illustration showing people with sight, hearing, motor and cognitive disabilities'
+          />
+          <span id='footer-text'>
+            {
+              <>
+                <Button
+                  type='btn-link'
+                  className='purple-text'
+                  onClick={() => setShowAboutPhModal(true)}
+                >
+                  <img
+                    className='me-2'
+                    src={isLabMode ? labModeOn : labModeOff}
+                    alt=''
+                  />
+                  Version {appVersionInfo.appVersion}{' '}
+                  {getVersionLabel(appVersionInfo.appVersion) &&
+                    `(${getVersionLabel(appVersionInfo.appVersion)})`}
+                </Button>{' '}
+                | Built by GovTech Accessibility Enabling Team
+              </>
+            }
+          </span>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
