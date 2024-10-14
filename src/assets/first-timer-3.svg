@@ -7,62 +7,62 @@
 
         @keyframes hideshowcard1 {
             0% { stroke: #D1DBDE; }
-            9% { stroke: #EB5D5E; }
-            18% { stroke: #EB5D5E; }
+            9% { stroke: #E55C39; }
+            18% { stroke: #E55C39; }
             27% { stroke: #D1DBDE; }
         } 
 
         @keyframes hideshowcard2 {
             0% { stroke: #D1DBDE; }
             27% { stroke: #D1DBDE; }
-            36% { stroke: #EB5D5E; }
-            45% { stroke: #EB5D5E; }
+            36% { stroke: #E55C39; }
+            45% { stroke: #E55C39; }
             54% { stroke: #D1DBDE; }
         } 
 
         @keyframes hideshowcard3 {
             0% { stroke: #D1DBDE; }
             54% { stroke: #D1DBDE; }
-            63% { stroke: #EB5D5E; }
-            72% { stroke: #EB5D5E; }
+            63% { stroke: #E55C39; }
+            72% { stroke: #E55C39; }
             81% { stroke: #D1DBDE; }
         } 
 
         @keyframes hideshowcard4 {
             0% { stroke: #D1DBDE; }
             81% { stroke: #D1DBDE; }
-            90% { stroke: #EB5D5E; }
-            95% { stroke: #EB5D5E; }
+            90% { stroke: #E55C39; }
+            95% { stroke: #E55C39; }
         } 
 
         @keyframes hideshowcircle1 {
             0% { fill: #FFFFFF; }
-            9% { fill: #EB5D5E; }
-            18% { fill: #EB5D5E; }
+            9% { fill: #E55C39; }
+            18% { fill: #E55C39; }
             27% { fill: #FFFFFF; }
         } 
 
         @keyframes hideshowcircle2 {
             0% { fill: #FFFFFF; }
             27% { fill: #FFFFFF; }
-            36% { fill: #EB5D5E; }
-            45% { fill: #EB5D5E; }
+            36% { fill: #E55C39; }
+            45% { fill: #E55C39; }
             54% { fill: #FFFFFF; }        
         } 
 
         @keyframes hideshowcircle3 {
             0% { fill: #FFFFFF; }
             54% { fill: #FFFFFF; }
-            63% { fill: #EB5D5E; }
-            72% { fill: #EB5D5E; }
+            63% { fill: #E55C39; }
+            72% { fill: #E55C39; }
             81% { fill: #FFFFFF; }
         } 
 
         @keyframes hideshowcircle4 {
             0% { fill: #FFFFFF; }
             81% { fill: #FFFFFF; }
-            90% { fill: #EB5D5E; }
-            95% { fill: #EB5D5E; }
+            90% { fill: #E55C39; }
+            95% { fill: #E55C39; }
         } 
 
         .card1 {
@@ -125,7 +125,7 @@
     <rect x="230" y="86" width="15" height="4" rx="2" fill="#D1DBDE"></rect>
     <rect x="252" y="94" width="15" height="4" rx="2" fill="#D1DBDE"></rect>
     <rect x="224" y="86" width="4" height="4" rx="2" fill="#D1DBDE"></rect>
-    <circle cx="30" cy="12" r="7" fill="#EB5D5E"></circle>
+    <circle cx="30" cy="12" r="7" fill="#E55C39"></circle>
     <mask id="path-29-inside-1_2077_12203" fill="white">
     <path fill-rule="evenodd" clip-rule="evenodd" d="M41.8341 14C40.8819 19.6754 35.946 24 30 24C23.3726 24 18 18.6274 18 12C18 5.37258 23.3726 0 30 0C35.946 0 40.8819 4.32457 41.8341 10H90.1659C91.1181 4.32457 96.054 0 102 0C107.946 0 112.882 4.32457 113.834 10H162.166C163.118 4.32457 168.054 0 174 0C179.946 0 184.882 4.32457 185.834 10H234.166C235.118 4.32457 240.054 0 246 0C252.627 0 258 5.37258 258 12C258 18.6274 252.627 24 246 24C240.054 24 235.118 19.6754 234.166 14H185.834C184.882 19.6754 179.946 24 174 24C168.054 24 163.118 19.6754 162.166 14H113.834C112.882 19.6754 107.946 24 102 24C96.054 24 91.1181 19.6754 90.1659 14H41.8341Z"></path>
     </mask>
