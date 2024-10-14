@@ -394,8 +394,7 @@ a:hover {
 
 .typewriter {
   position: absolute;
-  left: 0;
-  padding-left: 24px;
+  left: 30%;
   padding-bottom: 28px;
   z-index: 2;
   color: #eb5d5e;
