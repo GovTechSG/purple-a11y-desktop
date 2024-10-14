@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import a11yLogo from '../../assets/logo-oobee-full-colour-FPA-110x40.svg'
-import appIllustration from '../../assets/app-illustration.svg'
+import appIllustration from '../../assets/home-page-illustration.svg'
 import editIcon from '../../assets/edit-pencil-purple.svg'
 import labModeOff from '../../assets/lab-icon-off.svg'
 import labModeOn from '../../assets/lab-icon-on.svg'
@@ -392,7 +392,7 @@ const HomePage = ({ isProxy, appVersionInfo, setCompletedScanId }) => {
         )}
         <div id='home-page-footer'>
           <img
-            id='app-illustration'
+            id='home-page-illustration'
             src={appIllustration}
             alt='Illustration showing people with sight, hearing, motor and cognitive disabilities'
           />
