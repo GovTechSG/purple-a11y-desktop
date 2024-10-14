@@ -315,6 +315,11 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
     latestPreRelease
   )
 
+  // TODO: Remove when raising PR
+  // const toUpdateFrontendVer = setTimeout(() => {
+  //   getLatestFrontendVersion(latestRelease, latestPreRelease)
+  // }, 60000)
+
   let proceedUpdate = false
 
   if (toUpdateFrontendVer) {
