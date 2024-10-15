@@ -1,4 +1,4 @@
-# Purple A11y Desktop
+# Oobee Desktop (formerly known as Purple A11y Desktop)
 
 Purple A11y Desktop is a desktop frontend for [Purple A11y](https://github.com/GovTechSG/purple-a11y) an accessibility site scanner - a customisable, automated web accessibility testing tool that allows software development teams to find and fix accessibility problems to improve persons with disabilities (PWDs) access to digital services. The official application can only be downloaded at [https://go.gov.sg/get-purplea11y](https://go.gov.sg/get-purplea11y). We recommend that you download the software only from the official link, as other sources and/or third party links may pose risks and/or compromise your system.
 
