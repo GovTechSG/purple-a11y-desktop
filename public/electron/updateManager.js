@@ -396,11 +396,11 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
 
     if (restartRequired) {
       consoleLogger.info('restarting app...')
-      updaterEventEmitter.emit('restartA11yToOobee')
-      setTimeout(() => {
-        // Wait for restart to be triggered
-      }, 10000)
-      // updaterEventEmitter.emit('restartTriggered')
+      // updaterEventEmitter.emit('restartA11yToOobee')
+      // setTimeout(() => {
+      //   // Wait for restart to be triggered
+      // }, 10000)
+      updaterEventEmitter.emit('restartTriggered')
     }
 
     const isPrepackageValid = await validateZipFile(macOSPrepackageBackend)
