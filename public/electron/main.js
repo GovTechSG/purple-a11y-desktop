@@ -165,10 +165,7 @@ app.on('ready', async () => {
 
       if (fs.existsSync(oobeePath) && !currentAppPath.includes('Oobee')) {
         const { exec } = require('child_process')
-        const openCommand =
-          process.platform === 'win32'
-            ? `"${oobeePath}"`
-            : `open "${oobeePath}"`
+        const openCommand = process.platform === 'win32' ? `start "" "${oobeePath}"` : `open "${oobeePath}"`;
 
         exec(openCommand, (error) => {
           if (error) {
