@@ -34,8 +34,8 @@ Source: "D:\a\Oobee Backend\*"; DestDir: "\\?\{app}\Oobee Backend"; Flags: ignor
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{autoprograms}\Oobee Desktop"; Filename: "C:\Program Files\Oobee\Oobee Frontend\Oobee.exe"
-Name: "{autodesktop}\Oobee Desktop"; Filename: "C:\Program Files\Oobee\Oobee Frontend\Oobee.exe"; Tasks: desktopicon
+Name: "{autoprograms}\Oobee Desktop"; Filename: "C:\Program Files\Oobee Desktop\Oobee Frontend\Oobee.exe"
+Name: "{autodesktop}\Oobee Desktop"; Filename: "C:\Program Files\Oobee Desktop\Oobee Frontend\Oobee.exe"; Tasks: desktopicon
 
 ; [Run]
 ; Filename: "C:\Program Files\Oobee\Oobee Frontend\Oobee.exe"; Description: "{cm:LaunchProgram,Oobee Desktop}"; Flags: nowait postinstall skipifsilent
