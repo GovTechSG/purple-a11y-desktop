@@ -39,22 +39,32 @@
 
   /* Fonts */
   --a11y-regular-paragraph: 'PT Sans';
-}
-
-body {
-  background-color: var(--a11y-black-5);
-}
-
-h3 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 2rem;
+  --a11y-headings: 'PT Sans Bold';
 }
 
 #root {
   min-height: 100vh;
   width: 100vw;
   font-family: var(--a11y-regular-paragraph);
+}
+
+body {
+  background-color: var(--a11y-black-5);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--a11y-headings);
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 2rem;
 }
 
 .purple-text {
@@ -1043,12 +1053,35 @@ hr {
 }
 
 @font-face {
-  font-family: 'DM Serif Text';
-  font-feature-settings: 'liga' off, 'clig' off;
-  src: url('./fonts/DMSerifText-Regular.woff2') format('woff2');
-  font-size: 40px;
+  font-family: 'PT Sans';
+  src: url('./fonts/PTSans-Regular.woff2') format('woff2'),
+    url('./fonts/PTSans-Regular.woff') format('woff');
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  line-height: 48px; /* 120% */
+}
+
+@font-face {
+  font-family: 'PT Sans Bold';
+  src: url('./fonts/PTSans-Bold.woff2') format('woff2'),
+    url('./fonts/PTSans-Bold.woff') format('woff');
+  font-style: normal;
+  font-weight: 700; /* Bold */
+  font-display: swap;
+}
+@font-face {
+  font-family: 'PT Sans Caption';
+  src: url('./fonts/PTSans-Caption.woff2') format('woff2'),
+    url('./fonts/PTSans-Caption.woff') format('woff');
+  font-style: normal;
+  font-weight: 400; /* Regular weight */
+  font-display: swap;
+}
+@font-face {
+  font-family: 'PT Sans Narrow';
+  src: url('./fonts/PTSans-Narrow.woff2') format('woff2'),
+    url('./fonts/PTSans-Narrow.woff') format('woff');
+  font-style: normal;
+  font-weight: 400; /* Regular weight */
+  font-display: swap;
 }
