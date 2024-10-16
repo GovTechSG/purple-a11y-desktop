@@ -2,7 +2,7 @@
 
 Oobee Desktop (formerly known as Purple A11y) is a desktop frontend for [Oobee](https://github.com/GovTechSG/oobee) an accessibility site scanner - a customisable, automated web accessibility testing tool that allows software development teams to find and fix accessibility problems to improve persons with disabilities (PWDs) access to digital services. The official application can only be downloaded at [https://go.gov.sg/get-purplea11y](https://go.gov.sg/get-purplea11y). We recommend that you download the software only from the official link, as other sources and/or third party links may pose risks and/or compromise your system.
 
-<img alt="Oobee Desktop main screen" src="https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/8eb8268e-80dd-4aff-b004-a4e7b8949ebc">
+<img alt="Oobee Desktop main screen" src="https://github.com/user-attachments/assets/3992115c-d237-4d66-b247-a541a2a49f9e">
 
 ## Technology Stack
 
@@ -66,19 +66,19 @@ Open an [issue ticket](https://github.com/GovTechSG/oobee-desktop/issues) for as
 
 Enter a valid URL to scan in the textbox and press the "Scan" button.  The default settings will crawl your website and scan 100 pages for accessibility issues.
 
-![Oobee Desktop main page](https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/7d114637-6337-4f68-a8a4-a7673c4601ef)
+![Oobee Desktop main page](https://github.com/user-attachments/assets/94d19cf8-88e4-46c3-b5d6-647b7c615a6e)
 
 ## Limiting pages scanned
 
 If you find a scan takes too long to complete due to large website, or there are too many pages in a sitemap to scan, you may choose to limit number of pages scanned. Click on the drop down and enter the desired number of pages to scan.
 
-![Limit Scan Pages](https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/4bfb1125-138e-4720-9db0-a046a4b1f495)
+![Limit Scan Pages](https://github.com/user-attachments/assets/b0180bd4-bd98-44f8-a8ea-9f73f29b7538)
 
 ## Advanced scan options
 
 Click on the "Advanced scan options" button to configure the scan options.
 
-![Advanced Scan Options](https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/caf2c1a6-1acf-433d-9843-3482666ac377)
+![Advanced Scan Options](https://github.com/user-attachments/assets/58bbbf47-30f6-4751-bbb8-b8d6243f5187)
 
 ### Scan Type Selection
 
