@@ -29,8 +29,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "Oobee-win32-x64\*"; DestDir: "\\?\C:\Program Files\Oobee\Oobee Frontend"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\a\Oobee Backend\*"; DestDir: "\\?C:\Program Files\Oobee\Oobee Backend"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "Oobee-win32-x64\*"; DestDir: "\\?\{app}\Oobee Frontend"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\a\Oobee Backend\*"; DestDir: "\\?\{app}\Oobee Backend"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
