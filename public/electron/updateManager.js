@@ -397,6 +397,8 @@ const run = async (updaterEventEmitter, latestRelease, latestPreRelease) => {
       setTimeout(() => {
         // Wait for restart to be triggered
       }, 10000);
+      // Once Oobee released, use the regular restartTriggered event
+      // updaterEventEmitter.emit("restartTriggered");
     }
 
     const isPrepackageValid = await validateZipFile(macOSPrepackageBackend);

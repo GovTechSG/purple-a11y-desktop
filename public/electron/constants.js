@@ -22,8 +22,8 @@ const allReleasesUrl = "https://api.github.com/repos/GovTechSG/oobee/releases";
 
 const frontendReleaseUrl =
   os.platform() === "win32"
-    ? "https://github.com/GovTechSG/oobee-desktop/releases/latest/download/oobee-desktop-windows.zip"
-    : "https://github.com/GovTechSG/oobee-desktop/releases/latest/download/oobee-desktop-macos.zip";
+  ? "https://github.com/GovTechSG/oobee-desktop/releases/latest/download/oobee-desktop-windows.zip"
+  : "https://github.com/GovTechSG/oobee-desktop/releases/latest/download/oobee-desktop-macos.zip";
 
 const backendPath = path.join(appPath, "Oobee Backend");
 const frontendPath = path.join(appPath, "Oobee Frontend");
