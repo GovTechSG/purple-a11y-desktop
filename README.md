@@ -2,7 +2,7 @@
 
 Oobee Desktop (formerly known as Purple A11y) is a desktop frontend for [Oobee](https://github.com/GovTechSG/oobee) an accessibility site scanner - a customisable, automated web accessibility testing tool that allows software development teams to find and fix accessibility problems to improve persons with disabilities (PWDs) access to digital services. The official application can only be downloaded at [https://go.gov.sg/get-purplea11y](https://go.gov.sg/get-purplea11y). We recommend that you download the software only from the official link, as other sources and/or third party links may pose risks and/or compromise your system.
 
-<img alt="Oobee Desktop main screen" src="https://github.com/GovTechSG/oobee-desktop/assets/2021525/8eb8268e-80dd-4aff-b004-a4e7b8949ebc">
+<img alt="Oobee Desktop main screen" src="https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/8eb8268e-80dd-4aff-b004-a4e7b8949ebc">
 
 ## Technology Stack
 
@@ -66,19 +66,19 @@ Open an [issue ticket](https://github.com/GovTechSG/oobee-desktop/issues) for as
 
 Enter a valid URL to scan in the textbox and press the "Scan" button.  The default settings will crawl your website and scan 100 pages for accessibility issues.
 
-![Oobee Desktop main page](https://github.com/GovTechSG/oobee-desktop/assets/2021525/7d114637-6337-4f68-a8a4-a7673c4601ef)
+![Oobee Desktop main page](https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/7d114637-6337-4f68-a8a4-a7673c4601ef)
 
 ## Limiting pages scanned
 
 If you find a scan takes too long to complete due to large website, or there are too many pages in a sitemap to scan, you may choose to limit number of pages scanned. Click on the drop down and enter the desired number of pages to scan.
 
-![Limit Scan Pages](https://github.com/GovTechSG/oobee-desktop/assets/2021525/4bfb1125-138e-4720-9db0-a046a4b1f495)
+![Limit Scan Pages](https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/4bfb1125-138e-4720-9db0-a046a4b1f495)
 
 ## Advanced scan options
 
 Click on the "Advanced scan options" button to configure the scan options.
 
-![Advanced Scan Options](https://github.com/GovTechSG/oobee-desktop/assets/2021525/caf2c1a6-1acf-433d-9843-3482666ac377)
+![Advanced Scan Options](https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/caf2c1a6-1acf-433d-9843-3482666ac377)
 
 ### Scan Type Selection
 
@@ -94,7 +94,7 @@ With sitemap crawl, provide a URL to a sitemap file (e.g. `https.domain.com/site
 
 Custom flow is used to scan Single-Page Applications (SPAs) or websites that require user authentication. 2 pop-up windows will appear after running the scan. The browser pop-up window will be used to record your actions, proceed with your actions as you would normally do on the website and close the browser window when you are done. The second window is used to log the actions in code (**do not close the second window** until the scan is completed).
 
-![Custom Flow Browser](https://github.com/GovTechSG/oobee-desktop/assets/2021525/c5962e1d-80c4-430d-853f-37009302c19d)
+![Custom Flow Browser](https://github.com/GovTechSG/purple-a11y-desktop/assets/2021525/c5962e1d-80c4-430d-853f-37009302c19d)
 
 ### Viewport Options
 
