@@ -64,7 +64,7 @@ app.on("ready", async () => {
     }),
   });
   
-  const { data: releaseInfo } = await axiosInstance.get('https://govtechsg.github.io/purple-a11y-desktop/latest-release.json')
+  const { data: releaseInfo } = await axiosInstance.get('https://govtechsg.github.io/oobee-desktop/latest-release.json')
   .catch((e) => {
     console.log("Unable to get release info");
     return { data: undefined };
@@ -157,7 +157,7 @@ app.on("ready", async () => {
 
       if (fs.existsSync(oobeePath) && !currentAppPath.includes('Oobee')) {
         const { exec } = require('child_process');
-        const openCommand = process.platform === 'win32' ? `"${oobeePath}"` : `open "${oobeePath}"`;
+        const openCommand = process.platform === 'win32' ? `start "" "${oobeePath}"` : `open "${oobeePath}"`;
         
         exec(openCommand, (error) => {
           if (error) {
