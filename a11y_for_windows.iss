@@ -3,7 +3,7 @@
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 [SETUP]
-AppId={{75a53a2c-a9e1-4d9b-be27-f8c96f9315c5}
+AppId={{cc9a344d-66b1-4f2d-844e-0b939cf31959}
 AppName=Oobee Desktop
 AppVersion=0.10.0
 AppVerName=Oobee Desktop
